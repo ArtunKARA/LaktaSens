@@ -10,8 +10,9 @@ INSERT INTO inek (inekQR, ad, irk, dogumTarihi, sonDogurmaTarihi, firmaID, anneI
 ('QR124', N'Zeytin', N'Jersey', '2019-03-22', '2023-11-27', 1, NULL, '2024-02-20', 1, 'E', '2024-09-27', '2024-09-27'),
 ('QR125', N'Mavi', N'Ayrshire', '2018-05-30', '2024-04-05', 2, NULL, '2024-06-29', 1, 'E', '2024-02-05', '2024-02-05'),
 ('QR126', N'Mavi', N'Angus', '2018-05-30', '2024-08-31', 2, NULL, '2023-11-25', 1, 'H', '2024-06-30', '2024-06-30'),
-('QR127', N'Mavi', N'Ayrshire', '2018-05-30', '2024-06-30', 2, NULL, '2023-09-25', 1, 'H', '2024-05-01', '2024-05-01');
+('QR127', N'Mavi', N'Ayrshire', '2018-05-30', '2024-06-30', 2, NULL, '2023-09-25', 2, 'H', '2024-05-01', '2024-05-01');
 GO
+
 -- Doğurma tablosuna veri ekleme
 INSERT INTO dogurma (dogurmaTarihi, inekID) VALUES
 ('2024-10-21', 1),
@@ -26,10 +27,11 @@ INSERT INTO dogurma (dogurmaTarihi, inekID) VALUES
 ('2024-08-31', 4),
 ('2023-09-03', 4),
 ('2022-09-05', 4),
-('2024-06-31', 5),
+('2024-06-30', 5),
 ('2023-07-03', 5),
 ('2022-07-05', 5);
 GO
+
 -- Döllenme tablosuna veri ekleme
 INSERT INTO dollenme (dollenmeTarihi, inekID, dollenmeSayisi, tuttuMu) VALUES
 ('2024-01-15', 1, 1, 'E'),
@@ -45,6 +47,7 @@ INSERT INTO dollenme (dollenmeTarihi, inekID, dollenmeSayisi, tuttuMu) VALUES
 ('2023-11-28', 5, 1, 'E'),
 ('2022-11-30', 4, 1, 'H');
 GO
+
 -- Kuru tablosuna veri ekleme
 INSERT INTO kuru (kuruBaslangicTarihi, inekID) VALUES
 ('2024-08-22', 1),
@@ -63,6 +66,7 @@ INSERT INTO kuru (kuruBaslangicTarihi, inekID) VALUES
 ('2023-05-04', 5),
 ('2022-05-06', 5);
 GO
+
 -- Süt Ölçüm tablosuna veri ekleme
 INSERT INTO sutOlcum (makineID, sutMiktar, inekID, sagimTarihi) VALUES
 (1, 4, 1, '2024-11-01'),
@@ -77,7 +81,7 @@ INSERT INTO sutOlcum (makineID, sutMiktar, inekID, sagimTarihi) VALUES
 (2, 5, 1, '2024-10-23'),
 (1, 4, 1, '2024-10-22'),
 (1, 5, 1, '2024-10-21'),
-(2, 5, 1, '2022-10-20');
+(2, 5, 1, '2022-10-20'),
 
 (1, 6, 2, '2024-11-01'),
 (1, 7, 2, '2024-10-31'),
@@ -91,7 +95,7 @@ INSERT INTO sutOlcum (makineID, sutMiktar, inekID, sagimTarihi) VALUES
 (2, 7, 2, '2024-10-23'),
 (1, 6, 2, '2024-10-22'),
 (1, 7, 2, '2024-10-21'),
-(2, 6, 2, '2022-10-20');
+(2, 6, 2, '2022-10-20'),
 
 (1, 8, 3, '2024-11-01'),
 (1, 7, 3, '2024-10-31'),
@@ -105,7 +109,7 @@ INSERT INTO sutOlcum (makineID, sutMiktar, inekID, sagimTarihi) VALUES
 (2, 8, 3, '2024-10-23'),
 (1, 8, 3, '2024-10-22'),
 (1, 8, 3, '2024-10-21'),
-(2, 8, 3, '2022-10-20');
+(2, 8, 3, '2022-10-20'),
 
 (1, 8, 4, '2024-11-01'),
 (1, 9, 4, '2024-10-31'),
@@ -117,33 +121,7 @@ INSERT INTO sutOlcum (makineID, sutMiktar, inekID, sagimTarihi) VALUES
 (1, 9, 4, '2024-10-25'),
 (1, 9, 4, '2024-10-24'),
 (2, 9, 4, '2024-10-23'),
-(1, 9, 4, '2024-10-22'),
+(1, 8, 4, '2024-10-22'),
 (1, 9, 4, '2024-10-21'),
-(2, 9, 4, '2022-10-20');
-
-(1, 10, 5, '2024-11-01'),
-(1, 9, 5, '2024-10-31'),
-(1, 9, 5, '2024-10-30'),
-(2, 10, 5, '2024-10-29'),
-(1, 9, 5, '2024-10-28'),
-(1, 10, 5, '2024-10-27'),
-(2, 10, 5, '2024-10-26'),
-(1, 9, 5, '2024-10-25'),
-(1, 9, 5, '2024-10-24'),
-(2, 9, 5, '2024-10-23'),
-(1, 9, 5, '2024-10-22'),
-(1, 9, 5, '2024-10-21'),
-(2, 9, 5, '2022-10-20');
+(2, 8, 4, '2022-10-20');
 GO
-
--- Sağım Makinesi tablosuna veri ekleme
-INSERT INTO sagimMakine (makineAd, hazneHacmi, QR, firmaID) VALUES
-('Makine 1', 15, 'QR_MK1', 1),
-('Makine 2', 10, 'QR_MK2', 2);
-GO
--- Kullanıcılar tablosuna veri ekleme
-INSERT INTO kullanicilar (kullaniciAdi, eposta, parola, kullaniciTuru, isim, soyisim, telefonNo, onayDurumu, firmaID) VALUES
-('kullanici1', 'kullanici1@example.com', 'sifre1', 'A', 'Ali', 'Veli', '1112223333', 'A', 1),
-('kullanici2', 'kullanici2@example.com', 'sifre2', 'A', 'Ayşe', 'Yılmaz', '4445556666', 'A', 2);
-GO
-

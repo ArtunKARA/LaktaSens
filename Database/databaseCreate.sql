@@ -1,17 +1,22 @@
--- Veritabanı oluşturma
-IF EXISTS(SELECT * FROM sys.databases WHERE name = 'laktasense')
-BEGIN
-    DROP DATABASE laktasense;
-END;
+-- Veritabanı bağlantısını sonlandır ve ardından veritabanını sil
+USE master;
 GO
 
+IF DB_ID('laktasense') IS NOT NULL
+BEGIN
+    ALTER DATABASE laktasense SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
+    DROP DATABASE laktasense;
+END
+GO
+
+-- Yeni veritabanı oluştur
 CREATE DATABASE laktasense;
 GO
 
 USE laktasense;
 GO
 
--- Firmalar tablosu
+-- Tabloları yeniden oluştur
 CREATE TABLE firmalar (
     firmaID INT PRIMARY KEY IDENTITY(1,1),
     ciftlikAdi NVARCHAR(50),
@@ -20,8 +25,8 @@ CREATE TABLE firmalar (
     bolge CHAR(1),
     hesapDurumu CHAR(1)
 );
+GO
 
--- İnek tablosu
 CREATE TABLE inek (
     inekID INT PRIMARY KEY IDENTITY(1,1),
     inekQR NVARCHAR(50) UNIQUE,
@@ -30,7 +35,7 @@ CREATE TABLE inek (
     dogumTarihi DATE,
     sonDogurmaTarihi DATE,
     firmaID INT,
-    anneID INT NULL,
+    anneID INT,
     sonDollenme DATE,
     dollenmeSayisi INT,
     tuttuMu CHAR(1),
@@ -38,16 +43,16 @@ CREATE TABLE inek (
     sonSutOlcumTarihi DATE,
     FOREIGN KEY (firmaID) REFERENCES firmalar(firmaID)
 );
+GO
 
--- Doğurma tablosu
 CREATE TABLE dogurma (
     dogurmaID INT PRIMARY KEY IDENTITY(1,1),
     dogurmaTarihi DATE,
     inekID INT,
     FOREIGN KEY (inekID) REFERENCES inek(inekID)
 );
+GO
 
--- Döllenme tablosu
 CREATE TABLE dollenme (
     dollenmeID INT PRIMARY KEY IDENTITY(1,1),
     dollenmeTarihi DATE,
@@ -56,16 +61,16 @@ CREATE TABLE dollenme (
     tuttuMu CHAR(1),
     FOREIGN KEY (inekID) REFERENCES inek(inekID)
 );
+GO
 
--- Kuru tablosu
 CREATE TABLE kuru (
     kuruID INT PRIMARY KEY IDENTITY(1,1),
     kuruBaslangicTarihi DATE,
     inekID INT,
     FOREIGN KEY (inekID) REFERENCES inek(inekID)
 );
+GO
 
--- Süt Ölçüm tablosu
 CREATE TABLE sutOlcum (
     olcumID INT PRIMARY KEY IDENTITY(1,1),
     makineID INT,
@@ -74,8 +79,8 @@ CREATE TABLE sutOlcum (
     sagimTarihi DATE,
     FOREIGN KEY (inekID) REFERENCES inek(inekID)
 );
+GO
 
--- Sağım Makinesi tablosu
 CREATE TABLE sagimMakine (
     makineID INT PRIMARY KEY IDENTITY(1,1),
     makineAd NVARCHAR(50),
@@ -84,8 +89,8 @@ CREATE TABLE sagimMakine (
     firmaID INT,
     FOREIGN KEY (firmaID) REFERENCES firmalar(firmaID)
 );
+GO
 
--- Kullanıcılar tablosu
 CREATE TABLE kullanicilar (
     kullaniciID INT PRIMARY KEY IDENTITY(1,1),
     kullaniciAdi NVARCHAR(50),
@@ -99,49 +104,54 @@ CREATE TABLE kullanicilar (
     firmaID INT,
     FOREIGN KEY (firmaID) REFERENCES firmalar(firmaID)
 );
+GO
 
--- MSSQL için tetikleyiciler
--- sonDogurmaTarihi değişiminde tetikleyici
-CREATE TRIGGER trgAfterUpdateSonDogurma
+-- Trigger'ları yeniden oluştur
+
+-- After update trigger for sonDogurmaTarihi
+CREATE TRIGGER after_update_sonDogurma
 ON inek
 AFTER UPDATE
 AS
 BEGIN
-    IF UPDATE(sonDogurmaTarihi)
+    IF (UPDATE(sonDogurmaTarihi))
     BEGIN
         INSERT INTO dogurma (dogurmaTarihi, inekID)
         SELECT sonDogurmaTarihi, inekID
-        FROM inserted;
+        FROM inserted
+        WHERE sonDogurmaTarihi IS NOT NULL;
     END
 END;
 GO
 
--- sonDollenme değişiminde tetikleyici
-CREATE TRIGGER trgAfterUpdateSonDollenme
+-- After update trigger for sonDollenme
+CREATE TRIGGER after_update_sonDollenme
 ON inek
 AFTER UPDATE
 AS
 BEGIN
-    IF UPDATE(sonDollenme)
+    IF (UPDATE(sonDollenme))
     BEGIN
         INSERT INTO dollenme (dollenmeTarihi, inekID, dollenmeSayisi, tuttuMu)
         SELECT sonDollenme, inekID, dollenmeSayisi, tuttuMu
-        FROM inserted;
+        FROM inserted
+        WHERE sonDollenme IS NOT NULL;
     END
 END;
 GO
 
--- sonKuruTarihi değişiminde tetikleyici
-CREATE TRIGGER trgAfterUpdateSonKuruTarihi
+-- After update trigger for sonKuruTarihi
+CREATE TRIGGER after_update_sonKuruTarihi
 ON inek
 AFTER UPDATE
 AS
 BEGIN
-    IF UPDATE(sonKuruTarihi)
+    IF (UPDATE(sonKuruTarihi))
     BEGIN
         INSERT INTO kuru (kuruBaslangicTarihi, inekID)
         SELECT sonKuruTarihi, inekID
-        FROM inserted;
-    END
+        FROM inserted
+        WHERE sonKuruTarihi IS NOT NULL;
+    END
 END;
 GO
