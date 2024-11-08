@@ -11,7 +11,7 @@ const defaultState = {
     rtlClass: 'ltr',
     animation: '',
     navbar: 'navbar-sticky',
-    locale: 'en',
+    locale: 'tr',
     sidebar: false,
     pageTitle: '',
     languageList: [
@@ -46,22 +46,22 @@ const initialState = {
     sidebar: localStorage.getItem('sidebar') || defaultState.sidebar,
     semidark: localStorage.getItem('semidark') || themeConfig.semidark,
     languageList: [
-        { code: 'zh', name: 'Chinese' },
-        { code: 'da', name: 'Danish' },
+        //{ code: 'zh', name: 'Chinese' },
+        //{ code: 'da', name: 'Danish' },
         { code: 'en', name: 'English' },
-        { code: 'fr', name: 'French' },
-        { code: 'de', name: 'German' },
-        { code: 'el', name: 'Greek' },
-        { code: 'hu', name: 'Hungarian' },
-        { code: 'it', name: 'Italian' },
-        { code: 'ja', name: 'Japanese' },
-        { code: 'pl', name: 'Polish' },
-        { code: 'pt', name: 'Portuguese' },
-        { code: 'ru', name: 'Russian' },
-        { code: 'es', name: 'Spanish' },
-        { code: 'sv', name: 'Swedish' },
+        //{ code: 'fr', name: 'French' },
+        //{ code: 'de', name: 'German' },
+        //{ code: 'el', name: 'Greek' },
+        //{ code: 'hu', name: 'Hungarian' },
+        //{ code: 'it', name: 'Italian' },
+        //{ code: 'ja', name: 'Japanese' },
+        //{ code: 'pl', name: 'Polish' },
+        //{ code: 'pt', name: 'Portuguese' },
+        //{ code: 'ru', name: 'Russian' },
+        //{ code: 'es', name: 'Spanish' },
+        //{ code: 'sv', name: 'Swedish' },
         { code: 'tr', name: 'Turkish' },
-        { code: 'ae', name: 'Arabic' },
+        //{ code: 'ae', name: 'Arabic' },
     ],
 };
 
@@ -134,7 +134,7 @@ const themeConfigSlice = createSlice({
         },
 
         setPageTitle(state, { payload }) {
-            document.title = `${payload} | VRISTO - Multipurpose Tailwind Dashboard Template`;
+            document.title = `${payload} | LaktaSens`;
         },
     },
 });
