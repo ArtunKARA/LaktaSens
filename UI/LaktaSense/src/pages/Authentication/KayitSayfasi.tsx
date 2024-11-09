@@ -19,12 +19,29 @@ import Swal from 'sweetalert2';
 import router from '../../router';
 import { addDurations } from '@fullcalendar/core/internal';
 import { add } from 'lodash';
+import Select, { SingleValue } from 'react-select';
+import axios from 'axios';
+
+
 
 const KayitSayfasi = () => {
     const dispatch = useDispatch();
+    const [cityOpitons, setCityOptions] = useState<OptionType[]>([]);
     useEffect(() => {
         dispatch(setPageTitle('Register Boxed'));
-    });
+        axios.get('http://localhost:3030/api/options/cityList')
+            .then(response => {
+                const cityOpitons = response.data.map((city: any) => ({
+                    value: city.ID,
+                    label: city.SehirIlceMahalleAdi
+                }));
+                setCityOptions(cityOpitons);
+            })
+            .catch(error => {
+                console.error('Error fetching city options:', error);
+            });
+    }, []    
+    );
     const navigate = useNavigate();
     const isDark = useSelector((state: IRootState) => state.themeConfig.theme === 'dark' || state.themeConfig.isDarkMode);
     const isRtl = useSelector((state: IRootState) => state.themeConfig.rtlClass) === 'rtl' ? true : false;
@@ -59,7 +76,7 @@ const KayitSayfasi = () => {
         lastname: Yup.string().required('Please fill the last name'),
         username: Yup.string().required('Please choose a userName'),
         city: Yup.string().required('Please provide a valid city'),
-        state: Yup.string().required('Please provide a valid state'),
+        district: Yup.string().required('Please provide a valid District'),
         tcNumber: Yup.string()
         .required('Please provide a valid TC Number')
         .matches(/^[1-9][0-9]{10}$/, 'TC Number must be 11 digits and cannot start with 0')
@@ -79,6 +96,28 @@ const KayitSayfasi = () => {
         agree: Yup.bool().oneOf([true], 'You must agree before submitting.'),
     });
 
+    interface OptionType {
+        value: string;
+        label: string;
+    }
+    
+    const CitySelect = ({ field, form, options }: { field: any; form: any; options: OptionType[] }) => {
+        const handleChange = (selectedOption: SingleValue<OptionType> | null) => {
+            form.setFieldValue(field.name, selectedOption ? selectedOption.value : '');
+        };
+    
+        return (
+            <Select
+                options={options}
+                value={options ? options.find(option => option.value === field.value) : null}
+                onChange={handleChange}
+                placeholder="Please select a city"
+                isSearchable={true}
+                isClearable={true}
+            />
+        );
+    };
+    
     return (
         <div>
             <div className="absolute inset-0">
@@ -147,7 +186,7 @@ const KayitSayfasi = () => {
                                         email: '',
                                         companyName: '',
                                         city: '',
-                                        state: '',
+                                        district: '',
                                         address: '',
                                         agree: false,
                                     }}
@@ -157,7 +196,7 @@ const KayitSayfasi = () => {
                                     {({ errors, submitCount, touched, values }) => (
                                         <Form className="space-y-5">
                                             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                                                <div className={submitCount ? (errors.firstname ? 'has-error' : 'has-success') : ''}>
+                                                <div>
                                                     <label htmlFor="firstname">First Name </label>
                                                     <Field name="firstname" type="text" id="firstname" placeholder="Enter First Name" className="form-input" />
 
@@ -172,7 +211,7 @@ const KayitSayfasi = () => {
                                                     )}
                                                 </div>
 
-                                                <div className={submitCount ? (errors.lastname ? 'has-error' : 'has-success') : ''}>
+                                                <div>
                                                     <label htmlFor="fullName">Last Name </label>
                                                     <Field name="lastname" type="text" id="lastname" placeholder="Enter Last Name" className="form-input" />
 
@@ -180,7 +219,7 @@ const KayitSayfasi = () => {
                                                 </div>
                                             </div>
                                             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                                                <div className={submitCount ? (errors.tcNumber ? 'has-error' : 'has-success') : ''}>
+                                                <div>
                                                     <label htmlFor="tcNumber">TC Number </label>
                                                     <Field name="tcNumber" type="text" id="tcNumber" placeholder="Enter First Name" className="form-input" />
 
@@ -195,31 +234,49 @@ const KayitSayfasi = () => {
                                                     )}
                                                 </div>
 
-                                                <div className={submitCount ? (errors.email ? 'has-error' : 'has-success') : ''}>
+                                                <div>
                                                     <label htmlFor="Email">Email</label>
                                                     <Field name="email" type="text" id="Email" placeholder="Enter Email" className="form-input" />
 
                                                     {submitCount ? errors.email ? <div className="text-danger mt-1">{errors.email}</div> : <div className="text-success mt-1">Looks Good!</div> : ''}
                                                 </div>
                                             </div>
-                                            <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
-                                                <div className={`md:col-span-2 ${submitCount ? (errors.city ? 'has-error' : 'has-success') : ''}`}>
-                                                    <label htmlFor="customeCity">City</label>
-                                                    <Field name="city" type="text" id="city" placeholder="Enter City" className="form-input" />
-
-                                                    {submitCount ? errors.city ? <div className="text-danger mt-1">{errors.city}</div> : <div className="text-success mt-1">Looks Good!</div> : ''}
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                                <div className="form-group">
+                                                    <label htmlFor="city">City</label>
+                                                    <Field 
+                                                            name="city"
+                                                            component={CitySelect}
+                                                            options={cityOpitons}
+                                                            disabled = {true}
+                                                    />
+                                                    {submitCount ? (
+                                                        errors.city ? (
+                                                            <div className="text-danger mt-1">{errors.city}</div>
+                                                        ) : (
+                                                            <div className="text-[#1abc9c] mt-1">Looks Good!</div>
+                                                        )
+                                                    ) : (
+                                                        ''
+                                                    )}
                                                 </div>
 
-                                                <div className={submitCount ? (errors.state ? 'has-error' : 'has-success') : ''}>
-                                                    <label htmlFor="customeState">State</label>
-                                                    <Field name="state" type="text" id="customeState" placeholder="Enter State" className="form-input" />
-                                                    {submitCount ? errors.state ? <div className="text-danger mt-1">{errors.state}</div> : <div className="text-success mt-1">Looks Good!</div> : ''}
-                                                </div>
-
-                                                <div className={submitCount ? (errors.zip ? 'has-error' : 'has-success') : ''}>
-                                                    <label htmlFor="customeZip">Zip</label>
-                                                    <Field name="zip" type="text" id="customeZip" placeholder="Enter Zip" className="form-input" />
-                                                    {submitCount ? errors.zip ? <div className="text-danger mt-1">{errors.zip}</div> : <div className="text-success mt-1">Looks Good!</div> : ''}
+                                                <div className="form-group">
+                                                    <label htmlFor="district">District</label>
+                                                    <Field 
+                                                            name="district"
+                                                            component={CitySelect}
+                                                            options={cityOpitons}
+                                                    />
+                                                    {submitCount ? (
+                                                        errors.district ? (
+                                                            <div className="text-danger mt-1">{errors.district}</div>
+                                                        ) : (
+                                                            <div className="text-[#1abc9c] mt-1">Looks Good!</div>
+                                                        )
+                                                    ) : (
+                                                        ''
+                                                    )}
                                                 </div>
                                             </div>
 

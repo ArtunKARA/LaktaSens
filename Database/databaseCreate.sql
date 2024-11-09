@@ -2,18 +2,18 @@
 USE master;
 GO
 
-IF DB_ID('laktasense') IS NOT NULL
+IF DB_ID('laktasens') IS NOT NULL
 BEGIN
-    ALTER DATABASE laktasense SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
-    DROP DATABASE laktasense;
+    ALTER DATABASE laktasens SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
+    DROP DATABASE laktasens;
 END
 GO
 
 -- Yeni veritabanı oluştur
-CREATE DATABASE laktasense;
+CREATE DATABASE laktasens;
 GO
 
-USE laktasense;
+USE laktasens;
 GO
 
 -- Tabloları yeniden oluştur
