@@ -13,6 +13,12 @@ import IconInstagram from '../../components/Icon/IconInstagram';
 import IconFacebookCircle from '../../components/Icon/IconFacebookCircle';
 import IconTwitter from '../../components/Icon/IconTwitter';
 import IconGoogle from '../../components/Icon/IconGoogle';
+import * as Yup from 'yup';
+import { Field, Form, Formik } from 'formik';
+import Swal from 'sweetalert2';
+import router from '../../router';
+import { addDurations } from '@fullcalendar/core/internal';
+import { add } from 'lodash';
 
 const KayitSayfasi = () => {
     const dispatch = useDispatch();
@@ -33,9 +39,45 @@ const KayitSayfasi = () => {
     };
     const [flag, setFlag] = useState(themeConfig.locale);
 
+
     const submitForm = () => {
-        navigate('/');
+        const toast = Swal.mixin({
+            toast: true,
+            position: 'top',
+            showConfirmButton: false,
+            timer: 3000,
+        });
+        toast.fire({
+            icon: 'success',
+            title: 'Form submitted successfully',
+            padding: '10px 20px',
+        });
+        navigate("/cifci/dashboard");
     };
+    const submitFormValidation = Yup.object().shape({
+        firstname: Yup.string().required('Please fill the first name'),
+        lastname: Yup.string().required('Please fill the last name'),
+        username: Yup.string().required('Please choose a userName'),
+        city: Yup.string().required('Please provide a valid city'),
+        state: Yup.string().required('Please provide a valid state'),
+        tcNumber: Yup.string()
+        .required('Please provide a valid TC Number')
+        .matches(/^[1-9][0-9]{10}$/, 'TC Number must be 11 digits and cannot start with 0')
+        .test('is-valid-tc', 'Invalid TC Number', value => {
+            if (!value) return false;
+            const digits = value.split('').map(Number);
+            const oddSum = digits[0] + digits[2] + digits[4] + digits[6] + digits[8];
+            const evenSum = digits[1] + digits[3] + digits[5] + digits[7];
+            const totalSum = oddSum + evenSum + digits[9];
+            
+            const rule10 = (oddSum * 7 - evenSum) % 10 === digits[9];
+            const rule11 = totalSum % 10 === digits[10];
+            
+            return rule10 && rule11;
+        }),
+        email: Yup.string().email('Invalid email').required('Please fill the Email'),
+        agree: Yup.bool().oneOf([true], 'You must agree before submitting.'),
+    });
 
     return (
         <div>
@@ -96,44 +138,116 @@ const KayitSayfasi = () => {
                                 <h1 className="text-3xl font-extrabold uppercase !leading-snug text-primary md:text-4xl">Sign Up</h1>
                                 <p className="text-base font-bold leading-normal text-white-dark">Enter your email and password to register</p>
                             </div>
-                            <form className="space-y-5 dark:text-white" onSubmit={submitForm}>
-                                <div>
-                                    <label htmlFor="Name">Name</label>
-                                    <div className="relative text-white-dark">
-                                        <input id="Name" type="text" placeholder="Enter Name" className="form-input ps-10 placeholder:text-white-dark" />
-                                        <span className="absolute start-4 top-1/2 -translate-y-1/2">
-                                            <IconUser fill={true} />
-                                        </span>
-                                    </div>
-                                </div>
-                                <div>
-                                    <label htmlFor="Email">Email</label>
-                                    <div className="relative text-white-dark">
-                                        <input id="Email" type="email" placeholder="Enter Email" className="form-input ps-10 placeholder:text-white-dark" />
-                                        <span className="absolute start-4 top-1/2 -translate-y-1/2">
-                                            <IconMail fill={true} />
-                                        </span>
-                                    </div>
-                                </div>
-                                <div>
-                                    <label htmlFor="Password">Password</label>
-                                    <div className="relative text-white-dark">
-                                        <input id="Password" type="password" placeholder="Enter Password" className="form-input ps-10 placeholder:text-white-dark" />
-                                        <span className="absolute start-4 top-1/2 -translate-y-1/2">
-                                            <IconLockDots fill={true} />
-                                        </span>
-                                    </div>
-                                </div>
-                                <div>
-                                    <label className="flex cursor-pointer items-center">
-                                        <input type="checkbox" className="form-checkbox bg-white dark:bg-black" />
-                                        <span className="text-white-dark">Subscribe to weekly newsletter</span>
-                                    </label>
-                                </div>
-                                <button type="submit" className="btn btn-gradient !mt-6 w-full border-0 uppercase shadow-[0_10px_20px_-10px_rgba(67,97,238,0.44)]">
-                                    Sign Up
-                                </button>
-                            </form>
+                                <Formik
+                                    initialValues={{
+                                        referenceType : '',
+                                        firstname: 'Abuzettin',
+                                        lastname: 'Kamyoncu',
+                                        tcNumber: '',
+                                        email: '',
+                                        companyName: '',
+                                        city: '',
+                                        state: '',
+                                        address: '',
+                                        agree: false,
+                                    }}
+                                    validationSchema={submitFormValidation}
+                                    onSubmit={() => {}}
+                                >
+                                    {({ errors, submitCount, touched, values }) => (
+                                        <Form className="space-y-5">
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                                <div className={submitCount ? (errors.firstname ? 'has-error' : 'has-success') : ''}>
+                                                    <label htmlFor="firstname">First Name </label>
+                                                    <Field name="firstname" type="text" id="firstname" placeholder="Enter First Name" className="form-input" />
+
+                                                    {submitCount ? (
+                                                        errors.firstname ? (
+                                                            <div className="text-danger mt-1">{errors.firstname}</div>
+                                                        ) : (
+                                                            <div className="text-success mt-1">Looks Good!</div>
+                                                        )
+                                                    ) : (
+                                                        ''
+                                                    )}
+                                                </div>
+
+                                                <div className={submitCount ? (errors.lastname ? 'has-error' : 'has-success') : ''}>
+                                                    <label htmlFor="fullName">Last Name </label>
+                                                    <Field name="lastname" type="text" id="lastname" placeholder="Enter Last Name" className="form-input" />
+
+                                                    {submitCount ? errors.lastname ? <div className="text-danger mt-1">{errors.lastname}</div> : <div className="text-success mt-1">Looks Good!</div> : ''}
+                                                </div>
+                                            </div>
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                                <div className={submitCount ? (errors.tcNumber ? 'has-error' : 'has-success') : ''}>
+                                                    <label htmlFor="tcNumber">TC Number </label>
+                                                    <Field name="tcNumber" type="text" id="tcNumber" placeholder="Enter First Name" className="form-input" />
+
+                                                    {submitCount ? (
+                                                        errors.tcNumber ? (
+                                                            <div className="text-danger mt-1">{errors.tcNumber}</div>
+                                                        ) : (
+                                                            <div className="text-success mt-1">Looks Good!</div>
+                                                        )
+                                                    ) : (
+                                                        ''
+                                                    )}
+                                                </div>
+
+                                                <div className={submitCount ? (errors.email ? 'has-error' : 'has-success') : ''}>
+                                                    <label htmlFor="Email">Email</label>
+                                                    <Field name="email" type="text" id="Email" placeholder="Enter Email" className="form-input" />
+
+                                                    {submitCount ? errors.email ? <div className="text-danger mt-1">{errors.email}</div> : <div className="text-success mt-1">Looks Good!</div> : ''}
+                                                </div>
+                                            </div>
+                                            <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
+                                                <div className={`md:col-span-2 ${submitCount ? (errors.city ? 'has-error' : 'has-success') : ''}`}>
+                                                    <label htmlFor="customeCity">City</label>
+                                                    <Field name="city" type="text" id="city" placeholder="Enter City" className="form-input" />
+
+                                                    {submitCount ? errors.city ? <div className="text-danger mt-1">{errors.city}</div> : <div className="text-success mt-1">Looks Good!</div> : ''}
+                                                </div>
+
+                                                <div className={submitCount ? (errors.state ? 'has-error' : 'has-success') : ''}>
+                                                    <label htmlFor="customeState">State</label>
+                                                    <Field name="state" type="text" id="customeState" placeholder="Enter State" className="form-input" />
+                                                    {submitCount ? errors.state ? <div className="text-danger mt-1">{errors.state}</div> : <div className="text-success mt-1">Looks Good!</div> : ''}
+                                                </div>
+
+                                                <div className={submitCount ? (errors.zip ? 'has-error' : 'has-success') : ''}>
+                                                    <label htmlFor="customeZip">Zip</label>
+                                                    <Field name="zip" type="text" id="customeZip" placeholder="Enter Zip" className="form-input" />
+                                                    {submitCount ? errors.zip ? <div className="text-danger mt-1">{errors.zip}</div> : <div className="text-success mt-1">Looks Good!</div> : ''}
+                                                </div>
+                                            </div>
+
+                                            <div className={submitCount ? (errors.agree ? 'has-error' : 'has-success') : ''}>
+                                                <div className="flex">
+                                                    <Field name="agree" id="agree" type="checkbox" className="form-checkbox" />
+                                                    {values.agree}
+                                                    <label htmlFor="agree" className="text-white-dark font-semibold">
+                                                        Agree to terms and conditions
+                                                    </label>
+                                                </div>
+                                                {submitCount ? errors.agree ? <div className="text-danger mt-1">{errors.agree}</div> : '' : ''}
+                                            </div>
+
+                                            <button
+                                                type="submit"
+                                                className="btn btn-primary !mt-6"
+                                                onClick={() => {
+                                                    if (Object.keys(touched).length !== 0 && Object.keys(errors).length === 0) {
+                                                        submitForm();
+                                                    }
+                                                }}
+                                            >
+                                                Submit Form
+                                            </button>
+                                        </Form>
+                                    )}
+                                </Formik>                           
                             <div className="relative my-7 text-center md:mb-9">
                                 <span className="absolute inset-x-0 top-1/2 h-px w-full -translate-y-1/2 bg-white-light dark:bg-white-dark"></span>
                                 <span className="relative bg-white px-2 font-bold uppercase text-white-dark dark:bg-dark dark:text-white-light">or</span>

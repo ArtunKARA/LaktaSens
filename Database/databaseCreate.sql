@@ -19,9 +19,9 @@ GO
 -- Tabloları yeniden oluştur
 CREATE TABLE firmalar (
     firmaID INT PRIMARY KEY IDENTITY(1,1),
-    ciftlikAdi NVARCHAR(50),
+    firmaAdi NVARCHAR(50),
     telefonNo NVARCHAR(10),
-    ciftlikAdresi NVARCHAR(250),
+    firmaAdresi NVARCHAR(250),
     bolge CHAR(1),
     hesapDurumu CHAR(1)
 );
