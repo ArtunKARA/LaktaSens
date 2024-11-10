@@ -4,11 +4,8 @@ import { IRootState } from '../../store';
 import { setPageTitle, toggleRTL } from '../../store/themeConfigSlice';
 import { useEffect, useState } from 'react';
 import Dropdown from '../../components/Dropdown';
-import i18next from 'i18next';
+import i18next, { changeLanguage } from 'i18next';
 import IconCaretDown from '../../components/Icon/IconCaretDown';
-import IconUser from '../../components/Icon/IconUser';
-import IconMail from '../../components/Icon/IconMail';
-import IconLockDots from '../../components/Icon/IconLockDots';
 import IconInstagram from '../../components/Icon/IconInstagram';
 import IconFacebookCircle from '../../components/Icon/IconFacebookCircle';
 import IconTwitter from '../../components/Icon/IconTwitter';
@@ -17,16 +14,16 @@ import * as Yup from 'yup';
 import { Field, Form, Formik } from 'formik';
 import Swal from 'sweetalert2';
 import router from '../../router';
-import { addDurations } from '@fullcalendar/core/internal';
-import { add } from 'lodash';
 import Select, { SingleValue } from 'react-select';
 import axios from 'axios';
+import { s } from '@fullcalendar/core/internal-common';
 
 
 
 const KayitSayfasi = () => {
     const dispatch = useDispatch();
     const [cityOpitons, setCityOptions] = useState<OptionType[]>([]);
+    const [districtOpitons, setDistrictOptions] = useState<OptionType[]>([]);
     useEffect(() => {
         dispatch(setPageTitle('Register Boxed'));
         axios.get('http://localhost:3030/api/options/cityList')
@@ -36,12 +33,29 @@ const KayitSayfasi = () => {
                     label: city.SehirIlceMahalleAdi
                 }));
                 setCityOptions(cityOpitons);
+                console.log(cityOpitons);
             })
             .catch(error => {
                 console.error('Error fetching city options:', error);
             });
     }, []    
     );
+    const getDistrictList = (cityID: string) => {
+        axios.get('http://localhost:3030/api/options/districtList?cityID=' + cityID)
+            .then(response => {
+                const districtOptions = response.data.map((district: any) => ({
+                    value: district.ID,
+                    label: district.SehirIlceMahalleAdi
+                }));
+                setDistrictOptions(districtOptions);
+                console.log(districtOptions);
+            })
+            .catch(error => {
+                console.error('Error fetching district options:', error);
+            });
+    };
+
+
     const navigate = useNavigate();
     const isDark = useSelector((state: IRootState) => state.themeConfig.theme === 'dark' || state.themeConfig.isDarkMode);
     const isRtl = useSelector((state: IRootState) => state.themeConfig.rtlClass) === 'rtl' ? true : false;
@@ -57,7 +71,7 @@ const KayitSayfasi = () => {
     const [flag, setFlag] = useState(themeConfig.locale);
 
 
-    const submitForm = () => {
+    const submitForm = (values: any) => {
         const toast = Swal.mixin({
             toast: true,
             position: 'top',
@@ -69,12 +83,12 @@ const KayitSayfasi = () => {
             title: 'Form submitted successfully',
             padding: '10px 20px',
         });
-        navigate("/cifci/dashboard");
+        console.log(values);    
+        //navigate("/cifci/dashboard");
     };
     const submitFormValidation = Yup.object().shape({
         firstname: Yup.string().required('Please fill the first name'),
         lastname: Yup.string().required('Please fill the last name'),
-        username: Yup.string().required('Please choose a userName'),
         city: Yup.string().required('Please provide a valid city'),
         district: Yup.string().required('Please provide a valid District'),
         tcNumber: Yup.string()
@@ -102,6 +116,24 @@ const KayitSayfasi = () => {
     }
     
     const CitySelect = ({ field, form, options }: { field: any; form: any; options: OptionType[] }) => {
+        const handleChange = (selectedOption: SingleValue<OptionType> | null) => {
+            form.setFieldValue(field.name, selectedOption ? selectedOption.value : '');
+            form.setFieldValue('district', '');
+            getDistrictList(selectedOption ? selectedOption.value : '');
+        };
+    
+        return (
+            <Select
+                options={options}
+                value={options ? options.find(option => option.value === field.value) : null}
+                onChange={handleChange}
+                placeholder="Please select a city"
+                isSearchable={true}
+                isClearable={true}
+            />
+        );
+    };
+    const DistrictSelect = ({ field, form, options }: { field: any; form: any; options: OptionType[] }) => {
         const handleChange = (selectedOption: SingleValue<OptionType> | null) => {
             form.setFieldValue(field.name, selectedOption ? selectedOption.value : '');
         };
@@ -180,8 +212,8 @@ const KayitSayfasi = () => {
                                 <Formik
                                     initialValues={{
                                         referenceType : '',
-                                        firstname: 'Abuzettin',
-                                        lastname: 'Kamyoncu',
+                                        firstname: '',
+                                        lastname: '',
                                         tcNumber: '',
                                         email: '',
                                         companyName: '',
@@ -221,7 +253,7 @@ const KayitSayfasi = () => {
                                             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                                                 <div>
                                                     <label htmlFor="tcNumber">TC Number </label>
-                                                    <Field name="tcNumber" type="text" id="tcNumber" placeholder="Enter First Name" className="form-input" />
+                                                    <Field name="tcNumber" type="text" id="tcNumber" placeholder="Enter TC Number" className="form-input" />
 
                                                     {submitCount ? (
                                                         errors.tcNumber ? (
@@ -248,7 +280,6 @@ const KayitSayfasi = () => {
                                                             name="city"
                                                             component={CitySelect}
                                                             options={cityOpitons}
-                                                            disabled = {true}
                                                     />
                                                     {submitCount ? (
                                                         errors.city ? (
@@ -265,8 +296,8 @@ const KayitSayfasi = () => {
                                                     <label htmlFor="district">District</label>
                                                     <Field 
                                                             name="district"
-                                                            component={CitySelect}
-                                                            options={cityOpitons}
+                                                            component={DistrictSelect}
+                                                            options={values.city.length == 0 ? [{value: '', label: 'Please select a city first'}] : districtOpitons}
                                                     />
                                                     {submitCount ? (
                                                         errors.district ? (
@@ -279,7 +310,19 @@ const KayitSayfasi = () => {
                                                     )}
                                                 </div>
                                             </div>
-
+                                            <div>
+                                                <label htmlFor="address">Enter Address</label>
+                                                <textarea id="address" rows={3} className="form-textarea" placeholder="Enter Address" required></textarea>
+                                                {submitCount ? (
+                                                        errors.address ? (
+                                                            <div className="text-danger mt-1">{errors.address}</div>
+                                                        ) : (
+                                                            <div className="text-[#1abc9c] mt-1">Looks Good!</div>
+                                                        )
+                                                    ) : (
+                                                        ''
+                                                    )}
+                                            </div>
                                             <div className={submitCount ? (errors.agree ? 'has-error' : 'has-success') : ''}>
                                                 <div className="flex">
                                                     <Field name="agree" id="agree" type="checkbox" className="form-checkbox" />
@@ -295,8 +338,9 @@ const KayitSayfasi = () => {
                                                 type="submit"
                                                 className="btn btn-primary !mt-6"
                                                 onClick={() => {
+                                                    console.log(Object.keys(errors));
                                                     if (Object.keys(touched).length !== 0 && Object.keys(errors).length === 0) {
-                                                        submitForm();
+                                                        submitForm(values);
                                                     }
                                                 }}
                                             >
@@ -308,46 +352,6 @@ const KayitSayfasi = () => {
                             <div className="relative my-7 text-center md:mb-9">
                                 <span className="absolute inset-x-0 top-1/2 h-px w-full -translate-y-1/2 bg-white-light dark:bg-white-dark"></span>
                                 <span className="relative bg-white px-2 font-bold uppercase text-white-dark dark:bg-dark dark:text-white-light">or</span>
-                            </div>
-                            <div className="mb-10 md:mb-[60px]">
-                                <ul className="flex justify-center gap-3.5 text-white">
-                                    <li>
-                                        <Link
-                                            to="#"
-                                            className="inline-flex h-8 w-8 items-center justify-center rounded-full p-0 transition hover:scale-110"
-                                            style={{ background: 'linear-gradient(135deg, rgba(239, 18, 98, 1) 0%, rgba(67, 97, 238, 1) 100%)' }}
-                                        >
-                                            <IconInstagram />
-                                        </Link>
-                                    </li>
-                                    <li>
-                                        <Link
-                                            to="#"
-                                            className="inline-flex h-8 w-8 items-center justify-center rounded-full p-0 transition hover:scale-110"
-                                            style={{ background: 'linear-gradient(135deg, rgba(239, 18, 98, 1) 0%, rgba(67, 97, 238, 1) 100%)' }}
-                                        >
-                                            <IconFacebookCircle />
-                                        </Link>
-                                    </li>
-                                    <li>
-                                        <Link
-                                            to="#"
-                                            className="inline-flex h-8 w-8 items-center justify-center rounded-full p-0 transition hover:scale-110"
-                                            style={{ background: 'linear-gradient(135deg, rgba(239, 18, 98, 1) 0%, rgba(67, 97, 238, 1) 100%)' }}
-                                        >
-                                            <IconTwitter fill={true} />
-                                        </Link>
-                                    </li>
-                                    <li>
-                                        <Link
-                                            to="#"
-                                            className="inline-flex h-8 w-8 items-center justify-center rounded-full p-0 transition hover:scale-110"
-                                            style={{ background: 'linear-gradient(135deg, rgba(239, 18, 98, 1) 0%, rgba(67, 97, 238, 1) 100%)' }}
-                                        >
-                                            <IconGoogle />
-                                        </Link>
-                                    </li>
-                                </ul>
                             </div>
                             <div className="text-center dark:text-white">
                                 Already have an account ?&nbsp;
