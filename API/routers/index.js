@@ -1,5 +1,6 @@
 const express = require("express");
 const options = require("./options.js");
+const login = require("./login.js");
 
 
 
@@ -11,5 +12,6 @@ router.get("/", (req, res) => {
 
 // Router definition
 router.use("/api/options", options);
+router.use("/api/login", login);
 
 module.exports = router;

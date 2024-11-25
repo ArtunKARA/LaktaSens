@@ -156,7 +156,11 @@
     "SIGN UP" : "KAYDOL",
     "or" : "veya",
     "Enter Email": "E-posta Girin",
-    "Enter Password": "Şifre Girin"
+    "Enter Password": "Şifre Girin",
+    "Email or password is incorrect.":"Eposta yada şifre yanlış.",
+    "Warning !":"Hata !",
+    "Your account has been suspended.":"Hesabınız askıya alınmışır.",
+    "A type of user that does not exist.":"Var olmayan bir kullanıcı tütü"
 
 
 }
