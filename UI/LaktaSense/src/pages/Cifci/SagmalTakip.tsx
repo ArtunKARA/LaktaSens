@@ -660,26 +660,17 @@ const MultipleTables = () => {
                                 title: t('Breed'),
                                 sortable: true,
                             },
-                            {
-                                accessor: 'age',
-                                title: t('Age'),
-                                sortable: true,
-                            },
-                            {
-                                accessor: 'weigth',
-                                title: t('Weigth'),
-                                sortable: true,
-                            },
                             { 
-                                accessor: 'lactatioCycle',
-                                title: t('Lactation Cycle'), 
+                                accessor: 'Cycle',
+                                title: t('Cycle'), 
                                 sortable: true 
                             },
-                            { 
-                                accessor: 'calvingCycle',
-                                title: t('Calving Cycle'), 
-                                sortable: true 
+                            {
+                                accessor: 'Kalan Gün Sayısı',
+                                title: t('Number of Days Remaining'),
+                                sortable: true,
                             },
+                           
                             {
                                 accessor: 'status',
                                 title: t('Status'),
@@ -687,8 +678,8 @@ const MultipleTables = () => {
                                 render: () => <span className={`badge bg-${randomColor()} `}>{randomStatus()}</span>,
                             },
                             {
-                                accessor: 'action',
-                                title: t('Action'),
+                                accessor: 'Düzenle',
+                                title: t('Edit'),
                                 titleClassName: '!text-center',
                                 render: () => (
                                     <div className="flex items-center w-max mx-auto gap-2">

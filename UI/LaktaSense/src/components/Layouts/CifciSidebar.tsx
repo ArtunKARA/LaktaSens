@@ -127,13 +127,13 @@ const Sidebar = () => {
                                                     <NavLink to="/cifci/KuruTakip">{t('Dry')}</NavLink>
                                                 </li>
                                                 <li>
-                                                    <NavLink to="/apps/invoice/add">{t('Pregnant')}</NavLink>
+                                                    <NavLink to="/cifci/GebeTakip">{t('Pregnant')}</NavLink>
                                                 </li>
                                                 <li>
-                                                    <NavLink to="/apps/invoice/edit">{t('Service')}</NavLink>
+                                                    <NavLink to="/cifci/ServisTakip">{t('Service')}</NavLink>
                                                 </li>
                                                 <li>
-                                                    <NavLink to="/apps/invoice/edit">{t('To be Removed')}</NavLink>
+                                                    <NavLink to="/cifci/CikarilacaklarTakip">{t('Will Be Removed')}</NavLink>
                                                 </li>
                                             </ul>
                                         </AnimateHeight>

@@ -5,6 +5,9 @@ const CifciDashboard = lazy(() => import('../pages/Cifci/CifciDashboard'));
 const GenelTakip = lazy(() => import('../pages/Cifci/GenelTakip'));
 const SagmalTakip = lazy(() => import('../pages/Cifci/SagmalTakip'));
 const KuruTakip = lazy(() => import('../pages/Cifci/KuruTakip')); 
+const GebeTakip = lazy(() => import('../pages/Cifci/GebeTakip')); 
+const ServisTakip = lazy(() => import('../pages/Cifci/ServisTakip')); 
+const CikarilacaklarTakip = lazy(() => import('../pages/Cifci/CikarilacaklarTakip'));
 const KayitSayfasi = lazy(() => import('../pages/Authentication/KayitSayfasi'));
 const routes = [
     //login page
@@ -41,6 +44,22 @@ const routes = [
     {
         path: '/cifci/KuruTakip',
         element: <KuruTakip />,
+        layout : 'cifci',
+    },
+    //farmer gebe follow page
+    {
+        path: '/cifci/GebeTakip',
+        element: <GebeTakip />,
+        layout : 'cifci',
+    },
+    {
+        path: '/cifci/ServisTakip',
+        element: <ServisTakip />,
+        layout : 'cifci',
+    },
+    {
+        path: '/cifci/CikarilacaklarTakip',
+        element: <CikarilacaklarTakip />,
         layout : 'cifci',
     },
 ];
