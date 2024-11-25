@@ -124,7 +124,7 @@ const Sidebar = () => {
                                                     <NavLink to="/cifci/SagmalTakip">{t('Milking')}</NavLink>
                                                 </li>
                                                 <li>
-                                                    <NavLink to="/apps/invoice/preview">{t('Dry')}</NavLink>
+                                                    <NavLink to="/cifci/KuruTakip">{t('Dry')}</NavLink>
                                                 </li>
                                                 <li>
                                                     <NavLink to="/apps/invoice/add">{t('Pregnant')}</NavLink>
