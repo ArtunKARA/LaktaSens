@@ -146,7 +146,7 @@
     "Weigth" : "Ağırlık",
     "Status" : "Durum",
     "Lactation Cycle" : "Laktasyon Döngüsü",
-    "Calving Cycle" : "Doğum Döngüsü",
+    "Calving Cycle" : "Yavru Döngüsü",
     "Action": "Aksiyon",
     "Sign in": "Giriş yap",
     "Enter your email and password to login": "Giriş yapmak için e-posta ve şifrenizi girin",
@@ -156,7 +156,17 @@
     "SIGN UP" : "KAYDOL",
     "or" : "veya",
     "Enter Email": "E-posta Girin",
-    "Enter Password": "Şifre Girin"
-
-
+    "Enter Password": "Şifre Girin",
+    "Number of Days Remaining": "Kalan Gün Sayısı",
+    "Add Calf": "Yavru ekle",
+    "Service Period": "Servis Periyodu",
+    "Cycle": "Döngü",
+    "Edit": "Düzenle",
+    "Will Be Removed": "Çıkarılacaklar",
+    "Reason": "Sebep",
+    "Delayed Day": "Geciken Gün",
+    "Loop": "Döngüye Al",
+    "Leave The Herd": "Sürüden Çıkar",
+    "Milk Cycle": "Süt Döngüsü",
+    "Detail": "Detay"
 }
