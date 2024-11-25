@@ -64,6 +64,7 @@ const LoginBoxed = () => {
                 hesapDurumu: data.hesapDurumu,
                 eposta: data.eposta,
                 isim: data.isim,
+                soyisim: data.soyisim,
                 telefonNo: data.telefonNo,
                 firmaID: data.firmaID
             };

@@ -156,7 +156,21 @@
     "SIGN UP" : "KAYDOL",
     "or" : "veya",
     "Enter Email": "E-posta Girin",
-    "Enter Password": "Şifre Girin"
-
-
+    "Enter Password": "Şifre Girin",
+    "Email or password is incorrect.":"Eposta yada şifre yanlış.",
+    "Warning !":"Hata !",
+    "Your account has been suspended.":"Hesabınız askıya alınmışır.",
+    "A type of user that does not exist.":"Var olmayan bir kullanıcı tütü",
+    "Number of Days Remaining": "Kalan Gün Sayısı",
+    "Add Calf": "Yavru ekle",
+    "Service Period": "Servis Periyodu",
+    "Cycle": "Döngü",
+    "Edit": "Düzenle",
+    "Will Be Removed": "Çıkarılacaklar",
+    "Reason": "Sebep",
+    "Delayed Day": "Geciken Gün",
+    "Loop": "Döngüye Al",
+    "Leave The Herd": "Sürüden Çıkar",
+    "Milk Cycle": "Süt Döngüsü",
+    "Detail": "Detay"
 }
