@@ -12,82 +12,77 @@ const Layouts = () => {
   }, [dispatch]);
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-      {/* Main Container */}
-      <div className="grid grid-cols-12 gap-4 w-full max-w-screen-xl">
-        {/* Empty Columns for Centering */}
-        <div className="col-span-3"></div>
+    <div className="min-h-screen bg-white flex justify-center items-center">
+      {/* Form Container */}
+      <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-2xl -mt-20">
+        <h5 className="font-semibold text-lg text-gray-700 mb-6 text-center">
+          {t('Detail')}
+        </h5>
 
-        {/* Form Column */}
-        <div className="col-span-6 bg-white rounded-lg shadow-lg p-6">
-          <h5 className="font-semibold text-lg text-gray-700 mb-5 text-center">
-            {t('Detail')}
-          </h5>
-
-          {/* Form Fields */}
-          <form className="space-y-5">
-            <div className="grid grid-cols-2 gap-4">
-              {/* Input Fields */}
-              <div>
-                <input
-                  type="text"
-                  placeholder={t('Id')}
-                  className="form-input w-full"
-                />
-              </div>
-              <div>
-                <input
-                  type="text"
-                  placeholder={t('Name')}
-                  className="form-input w-full"
-                />
-              </div>
-              <div>
-                <input
-                  type="text"
-                  placeholder={t('Breed')}
-                  className="form-input w-full"
-                />
-              </div>
-              <div>
-                <input
-                  type="text"
-                  placeholder={t('Age')}
-                  className="form-input w-full"
-                />
-              </div>
-              <div>
-                <input
-                  type="text"
-                  placeholder={t('Weight')}
-                  className="form-input w-full"
-                />
-              </div>
-              <div>
-                <input
-                  type="text"
-                  placeholder={t('Status in the herd')}
-                  className="form-input w-full"
-                />
-              </div>
+        {/* Form Fields */}
+        <form className="space-y-5">
+          <div className="grid gap-6">
+            {/* Input Fields */}
+            <div>
+              <input
+                type="text"
+                placeholder={t('Id')}
+                className="form-input w-full"
+              />
             </div>
-
-            {/* Required Fields Text */}
-            <div className="!mt-2 text-center">
-              <span className="text-gray-500 text-[11px] inline-block">
-                * {t('Required Fields')}
-              </span>
+            <div>
+              <input
+                type="text"
+                placeholder={t('Name')}
+                className="form-input w-full"
+              />
             </div>
+            <div>
+              <input
+                type="text"
+                placeholder={t('Breed')}
+                className="form-input w-full"
+              />
+            </div>
+          </div>
 
-            {/* Submit Button */}
-            <button type="submit" className="btn btn-primary w-full">
-              {t('Submit')}
-            </button>
-          </form>
-        </div>
+          {/* Döllenme Tuttu Mu? Radio Buttons */}
+          <div className="mb-4">
+            <span className="block font-semibold mb-2">{t('Did the fertilization take?')}</span>
+            <div className="flex items-center space-x-4">
+              <label className="flex items-center">
+                <input
+                  type="radio"
+                  name="fertilization"
+                  value="yes"
+                  className="mr-2"
+                />
+                {t('Yes')}
+              </label>
+              <label className="flex items-center">
+                <input
+                  type="radio"
+                  name="fertilization"
+                  value="no"
+                  className="mr-2"
+                />
+                {t('No')}
+              </label>
+            </div>
+          </div>
 
-        {/* Empty Columns for Centering */}
-        <div className="col-span-3"></div>
+          {/* Required Fields Text */}
+          <div className="!mt-2 text-center">
+            <span className="text-gray-500 text-[11px] inline-block">
+              * {t('Required Fields')}
+            </span>
+          </div>
+
+          {/* Submit Button */}
+          <button type="submit" className="btn btn-primary w-full">
+            {t('Submit')}
+          </button>
+        </form>
       </div>
     </div>
   );
