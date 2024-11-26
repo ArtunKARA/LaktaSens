@@ -1,8 +1,12 @@
 const express = require("express");
 const options = require("./options.js");
 const login = require("./login.js");
-const genelTakip = require("./genel-takip.js");
-
+const genelTakip = require("./çiftçi/genel-takip.js");
+const kullanıcı = require("./kullanıcı.js");
+const sağım = require("./çiftçi/sağım.js");
+const kuru = require("./çiftçi/kuru.js");
+const gebe = require("./çiftçi/gebe.js");
+const servis = require("./çiftçi/servis.js");
 
 const router = express.Router();
 
@@ -13,6 +17,11 @@ router.get("/", (req, res) => {
 // Router definition
 router.use("/api/options", options);
 router.use("/api/login", login);
-router.use("/api/genelTakip",genelTakip)
+router.use("/api/genelTakip",genelTakip);
+router.use("/api/kullanıcı",kullanıcı);
+router.use("/api/sağım",sağım);
+router.use("/api/kuru",kuru);
+router.use("/api/gebe",gebe);
+router.use("/api/servis",servis);
 
 module.exports = router;

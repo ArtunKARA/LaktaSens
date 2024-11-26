@@ -1,4 +1,4 @@
-const { poolPromise } = require("../service/connection.js");
+const { poolPromise } = require("../../service/connection.js");
 
 exports.postGenelTakip = async (req, res) => {
     const {
