@@ -1,7 +1,8 @@
 -- Firmalar tablosuna veri ekleme
-INSERT INTO firmalar (ciftlikAdi, telefonNo, ciftlikAdresi, bolge, hesapDurumu) VALUES
+INSERT INTO firmalar (firmaAdi, telefonNo, firmaAdresi, bolge, hesapDurumu) VALUES
 (N'Çiftlik A', '1234567890', N'Adres 1, Şehir', 'A', 'A'),
-(N'Çiftlik B', '0987654321', N'Adres 2, Şehir', 'B', 'A');
+(N'Çiftlik B', '0987654321', N'Adres 2, Şehir', 'B', 'A'),
+(N'MaxTedarik', '1234567890', N'Adres 3, Şehir', 'A', 'A');
 GO
 
 -- İnek tablosuna veri ekleme
@@ -124,4 +125,21 @@ INSERT INTO sutOlcum (makineID, sutMiktar, inekID, sagimTarihi) VALUES
 (1, 8, 4, '2024-10-22'),
 (1, 9, 4, '2024-10-21'),
 (2, 8, 4, '2022-10-20');
+GO
+
+-- Kullanıcılar tablosuna veri ekleme
+INSERT INTO kullanicilar (kullaniciAdi, eposta, parola, kullaniciTuru, isim, soyisim, telefonNo, hesapDurumu, firmaID)
+VALUES
+-- Admin Kullanıcısı
+('admin1', 'admin1@example.com', 'password123', 'a', 'Ahmet', 'Yılmaz', '5301234567', 'a', 1),
+
+-- Çiftçi Kullanıcıları
+('ciftci1', 'ciftci1@example.com', 'password123', 'c', 'Ali', 'Kaya', '5312345678', 'a', 2),
+('ciftci2', 'ciftci2@example.com', 'password123', 'c', 'Ayşe', 'Demir', '5323456789', 'p', 2),
+('ciftci3', 'ciftci3@example.com', 'password123', 'c', 'Mehmet', 'Çelik', '5334567890', 'b', 2),
+
+-- Tedarikçi Kullanıcıları
+('tedarikci1', 'tedarikci1@example.com', 'password123', 't', 'Zeynep', 'Şahin', '5345678901', 'a', 3),
+('tedarikci2', 'tedarikci2@example.com', 'password123', 't', 'Fatma', 'Eren', '5356789012', 'p', 3),
+('tedarikci3', 'tedarikci3@example.com', 'password123', 't', 'Hakan', 'Koç', '5367890123', 'b', 3);
 GO

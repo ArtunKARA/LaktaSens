@@ -1,5 +1,6 @@
 import path from 'path';
 import { lazy } from 'react';
+import AuthGuard from './AuthGuard';
 const LoginBoxed = lazy(() => import('../pages/Authentication/LoginBoxed'));
 const CifciDashboard = lazy(() => import('../pages/Cifci/CifciDashboard'));
 const GenelTakip = lazy(() => import('../pages/Cifci/GenelTakip'));
@@ -26,41 +27,41 @@ const routes = [
     //farmer dashboard
     {
         path: '/cifci/dashboard',
-        element: <CifciDashboard />,
+        element:<AuthGuard allowedRoles={['c']}><CifciDashboard /></AuthGuard>,
         layout : 'cifci',
     },
     //farmer general follow page
     {
         path: '/cifci/GenelTakip',
-        element: <GenelTakip />,
+        element: <AuthGuard allowedRoles={['c']}><GenelTakip /></AuthGuard>,
         layout : 'cifci',
     },
     //farmer sagmal follow page
     {
         path: '/cifci/SagmalTakip',
-        element: <SagmalTakip />,
+        element: <AuthGuard allowedRoles={['c']}><SagmalTakip /></AuthGuard>,
         layout : 'cifci',
     },
     //farmer kuru follow page
     {
         path: '/cifci/KuruTakip',
-        element: <KuruTakip />,
+        element: <AuthGuard allowedRoles={['c']}><KuruTakip /></AuthGuard>,
         layout : 'cifci',
     },
     //farmer gebe follow page
     {
         path: '/cifci/GebeTakip',
-        element: <GebeTakip />,
+        element: <AuthGuard allowedRoles={['c']}><GebeTakip /></AuthGuard>,
         layout : 'cifci',
     },
     {
         path: '/cifci/ServisTakip',
-        element: <ServisTakip />,
+        element: <AuthGuard allowedRoles={['c']}><ServisTakip /></AuthGuard>,
         layout : 'cifci',
     },
     {
         path: '/cifci/CikarilacaklarTakip',
-        element: <CikarilacaklarTakip />,
+        element: <AuthGuard allowedRoles={['c']}><CikarilacaklarTakip /></AuthGuard>,
         layout : 'cifci',
     },
     {

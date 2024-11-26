@@ -96,11 +96,11 @@ CREATE TABLE kullanicilar (
     kullaniciAdi NVARCHAR(50),
     eposta NVARCHAR(50),
     parola NVARCHAR(50),
-    kullaniciTuru CHAR(1),
+    kullaniciTuru CHAR(1), -- a admin,c ciftci,t tedarikçi  
     isim NVARCHAR(50),
     soyisim NVARCHAR(50),
     telefonNo NVARCHAR(10),
-    hesapDurumu CHAR(1),
+    hesapDurumu CHAR(1), -- a aktif, p pasif,b beklemede 
     firmaID INT,
     FOREIGN KEY (firmaID) REFERENCES firmalar(firmaID)
 );
