@@ -8,6 +8,7 @@ const KuruTakip = lazy(() => import('../pages/Cifci/KuruTakip'));
 const GebeTakip = lazy(() => import('../pages/Cifci/GebeTakip')); 
 const ServisTakip = lazy(() => import('../pages/Cifci/ServisTakip')); 
 const CikarilacaklarTakip = lazy(() => import('../pages/Cifci/CikarilacaklarTakip'));
+const GenelTakipDetay = lazy(() => import('../pages/Cifci/GenelTakipDetay'));
 const KayitSayfasi = lazy(() => import('../pages/Authentication/KayitSayfasi'));
 const routes = [
     //login page
@@ -60,6 +61,11 @@ const routes = [
     {
         path: '/cifci/CikarilacaklarTakip',
         element: <CikarilacaklarTakip />,
+        layout : 'cifci',
+    },
+    {
+        path: '/cifci/GenelTakipDetay',
+        element: <GenelTakipDetay />,
         layout : 'cifci',
     },
 ];

@@ -135,6 +135,9 @@ const Sidebar = () => {
                                                 <li>
                                                     <NavLink to="/cifci/CikarilacaklarTakip">{t('Will Be Removed')}</NavLink>
                                                 </li>
+                                                <li>
+                                                    <NavLink to="/cifci/GenelTakipDetay">{t('Detail')}</NavLink>
+                                                </li>
                                             </ul>
                                         </AnimateHeight>
                                     </li>
