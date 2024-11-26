@@ -20,7 +20,12 @@ SELECT
             END
         ELSE NULL -- Bilinmiyor durumu için NULL döndür
     END AS kalanGun
-FROM inek;
+FROM 
+    inek
+JOIN 
+    kullanicilar ON inek.firmaID = kullanicilar.firmaID
+WHERE 
+    kullanicilar.kullaniciID = 1;
 
 -- Servis ve Gebe Kalan Gün Analizi
 SELECT 
@@ -45,7 +50,12 @@ SELECT
             END
         ELSE NULL
     END AS guncelGunSayisi
-FROM inek;
+FROM 
+    inek
+JOIN 
+    kullanicilar ON inek.firmaID = kullanicilar.firmaID
+WHERE 
+    kullanicilar.kullaniciID = 1;
 -- Genel Takip tablosu MySQL kodu
 USE laktasense;
 
@@ -110,36 +120,33 @@ FROM
 USE laktasense;
 
 SELECT 
-    inek.inekID AS [İnek ID],
-    inek.ad AS [İnek Adı],
-    inek.irk AS [Irkı],
-    
-    -- Yaş hesaplama
-    DATEDIFF(YEAR, inek.dogumTarihi, GETDATE()) AS [Yaşı],
-
-    inek.kilo AS [Kilosu],
+    inek.inekID AS "İnek ID",
+    inek.ad AS "İnek Adı",
+    inek.irk AS "Irkı",
+    DATEDIFF(YEAR, inek.dogumTarihi, GETDATE()) AS "Yaşı",  -- Yaş hesaplama
+    inek.kilo AS "Kilosu",
     
     -- Süt döngüsünün durumu
     CASE 
         WHEN inek.sonDogurmaTarihi > inek.sonKuruTarihi THEN 'Sağımda'
         WHEN inek.sonKuruTarihi > inek.sonDogurmaTarihi THEN 'Kuruda'
         ELSE 'Bilinmiyor'
-    END AS [Süt Döngüsü Durumu],
+    END AS "Süt Döngüsü Durumu",
     
     -- Süt kalan gün durumu
     CASE 
         WHEN inek.sonDogurmaTarihi > inek.sonKuruTarihi THEN 
             CASE 
-                WHEN 305 - DATEDIFF(DAY, inek.sonDogurmaTarihi, GETDATE()) < 0 THEN 'Kontrol Edilmeli'
+                WHEN 305 - DATEDIFF(DAY, GETDATE(), inek.sonDogurmaTarihi) < 0 THEN 'Kontrol Edilmeli'
                 ELSE 'Normal'
             END
         WHEN inek.sonKuruTarihi > inek.sonDogurmaTarihi THEN 
             CASE 
-                WHEN 60 - DATEDIFF(DAY, inek.sonKuruTarihi, GETDATE()) < 0 THEN 'Kontrol Edilmeli'
+                WHEN 60 - DATEDIFF(DAY, GETDATE(), inek.sonKuruTarihi) < 0 THEN 'Kontrol Edilmeli'
                 ELSE 'Normal'
             END
         ELSE 'Kontrol Edilmeli'
-    END AS [Süt Kalan Gün Durumu],
+    END AS "Süt Kalan Gün Durumu",
 
     -- Yavru döngüsünün durumu
     CASE 
@@ -147,28 +154,33 @@ SELECT
         WHEN (inek.sonDollenme < inek.sonDogurmaTarihi AND (inek.tuttuMu = 'H' OR inek.tuttuMu IS NULL)) 
              OR (inek.sonDollenme > inek.sonDogurmaTarihi AND (inek.tuttuMu = 'H' OR inek.tuttuMu IS NULL)) THEN 'Serviste'
         ELSE 'Çıkarılmalı'
-    END AS [Yavru Döngüsü Durumu],
+    END AS "Yavru Döngüsü Durumu",
 
     -- Yavru kalan gün durumu
     CASE 
         WHEN inek.sonDollenme > inek.sonDogurmaTarihi AND inek.tuttuMu = 'E' THEN 
             CASE 
-                WHEN 280 - DATEDIFF(DAY, inek.sonDollenme, GETDATE()) < 0 THEN 'Kontrol Edilmeli'
+                WHEN 280 - DATEDIFF(DAY, GETDATE(), inek.sonDollenme) < 0 THEN 'Kontrol Edilmeli'
                 ELSE 'Normal'
             END
         WHEN (inek.sonDollenme < inek.sonDogurmaTarihi AND (inek.tuttuMu = 'H' OR inek.tuttuMu IS NULL)) 
              OR (inek.sonDollenme > inek.sonDogurmaTarihi AND (inek.tuttuMu = 'H' OR inek.tuttuMu IS NULL)) THEN
             CASE 
-                WHEN inek.tuttuMu = 'E' AND 280 - DATEDIFF(DAY, inek.sonDollenme, GETDATE()) < 0 THEN 'Kontrol Edilmeli'
-                WHEN inek.dollenmeSayisi IS NULL AND 85 - DATEDIFF(DAY, inek.sonDogurmaTarihi, GETDATE()) < 0 THEN 'Kontrol Edilmeli'
-                WHEN inek.dollenmeSayisi = 1 AND 106 - DATEDIFF(DAY, inek.sonDogurmaTarihi, GETDATE()) < 0 THEN 'Kontrol Edilmeli'
-                WHEN inek.dollenmeSayisi = 2 AND 127 - DATEDIFF(DAY, inek.sonDogurmaTarihi, GETDATE()) < 0 THEN 'Kontrol Edilmeli'
+                WHEN inek.tuttuMu = 'E' AND 280 - DATEDIFF(DAY, GETDATE(), inek.sonDollenme) < 0 THEN 'Kontrol Edilmeli'
+                WHEN inek.dollenmeSayisi IS NULL AND 85 - DATEDIFF(DAY, GETDATE(), inek.sonDogurmaTarihi) < 0 THEN 'Kontrol Edilmeli'
+                WHEN inek.dollenmeSayisi = 1 AND 106 - DATEDIFF(DAY, GETDATE(), inek.sonDogurmaTarihi) < 0 THEN 'Kontrol Edilmeli'
+                WHEN inek.dollenmeSayisi = 2 AND 127 - DATEDIFF(DAY, GETDATE(), inek.sonDogurmaTarihi) < 0 THEN 'Kontrol Edilmeli'
                 ELSE 'Normal'
             END
         ELSE 'Kontrol Edilmeli'
-    END AS [Yavru Kalan Gün Durumu]
+    END AS "Yavru Kalan Gün Durumu"
 FROM 
-    inek;
+    inek
+JOIN 
+    kullanicilar ON inek.firmaID = kullanicilar.firmaID
+WHERE 
+    kullanicilar.kullaniciID = 1;
+
 
 -- çıkarılacak tablosu mysql kodu 
 USE laktasense;
@@ -208,9 +220,12 @@ SELECT
 
 FROM 
     inek
+JOIN 
+    kullanicilar ON inek.firmaID = kullanicilar.firmaID
 WHERE 
+    kullanicilar.kullaniciID = 2
     -- Sadece geçerli bir "Sebep" (gecikme durumu) olan inekleri seçiyoruz
-    (
+   And (
         (inek.sonDogurmaTarihi > inek.sonKuruTarihi AND 305 - DATEDIFF(CURDATE(), inek.sonDogurmaTarihi) < 0) 
         OR (inek.sonKuruTarihi > inek.sonDogurmaTarihi AND 60 - DATEDIFF(CURDATE(), inek.sonKuruTarihi) < 0)
         OR (inek.sonDollenme > inek.sonDogurmaTarihi AND inek.tuttuMu = 'E' AND 280 - DATEDIFF(CURDATE(), inek.sonDollenme) < 0)
@@ -248,16 +263,16 @@ SELECT
     
     -- Sebep sütununda gecikme durumu ve döngü adı
     CASE 
-        WHEN inek.sonDogurmaTarihi > inek.sonKuruTarihi AND 305 - DATEDIFF(DAY, inek.sonDogurmaTarihi, GETDATE()) < 0 THEN CONCAT('Sağımda ', 305 - DATEDIFF(DAY, inek.sonDogurmaTarihi, GETDATE()), ' gün gecikme')
-        WHEN inek.sonKuruTarihi > inek.sonDogurmaTarihi AND 60 - DATEDIFF(DAY, inek.sonKuruTarihi, GETDATE()) < 0 THEN CONCAT('Kuruda ', 60 - DATEDIFF(DAY, inek.sonKuruTarihi, GETDATE()), ' gün gecikme')
-        WHEN inek.sonDollenme > inek.sonDogurmaTarihi AND inek.tuttuMu = 'E' AND 280 - DATEDIFF(DAY, inek.sonDollenme, GETDATE()) < 0 THEN CONCAT('Gebe ', 280 - DATEDIFF(DAY, inek.sonDollenme, GETDATE()), ' gün gecikme')
+        WHEN inek.sonDogurmaTarihi > inek.sonKuruTarihi AND 305 - DATEDIFF(DAY, GETDATE(), inek.sonDogurmaTarihi) < 0 THEN CONCAT('Sağımda ', 305 - DATEDIFF(DAY, GETDATE(), inek.sonDogurmaTarihi), ' gün gecikme')
+        WHEN inek.sonKuruTarihi > inek.sonDogurmaTarihi AND 60 - DATEDIFF(DAY, GETDATE(), inek.sonKuruTarihi) < 0 THEN CONCAT('Kuruda ', 60 - DATEDIFF(DAY, GETDATE(), inek.sonKuruTarihi), ' gün gecikme')
+        WHEN inek.sonDollenme > inek.sonDogurmaTarihi AND inek.tuttuMu = 'E' AND 280 - DATEDIFF(DAY, GETDATE(), inek.sonDollenme) < 0 THEN CONCAT('Gebe ', 280 - DATEDIFF(DAY, GETDATE(), inek.sonDollenme), ' gün gecikme')
         WHEN (inek.sonDollenme < inek.sonDogurmaTarihi AND (inek.tuttuMu = 'H' OR inek.tuttuMu IS NULL)) 
              OR (inek.sonDollenme > inek.sonDogurmaTarihi AND (inek.tuttuMu = 'H' OR inek.tuttuMu IS NULL)) THEN
             CASE 
-                WHEN inek.tuttuMu = 'E' AND 280 - DATEDIFF(DAY, inek.sonDollenme, GETDATE()) < 0 THEN CONCAT('Gebe ', 280 - DATEDIFF(DAY, inek.sonDollenme, GETDATE()), ' gün gecikme')
-                WHEN inek.dollenmeSayisi IS NULL AND 85 - DATEDIFF(DAY, inek.sonDogurmaTarihi, GETDATE()) < 0 THEN CONCAT('Serviste ', 85 - DATEDIFF(DAY, inek.sonDogurmaTarihi, GETDATE()), ' gün gecikme')
-                WHEN inek.dollenmeSayisi = 1 AND 106 - DATEDIFF(DAY, inek.sonDogurmaTarihi, GETDATE()) < 0 THEN CONCAT('Serviste ', 106 - DATEDIFF(DAY, inek.sonDogurmaTarihi, GETDATE()), ' gün gecikme')
-                WHEN inek.dollenmeSayisi = 2 AND 127 - DATEDIFF(DAY, inek.sonDogurmaTarihi, GETDATE()) < 0 THEN CONCAT('Serviste ', 127 - DATEDIFF(DAY, inek.sonDogurmaTarihi, GETDATE()), ' gün gecikme')
+                WHEN inek.tuttuMu = 'E' AND 280 - DATEDIFF(DAY, GETDATE(), inek.sonDollenme) < 0 THEN CONCAT('Gebe ', 280 - DATEDIFF(DAY, GETDATE(), inek.sonDollenme), ' gün gecikme')
+                WHEN inek.dollenmeSayisi IS NULL AND 85 - DATEDIFF(DAY, GETDATE(), inek.sonDogurmaTarihi) < 0 THEN CONCAT('Serviste ', 85 - DATEDIFF(DAY, GETDATE(), inek.sonDogurmaTarihi), ' gün gecikme')
+                WHEN inek.dollenmeSayisi = 1 AND 106 - DATEDIFF(DAY, GETDATE(), inek.sonDogurmaTarihi) < 0 THEN CONCAT('Serviste ', 106 - DATEDIFF(DAY, GETDATE(), inek.sonDogurmaTarihi), ' gün gecikme')
+                WHEN inek.dollenmeSayisi = 2 AND 127 - DATEDIFF(DAY, GETDATE(), inek.sonDogurmaTarihi) < 0 THEN CONCAT('Serviste ', 127 - DATEDIFF(DAY, GETDATE(), inek.sonDogurmaTarihi), ' gün gecikme')
                 ELSE NULL
             END
         ELSE NULL
@@ -265,46 +280,51 @@ SELECT
 
     -- Kalan gün sayısı
     CASE 
-        WHEN inek.sonDogurmaTarihi > inek.sonKuruTarihi AND 305 - DATEDIFF(DAY, inek.sonDogurmaTarihi, GETDATE()) < 0 THEN 305 - DATEDIFF(DAY, inek.sonDogurmaTarihi, GETDATE())
-        WHEN inek.sonKuruTarihi > inek.sonDogurmaTarihi AND 60 - DATEDIFF(DAY, inek.sonKuruTarihi, GETDATE()) < 0 THEN 60 - DATEDIFF(DAY, inek.sonKuruTarihi, GETDATE())
-        WHEN inek.sonDollenme > inek.sonDogurmaTarihi AND inek.tuttuMu = 'E' AND 280 - DATEDIFF(DAY, inek.sonDollenme, GETDATE()) < 0 THEN 280 - DATEDIFF(DAY, inek.sonDollenme, GETDATE())
-        WHEN inek.dollenmeSayisi IS NULL AND 85 - DATEDIFF(DAY, inek.sonDogurmaTarihi, GETDATE()) < 0 THEN 85 - DATEDIFF(DAY, inek.sonDogurmaTarihi, GETDATE())
-        WHEN inek.dollenmeSayisi = 1 AND 106 - DATEDIFF(DAY, inek.sonDogurmaTarihi, GETDATE()) < 0 THEN 106 - DATEDIFF(DAY, inek.sonDogurmaTarihi, GETDATE())
-        WHEN inek.dollenmeSayisi = 2 AND 127 - DATEDIFF(DAY, inek.sonDogurmaTarihi, GETDATE()) < 0 THEN 127 - DATEDIFF(DAY, inek.sonDogurmaTarihi, GETDATE())
+        WHEN inek.sonDogurmaTarihi > inek.sonKuruTarihi AND 305 - DATEDIFF(DAY, GETDATE(), inek.sonDogurmaTarihi) < 0 THEN 305 - DATEDIFF(DAY, GETDATE(), inek.sonDogurmaTarihi)
+        WHEN inek.sonKuruTarihi > inek.sonDogurmaTarihi AND 60 - DATEDIFF(DAY, GETDATE(), inek.sonKuruTarihi) < 0 THEN 60 - DATEDIFF(DAY, GETDATE(), inek.sonKuruTarihi)
+        WHEN inek.sonDollenme > inek.sonDogurmaTarihi AND inek.tuttuMu = 'E' AND 280 - DATEDIFF(DAY, GETDATE(), inek.sonDollenme) < 0 THEN 280 - DATEDIFF(DAY, GETDATE(), inek.sonDollenme)
+        WHEN inek.dollenmeSayisi IS NULL AND 85 - DATEDIFF(DAY, GETDATE(), inek.sonDogurmaTarihi) < 0 THEN 85 - DATEDIFF(DAY, GETDATE(), inek.sonDogurmaTarihi)
+        WHEN inek.dollenmeSayisi = 1 AND 106 - DATEDIFF(DAY, GETDATE(), inek.sonDogurmaTarihi) < 0 THEN 106 - DATEDIFF(DAY, GETDATE(), inek.sonDogurmaTarihi)
+        WHEN inek.dollenmeSayisi = 2 AND 127 - DATEDIFF(DAY, GETDATE(), inek.sonDogurmaTarihi) < 0 THEN 127 - DATEDIFF(DAY, GETDATE(), inek.sonDogurmaTarihi)
         ELSE NULL
     END AS "Sütun"
 
 FROM 
     inek
+JOIN 
+    kullanicilar ON inek.firmaID = kullanicilar.firmaID
 WHERE 
+    kullanicilar.kullaniciID = 2
     -- Sadece geçerli bir "Sebep" (gecikme durumu) olan inekleri seçiyoruz
-    (
-        (inek.sonDogurmaTarihi > inek.sonKuruTarihi AND 305 - DATEDIFF(DAY, inek.sonDogurmaTarihi, GETDATE()) < 0) 
-        OR (inek.sonKuruTarihi > inek.sonDogurmaTarihi AND 60 - DATEDIFF(DAY, inek.sonKuruTarihi, GETDATE()) < 0)
-        OR (inek.sonDollenme > inek.sonDogurmaTarihi AND inek.tuttuMu = 'E' AND 280 - DATEDIFF(DAY, inek.sonDollenme, GETDATE()) < 0)
-        OR (inek.dollenmeSayisi IS NULL AND 85 - DATEDIFF(DAY, inek.sonDogurmaTarihi, GETDATE()) < 0)
-        OR (inek.dollenmeSayisi = 1 AND 106 - DATEDIFF(DAY, inek.sonDogurmaTarihi, GETDATE()) < 0)
-        OR (inek.dollenmeSayisi = 2 AND 127 - DATEDIFF(DAY, inek.sonDogurmaTarihi, GETDATE()) < 0)
+    AND (
+        (inek.sonDogurmaTarihi > inek.sonKuruTarihi AND 305 - DATEDIFF(DAY, GETDATE(), inek.sonDogurmaTarihi) < 0) 
+        OR (inek.sonKuruTarihi > inek.sonDogurmaTarihi AND 60 - DATEDIFF(DAY, GETDATE(), inek.sonKuruTarihi) < 0)
+        OR (inek.sonDollenme > inek.sonDogurmaTarihi AND inek.tuttuMu = 'E' AND 280 - DATEDIFF(DAY, GETDATE(), inek.sonDollenme) < 0)
+        OR (inek.dollenmeSayisi IS NULL AND 85 - DATEDIFF(DAY, GETDATE(), inek.sonDogurmaTarihi) < 0)
+        OR (inek.dollenmeSayisi = 1 AND 106 - DATEDIFF(DAY, GETDATE(), inek.sonDogurmaTarihi) < 0)
+        OR (inek.dollenmeSayisi = 2 AND 127 - DATEDIFF(DAY, GETDATE(), inek.sonDogurmaTarihi) < 0)
     )
     AND 
     -- "Sebep" sütununda geçerli bir değer olmalı, NULL olamaz
     (
         CASE 
-            WHEN inek.sonDogurmaTarihi > inek.sonKuruTarihi AND 305 - DATEDIFF(DAY, inek.sonDogurmaTarihi, GETDATE()) < 0 THEN 1
-            WHEN inek.sonKuruTarihi > inek.sonDogurmaTarihi AND 60 - DATEDIFF(DAY, inek.sonKuruTarihi, GETDATE()) < 0 THEN 1
-            WHEN inek.sonDollenme > inek.sonDogurmaTarihi AND inek.tuttuMu = 'E' AND 280 - DATEDIFF(DAY, inek.sonDollenme, GETDATE()) < 0 THEN 1
+            WHEN inek.sonDogurmaTarihi > inek.sonKuruTarihi AND 305 - DATEDIFF(DAY, GETDATE(), inek.sonDogurmaTarihi) < 0 THEN 1
+            WHEN inek.sonKuruTarihi > inek.sonDogurmaTarihi AND 60 - DATEDIFF(DAY, GETDATE(), inek.sonKuruTarihi) < 0 THEN 1
+            WHEN inek.sonDollenme > inek.sonDogurmaTarihi AND inek.tuttuMu = 'E' AND 280 - DATEDIFF(DAY, GETDATE(), inek.sonDollenme) < 0 THEN 1
             WHEN (inek.sonDollenme < inek.sonDogurmaTarihi AND (inek.tuttuMu = 'H' OR inek.tuttuMu IS NULL)) 
                  OR (inek.sonDollenme > inek.sonDogurmaTarihi AND (inek.tuttuMu = 'H' OR inek.tuttuMu IS NULL)) THEN
                 CASE 
-                    WHEN inek.tuttuMu = 'E' AND 280 - DATEDIFF(DAY, inek.sonDollenme, GETDATE()) < 0 THEN 1
-                    WHEN inek.dollenmeSayisi IS NULL AND 85 - DATEDIFF(DAY, inek.sonDogurmaTarihi, GETDATE()) < 0 THEN 1
-                    WHEN inek.dollenmeSayisi = 1 AND 106 - DATEDIFF(DAY, inek.sonDogurmaTarihi, GETDATE()) < 0 THEN 1
-                    WHEN inek.dollenmeSayisi = 2 AND 127 - DATEDIFF(DAY, inek.sonDogurmaTarihi, GETDATE()) < 0 THEN 1
+                    WHEN inek.tuttuMu = 'E' AND 280 - DATEDIFF(DAY, GETDATE(), inek.sonDollenme) < 0 THEN 1
+                    WHEN inek.dollenmeSayisi IS NULL AND 85 - DATEDIFF(DAY, GETDATE(), inek.sonDogurmaTarihi) < 0 THEN 1
+                    WHEN inek.dollenmeSayisi = 1 AND 106 - DATEDIFF(DAY, GETDATE(), inek.sonDogurmaTarihi) < 0 THEN 1
+                    WHEN inek.dollenmeSayisi = 2 AND 127 - DATEDIFF(DAY, GETDATE(), inek.sonDogurmaTarihi) < 0 THEN 1
                     ELSE 0
                 END
             ELSE 0
         END > 0
     );
+
+
     -- yaşam payı hesabı
     SELECT 
     inek.inekID AS "İnek ID",
@@ -314,5 +334,9 @@ WHERE
     -- Yaşam Payı Enerji İhtiyacı Hesaplama
     0.086 * 0.75 * inek.kilo AS "Yaşam Payı Enerji İhtiyacı (Mcal)"
 FROM 
-    inek;
+    inek
+JOIN 
+    kullanicilar ON inek.firmaID = kullanicilar.firmaID
+WHERE 
+    kullanicilar.kullaniciID = 1; -- Kullanıcı ID'si burada belirtiliyor
 
