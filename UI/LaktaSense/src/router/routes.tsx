@@ -9,6 +9,9 @@ const KuruTakip = lazy(() => import('../pages/Cifci/KuruTakip'));
 const GebeTakip = lazy(() => import('../pages/Cifci/GebeTakip')); 
 const ServisTakip = lazy(() => import('../pages/Cifci/ServisTakip')); 
 const CikarilacaklarTakip = lazy(() => import('../pages/Cifci/CikarilacaklarTakip'));
+const GenelTakipDetay = lazy(() => import('../pages/Cifci/GenelTakipDetay'));
+const InekEkle= lazy(() => import('../pages/Cifci/InekEkle'));
+const ServisTakipDetay= lazy(() => import('../pages/Cifci/ServisTakipDetay'));
 const KayitSayfasi = lazy(() => import('../pages/Authentication/KayitSayfasi'));
 const routes = [
     //login page
@@ -53,14 +56,34 @@ const routes = [
         element: <AuthGuard allowedRoles={['c']}><GebeTakip /></AuthGuard>,
         layout : 'cifci',
     },
+    //Farmer servis takip sayfası
     {
         path: '/cifci/ServisTakip',
         element: <AuthGuard allowedRoles={['c']}><ServisTakip /></AuthGuard>,
         layout : 'cifci',
     },
+    // Farmer çıkarılacaklar takip sayfası
     {
         path: '/cifci/CikarilacaklarTakip',
         element: <AuthGuard allowedRoles={['c']}><CikarilacaklarTakip /></AuthGuard>,
+        layout : 'cifci',
+    },
+    //Farmer genel takip detay sayfası
+    {
+        path: '/cifci/GenelTakipDetay',
+       element: <GenelTakipDetay />,
+        layout : 'cifci',
+    },
+    //Farmer inek ekle sayfası
+    {
+        path: '/cifci/InekEkle',
+        element: <InekEkle />,
+        layout : 'cifci',
+    },
+       //Farmer servis detay sayfası
+       {
+        path: '/cifci/ServisTakipDetay',
+        element: <ServisTakipDetay />,
         layout : 'cifci',
     },
 ];

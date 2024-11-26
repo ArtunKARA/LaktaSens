@@ -146,7 +146,7 @@
     "Weigth" : "Ağırlık",
     "Status" : "Durum",
     "Lactation Cycle" : "Laktasyon Döngüsü",
-    "Calving Cycle" : "Yavru Döngüsü",
+    "Calvin Cycle" : "Yavru Döngüsü",
     "Action": "Aksiyon",
     "Sign in": "Giriş yap",
     "Enter your email and password to login": "Giriş yapmak için e-posta ve şifrenizi girin",
@@ -172,5 +172,33 @@
     "Loop": "Döngüye Al",
     "Leave The Herd": "Sürüden Çıkar",
     "Milk Cycle": "Süt Döngüsü",
-    "Detail": "Detay"
+    "Detail": "Detay",
+    "First Name": "Adınız",
+    "Name": "Adı",
+    "Id": "Id",
+    "Enter First Name": "Adınızı Giriniz",
+    "Last Name": "Soy Adınız",
+    "Enter Last Name": "Soy Adınızı Giriniz",
+    "TC Number": "TC Numaranız",
+    "Enter TC Number": "TC Numaranızı Giriniz",
+    "City": "İl",
+    "District": "İlçe",
+    "Address": "Adres",
+    "Enter Address": "Adres Giriniz",
+    "Agree to terms and conditions": "Şartlar ve koşulları kabul ediyorum",
+    "Submit Form": "Formu Gönder",
+    "Please select a city": "Lütfen şehir seçiniz",
+    "Please select a city first": "Lütfen önce şehir seçiniz",
+    "or": "veya",
+    "Already have an account ?": "Zaten bir hasabınız var mı?",
+    "SIGN IN": "Giriş Yap",
+    "Enter your email and password to register": "Kayıt olmak için e-posta adresinizi ve şifrenizi girin",
+    "Sign Up": "Üye Ol",
+    "Average milk production/month": "ortalama süt üretimi/ay",
+    "Life share account": "Yaşam payı hesabı",
+    "Status in the herd": "Sürüdeki Durumu",
+    "Submit": "Gönder"
+
+    
+    
 }

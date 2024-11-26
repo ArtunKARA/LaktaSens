@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { IRootState } from '../../store';
@@ -21,6 +22,7 @@ import { s } from '@fullcalendar/core/internal-common';
 
 
 const KayitSayfasi = () => {
+    const { t } = useTranslation();
     const dispatch = useDispatch();
     const [cityOpitons, setCityOptions] = useState<OptionType[]>([]);
     const [districtOpitons, setDistrictOptions] = useState<OptionType[]>([]);
@@ -127,7 +129,7 @@ const KayitSayfasi = () => {
                 options={options}
                 value={options ? options.find(option => option.value === field.value) : null}
                 onChange={handleChange}
-                placeholder="Please select a city"
+                placeholder={t('Please select a city')}
                 isSearchable={true}
                 isClearable={true}
             />
@@ -143,7 +145,7 @@ const KayitSayfasi = () => {
                 options={options}
                 value={options ? options.find(option => option.value === field.value) : null}
                 onChange={handleChange}
-                placeholder="Please select a city"
+                placeholder={t('Please select a city')}
                 isSearchable={true}
                 isClearable={true}
             />
@@ -206,8 +208,8 @@ const KayitSayfasi = () => {
                         </div>
                         <div className="mx-auto w-full max-w-[440px]">
                             <div className="mb-10">
-                                <h1 className="text-3xl font-extrabold uppercase !leading-snug text-primary md:text-4xl">Sign Up</h1>
-                                <p className="text-base font-bold leading-normal text-white-dark">Enter your email and password to register</p>
+                                <h1 className="text-3xl font-extrabold uppercase !leading-snug text-primary md:text-4xl">{t('Sign Up')}</h1>
+                                <p className="text-base font-bold leading-normal text-white-dark">{t('Enter your email and password to register')}</p>
                             </div>
                                 <Formik
                                     initialValues={{
@@ -229,8 +231,8 @@ const KayitSayfasi = () => {
                                         <Form className="space-y-5">
                                             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                                                 <div>
-                                                    <label htmlFor="firstname">First Name </label>
-                                                    <Field name="firstname" type="text" id="firstname" placeholder="Enter First Name" className="form-input" />
+                                                    <label htmlFor="firstname">{t('First Name')}</label>
+                                                    <Field name="firstname" type="text" id="firstname" placeholder={t('Enter First Name')} className="form-input" />
 
                                                     {submitCount ? (
                                                         errors.firstname ? (
@@ -244,16 +246,16 @@ const KayitSayfasi = () => {
                                                 </div>
 
                                                 <div>
-                                                    <label htmlFor="fullName">Last Name </label>
-                                                    <Field name="lastname" type="text" id="lastname" placeholder="Enter Last Name" className="form-input" />
+                                                    <label htmlFor="fullName">{t('Last Name')}</label>
+                                                    <Field name="lastname" type="text" id="lastname" placeholder={t('Enter Last Name')} className="form-input" />
 
                                                     {submitCount ? errors.lastname ? <div className="text-danger mt-1">{errors.lastname}</div> : <div className="text-success mt-1">Looks Good!</div> : ''}
                                                 </div>
                                             </div>
                                             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                                                 <div>
-                                                    <label htmlFor="tcNumber">TC Number </label>
-                                                    <Field name="tcNumber" type="text" id="tcNumber" placeholder="Enter TC Number" className="form-input" />
+                                                    <label htmlFor="tcNumber">{t('TC Number')}</label>
+                                                    <Field name="tcNumber" type="text" id="tcNumber" placeholder={t('Enter TC Number')} className="form-input" />
 
                                                     {submitCount ? (
                                                         errors.tcNumber ? (
@@ -267,15 +269,15 @@ const KayitSayfasi = () => {
                                                 </div>
 
                                                 <div>
-                                                    <label htmlFor="Email">Email</label>
-                                                    <Field name="email" type="text" id="Email" placeholder="Enter Email" className="form-input" />
+                                                    <label htmlFor="Email">{t('Email')}</label>
+                                                    <Field name="email" type="text" id="Email" placeholder={t('Enter Email')} className="form-input" />
 
                                                     {submitCount ? errors.email ? <div className="text-danger mt-1">{errors.email}</div> : <div className="text-success mt-1">Looks Good!</div> : ''}
                                                 </div>
                                             </div>
                                             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                                                 <div className="form-group">
-                                                    <label htmlFor="city">City</label>
+                                                    <label htmlFor="city">{t('City')}</label>
                                                     <Field 
                                                             name="city"
                                                             component={CitySelect}
@@ -293,7 +295,7 @@ const KayitSayfasi = () => {
                                                 </div>
 
                                                 <div className="form-group">
-                                                    <label htmlFor="district">District</label>
+                                                    <label htmlFor="district">{t('District')}</label>
                                                     <Field 
                                                             name="district"
                                                             component={DistrictSelect}
@@ -311,8 +313,8 @@ const KayitSayfasi = () => {
                                                 </div>
                                             </div>
                                             <div>
-                                                <label htmlFor="address">Enter Address</label>
-                                                <textarea id="address" rows={3} className="form-textarea" placeholder="Enter Address" required></textarea>
+                                                <label htmlFor="address">{t('Address')}</label>
+                                                <textarea id="address" rows={3} className="form-textarea" placeholder={t('Enter Address')} required></textarea>
                                                 {submitCount ? (
                                                         errors.address ? (
                                                             <div className="text-danger mt-1">{errors.address}</div>
@@ -328,7 +330,7 @@ const KayitSayfasi = () => {
                                                     <Field name="agree" id="agree" type="checkbox" className="form-checkbox" />
                                                     {values.agree}
                                                     <label htmlFor="agree" className="text-white-dark font-semibold">
-                                                        Agree to terms and conditions
+                                                        {t('Agree to terms and conditions')}
                                                     </label>
                                                 </div>
                                                 {submitCount ? errors.agree ? <div className="text-danger mt-1">{errors.agree}</div> : '' : ''}
@@ -344,19 +346,19 @@ const KayitSayfasi = () => {
                                                     }
                                                 }}
                                             >
-                                                Submit Form
+                                                {t('Submit Form')}
                                             </button>
                                         </Form>
                                     )}
                                 </Formik>                           
                             <div className="relative my-7 text-center md:mb-9">
                                 <span className="absolute inset-x-0 top-1/2 h-px w-full -translate-y-1/2 bg-white-light dark:bg-white-dark"></span>
-                                <span className="relative bg-white px-2 font-bold uppercase text-white-dark dark:bg-dark dark:text-white-light">or</span>
+                                <span className="relative bg-white px-2 font-bold uppercase text-white-dark dark:bg-dark dark:text-white-light">{t('or')}</span>
                             </div>
                             <div className="text-center dark:text-white">
-                                Already have an account ?&nbsp;
+                                {t('Already have an account ?')}&nbsp;
                                 <Link to="/" className="uppercase text-primary underline transition hover:text-black dark:hover:text-white">
-                                    SIGN IN
+                                    {t('SIGN IN')}
                                 </Link>
                             </div>
                         </div>
