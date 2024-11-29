@@ -32,6 +32,7 @@ CREATE TABLE inek (
     inekQR NVARCHAR(50) UNIQUE,
     ad NVARCHAR(20),
     irk NVARCHAR(20),
+    kilo float,
     dogumTarihi DATE,
     sonDogurmaTarihi DATE,
     firmaID INT,

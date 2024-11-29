@@ -197,7 +197,13 @@
     "Average milk production/month": "ortalama süt üretimi/ay",
     "Life share account": "Yaşam payı hesabı",
     "Status in the herd": "Sürüdeki Durumu",
-    "Submit": "Gönder"
+    "Submit": "Gönder",
+    "Did the fertilization take?": "Döllenme gerçekleşti mi?",
+    "Calving Cycle": "Yavrulama Döngüsü",
+    "MD Remaining Days": "SD Kalan Gün",
+    "CD Remaining Days": "YD Kalan Gün",
+    "MD Status": "SD Durum",
+    "CD Status": "YD Durum"
 
     
     

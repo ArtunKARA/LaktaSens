@@ -677,13 +677,29 @@ const MultipleTables = () => {
                                 sortable: true,
                             },
                             {
+                                accessor: 'SD Kalan Gün',
+                                title: t('MD Remaining Days'),
+                                sortable: true,
+                            },
+                            {
+                                accessor: 'SD Durumu',
+                                title: t('MD Status'),
+                                sortable: true,
+                                render: () => <span className={`badge bg-${randomColor()} `}>{randomStatus()}</span>,
+                            },
+                            {
                                 accessor: 'Yavru Döngüsü',
                                 title: t('Calving Cycle'),
                                 sortable: true,
                             },
                             {
-                                accessor: 'Durumu',
-                                title: t('Status'),
+                                accessor: 'YD Kalan Gün',
+                                title: t('CD Remaining Days'),
+                                sortable: true,
+                            },
+                            {
+                                accessor: 'YD Durumu',
+                                title: t('CD Status'),
                                 sortable: true,
                                 render: () => <span className={`badge bg-${randomColor()} `}>{randomStatus()}</span>,
                             },
