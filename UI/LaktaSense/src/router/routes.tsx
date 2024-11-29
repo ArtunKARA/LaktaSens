@@ -13,6 +13,9 @@ const GenelTakipDetay = lazy(() => import('../pages/Cifci/GenelTakipDetay'));
 const InekEkle= lazy(() => import('../pages/Cifci/InekEkle'));
 const ServisTakipDetay= lazy(() => import('../pages/Cifci/ServisTakipDetay'));
 const GomuluSensor= lazy(() => import('../pages/Cifci/GomuluSensor'));
+const SicaklikSensorTakip= lazy(() => import('../pages/Cifci/SicaklikSensorTakip'));
+const InekSicaklikSensorTakip= lazy(() => import('../pages/Cifci/InekSicaklikSensorTakip'));
+const NemSensorTakip= lazy(() => import('../pages/Cifci/NemSensorTakip'));
 const KayitSayfasi = lazy(() => import('../pages/Authentication/KayitSayfasi'));
 const routes = [
     //login page
@@ -81,18 +84,36 @@ const routes = [
         element: <InekEkle />,
         layout : 'cifci',
     },
-       //Farmer servis detay sayfası
-       {
+    //Farmer servis detay sayfası
+    {
         path: '/cifci/ServisTakipDetay',
         element: <ServisTakipDetay />,
         layout : 'cifci',
     },
-         //Farmer servis detay sayfası
-         {
+    //Farmer gomuluSensor sayfası
+    {
             path: '/cifci/GomuluSensor',
             element: <GomuluSensor />,
             layout : 'cifci',
-        },
+    },
+    //Farmer sıcaklık sensor takip sayfası
+    {
+        path: '/cifci/SicaklikSensorTakip',
+        element: <SicaklikSensorTakip />,
+        layout : 'cifci',
+    },
+      //Farmer nem sensor takip sayfası
+      {
+        path: '/cifci/NemSensorTakip',
+        element: <NemSensorTakip />,
+        layout : 'cifci',
+    },
+      //Farmer inek sıcaklık sensor takip sayfası
+      {
+        path: '/cifci/InekSicaklikSensorTakip',
+        element: <InekSicaklikSensorTakip />,
+        layout : 'cifci',
+    },
 ];
 
 export { routes };

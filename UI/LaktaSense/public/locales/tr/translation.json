@@ -213,7 +213,11 @@
     "Sensor Tracking": "Sensör Takibi",
     "Humidity Sensor": "Nem Sensörü",
     "Temperature Sensor": "Sıcaklık Sensörü",
-    "Cows Body Temperature": "İneğin Vücut Sıcaklığı"
+    "Cows Body Temperature": "İneğin Vücut Sıcaklığı",
+    "Temperature Sensor Tracking": "Sıcaklık Sensör Takibi",
+    "Sensor": "Sensör",
+    "Sensor data": "Sensör Verisi",
+    "Environment": "Ortam"
 
     
     
