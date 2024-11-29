@@ -16,20 +16,13 @@ const Layouts = () => {
       {/* Form Container */}
       <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-2xl -mt-20">
         <h5 className="font-semibold text-lg text-gray-700 mb-6 text-center">
-          {t('Detail')}
+          {t('Fertilization Tracking')}
         </h5>
 
         {/* Form Fields */}
         <form className="space-y-5">
           <div className="grid gap-6">
             {/* Input Fields */}
-            <div>
-              <input
-                type="text"
-                placeholder={t('Id')}
-                className="form-input w-full"
-              />
-            </div>
             <div>
               <input
                 type="text"
@@ -40,7 +33,14 @@ const Layouts = () => {
             <div>
               <input
                 type="text"
-                placeholder={t('Breed')}
+                placeholder={t('Last Fertilization Date')}
+                className="form-input w-full"
+              />
+            </div>
+            <div>
+              <input
+                type="text"
+                placeholder={t('Escaped Fertilization')}
                 className="form-input w-full"
               />
             </div>
@@ -71,12 +71,7 @@ const Layouts = () => {
             </div>
           </div>
 
-          {/* Required Fields Text */}
-          <div className="!mt-2 text-center">
-            <span className="text-gray-500 text-[11px] inline-block">
-              * {t('Required Fields')}
-            </span>
-          </div>
+     
 
           {/* Submit Button */}
           <button type="submit" className="btn btn-primary w-full">
