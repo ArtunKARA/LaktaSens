@@ -197,7 +197,18 @@
     "Average milk production/month": "ortalama süt üretimi/ay",
     "Life share account": "Yaşam payı hesabı",
     "Status in the herd": "Sürüdeki Durumu",
-    "Submit": "Gönder"
+    "Submit": "Gönder",
+    "Fertilization Tracking": "Döllenme Takibi",
+    "Escaped Fertilization": "Kaçıncı Döllenme",
+    "Last Fertilization Date": "Son Döllenme Tarihi",
+    "Yes": "Evet",
+    "No": "Hayır",
+    "Did the fertilization take?": "Döllenme gerçekleşti mi?",
+    "Sensor Tracking": "Sensör Takibi",
+    "Humidity Sensor": "Nem Sensörü",
+    "Temperature Sensor": "Sıcaklık Sensörü",
+    "Cows Body Temperature": "İneğin Vücut Sıcaklığı"
+
 
     
     

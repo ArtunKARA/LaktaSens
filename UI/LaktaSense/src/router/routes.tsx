@@ -12,6 +12,7 @@ const CikarilacaklarTakip = lazy(() => import('../pages/Cifci/CikarilacaklarTaki
 const GenelTakipDetay = lazy(() => import('../pages/Cifci/GenelTakipDetay'));
 const InekEkle= lazy(() => import('../pages/Cifci/InekEkle'));
 const ServisTakipDetay= lazy(() => import('../pages/Cifci/ServisTakipDetay'));
+const GomuluSensor= lazy(() => import('../pages/Cifci/GomuluSensor'));
 const KayitSayfasi = lazy(() => import('../pages/Authentication/KayitSayfasi'));
 const routes = [
     //login page
@@ -86,6 +87,12 @@ const routes = [
         element: <ServisTakipDetay />,
         layout : 'cifci',
     },
+         //Farmer servis detay sayfası
+         {
+            path: '/cifci/GomuluSensor',
+            element: <GomuluSensor />,
+            layout : 'cifci',
+        },
 ];
 
 export { routes };
