@@ -34,9 +34,8 @@ const MultipleTables = () => {
               body: JSON.stringify({ id: "1" }), // Kullanıcı ID'sini gönderiyorsunuz
             });
             const data = await response.json();
-            
-            // Veriyi rowData state'ine kaydedin
-            setRowData(await data);
+            console.log('Gelen veri:', data);
+            setRowData(data); // Sadece doğrudan kullanılabilecek bir dizi olduğunda kullanı
           } catch (error) {
             console.error('API çağrısı sırasında bir hata oluştu:', error);
           }
@@ -54,15 +53,19 @@ const MultipleTables = () => {
     const [page, setPage] = useState(1);
     const PAGE_SIZES = [10, 20, 30, 50, 100];
     const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
-    const [initialRecords, setInitialRecords] = useState(sortBy(rowData, 'firstName'));
+    const [initialRecords, setInitialRecords] = useState<CowData[]>([]);
+    useEffect(() => {
+        const sortedData = sortBy(rowData, 'inekID');
+        setInitialRecords(sortedData);
+    }, [rowData]);
+    
     const [recordsData, setRecordsData] = useState(initialRecords);
 
     const [search, setSearch] = useState('');
     const [sortStatus, setSortStatus] = useState<DataTableSortStatus>({
-        columnAccessor: 'firstName',
+        columnAccessor: 'inekID',
         direction: 'asc',
     });
-
     useEffect(() => {
         setPage(1);
     }, [pageSize]);
@@ -95,58 +98,6 @@ const MultipleTables = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [sortStatus]);
 
-    const [page2, setPage2] = useState(1);
-    const [pageSize2, setPageSize2] = useState(PAGE_SIZES[0]);
-    const [initialRecords2, setInitialRecords2] = useState(sortBy(rowData, 'inekID'));
-    const [recordsData2, setRecordsData2] = useState(initialRecords2);
-
-    const [search2, setSearch2] = useState('');
-    const [sortStatus2, setSortStatus2] = useState<DataTableSortStatus>({
-        columnAccessor: 'inekID',
-        direction: 'asc',
-    });
-
-    useEffect(() => {
-        setPage2(1);
-    }, [pageSize2]);
-
-    useEffect(() => {
-        const from = (page2 - 1) * pageSize2;
-        const to = from + pageSize2;
-        setRecordsData2([...initialRecords2.slice(from, to)]);
-    }, [page2, pageSize2, initialRecords2]);
-
-    useEffect(() => {
-        setInitialRecords2(() => {
-            return rowData.filter((item: any) => {
-                return (
-                    item.inekID.toLowerCase().includes(search.toLowerCase()) ||
-                    item.ad.toLowerCase().includes(search.toLowerCase()) ||
-                    item.irk.toLowerCase().includes(search.toLowerCase()) ||
-                    item.guncelGunSayisi.toString().toLowerCase().includes(search.toLowerCase()) ||
-                    item.durum.toLowerCase().includes(search.toLowerCase())
-                );
-            });
-        });
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [search2]);
-
-    useEffect(() => {
-        const data2 = sortBy(initialRecords2, sortStatus2.columnAccessor);
-        setInitialRecords2(sortStatus2.direction === 'desc' ? data2.reverse() : data2);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [sortStatus2]);
-
-    const formatDate = (date: string | number | Date) => {
-        if (date) {
-            const dt = new Date(date);
-            const month = dt.getMonth() + 1 < 10 ? '0' + (dt.getMonth() + 1) : dt.getMonth() + 1;
-            const day = dt.getDate() < 10 ? '0' + dt.getDate() : dt.getDate();
-            return day + '/' + month + '/' + dt.getFullYear();
-        }
-        return '';
-    };
-
     const randomColor = () => {
         const color = ['primary', 'secondary', 'success', 'danger', 'warning', 'info'];
         const random = Math.floor(Math.random() * color.length);
@@ -158,20 +109,21 @@ const MultipleTables = () => {
         const random = Math.floor(Math.random() * status.length);
         return status[random];
     };
-
     return (
         <div>
             <div className="panel mt-6">
                 <div className="flex md:items-center md:flex-row flex-col mb-5 gap-5">
                     <h5 className="font-semibold text-lg dark:text-white-light">{t('Pregnant')}</h5>
                     <div className="ltr:ml-auto rtl:mr-auto">
-                        <input type="text" className="form-input w-auto" placeholder="Search..." value={search2} onChange={(e) => setSearch2(e.target.value)} />
+                        <input type="text" className="form-input w-auto" placeholder="Search..." value={search} onChange={(e) => setSearch(e.target.value)} />
                     </div>
+                </div>
+                <div>
                 </div>
                 <div className="datatables">
                     <DataTable
                         className="whitespace-nowrap table-hover"
-                        records={recordsData2}
+                        records={recordsData}
                         columns={[
                             { 
                                 accessor: 'inekID',
@@ -211,23 +163,18 @@ const MultipleTables = () => {
                                                 <IconPencil />
                                             </button>
                                         </Tippy>
-                                        <Tippy content="Delete">
-                                            <button type="button">
-                                                <IconTrashLines />
-                                            </button>
-                                        </Tippy>
                                     </div>
                                 ),
                             },
                         ]}
-                        totalRecords={initialRecords2.length}
-                        recordsPerPage={pageSize2}
-                        page={page2}
-                        onPageChange={(p) => setPage2(p)}
+                        totalRecords={initialRecords.length}
+                        recordsPerPage={pageSize}
+                        page={page}
+                        onPageChange={(p) => setPage(p)}
                         recordsPerPageOptions={PAGE_SIZES}
-                        onRecordsPerPageChange={setPageSize2}
-                        sortStatus={sortStatus2}
-                        onSortStatusChange={setSortStatus2}
+                        onRecordsPerPageChange={setPageSize}
+                        sortStatus={sortStatus}
+                        onSortStatusChange={setSortStatus}
                         minHeight={200}
                         paginationText={({ from, to, totalRecords }) => `Showing  ${from} to ${to} of ${totalRecords} entries`}
                     />

@@ -14,11 +14,12 @@ exports.postAllGebe = async (req, res) => {
                     inek.inekID,
                     inek.ad,
                     inek.irk,
+                    280 - DATEDIFF(DAY, inek.sonDollenme, GETDATE()) AS guncelGunSayisi,
                     CASE 
-                        WHEN 280 - DATEDIFF(DAY, inek.sonDollenme, GETDATE()) < 0 THEN 'Kontrol Edilmeli'
-                        ELSE CONCAT(280 - DATEDIFF(DAY, inek.sonDollenme, GETDATE()), ' gün kaldı')
-                    END AS guncelGunSayisi,
-                    'Gebe' AS durum
+                        WHEN 280 - DATEDIFF(DAY, inek.sonDollenme, GETDATE()) < 0 
+                        THEN 'Kontrol Edilmeli'
+                        ELSE 'Gebe'
+                    END AS durum
                 FROM 
                     inek
                 JOIN 
@@ -27,12 +28,13 @@ exports.postAllGebe = async (req, res) => {
                     kullanicilar.kullaniciID = @id 
                     AND inek.sonDollenme > inek.sonDogurmaTarihi 
                     AND inek.tuttuMu = 'E';
+
 `
         );
         if (result.recordset.length === 0) {
           return res.status(404).json({ error: "Kullanıcı bulunamadı." });
         }
-        return res.json(result.recordset[0]);
+        return res.json(result.recordset);
       } catch (error) {
         console.error('Customer could not be retrieved:', error);
         return res.status(500).json({ error: 'Internal server error' });
