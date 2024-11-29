@@ -6,7 +6,7 @@ import { useDispatch } from 'react-redux';
 const Layouts = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  
+
   useEffect(() => {
     dispatch(setPageTitle('Layouts'));
   }, [dispatch]);
@@ -31,49 +31,97 @@ const Layouts = () => {
           <h5 className="font-semibold text-lg dark:text-white-light">{t('Detail')}</h5>
         </div>
 
-        {/* Data Fields */}
-        <div className="pt-5 grid grid-cols-1 sm:grid-cols-2 gap-6">
+        {/* Form container */}
+        <form className="pt-5 grid grid-cols-1 sm:grid-cols-2 gap-6">
           <div>
-            <p className="text-gray-700">
-              <strong>{t('Id')}:</strong> {data.id}
-            </p>
+            <label className="text-gray-700 font-semibold">
+              {t('Id')}
+            </label>
+            <input
+              type="text"
+              value={data.id}
+              readOnly
+              className="mt-2 p-2 w-full bg-gray-100 border border-gray-300 rounded-md"
+            />
           </div>
           <div>
-            <p className="text-gray-700">
-              <strong>{t('Name')}:</strong> {data.name}
-            </p>
+            <label className="text-gray-700 font-semibold">
+              {t('Name')}
+            </label>
+            <input
+              type="text"
+              value={data.name}
+              readOnly
+              className="mt-2 p-2 w-full bg-gray-100 border border-gray-300 rounded-md"
+            />
           </div>
           <div>
-            <p className="text-gray-700">
-              <strong>{t('Breed')}:</strong> {data.breed}
-            </p>
+            <label className="text-gray-700 font-semibold">
+              {t('Breed')}
+            </label>
+            <input
+              type="text"
+              value={data.breed}
+              readOnly
+              className="mt-2 p-2 w-full bg-gray-100 border border-gray-300 rounded-md"
+            />
           </div>
           <div>
-            <p className="text-gray-700">
-              <strong>{t('Age')}:</strong> {data.age}
-            </p>
+            <label className="text-gray-700 font-semibold">
+              {t('Age')}
+            </label>
+            <input
+              type="text"
+              value={data.age}
+              readOnly
+              className="mt-2 p-2 w-full bg-gray-100 border border-gray-300 rounded-md"
+            />
           </div>
           <div>
-            <p className="text-gray-700">
-              <strong>{t('Weight')}:</strong> {data.weight}
-            </p>
+            <label className="text-gray-700 font-semibold">
+              {t('Weight')}
+            </label>
+            <input
+              type="text"
+              value={data.weight}
+              readOnly
+              className="mt-2 p-2 w-full bg-gray-100 border border-gray-300 rounded-md"
+            />
           </div>
           <div>
-            <p className="text-gray-700">
-              <strong>{t('Average milk production/month')}:</strong> {data.milkProduction}
-            </p>
+            <label className="text-gray-700 font-semibold">
+              {t('Average milk production/month')}
+            </label>
+            <input
+              type="text"
+              value={data.milkProduction}
+              readOnly
+              className="mt-2 p-2 w-full bg-gray-100 border border-gray-300 rounded-md"
+            />
           </div>
           <div>
-            <p className="text-gray-700">
-              <strong>{t('Life share account')}:</strong> {data.lifeShareAccount}
-            </p>
+            <label className="text-gray-700 font-semibold">
+              {t('Life share account')}
+            </label>
+            <input
+              type="text"
+              value={data.lifeShareAccount}
+              readOnly
+              className="mt-2 p-2 w-full bg-gray-100 border border-gray-300 rounded-md"
+            />
           </div>
           <div>
-            <p className="text-gray-700">
-              <strong>{t('Status in the herd')}:</strong> {data.herdStatus}
-            </p>
+            <label className="text-gray-700 font-semibold">
+              {t('Status in the herd')}
+            </label>
+            <input
+              type="text"
+              value={data.herdStatus}
+              readOnly
+              className="mt-2 p-2 w-full bg-gray-100 border border-gray-300 rounded-md"
+            />
           </div>
-        </div>
+        </form>
       </div>
     </div>
   );
