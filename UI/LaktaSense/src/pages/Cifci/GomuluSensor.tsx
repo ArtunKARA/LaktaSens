@@ -72,7 +72,7 @@ const Layouts = () => {
                   type="button"
                   className="ml-2 p-2 bg-gray-200 rounded hover:bg-gray-300"
                   title={t('Edit')}
-                  onClick={handleEditCowsTemperatureSensor} // Butona tıklanınca yönlendir
+                  onClick={handleEditHumiditySensor} // Butona tıklanınca yönlendir
                 >
                   <IconPencil className="text-gray-500" />
                 </button>
@@ -93,7 +93,7 @@ const Layouts = () => {
                   type="button"
                   className="ml-2 p-2 bg-gray-200 rounded hover:bg-gray-300"
                   title={t('Edit')}
-                  onClick={handleEditHumiditySensor} // Butona tıklanınca yönlendir
+                  onClick={handleEditCowsTemperatureSensor} // Butona tıklanınca yönlendir
 
                 >
                   <IconPencil className="text-gray-500" />

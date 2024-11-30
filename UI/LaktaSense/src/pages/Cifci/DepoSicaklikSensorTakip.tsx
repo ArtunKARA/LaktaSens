@@ -202,7 +202,7 @@ const MultipleTables = () => {
         <div>
             <div className="panel mt-6">
                 <div className="flex md:items-center md:flex-row flex-col mb-5 gap-5">
-                    <h5 className="font-semibold text-lg dark:text-white-light">{t('Temperature Sensor Tracking')}</h5>
+                    <h5 className="font-semibold text-lg dark:text-white-light">{t('Feed Warehouse Temperature Sensor Tracking')}</h5>
                     <div className="ltr:ml-auto rtl:mr-auto">
                         <input type="text" className="form-input w-auto" placeholder="Search..." value={search2} onChange={(e) => setSearch2(e.target.value)} />
                     </div>
