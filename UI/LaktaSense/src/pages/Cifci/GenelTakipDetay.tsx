@@ -90,7 +90,7 @@ const Layouts = () => {
           </div>
           <div>
             <label className="text-gray-700 font-semibold">
-              {t('Average milk production/month')}
+              {t('Milk Cycle')}
             </label>
             <input
               type="text"
@@ -112,7 +112,7 @@ const Layouts = () => {
           </div>
           <div>
             <label className="text-gray-700 font-semibold">
-              {t('Status in the herd')}
+              {t('Calvin Cycle')}
             </label>
             <input
               type="text"

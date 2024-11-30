@@ -413,3 +413,58 @@ FROM
                 OR (inek.sonDollenme > inek.sonDogurmaTarihi AND (inek.tuttuMu = 'H' OR inek.tuttuMu IS NULL))
             )
     ) AS servisteInekler;
+
+
+
+--DöllenmeDetaySorgusu ve kontrol
+UPDATE dollenme
+SET 
+    tuttuMu = 'H',                   -- Yeni döllenme durumu ('E': Evet, 'H': Hayır)
+    dollenmeTarihi = '2024-11-22',   -- Yeni döllenme tarihi
+    dollenmeSayisi = 3               -- Yeni döllenme sayısı
+WHERE inekID = 1;                    -- Güncellenecek inekID
+
+-- Güncellenen kayıtları görüntüle
+SELECT * 
+FROM dollenme;
+
+
+
+
+--İnek detay sorgusu-id, adı, ırkı,süt dongu, yavru döngü, yaşam payı
+SELECT 
+    inek.inekID AS "İnek ID",
+    inek.ad AS "İnek Adı",
+    inek.irk AS "Irkı",
+    DATEDIFF(YEAR, inek.dogumTarihi, GETDATE()) AS "Yaşı",  -- Yaş hesaplama
+    inek.kilo AS "Kilosu",
+    
+    -- Süt döngüsünün durumu
+    CASE 
+        WHEN inek.sonDogurmaTarihi > inek.sonKuruTarihi THEN 'Sağımda'
+        WHEN inek.sonKuruTarihi > inek.sonDogurmaTarihi THEN 'Kuruda'
+        ELSE 'Bilinmiyor'
+    END AS "Süt Döngüsü Durumu",
+
+    -- Yavru döngüsünün durumu
+    CASE 
+        WHEN inek.sonDollenme > inek.sonDogurmaTarihi AND inek.tuttuMu = 'E' THEN 'Gebe'
+        WHEN (inek.sonDollenme < inek.sonDogurmaTarihi AND (inek.tuttuMu = 'H' OR inek.tuttuMu IS NULL)) 
+             OR (inek.sonDollenme > inek.sonDogurmaTarihi AND (inek.tuttuMu = 'H' OR inek.tuttuMu IS NULL)) THEN 'Serviste'
+        ELSE 'Çıkarılmalı'
+    END AS "Yavru Döngüsü Durumu",
+
+    -- Yaşam Payı Enerji İhtiyacı
+    0.086 * 0.75 * inek.kilo AS "Yaşam Payı Enerji İhtiyacı (Mcal)"
+FROM 
+    inek
+JOIN 
+    kullanicilar ON inek.firmaID = kullanicilar.firmaID
+WHERE 
+    kullanicilar.kullaniciID = 1; -- Kullanıcı ID'si burada belirtiliyor
+
+
+
+
+
+

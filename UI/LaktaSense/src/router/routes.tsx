@@ -16,6 +16,7 @@ const GomuluSensor= lazy(() => import('../pages/Cifci/GomuluSensor'));
 const SicaklikSensorTakip= lazy(() => import('../pages/Cifci/SicaklikSensorTakip'));
 const InekSicaklikSensorTakip= lazy(() => import('../pages/Cifci/InekSicaklikSensorTakip'));
 const NemSensorTakip= lazy(() => import('../pages/Cifci/NemSensorTakip'));
+const AdminBasvuruDuzenleme= lazy(() => import('../pages/Cifci/AdminBasvuruDuzenleme'))
 const KayitSayfasi = lazy(() => import('../pages/Authentication/KayitSayfasi'));
 const routes = [
     //login page
@@ -112,6 +113,12 @@ const routes = [
       {
         path: '/cifci/InekSicaklikSensorTakip',
         element: <InekSicaklikSensorTakip />,
+        layout : 'cifci',
+    },
+       //Admin basvuru düzenlemesayfası
+       {
+        path: '/cifci/AdminBasvuruDuzenleme',
+        element: <AdminBasvuruDuzenleme />,
         layout : 'cifci',
     },
 ];
