@@ -209,16 +209,27 @@
     "Last Fertilization Date": "Son Döllenme Tarihi",
     "Yes": "Evet",
     "No": "Hayır",
-    "Did the fertilization take?": "Döllenme gerçekleşti mi?",
     "Sensor Tracking": "Sensör Takibi",
     "Humidity Sensor": "Nem Sensörü",
+    "Humidity Sensor Tracking": "Nem Sensörü Takibi",
     "Temperature Sensor": "Sıcaklık Sensörü",
     "Cows Body Temperature": "İneğin Vücut Sıcaklığı",
+    "Cows Body Temperature Tracking": "İneğin Vücut Sıcaklığı Takibi",
     "Temperature Sensor Tracking": "Sıcaklık Sensör Takibi",
     "Sensor": "Sensör",
     "Sensor data": "Sensör Verisi",
-    "Environment": "Ortam"
+    "Environment": "Ortam",
+    "Weight": "Kilo",
+    "Birth Date": "Doğum Tarihi",
+    "Add Cow": "İnek Ekle",
+    "Select Milk Cycle": "Süt Döngüsünü Seçin",
+    "İn Dry": "Kuruda",
+    "Select Calving Cycle": "Yavrulama Döngüsünü Seçin",
+    "In Service": "Serviste",
+    "Save": "Kaydet",
+    "Barn Tracking": "Ahır Takip",
+    "Feed Warehouse Tracking": "Yem Depo Takip",
+    "Feed Warehouse Humidity Sensor Tracking": "Yem Deposu Nem Sensörü Takibi",
+    "Feed Warehouse Temperature Sensor Tracking": "Yem Deposu Sıcaklık Sensörü Takibi"
 
-    
-    
 }
