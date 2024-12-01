@@ -21,6 +21,8 @@ interface CowData {
 }
 
 const MultipleTables = () => {
+    const storedUserInfo = localStorage.getItem('userInfo');
+    const userInfo = storedUserInfo ? JSON.parse(storedUserInfo) : null;
     const [rowData, setRowData] = useState<CowData[]>([]);
     useEffect(() => {
         // API'yi çağırma
@@ -31,7 +33,7 @@ const MultipleTables = () => {
               headers: {
                 'Content-Type': 'application/json',
               },
-              body: JSON.stringify({ id: "1" }), // Kullanıcı ID'sini gönderiyorsunuz
+              body: JSON.stringify({ id:userInfo.kullaniciID}), // Kullanıcı ID'sini gönderiyorsunuz
             });
             const data = await response.json();
             console.log('Gelen veri:', data);
@@ -80,7 +82,7 @@ const MultipleTables = () => {
         setInitialRecords(() => {
             return rowData.filter((item) => {
                 return (
-                    item.inekID.toLowerCase().includes(search.toLowerCase()) ||
+                    item.inekID.toString().toLowerCase().includes(search.toLowerCase()) ||
                     item.ad.toLowerCase().includes(search.toLowerCase()) ||
                     item.irk.toLowerCase().includes(search.toLowerCase()) ||
                     item.guncelGunSayisi.toString().toLowerCase().includes(search.toLowerCase()) ||
@@ -98,16 +100,13 @@ const MultipleTables = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [sortStatus]);
 
-    const randomColor = () => {
+    const statusColor = (durum : String) => {
         const color = ['primary', 'secondary', 'success', 'danger', 'warning', 'info'];
-        const random = Math.floor(Math.random() * color.length);
-        return color[random];
-    };
-
-    const randomStatus = () => {
-        const status = ['PAID', 'APPROVED', 'FAILED', 'CANCEL', 'SUCCESS', 'PENDING', 'COMPLETE'];
-        const random = Math.floor(Math.random() * status.length);
-        return status[random];
+        if(durum != "Gebe"){
+            return color[3]
+        }else{
+            return color[2]
+        }
     };
     return (
         <div>
@@ -150,7 +149,7 @@ const MultipleTables = () => {
                                 accessor: 'durum',
                                 title: t('Status'),
                                 sortable: true,
-                                render: () => <span className={`badge bg-${randomColor()} `}>{randomStatus()}</span>,
+                                render: ({ durum }) => <span className={`badge bg-${statusColor(durum)}`}>{durum}</span>,
                             },
                             {
                                 accessor: 'Yavru Ekle',
