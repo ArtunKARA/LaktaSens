@@ -41,6 +41,8 @@ const Layouts = () => {
               <input
                 type="text"
                 placeholder={t('Escaped Fertilization')}
+                value="dollenme sayısı"
+                readOnly
                 className="form-input w-full"
               />
             </div>

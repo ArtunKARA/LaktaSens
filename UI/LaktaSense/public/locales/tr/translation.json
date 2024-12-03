@@ -231,6 +231,8 @@
     "Feed Warehouse Tracking": "Yem Depo Takip",
     "Feed Warehouse Humidity Sensor Tracking": "Yem Deposu Nem Sensörü Takibi",
     "Feed Warehouse Temperature Sensor Tracking": "Yem Deposu Sıcaklık Sensörü Takibi",
-    "Pass to other loop": "Diğer döngüye geçir"
+    "Pass to other loop": "Diğer döngüye geçir",
+    "Last Calving Date": "Son Buzağılama Tarihi",
+    "Do you know the last calving date?": "Son buzağılama tarihini biliyor musunuz?"
 
 }
