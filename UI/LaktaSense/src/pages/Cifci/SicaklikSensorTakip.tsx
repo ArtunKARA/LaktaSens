@@ -1,15 +1,19 @@
+
 import { useTranslation } from 'react-i18next';
 import { DataTable, DataTableSortStatus } from 'mantine-datatable';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Fragment } from 'react';
 import sortBy from 'lodash/sortBy';
 import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
+import { Dialog, Transition } from '@headlessui/react';
+import IconX from '../../components/Icon/IconX';
+import IconPencil from '../../components/Icon/IconPencil';
 import { setPageTitle } from '../../store/themeConfigSlice';
 import { useDispatch } from 'react-redux';
 import IconBell from '../../components/Icon/IconBell';
 import IconXCircle from '../../components/Icon/IconXCircle';
-import IconPencil from '../../components/Icon/IconPencil';
 import IconTrashLines from '../../components/Icon/IconTrashLines';
+
 
 const rowData = [
     {
@@ -85,175 +89,161 @@ const rowData = [
 ];
 
 const MultipleTables = () => {
-    const { t } = useTranslation();
-    const dispatch = useDispatch();
-    useEffect(() => {
-        dispatch(setPageTitle('Multiple Tables'));
+  const { t } = useTranslation();
+  const [page2, setPage2] = useState(1);
+  const PAGE_SIZES = [10, 20, 30, 50, 100];
+  const [pageSize2, setPageSize2] = useState(PAGE_SIZES[0]);
+  const [initialRecords2, setInitialRecords2] = useState(sortBy(rowData, 'firstName'));
+  const [recordsData2, setRecordsData2] = useState(initialRecords2);
+  const [search2, setSearch2] = useState('');
+  const [sortStatus2, setSortStatus2] = useState<DataTableSortStatus>({
+    columnAccessor: 'firstName',
+    direction: 'asc',
+  });
+
+  const [modal21, setModal21] = useState(false);
+
+  useEffect(() => {
+    const from = (page2 - 1) * pageSize2;
+    const to = from + pageSize2;
+    setRecordsData2([...initialRecords2.slice(from, to)]);
+  }, [page2, pageSize2, initialRecords2]);
+
+  useEffect(() => {
+    setInitialRecords2(() => {
+      return rowData.filter((item: any) => {
+        return (
+          item.firstName.toLowerCase().includes(search2.toLowerCase()) ||
+          item.lastName.toLowerCase().includes(search2.toLowerCase()) ||
+          item.sensorData.toLowerCase().includes(search2.toLowerCase()) ||
+          item.status.toLowerCase().includes(search2.toLowerCase())
+        );
+      });
     });
-    const [page, setPage] = useState(1);
-    const PAGE_SIZES = [10, 20, 30, 50, 100];
-    const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
-    const [initialRecords, setInitialRecords] = useState(sortBy(rowData, 'firstName'));
-    const [recordsData, setRecordsData] = useState(initialRecords);
+  }, [search2]);
 
-    const [search, setSearch] = useState('');
-    const [sortStatus, setSortStatus] = useState<DataTableSortStatus>({
-        columnAccessor: 'firstName',
-        direction: 'asc',
-    });
+  useEffect(() => {
+    const data2 = sortBy(initialRecords2, sortStatus2.columnAccessor);
+    setInitialRecords2(sortStatus2.direction === 'desc' ? data2.reverse() : data2);
+  }, [sortStatus2]);
 
-    useEffect(() => {
-        setPage(1);
-    }, [pageSize]);
+  const randomColor = () => {
+    const color = ['primary', 'secondary', 'success', 'danger', 'warning', 'info'];
+    const random = Math.floor(Math.random() * color.length);
+    return color[random];
+  };
 
-    useEffect(() => {
-        const from = (page - 1) * pageSize;
-        const to = from + pageSize;
-        setRecordsData([...initialRecords.slice(from, to)]);
-    }, [page, pageSize, initialRecords]);
+  const randomStatus = () => {
+    const status = ['PAID', 'APPROVED', 'FAILED', 'CANCEL', 'SUCCESS', 'PENDING', 'COMPLETE'];
+    const random = Math.floor(Math.random() * status.length);
+    return status[random];
+  };
 
-    useEffect(() => {
-        setInitialRecords(() => {
-            return rowData.filter((item) => {
-                return (
-                    item.firstName.toLowerCase().includes(search.toLowerCase()) ||
-                    item.lastName.toLowerCase().includes(search.toLowerCase()) ||
-                    item.id.toString().toLowerCase().includes(search.toLowerCase()) ||
-                    item.sensorData.toLowerCase().includes(search.toLowerCase()) ||
-                    item.status.toLowerCase().includes(search.toLowerCase()) 
-                );
-            });
-        });
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [search]);
-
-    useEffect(() => {
-        const data = sortBy(initialRecords, sortStatus.columnAccessor);
-        setInitialRecords(sortStatus.direction === 'desc' ? data.reverse() : data);
-        setPage(1);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [sortStatus]);
-
-    const [page2, setPage2] = useState(1);
-    const [pageSize2, setPageSize2] = useState(PAGE_SIZES[0]);
-    const [initialRecords2, setInitialRecords2] = useState(sortBy(rowData, 'firstName'));
-    const [recordsData2, setRecordsData2] = useState(initialRecords2);
-
-    const [search2, setSearch2] = useState('');
-    const [sortStatus2, setSortStatus2] = useState<DataTableSortStatus>({
-        columnAccessor: 'firstName',
-        direction: 'asc',
-    });
-
-    useEffect(() => {
-        setPage2(1);
-    }, [pageSize2]);
-
-    useEffect(() => {
-        const from = (page2 - 1) * pageSize2;
-        const to = from + pageSize2;
-        setRecordsData2([...initialRecords2.slice(from, to)]);
-    }, [page2, pageSize2, initialRecords2]);
-
-    useEffect(() => {
-        setInitialRecords2(() => {
-            return rowData.filter((item: any) => {
-                return (
-                    item.firstName.toLowerCase().includes(search.toLowerCase()) ||
-                    item.lastName.toLowerCase().includes(search.toLowerCase()) ||
-                    item.id.toString().toLowerCase().includes(search.toLowerCase()) ||
-                    item.sensorData.toLowerCase().includes(search.toLowerCase()) ||
-                    item.status.toLowerCase().includes(search.toLowerCase()) 
-                );
-            });
-        });
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [search2]);
-
-    useEffect(() => {
-        const data2 = sortBy(initialRecords2, sortStatus2.columnAccessor);
-        setInitialRecords2(sortStatus2.direction === 'desc' ? data2.reverse() : data2);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [sortStatus2]);
-
-    const formatDate = (date: string | number | Date) => {
-        if (date) {
-            const dt = new Date(date);
-            const month = dt.getMonth() + 1 < 10 ? '0' + (dt.getMonth() + 1) : dt.getMonth() + 1;
-            const day = dt.getDate() < 10 ? '0' + dt.getDate() : dt.getDate();
-            return day + '/' + month + '/' + dt.getFullYear();
-        }
-        return '';
-    };
-
-    const randomColor = () => {
-        const color = ['primary', 'secondary', 'success', 'danger', 'warning', 'info'];
-        const random = Math.floor(Math.random() * color.length);
-        return color[random];
-    };
-
-    const randomStatus = () => {
-        const status = ['PAID', 'APPROVED', 'FAILED', 'CANCEL', 'SUCCESS', 'PENDING', 'COMPLETE'];
-        const random = Math.floor(Math.random() * status.length);
-        return status[random];
-    };
-
-    return (
-        <div>
-            <div className="panel mt-6">
-                <div className="flex md:items-center md:flex-row flex-col mb-5 gap-5">
-                    <h5 className="font-semibold text-lg dark:text-white-light">{t('Temperature Sensor Tracking')}</h5>
-                    <div className="ltr:ml-auto rtl:mr-auto">
-                        <input type="text" className="form-input w-auto" placeholder="Search..." value={search2} onChange={(e) => setSearch2(e.target.value)} />
-                    </div>
-                </div>
-                <div className="datatables">
-                    <DataTable
-                        className="whitespace-nowrap table-hover"
-                        records={recordsData2}
-                        columns={[
-                            {
-                                accessor: 'Sensor',
-                                title: t('Sensor'),
-                                sortable: true,
-                                render: ({ firstName, lastName, id }) => (
-                                    <div className="flex items-center w-max">
-                                        <img className="w-9 h-9 rounded-full ltr:mr-2 rtl:ml-2 object-cover" src={`/assets/images/profile-${id}.jpeg`} alt="" />
-                                        <div>{firstName + ' ' + lastName}</div>
-                                    </div>
-                                ),
-                            },
-                          
-                            {
-                                accessor: 'Sensor Data',
-                                title: t('Sensor Data'),
-                                sortable: true,
-                            },
-
-                           
-                            {
-                                accessor: 'status',
-                                title: t('Status'),
-                                sortable: true,
-                                render: () => <span className={`badge bg-${randomColor()} `}>{randomStatus()}</span>,
-                            },
-                          
-                        ]}
-                        totalRecords={initialRecords2.length}
-                        recordsPerPage={pageSize2}
-                        page={page2}
-                        onPageChange={(p) => setPage2(p)}
-                        recordsPerPageOptions={PAGE_SIZES}
-                        onRecordsPerPageChange={setPageSize2}
-                        sortStatus={sortStatus2}
-                        onSortStatusChange={setSortStatus2}
-                        minHeight={200}
-                        paginationText={({ from, to, totalRecords }) => `Showing  ${from} to ${to} of ${totalRecords} entries`}
-                    />
-                </div>
-            </div>
+  return (
+    <div>
+      <div className="panel mt-6">
+        <div className="flex md:items-center md:flex-row flex-col mb-5 gap-5">
+          <h5 className="font-semibold text-lg dark:text-white-light">{t('Temperature Sensor Tracking')}</h5>
+          <div className="ltr:ml-auto rtl:mr-auto">
+            <input
+              type="text"
+              className="form-input w-auto"
+              placeholder="Search..."
+              value={search2}
+              onChange={(e) => setSearch2(e.target.value)}
+            />
+          </div>
         </div>
-    );
+        <div className="datatables">
+          <DataTable
+            className="whitespace-nowrap table-hover"
+            records={recordsData2}
+            columns={[
+              {
+                accessor: 'Sensor',
+                title: t('Sensor'),
+                sortable: true,
+                render: ({ firstName, lastName, id }) => (
+                  <div className="flex items-center w-max">
+                    <img
+                      className="w-9 h-9 rounded-full ltr:mr-2 rtl:ml-2 object-cover"
+                      src={`/assets/images/profile-${id}.jpeg`}
+                      alt=""
+                    />
+                    <div>{firstName + ' ' + lastName}</div>
+                  </div>
+                ),
+              },
+              {
+                accessor: 'Sensor Data',
+                title: t('Sensor Data'),
+                sortable: true,
+              },
+              {
+                accessor: 'status',
+                title: t('Status'),
+                sortable: true,
+                render: () => <span className={`badge bg-${randomColor()} `}>{randomStatus()}</span>,
+              },
+              {
+                accessor: 'Actions',
+                title: t('Actions'),
+                render: () => (
+                  <div className="flex items-center gap-2">
+                    <Tippy content="Edit">
+                      <button type="button"onClick={() => setModal21(true)} className="btn btn-primary">
+                        <IconPencil />
+                      </button>
+                    </Tippy>
+                   
+                    <Transition appear show={modal21} as={Fragment}>
+                      <Dialog as="div" open={modal21} onClose={() => setModal21(false)}>
+                        <div className="fixed inset-0 z-10 overflow-y-auto ">
+                          <div className="flex min-h-screen items-center justify-center px-4">
+                            <Dialog.Panel className="panel my-8 w-full max-w-sm overflow-hidden rounded-lg py-1 px-4 text-black dark:text-white-dark">
+                              <div className="flex items-center justify-between p-5">
+                                <h5> {t('Pass to other loop')}</h5>
+                                <button
+                                  type="button"
+                                  onClick={() => setModal21(false)}
+                                  className="text-white-dark hover:text-dark"
+                                >
+                                  <IconX className="w-5 h-5" />
+                                </button>
+                              </div>
+                              <div className="p-5">
+                                <form>
+                                  <div className="relative mb-4">
+                                    <input type="date" placeholder="Tarih" className="form-input" id="tarih" />
+                                  </div>
+                                  <button type="button" className="btn btn-primary w-full">
+                                  {t('Save')}
+                                  </button>
+                                </form>
+                              </div>
+                            </Dialog.Panel>
+                          </div>
+                        </div>
+                      </Dialog>
+                    </Transition>
+                  </div>
+                ),
+              },
+            ]}
+            totalRecords={initialRecords2.length}
+            recordsPerPage={pageSize2}
+            page={page2}
+            onPageChange={(p) => setPage2(p)}
+            recordsPerPageOptions={PAGE_SIZES}
+            onRecordsPerPageChange={setPageSize2}
+            sortStatus={sortStatus2}
+            onSortStatusChange={setSortStatus2}
+            minHeight={200}
+          />
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default MultipleTables;

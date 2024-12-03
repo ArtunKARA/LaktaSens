@@ -7,18 +7,19 @@ const Layouts = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
 
-  const [isOlderThanTwoYears, setIsOlderThanTwoYears] = useState(false); // Yaş kontrolü state'i
+  const [isOlderThanTwoYears, setIsOlderThanTwoYears] = useState(false);
   const [milkCycle, setMilkCycle] = useState('');
   const [calvingCycle, setCalvingCycle] = useState('');
   const [name, setName] = useState('Daisy');
   const [breed, setBreed] = useState('Holstein Friesian');
   const [birthDate, setBirthDate] = useState('2019-04-15');
-  const [weight, setWeight] = useState('600 kg');
+  const [weight, setWeight] = useState('600');
+  const [knowsLastCalvingDate, setKnowsLastCalvingDate] = useState(false); // Başlangıçta 'Hayır' seçili
+  const [lastCalvingDate, setLastCalvingDate] = useState('');
 
   useEffect(() => {
     dispatch(setPageTitle('Layouts'));
 
-    // İnek yaşı kontrolü
     const currentYear = new Date().getFullYear();
     const birthYear = new Date(birthDate).getFullYear();
     const age = currentYear - birthYear;
@@ -27,7 +28,6 @@ const Layouts = () => {
   }, [dispatch, birthDate]);
 
   const handleSave = () => {
-    // Kaydetme işlemleri burada yapılabilir
     console.log('Form kaydedildi:', {
       name,
       breed,
@@ -35,107 +35,139 @@ const Layouts = () => {
       weight,
       milkCycle,
       calvingCycle,
+      knowsLastCalvingDate,
+      lastCalvingDate,
     });
-    alert(t('Form has been saved!')); // Kullanıcıya mesaj göstermek için
+    alert(t('Form has been saved!'));
   };
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col">
-      {/* Main container */}
       <div className="w-full flex-grow p-6 bg-white rounded-lg shadow-lg mx-auto">
         <div className="flex items-center justify-between mb-5">
           <h5 className="font-semibold text-lg dark:text-white-light">{t('Add Cow')}</h5>
         </div>
 
-        {/* Form container */}
         <form className="pt-5 grid grid-cols-1 sm:grid-cols-2 gap-6">
-          {/* Temel bilgiler */}
           <div>
-            <label className="text-gray-700 font-semibold">
-              {t('Name')}
-            </label>
+            <label className="text-gray-700 font-semibold">{t('Name')}</label>
             <input
               type="text"
               value={name}
-              onChange={(e) => setName(e.target.value)} // Input'u güncellemek için
+              onChange={(e) => setName(e.target.value)}
               className="mt-2 p-2 w-full bg-gray-100 border border-gray-300 rounded-md"
             />
           </div>
           <div>
-            <label className="text-gray-700 font-semibold">
-              {t('Breed')}
-            </label>
+            <label className="text-gray-700 font-semibold">{t('Breed')}</label>
             <input
               type="text"
               value={breed}
-              onChange={(e) => setBreed(e.target.value)} // Input'u güncellemek için
+              onChange={(e) => setBreed(e.target.value)}
               className="mt-2 p-2 w-full bg-gray-100 border border-gray-300 rounded-md"
             />
           </div>
           <div>
-            <label className="text-gray-700 font-semibold">
-              {t('Birth Date')}
-            </label>
+            <label className="text-gray-700 font-semibold">{t('Birth Date')}</label>
             <input
-              type="date" // Doğum tarihi için tarih seçici ekledik
+              type="date"
               value={birthDate}
-              onChange={(e) => setBirthDate(e.target.value)} // Input'u güncellemek için
+              onChange={(e) => setBirthDate(e.target.value)}
               className="mt-2 p-2 w-full bg-gray-100 border border-gray-300 rounded-md"
             />
           </div>
           <div>
-            <label className="text-gray-700 font-semibold">
-              {t('Weight')}
-            </label>
+            <label className="text-gray-700 font-semibold">{t('Weight')}</label>
             <input
-              type="text"
+              type="number"
               value={weight}
-              onChange={(e) => setWeight(e.target.value)} // Input'u güncellemek için
+              onChange={(e) => {
+                const value = e.target.value;
+                if (value === '' || Number(value) >= 0) {
+                  setWeight(value); // Sayısal değeri güncelle
+                }
+              }}
               className="mt-2 p-2 w-full bg-gray-100 border border-gray-300 rounded-md"
             />
           </div>
 
-          {/* 2 yaşından büyükse ek bilgiler */}
           {isOlderThanTwoYears && (
             <>
-              <div>
-                <label className="text-gray-700 font-semibold">
-                  {t('Milk Cycle')}
-                </label>
-                <select
-                  value={milkCycle}
-                  onChange={(e) => setMilkCycle(e.target.value)} // Seçim alanını güncellemek için
-                  className="mt-2 p-2 w-full bg-white border border-gray-300 rounded-md"
-                >
-                  <option value="" disabled>
-                    {t('Select Milk Cycle')}
-                  </option>
-                  <option value="sağımda">{t('Sağımda')}</option>
-                  <option value="kuruda">{t('İn Dry')}</option>
-                </select>
+            <div>
+  <label className="text-gray-700 font-semibold">{t('Do you know the last calving date?')}</label>
+  <div className="mt-2 flex justify-center gap-6">
+    <label className="flex items-center">
+      <input
+        type="radio"
+        name="calvingDate"
+        value="yes"
+        onChange={() => setKnowsLastCalvingDate(true)} // 'Evet' seçildiğinde true
+        checked={knowsLastCalvingDate === true}
+        className="mr-2"
+      />
+      {t('Yes')}
+    </label>
+    <label className="flex items-center">
+      <input
+        type="radio"
+        name="calvingDate"
+        value="no"
+        onChange={() => setKnowsLastCalvingDate(false)} // 'Hayır' seçildiğinde false
+        checked={knowsLastCalvingDate === false}
+        className="mr-2"
+      />
+      {t('No')}
+    </label>
+  </div>
               </div>
-              <div>
-                <label className="text-gray-700 font-semibold">
-                  {t('Calving Cycle')}
-                </label>
-                <select
-                  value={calvingCycle}
-                  onChange={(e) => setCalvingCycle(e.target.value)} // Seçim alanını güncellemek için
-                  className="mt-2 p-2 w-full bg-white border border-gray-300 rounded-md"
-                >
-                  <option value="" disabled>
-                    {t('Select Calving Cycle')}
-                  </option>
-                  <option value="gebe">{t('Pregnant')}</option>
-                  <option value="serviste">{t('In Service')}</option>
-                </select>
-              </div>
+
+              {knowsLastCalvingDate && (
+                <div>
+                  <label className="text-gray-700 font-semibold">
+                    {t('Last Calving Date')}
+                  </label>
+                  <input
+                    type="date"
+                    value={lastCalvingDate}
+                    onChange={(e) => setLastCalvingDate(e.target.value)}
+                    className="mt-2 p-2 w-full bg-gray-100 border border-gray-300 rounded-md"
+                  />
+                </div>
+              )}
+
+{!knowsLastCalvingDate && (
+    <div className="mt-4 flex gap-6">
+      <div className="w-full sm:w-1/2">
+        <label className="text-gray-700 font-semibold">{t('Milk Cycle')}</label>
+        <select
+          value={milkCycle}
+          onChange={(e) => setMilkCycle(e.target.value)}
+          className="mt-2 p-2 w-full bg-white border border-gray-300 rounded-md"
+        >
+          <option value="" disabled>{t('Select Milk Cycle')}</option>
+          <option value="sağımda">{t('Sağımda')}</option>
+          <option value="kuruda">{t('Dry')}</option>
+        </select>
+      </div>
+      <div className="w-full sm:w-1/2">
+        <label className="text-gray-700 font-semibold">{t('Calving Cycle')}</label>
+        <select
+          value={calvingCycle}
+          onChange={(e) => setCalvingCycle(e.target.value)}
+          className="mt-2 p-2 w-full bg-white border border-gray-300 rounded-md"
+        >
+          <option value="" disabled>{t('Select Calving Cycle')}</option>
+          <option value="gebe">{t('Pregnant')}</option>
+          <option value="serviste">{t('In Service')}</option>
+        </select>
+      </div>
+    </div>
+  )}
             </>
           )}
         </form>
 
-         {/* Kaydet Butonu */}
-         <div className="mt-6 flex justify-center">
+        <div className="mt-6 flex justify-center">
           <button
             type="button"
             onClick={handleSave}
