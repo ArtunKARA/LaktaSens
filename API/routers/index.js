@@ -19,7 +19,7 @@ router.use("/api/options", options);
 router.use("/api/login", login);
 router.use("/api/genelTakip",genelTakip);
 router.use("/api/kullanıcı",kullanıcı);
-router.use("/api/sağım",sağım);
+router.use("/api/sagim",sağım);
 router.use("/api/kuru",kuru);
 router.use("/api/gebe",gebe);
 router.use("/api/servis",servis);
