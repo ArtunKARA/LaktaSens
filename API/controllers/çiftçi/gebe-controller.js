@@ -32,7 +32,7 @@ exports.postAllGebe = async (req, res) => {
 `
         );
         if (result.recordset.length === 0) {
-          return res.status(404).json({ error: "Kullanıcı bulunamadı." });
+          return res.status(404).json(null);
         }
         return res.json(result.recordset);
       } catch (error) {

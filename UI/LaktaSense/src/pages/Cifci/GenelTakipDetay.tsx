@@ -1,27 +1,56 @@
 import { useTranslation } from 'react-i18next';
-import { useEffect } from 'react';
 import { setPageTitle } from '../../store/themeConfigSlice';
 import { useDispatch } from 'react-redux';
-
+import { useLocation } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+interface CowData {
+  İnekID: string;
+  İnekAdı: string;
+  Irkı: string;
+  Yaşı: number;
+  Kilosu: number;
+  SütDöngüsüDurumu: string;
+  SütKalanGünSayısı: number;
+  SütKalanGünDurumu: string;
+  YavruDöngüsüDurumu: string;
+  YavruKalanGünSayısı: number;
+  YavruKalanGünDurumu: string;
+  YaşamPayıEnerjiİhtiyacı: number;
+}
 const Layouts = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
+  const location = useLocation();
+  const { cowID } = location.state || {}; // State üzerinden gelen ID
+  const [cowDetails, setCowDetails] = useState<CowData>();
+
+  useEffect(() => {
+      if (!cowID) return; // ID yoksa çağrıyı yapma
+      const fetchCowDetails = async () => {
+          try {
+              const response = await fetch('http://localhost:3030/api/genelTakip/postGenelTakipDetay', {
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({ ID: cowID }),
+              });
+              const data = await response.json();
+              setCowDetails(data);
+          } catch (error) {
+              console.error('Veri çekerken hata oluştu:', error);
+          }
+      };
+
+      fetchCowDetails();
+  }, [cowID]);
+
 
   useEffect(() => {
     dispatch(setPageTitle('Layouts'));
   }, [dispatch]);
 
   // Örnek veriler, veritabanından çekilecek olan verilerin yerine kullanılabilir
-  const data = {
-    id: '12345',
-    name: 'Daisy',
-    breed: 'Holstein Friesian',
-    age: '4 years',
-    weight: '600 kg',
-    milkProduction: '30 liters/month',
-    lifeShareAccount: 'Active',
-    herdStatus: 'Leader',
-  };
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col">
@@ -39,7 +68,7 @@ const Layouts = () => {
             </label>
             <input
               type="text"
-              value={data.id}
+              value={cowDetails?.İnekID || ''}
               readOnly
               className="mt-2 p-2 w-full bg-gray-100 border border-gray-300 rounded-md"
             />
@@ -50,7 +79,7 @@ const Layouts = () => {
             </label>
             <input
               type="text"
-              value={data.name}
+              value={cowDetails?.İnekAdı || ''}
               readOnly
               className="mt-2 p-2 w-full bg-gray-100 border border-gray-300 rounded-md"
             />
@@ -61,7 +90,7 @@ const Layouts = () => {
             </label>
             <input
               type="text"
-              value={data.breed}
+              value={cowDetails?.Irkı || ''}
               readOnly
               className="mt-2 p-2 w-full bg-gray-100 border border-gray-300 rounded-md"
             />
@@ -72,7 +101,7 @@ const Layouts = () => {
             </label>
             <input
               type="text"
-              value={data.age}
+              value={cowDetails?.Yaşı || ''}
               readOnly
               className="mt-2 p-2 w-full bg-gray-100 border border-gray-300 rounded-md"
             />
@@ -83,7 +112,7 @@ const Layouts = () => {
             </label>
             <input
               type="text"
-              value={data.weight}
+              value={cowDetails?.Kilosu || ''}
               readOnly
               className="mt-2 p-2 w-full bg-gray-100 border border-gray-300 rounded-md"
             />
@@ -94,7 +123,7 @@ const Layouts = () => {
             </label>
             <input
               type="text"
-              value={data.milkProduction}
+              value={cowDetails?.SütDöngüsüDurumu || ''}
               readOnly
               className="mt-2 p-2 w-full bg-gray-100 border border-gray-300 rounded-md"
             />
@@ -105,7 +134,7 @@ const Layouts = () => {
             </label>
             <input
               type="text"
-              value={data.lifeShareAccount}
+              value={cowDetails?.YaşamPayıEnerjiİhtiyacı || ''}
               readOnly
               className="mt-2 p-2 w-full bg-gray-100 border border-gray-300 rounded-md"
             />
@@ -116,7 +145,7 @@ const Layouts = () => {
             </label>
             <input
               type="text"
-              value={data.herdStatus}
+              value={cowDetails?.YavruDöngüsüDurumu || ''}
               readOnly
               className="mt-2 p-2 w-full bg-gray-100 border border-gray-300 rounded-md"
             />

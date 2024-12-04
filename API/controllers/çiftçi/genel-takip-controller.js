@@ -75,9 +75,57 @@ exports.postGenelTakip = async (req, res) => {
               kullanicilar.kullaniciID = @ID;`
         );
         if (result.recordset.length === 0) {
-          return res.status(404).json({ error: "Kullanıcı bulunamadı." });
+          return res.status(404).json(null);
         }
         return res.json(result.recordset);
+      } catch (error) {
+        console.error('Customer could not be retrieved:', error);
+        return res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
+exports.postGenelTakipDetay = async (req, res) => {
+    const {
+        ID
+      } = req.body;
+    try {
+        const pool = await poolPromise;
+        const result = await pool.request()
+        .input("ID",ID)
+        .query(
+            `SELECT 
+                inek.inekID AS "İnekID",
+                inek.ad AS "İnekAdı",
+                inek.irk AS "Irkı",
+                DATEDIFF(YEAR, inek.dogumTarihi, GETDATE()) AS "Yaşı",  -- Yaş hesaplama
+                inek.kilo AS "Kilosu",
+                
+                -- Süt döngüsünün durumu
+                CASE 
+                    WHEN inek.sonDogurmaTarihi > inek.sonKuruTarihi THEN 'Sağımda'
+                    WHEN inek.sonKuruTarihi > inek.sonDogurmaTarihi THEN 'Kuruda'
+                    ELSE 'Bilinmiyor'
+                END AS "SütDöngüsüDurumu",
+
+                -- Yavru döngüsünün durumu
+                CASE 
+                    WHEN inek.sonDollenme > inek.sonDogurmaTarihi AND inek.tuttuMu = 'E' THEN 'Gebe'
+                    WHEN (inek.sonDollenme < inek.sonDogurmaTarihi AND (inek.tuttuMu = 'H' OR inek.tuttuMu IS NULL)) 
+                        OR (inek.sonDollenme > inek.sonDogurmaTarihi AND (inek.tuttuMu = 'H' OR inek.tuttuMu IS NULL)) THEN 'Serviste'
+                    ELSE 'Çıkarılmalı'
+                END AS "YavruDöngüsüDurumu",
+
+                -- Yaşam Payı Enerji İhtiyacı
+                0.086 * 0.75 * inek.kilo AS "YaşamPayıEnerjiİhtiyacı"
+            FROM 
+                inek
+            WHERE 
+                inek.inekID = @ID; -- Kullanıcı ID'si burada belirtiliyor`
+        );
+        if (result.recordset.length === 0) {
+          return res.status(404).json(null);
+        }
+        return res.json(result.recordset[0]);
       } catch (error) {
         console.error('Customer could not be retrieved:', error);
         return res.status(500).json({ error: 'Internal server error' });

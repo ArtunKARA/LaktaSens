@@ -29,7 +29,7 @@ exports.postSagim = async (req, res) => {
                 AND DATEDIFF(DAY, sonDogurmaTarihi, GETDATE()) <= 305;`
         );
         if (result.recordset.length === 0) {
-          return res.status(404).json({ error: "Kullanıcı bulunamadı." });
+          return res.status(404).json(null);
         }
         return res.json(result.recordset);
       } catch (error) {

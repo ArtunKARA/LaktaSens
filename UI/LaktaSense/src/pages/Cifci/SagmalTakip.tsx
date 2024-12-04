@@ -50,7 +50,7 @@ const MultipleTables = () => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
     useEffect(() => {
-        dispatch(setPageTitle(t('Pregnant')));
+        dispatch(setPageTitle(t('Milking')));
     });
     const [page, setPage] = useState(1);
     const PAGE_SIZES = [10, 20, 30, 50, 100];

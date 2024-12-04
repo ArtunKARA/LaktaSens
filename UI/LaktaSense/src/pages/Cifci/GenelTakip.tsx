@@ -10,6 +10,7 @@ import IconBell from '../../components/Icon/IconBell';
 import IconXCircle from '../../components/Icon/IconXCircle';
 import IconPencil from '../../components/Icon/IconPencil';
 import IconTrashLines from '../../components/Icon/IconTrashLines';
+import { useNavigate } from 'react-router-dom';
 
 interface CowData {
     İnekID: string;
@@ -55,7 +56,7 @@ const MultipleTables = () => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
     useEffect(() => {
-        dispatch(setPageTitle(t('Pregnant')));
+        dispatch(setPageTitle(t('Generel Follow Up')));
     });
     const [page, setPage] = useState(1);
     const PAGE_SIZES = [10, 20, 30, 50, 100];
@@ -142,6 +143,10 @@ const MultipleTables = () => {
                 break;
         }
     };
+    const navigate = useNavigate();
+    const handleDetailClick = (id : any) => {
+        navigate('/cifci/GenelTakipDetay', { state: { cowID: id } });
+    };
 
     return (
         <div>
@@ -201,7 +206,8 @@ const MultipleTables = () => {
                                 style={{ 
                                     backgroundColor: statusColor(SütKalanGünDurumu),
                                     color: 'white'
-                                }}>{SütKalanGünDurumu}</span>,                            },
+                                }}>{SütKalanGünDurumu}</span>,                            
+                            },
                             {
                                 accessor: 'YavruDöngüsüDurumu',
                                 title: t('Calving Cycle'),
@@ -226,10 +232,10 @@ const MultipleTables = () => {
                                 accessor: 'Detay',
                                 title: t('Detail'),
                                 titleClassName: '!text-center',
-                                render: () => (
+                                render: ({ İnekID }) => (
                                     <div className="flex items-center w-max mx-auto gap-2">
                                         <Tippy content="Edit">
-                                            <button type="button">
+                                            <button type="button" onClick={() => handleDetailClick(İnekID)}>
                                                 <IconPencil />
                                             </button>
                                         </Tippy>
