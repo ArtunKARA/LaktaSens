@@ -7,8 +7,8 @@ GO
 
 -- İnek tablosuna veri ekleme
 INSERT INTO inek (inekQR, ad, irk, kilo, dogumTarihi, sonDogurmaTarihi, firmaID, anneID, sonDollenme, dollenmeSayisi, tuttuMu, sonKuruTarihi, sonSutOlcumTarihi) VALUES
-('QR123', N'Ayla', N'Holstein', 300, '2020-01-15', '2024-10-21', 1, NULL, '2024-01-15', 1, NULL, '2024-08-22', '2024-08-22'),
-('QR124', N'Zeytin', N'Jersey', 250, '2019-03-22', '2023-11-27', 1, NULL, '2024-02-20', 1, 'E', '2024-09-27', '2024-09-27'),
+('QR123', N'Ayla', N'Holstein', 300, '2020-01-15', '2024-10-21', 2, NULL, '2024-01-15', 1, NULL, '2024-08-22', '2024-08-22'),
+('QR124', N'Zeytin', N'Jersey', 250, '2019-03-22', '2023-11-27', 2, NULL, '2024-02-20', 1, 'E', '2024-09-27', '2024-09-27'),
 ('QR125', N'Mavi', N'Ayrshire', 400, '2018-05-30', '2024-04-05', 2, NULL, '2024-06-29', 1, 'E', '2024-02-05', '2024-02-05'),
 ('QR126', N'Mavi', N'Angus', 350, '2018-05-30', '2024-08-31', 2, NULL, '2023-11-25', 1, 'H', '2024-06-30', '2024-06-30'),
 ('QR127', N'Mavi', N'Ayrshire', 375, '2018-05-30', '2024-06-30', 2, NULL, '2023-09-25', 2, 'H', '2024-05-01', '2024-05-01');
