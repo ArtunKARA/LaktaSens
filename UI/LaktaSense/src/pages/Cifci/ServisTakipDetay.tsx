@@ -28,6 +28,7 @@ const Layouts = () => {
                 type="text"
                 placeholder={t('Name')}
                 className="form-input w-full"
+                readOnly
               />
             </div>
             <div>

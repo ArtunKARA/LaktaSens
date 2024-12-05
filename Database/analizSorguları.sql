@@ -386,20 +386,23 @@ USE laktasens;
 SELECT 
     servisteInekler.inekID,
     servisteInekler.ad,
-    'Serviste' AS durum,
+	servisteInekler.kalanGun AS guncelGunSayisi,
+	servisteInekler.dollenmeSayisi,
     CASE 
-        WHEN servisteInekler.kalanGun < 0 THEN 'Kontrol Edilmeli'
-        ELSE CONCAT(servisteInekler.kalanGun, ' gün kaldı')
-    END AS guncelGunSayisi
+		WHEN servisteInekler.dollenmeSayisi > 2 AND servisteInekler.kalanGun > 127 THEN 'Sürüden Çıkarlmalı'
+        WHEN servisteInekler.kalanGun < 0 THEN 'Döllenmeli'
+        ELSE 'Serviste'
+    END AS durum
 FROM 
     (
         SELECT 
             inek.inekID,
             inek.ad,
+			inek.dollenmeSayisi,
             CASE 
-                WHEN inek.dollenmeSayisi IS NULL THEN 85 - DATEDIFF(DAY, inek.sonDogurmaTarihi, GETDATE())
-                WHEN inek.dollenmeSayisi = 1 THEN 106 - DATEDIFF(DAY, inek.sonDogurmaTarihi, GETDATE())
-                WHEN inek.dollenmeSayisi = 2 THEN 127 - DATEDIFF(DAY, inek.sonDogurmaTarihi, GETDATE())
+                WHEN inek.tuttuMu IS NULL THEN 85 - DATEDIFF(DAY, inek.sonDogurmaTarihi, GETDATE())
+                WHEN inek.dollenmeSayisi = 1 THEN 21 - DATEDIFF(DAY, inek.sonDollenme, GETDATE()) -- 106
+                WHEN inek.dollenmeSayisi = 2 THEN 21 - DATEDIFF(DAY, inek.sonDollenme, GETDATE()) -- 127
                 ELSE -DATEDIFF(DAY, inek.sonDogurmaTarihi, GETDATE())
             END AS kalanGun
         FROM 
@@ -416,12 +419,12 @@ FROM
 
 
 
---DöllenmeDetaySorgusu ve kontrol
+--DöllenmeDetaySorgusu Update
 UPDATE dollenme
 SET 
     tuttuMu = 'H',                   -- Yeni döllenme durumu ('E': Evet, 'H': Hayır)
     dollenmeTarihi = '2024-11-22',   -- Yeni döllenme tarihi
-    dollenmeSayisi = 3               -- Yeni döllenme sayısı
+    dollenmeSayisi = dollenmeSayisi + 1    -- Yeni döllenme sayısı
 WHERE inekID = 1;                    -- Güncellenecek inekID
 
 -- Güncellenen kayıtları görüntüle
@@ -463,6 +466,8 @@ JOIN
 WHERE 
     kullanicilar.kullaniciID = 1; -- Kullanıcı ID'si burada belirtiliyor
 
+
+-- Servisdetay update
 
 
 

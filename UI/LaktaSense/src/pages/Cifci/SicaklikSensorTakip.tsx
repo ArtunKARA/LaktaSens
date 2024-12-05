@@ -198,7 +198,7 @@ const MultipleTables = () => {
                    
                     <Transition appear show={modal21} as={Fragment}>
                       <Dialog as="div" open={modal21} onClose={() => setModal21(false)}>
-                        <div className="fixed inset-0 z-10 overflow-y-auto ">
+                        <div className="fixed inset-0 z-10 overflow-y-auto bg-[black]/10">
                           <div className="flex min-h-screen items-center justify-center px-4">
                             <Dialog.Panel className="panel my-8 w-full max-w-sm overflow-hidden rounded-lg py-1 px-4 text-black dark:text-white-dark">
                               <div className="flex items-center justify-between p-5">

@@ -10,6 +10,7 @@ import IconBell from '../../components/Icon/IconBell';
 import IconXCircle from '../../components/Icon/IconXCircle';
 import IconPencil from '../../components/Icon/IconPencil';
 import IconTrashLines from '../../components/Icon/IconTrashLines';
+import { useNavigate } from 'react-router-dom'; // Yönlendirme için ekledik
 
 
 interface CowData {
@@ -24,6 +25,10 @@ const MultipleTables = () => {
     const storedUserInfo = localStorage.getItem('userInfo');
     const userInfo = storedUserInfo ? JSON.parse(storedUserInfo) : null;
     const [rowData, setRowData] = useState<CowData[]>([]);
+    const navigate = useNavigate(); // Yönlendirme için kullanılıyor
+    const handleEditServisTakipDetay = () => {
+        navigate('/cifci/ServisTakipDetay'); // Doğru rota ile yönlendir
+      };
     useEffect(() => {
         // API'yi çağırma
         const fetchData = async () => {
@@ -155,13 +160,8 @@ const MultipleTables = () => {
                                 render: () => (
                                     <div className="flex items-center w-max mx-auto gap-2">
                                         <Tippy content="Edit">
-                                            <button type="button">
+                                            <button type="button" onClick={handleEditServisTakipDetay}>
                                                 <IconPencil />
-                                            </button>
-                                        </Tippy>
-                                        <Tippy content="Delete">
-                                            <button type="button">
-                                                <IconTrashLines />
                                             </button>
                                         </Tippy>
                                     </div>

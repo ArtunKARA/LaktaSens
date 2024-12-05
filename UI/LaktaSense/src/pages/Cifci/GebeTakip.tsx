@@ -10,6 +10,7 @@ import IconBell from '../../components/Icon/IconBell';
 import IconXCircle from '../../components/Icon/IconXCircle';
 import IconPencil from '../../components/Icon/IconPencil';
 import IconTrashLines from '../../components/Icon/IconTrashLines';
+import { useNavigate } from 'react-router-dom'; // Yönlendirme için ekledik
 
 
 interface CowData {
@@ -48,6 +49,10 @@ const MultipleTables = () => {
 
 
     const { t } = useTranslation();
+    const navigate = useNavigate(); // Yönlendirme için kullanılıyor
+    const handleEditInekEkle = () => {
+        navigate('/cifci/InekEkle'); // Doğru rota ile yönlendir
+      };
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(setPageTitle(t('Pregnant')));
@@ -158,7 +163,7 @@ const MultipleTables = () => {
                                 render: () => (
                                     <div className="flex items-center w-max mx-auto gap-2">
                                         <Tippy content="Edit">
-                                            <button type="button">
+                                            <button type="button" onClick={handleEditInekEkle}>
                                                 <IconPencil />
                                             </button>
                                         </Tippy>

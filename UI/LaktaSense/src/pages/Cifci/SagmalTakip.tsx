@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { DataTable, DataTableSortStatus } from 'mantine-datatable';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Fragment} from 'react';
 import sortBy from 'lodash/sortBy';
 import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
@@ -10,6 +10,11 @@ import IconBell from '../../components/Icon/IconBell';
 import IconXCircle from '../../components/Icon/IconXCircle';
 import IconPencil from '../../components/Icon/IconPencil';
 import IconTrashLines from '../../components/Icon/IconTrashLines';
+import 'tippy.js/dist/tippy.css';
+import { Dialog, Transition } from '@headlessui/react';
+import IconX from '../../components/Icon/IconX';
+
+
 
 
 interface CowData {
@@ -48,12 +53,29 @@ const MultipleTables = () => {
 
 
     const { t } = useTranslation();
+    const [page2, setPage2] = useState(1);
+    const PAGE_SIZES = [10, 20, 30, 50, 100];
+    const [pageSize2, setPageSize2] = useState(PAGE_SIZES[0]);
+    const [initialRecords2, setInitialRecords2] = useState(sortBy(rowData, 'firstName'));
+    const [recordsData2, setRecordsData2] = useState(initialRecords2);
+    const [search2, setSearch2] = useState('');
+    const [sortStatus2, setSortStatus2] = useState<DataTableSortStatus>({
+    columnAccessor: 'firstName',
+    direction: 'asc',
+  });
+  const [modal21, setModal21] = useState(false);
+
+  useEffect(() => {
+    const from = (page2 - 1) * pageSize2;
+    const to = from + pageSize2;
+    setRecordsData2([...initialRecords2.slice(from, to)]);
+  }, [page2, pageSize2, initialRecords2]);
+    
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(setPageTitle(t('Milking')));
     });
     const [page, setPage] = useState(1);
-    const PAGE_SIZES = [10, 20, 30, 50, 100];
     const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
     const [initialRecords, setInitialRecords] = useState<CowData[]>([]);
     useEffect(() => {
@@ -91,6 +113,13 @@ const MultipleTables = () => {
         });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [search]);
+
+
+    useEffect(() => {
+      const from = (page2 - 1) * pageSize2;
+      const to = from + pageSize2;
+      setRecordsData2([...initialRecords2.slice(from, to)]);
+    }, [page2, pageSize2, initialRecords2]);
 
     useEffect(() => {
         const data = sortBy(initialRecords, sortStatus.columnAccessor);
@@ -149,24 +178,49 @@ const MultipleTables = () => {
                                 render: ({ durum }) => <span className={`badge bg-${statusColor(durum)}`}>{durum}</span>,
                             },
                             {
-                                accessor: 'Düzenle',
-                                title: t('Edit'),
-                                titleClassName: '!text-center',
+                                accessor: 'Actions',
+                                title: t('Actions'),
                                 render: () => (
-                                    <div className="flex items-center w-max mx-auto gap-2">
-                                        <Tippy content="Edit">
-                                            <button type="button">
-                                                <IconPencil />
-                                            </button>
-                                        </Tippy>
-                                        <Tippy content="Delete">
-                                            <button type="button">
-                                                <IconTrashLines />
-                                            </button>
-                                        </Tippy>
-                                    </div>
+                                  <div className="flex items-center gap-2">
+                                    <Tippy content="Edit">
+                                      <button type="button"onClick={() => setModal21(true)} className="btn btn-primary">
+                                        <IconPencil />
+                                      </button>
+                                    </Tippy>
+                                   
+                                    <Transition appear show={modal21} as={Fragment}>
+                                      <Dialog as="div" open={modal21} onClose={() => setModal21(false)}>
+                                        <div className="fixed inset-0 z-10 overflow-y-auto bg-[black]/10">
+                                          <div className="flex min-h-screen items-center justify-center px-4">
+                                            <Dialog.Panel className="panel my-8 w-full max-w-sm overflow-hidden rounded-lg py-1 px-4 text-black dark:text-white-dark">
+                                              <div className="flex items-center justify-between p-5">
+                                                <h5> {t('Pass to other loop')}</h5>
+                                                <button
+                                                  type="button"
+                                                  onClick={() => setModal21(false)}
+                                                  className="text-white-dark hover:text-dark"
+                                                >
+                                                  <IconX className="w-5 h-5" />
+                                                </button>
+                                              </div>
+                                              <div className="p-5">
+                                                <form>
+                                                  <div className="relative mb-4">
+                                                    <input type="date" placeholder="Tarih" className="form-input" id="tarih" />
+                                                  </div>
+                                                  <button type="button" className="btn btn-primary w-full">
+                                                  {t('Save')}
+                                                  </button>
+                                                </form>
+                                              </div>
+                                            </Dialog.Panel>
+                                          </div>
+                                        </div>
+                                      </Dialog>
+                                    </Transition>
+                                  </div>
                                 ),
-                            },
+                              },
                         ]}
                         totalRecords={initialRecords.length}
                         recordsPerPage={pageSize}
