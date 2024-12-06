@@ -1,3 +1,5 @@
+
+//GömülüSensorTakip sayfası kopyası
 import { useTranslation } from 'react-i18next';
 import { useEffect } from 'react';
 import { setPageTitle } from '../../store/themeConfigSlice';
@@ -15,11 +17,14 @@ const Layouts = () => {
   }, [dispatch]);
 
   // Yönlendirme işlemi için bir fonksiyon tanımlıyoruz
-  const handleEditDepoTemperatureSensor = () => {
-    navigate('/cifci/DepoSicaklikSensorTakip'); // Doğru rota ile yönlendir
+  const handleEditTemperatureSensor = () => {
+    navigate('/cifci/SicaklikSensorTakip'); // Doğru rota ile yönlendir
   };
-  const handleEdiDepotHumiditySensor = () => {
-    navigate('/cifci/DepoNemSensorTakip'); // Doğru rota ile yönlendir
+  const handleEditCowsTemperatureSensor = () => {
+    navigate('/cifci/InekSicaklikSensorTakip'); // Doğru rota ile yönlendir
+  };
+  const handleEditHumiditySensor = () => {
+    navigate('/cifci/NemSensorTakip'); // Doğru rota ile yönlendir
   };
 
   return (
@@ -48,7 +53,7 @@ const Layouts = () => {
                   type="button"
                   className="ml-2 p-2 bg-gray-200 rounded hover:bg-gray-300"
                   title={t('Edit')}
-                  onClick={handleEditDepoTemperatureSensor} // Butona tıklanınca yönlendir
+                  onClick={handleEditTemperatureSensor} // Butona tıklanınca yönlendir
                 >
                   <IconPencil className="text-gray-500" />
                 </button>
@@ -69,7 +74,29 @@ const Layouts = () => {
                   type="button"
                   className="ml-2 p-2 bg-gray-200 rounded hover:bg-gray-300"
                   title={t('Edit')}
-                  onClick={handleEdiDepotHumiditySensor} // Butona tıklanınca yönlendir
+                  onClick={handleEditHumiditySensor} // Butona tıklanınca yönlendir
+                >
+                  <IconPencil className="text-gray-500" />
+                </button>
+              </div>
+            </div>
+
+            <div className="relative">
+              <label htmlFor="Fire Sensor" className="block font-semibold mb-1">
+                {t('Fire Sensor')}
+              </label>
+              <div className="flex items-center">
+                <input
+                  id="Fire Sensor"
+                  type="text"
+                  className="form-input w-full"
+                />
+                <button
+                  type="button"
+                  className="ml-2 p-2 bg-gray-200 rounded hover:bg-gray-300"
+                  title={t('Edit')}
+                  onClick={handleEditCowsTemperatureSensor} // Butona tıklanınca yönlendir
+
                 >
                   <IconPencil className="text-gray-500" />
                 </button>

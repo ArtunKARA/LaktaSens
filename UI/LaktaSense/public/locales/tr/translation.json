@@ -234,5 +234,7 @@
     "Pass to other loop": "Diğer döngüye geçir",
     "Last Calving Date": "Son Buzağılama Tarihi",
     "Do you know the last calving date?": "Son buzağılama tarihini biliyor musunuz?",
-    "Number of Fertilizations": "Döllenme Sayisi"
+    "Number of Fertilizations": "Döllenme Sayisi",
+    "Sensor details and instant information": "Sensor detay ve anlık bilgi",
+    "Fire Sensor": "Yangın Sensörü"
 }
