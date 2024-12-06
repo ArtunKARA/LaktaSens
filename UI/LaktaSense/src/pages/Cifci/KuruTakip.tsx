@@ -168,50 +168,7 @@ const MultipleTables = () => {
                                 sortable: true,
                                 render: ({ durum }) => <span className={`badge bg-${statusColor(durum)}`}>{durum}</span>,
                             },
-                            {
-                                accessor: 'Actions',
-                                title: t('Actions'),
-                                render: () => (
-                                  <div className="flex items-center gap-2">
-                                    <Tippy content="Edit">
-                                      <button type="button"onClick={() => setModal21(true)} className="btn btn-primary">
-                                        <IconPencil />
-                                      </button>
-                                    </Tippy>
-                                   
-                                    <Transition appear show={modal21} as={Fragment}>
-                                      <Dialog as="div" open={modal21} onClose={() => setModal21(false)}>
-                                        <div className="fixed inset-0 z-10 overflow-y-auto bg-[black]/10">
-                                          <div className="flex min-h-screen items-center justify-center px-4">
-                                            <Dialog.Panel className="panel my-8 w-full max-w-sm overflow-hidden rounded-lg py-1 px-4 text-black dark:text-white-dark">
-                                              <div className="flex items-center justify-between p-5">
-                                                <h5> {t('Pass to other loop')}</h5>
-                                                <button
-                                                  type="button"
-                                                  onClick={() => setModal21(false)}
-                                                  className="text-white-dark hover:text-dark"
-                                                >
-                                                  <IconX className="w-5 h-5" />
-                                                </button>
-                                              </div>
-                                              <div className="p-5">
-                                                <form>
-                                                  <div className="relative mb-4">
-                                                    <input type="date" placeholder="Tarih" className="form-input" id="tarih" />
-                                                  </div>
-                                                  <button type="button" className="btn btn-primary w-full">
-                                                  {t('Save')}
-                                                  </button>
-                                                </form>
-                                              </div>
-                                            </Dialog.Panel>
-                                          </div>
-                                        </div>
-                                      </Dialog>
-                                    </Transition>
-                                  </div>
-                                ),
-                              },
+                            
                         ]}
                         totalRecords={initialRecords.length}
                         recordsPerPage={pageSize}

@@ -154,7 +154,6 @@
     "Password": "Parola",
     "Don't have an account ?" : "Hesabınız yok mu?",
     "SIGN UP" : "KAYDOL",
-    "or" : "veya",
     "Enter Email": "E-posta Girin",
     "Enter Password": "Şifre Girin",
     "Email or password is incorrect.":"Eposta yada şifre yanlış.",
@@ -174,7 +173,6 @@
     "Milk Cycle": "Süt Döngüsü",
     "Detail": "Detay",
     "First Name": "Adınız",
-    "Name": "Adı",
     "Id": "Id",
     "Enter First Name": "Adınızı Giriniz",
     "Last Name": "Soy Adınız",
@@ -236,5 +234,10 @@
     "Do you know the last calving date?": "Son buzağılama tarihini biliyor musunuz?",
     "Number of Fertilizations": "Döllenme Sayisi",
     "Sensor details and instant information": "Sensor detay ve anlık bilgi",
-    "Fire Sensor": "Yangın Sensörü"
+    "Fire Sensor": "Yangın Sensörü",
+    "Milk Cycle Analysis": "Süt Döngü Analizi",
+    "Calving Cycle Analysis": "Yavrulama Döngü Analizi",
+    "Must be Checked": "Kontrol Edilmeli",
+    "Calving": "Yavrulama"
+    
 }
