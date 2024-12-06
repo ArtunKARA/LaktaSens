@@ -239,8 +239,14 @@ const MultipleTables = () => {
                                                 <IconPencil />
                                             </button>
                                         </Tippy>
+                                        <Tippy content="Edit">
+                                            <button type="button" onClick={() => handleDetailClick(İnekID)}>
+                                                <IconTrashLines />
+                                            </button>
+                                        </Tippy>
                                        
                                     </div>
+                                    
                                 ),
                             },
                         ]}
