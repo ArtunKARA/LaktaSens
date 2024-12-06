@@ -3,6 +3,9 @@ import { setPageTitle } from '../../store/themeConfigSlice';
 import { useDispatch } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import Tippy from '@tippyjs/react';
+import 'tippy.js/dist/tippy.css';
+import IconTrashLines from '../../components/Icon/IconTrashLines';
 interface CowData {
   İnekID: string;
   İnekAdı: string;
@@ -58,6 +61,11 @@ const Layouts = () => {
       <div className="w-full flex-grow p-6 bg-white rounded-lg shadow-lg mx-auto">
         <div className="flex items-center justify-between mb-5">
           <h5 className="font-semibold text-lg dark:text-white-light">{t('Detail')}</h5>
+          <Tippy content="Edit">
+              <button type="button" >
+                <IconTrashLines />
+              </button>
+          </Tippy>
         </div>
 
         {/* Form container */}
