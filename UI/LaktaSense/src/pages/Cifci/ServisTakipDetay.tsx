@@ -33,7 +33,7 @@ const Layouts = () => {
             </div>
             <div>
               <input
-                type="text"
+                type="date"
                 placeholder={t('Last Fertilization Date')}
                 className="form-input w-full"
               />

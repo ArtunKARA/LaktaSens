@@ -18,7 +18,8 @@ interface CowData {
     ad: string;
     irk: string;
     durum: string;
-    kalanGun: number;
+    dollenmeSayisi: number;
+    guncelGunSayisi: number;
 }
 
 const MultipleTables = () => {
@@ -33,7 +34,7 @@ const MultipleTables = () => {
         // API'yi çağırma
         const fetchData = async () => {
           try {
-            const response = await fetch('http://localhost:3030/api/sagim/postSagim', {
+            const response = await fetch('http://localhost:3030/api/servis/postServis', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
@@ -90,7 +91,7 @@ const MultipleTables = () => {
                     item.İnekID.toString().toLowerCase().includes(search.toLowerCase()) ||
                     item.ad.toLowerCase().includes(search.toLowerCase()) ||
                     item.durum.toLowerCase().includes(search.toLowerCase()) ||
-                    item.kalanGun.toString().toLowerCase().includes(search.toLowerCase())
+                    item.guncelGunSayisi.toString().toLowerCase().includes(search.toLowerCase())
                 );
             });
         });
@@ -106,11 +107,14 @@ const MultipleTables = () => {
 
     const statusColor = (durum : String) => {
         const color = ['primary', 'secondary', 'success', 'danger', 'warning', 'info'];
-        if(durum != "Sagimda"){
-            return color[3]
-        }else{
+        if(durum == "Serviste"){
             return color[2]
+        }else if(durum == "Döllenmeli"){
+            return color[4]
+        }else{
+            return color[3]
         }
+        
     };
 
     return (
@@ -143,7 +147,12 @@ const MultipleTables = () => {
                                 sortable: true,
                             },
                             {
-                                accessor: 'kalanGun',
+                                accessor: 'dollenmeSayisi',
+                                title: t('Number of Fertilizations'),
+                                sortable: true,
+                            },                          
+                            {
+                                accessor: 'guncelGunSayisi',
                                 title: t('Number of Days Remaining'),
                                 sortable: true,
                             },                          
