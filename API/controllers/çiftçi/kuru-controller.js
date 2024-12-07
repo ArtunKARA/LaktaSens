@@ -25,7 +25,8 @@ exports.postKuru = async (req, res) => {
             JOIN 
                 kullanicilar ON inek.firmaID = kullanicilar.firmaID
             WHERE 
-                kullanicilar.kullaniciID = @ID 
+                kullanicilar.kullaniciID = @ID
+                AND NOT(inek.sonDogurmaTarihi IS NULL AND inek.sonDollenme IS NULL AND inek.sonKuruTarihi IS NULL) 
                 AND inek.sonKuruTarihi > inek.sonDogurmaTarihi;`
         );
         if (result.recordset.length === 0) {

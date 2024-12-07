@@ -50,9 +50,9 @@ const MultipleTables = () => {
 
     const { t } = useTranslation();
     const navigate = useNavigate(); // Yönlendirme için kullanılıyor
-    const handleEditInekEkle = () => {
-        navigate('/cifci/InekEkle'); // Doğru rota ile yönlendir
-      };
+    const handleEditInekEkle = (id : any) => {
+        navigate('/cifci/InekEkle', { state: { cowID: id } });
+    };
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(setPageTitle(t('Pregnant')));
@@ -160,10 +160,10 @@ const MultipleTables = () => {
                                 accessor: 'Yavru Ekle',
                                 title: t('Add Calf'),
                                 titleClassName: '!text-center',
-                                render: () => (
+                                render: ({inekID}) => (
                                     <div className="flex items-center w-max mx-auto gap-2">
                                         <Tippy content="Edit">
-                                            <button type="button" onClick={handleEditInekEkle}>
+                                            <button type="button" onClick={() => handleEditInekEkle(inekID)}>
                                                 <IconPencil />
                                             </button>
                                         </Tippy>

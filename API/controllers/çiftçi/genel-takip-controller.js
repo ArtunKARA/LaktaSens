@@ -50,9 +50,8 @@ exports.postGenelTakip = async (req, res) => {
                   WHEN (inek.sonDollenme < inek.sonDogurmaTarihi AND (inek.tuttuMu = 'H' OR inek.tuttuMu IS NULL)) 
                       OR (inek.sonDollenme > inek.sonDogurmaTarihi AND (inek.tuttuMu = 'H' OR inek.tuttuMu IS NULL)) THEN
                       CASE 
-                          WHEN inek.dollenmeSayisi IS NULL THEN 85 - DATEDIFF(DAY, inek.sonDogurmaTarihi, GETDATE())
-                          WHEN inek.dollenmeSayisi = 1 THEN 106 - DATEDIFF(DAY, inek.sonDogurmaTarihi, GETDATE())
-                          WHEN inek.dollenmeSayisi = 2 THEN 127 - DATEDIFF(DAY, inek.sonDogurmaTarihi, GETDATE())
+                          WHEN inek.tuttuMu IS NULL THEN 85 - DATEDIFF(DAY, inek.sonDogurmaTarihi, GETDATE())
+                          WHEN inek.dollenmeSayisi > 0 THEN 21 - DATEDIFF(DAY, inek.sonDollenme, GETDATE())
                           ELSE NULL
                       END
                   ELSE NULL
@@ -61,10 +60,11 @@ exports.postGenelTakip = async (req, res) => {
               CASE 
                   WHEN inek.sonDollenme > inek.sonDogurmaTarihi AND inek.tuttuMu = 'E' AND 280 - DATEDIFF(DAY, inek.sonDollenme, GETDATE()) < 0 THEN 'Kontrol Edilmeli'
                   WHEN inek.tuttuMu = 'E' AND 280 - DATEDIFF(DAY, inek.sonDollenme, GETDATE()) >= 0 THEN 'Normal'
-                  WHEN inek.dollenmeSayisi IS NULL AND 85 - DATEDIFF(DAY, inek.sonDogurmaTarihi, GETDATE()) < 0 THEN 'Kontrol Edilmeli'
+				  WHEN inek.tuttuMu IS NULL AND 85 - DATEDIFF(DAY, inek.sonDogurmaTarihi, GETDATE()) > 0 THEN 'Normal'
+                  WHEN inek.tuttuMu IS NULL AND 85 - DATEDIFF(DAY, inek.sonDogurmaTarihi, GETDATE()) < 0 THEN 'Kontrol Edilmeli'
                   WHEN inek.dollenmeSayisi = 1 AND 106 - DATEDIFF(DAY, inek.sonDogurmaTarihi, GETDATE()) < 0 THEN 'Kontrol Edilmeli'
                   WHEN inek.dollenmeSayisi = 2 AND 127 - DATEDIFF(DAY, inek.sonDogurmaTarihi, GETDATE()) < 0 THEN 'Kontrol Edilmeli'
-                  ELSE 'Normal'
+                  ELSE 'Çıkarılmalı'
               END AS "YavruKalanGünDurumu"
 
           FROM 
@@ -72,7 +72,8 @@ exports.postGenelTakip = async (req, res) => {
           JOIN 
               kullanicilar ON inek.firmaID = kullanicilar.firmaID
           WHERE 
-              kullanicilar.kullaniciID = @ID;`
+              kullanicilar.kullaniciID = @ID
+              AND NOT(inek.sonDogurmaTarihi IS NULL AND inek.sonDollenme IS NULL AND inek.sonKuruTarihi IS NULL);`
         );
         if (result.recordset.length === 0) {
           return res.status(404).json(null);

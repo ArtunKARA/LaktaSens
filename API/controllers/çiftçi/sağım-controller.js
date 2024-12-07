@@ -25,6 +25,7 @@ exports.postSagim = async (req, res) => {
                 kullanicilar ON inek.firmaID = kullanicilar.firmaID
             WHERE 
                 kullanicilar.kullaniciID = @ID
+                AND NOT(inek.sonDogurmaTarihi IS NULL AND inek.sonDollenme IS NULL AND inek.sonKuruTarihi IS NULL)
                 AND sonDogurmaTarihi > sonKuruTarihi 
                 AND DATEDIFF(DAY, sonDogurmaTarihi, GETDATE()) <= 305;`
         );

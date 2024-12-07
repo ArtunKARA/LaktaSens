@@ -258,6 +258,7 @@
     "Barn Sensor": "Ahır Sensörü",
     "Warehouse Sensor": "Depo Sensörü",
     "Leash Sensor": "Tasma Sensörü",
-    "Newborn":  "Yenidoğan"
-
+    "Newborn":  "Yenidoğan",
+    "A cow cannot be both dry and in service.":"Bir inek hem kuruda ve servis durumda olamaz",
+    "Make a loop selection.":"Döngü seçimi yapınız"
 }

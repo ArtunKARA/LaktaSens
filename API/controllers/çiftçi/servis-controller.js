@@ -41,6 +41,7 @@ exports.postServis = async (req, res) => {
                             kullanicilar ON inek.firmaID = kullanicilar.firmaID
                         WHERE 
                             kullanicilar.kullaniciID = @ID
+                            AND NOT(inek.sonDogurmaTarihi IS NULL AND inek.sonDollenme IS NULL AND inek.sonKuruTarihi IS NULL)
                             AND (
                                 (inek.sonDollenme < inek.sonDogurmaTarihi AND (inek.tuttuMu = 'H' OR inek.tuttuMu IS NULL))
                                 OR (inek.sonDollenme > inek.sonDogurmaTarihi AND (inek.tuttuMu = 'H' OR inek.tuttuMu IS NULL))

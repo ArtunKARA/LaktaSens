@@ -2,24 +2,28 @@ import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
 import { setPageTitle } from '../../store/themeConfigSlice';
 import { useDispatch } from 'react-redux';
+import { useLocation } from 'react-router-dom';
 
 const Layouts = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
 
+  const location = useLocation();
+  const { cowID } = location.state || {}; // State üzerinden gelen ID
   const [isOlderThanTwoYears, setIsOlderThanTwoYears] = useState(false);
   const [milkCycle, setMilkCycle] = useState('');
   const [calvingCycle, setCalvingCycle] = useState('');
-  const [name, setName] = useState('Daisy');
-  const [breed, setBreed] = useState('Holstein Friesian');
-  const [birthDate, setBirthDate] = useState('2019-04-15');
-  const [weight, setWeight] = useState('600');
+  const [name, setName] = useState('');
+  const [breed, setBreed] = useState('');
+  const [birthDate, setBirthDate] = useState('');
+  const [weight, setWeight] = useState('');
   const [knowsLastCalvingDate, setKnowsLastCalvingDate] = useState('no');// Başlangıçta 'Hayır' seçili
   const [lastCalvingDate, setLastCalvingDate] = useState('');
 
   useEffect(() => {
-    dispatch(setPageTitle('Layouts'));
+    dispatch(setPageTitle('Add Cow'));
 
+    console.log(cowID);
     const currentYear = new Date().getFullYear();
     const birthYear = new Date(birthDate).getFullYear();
     const age = currentYear - birthYear;
@@ -28,7 +32,7 @@ const Layouts = () => {
   }, [dispatch, birthDate]);
 
   const handleSave = () => {
-    console.log('Form kaydedildi:', {
+    console.log('Form not kaydedildi:', {
       name,
       breed,
       birthDate,
@@ -38,7 +42,7 @@ const Layouts = () => {
       knowsLastCalvingDate,
       lastCalvingDate,
     });
-    alert(t('Form has been saved!'));
+    alert(t('Form has been not saved!'));
   };
 
   return (
@@ -91,7 +95,7 @@ const Layouts = () => {
             />
           </div>
 
-          {isOlderThanTwoYears && (
+          {(isOlderThanTwoYears && (cowID === undefined)) && (
             <>
             <div>
   <label className="text-gray-700 font-semibold">{t('Do you know the last calving date?')}</label>
@@ -192,7 +196,25 @@ const Layouts = () => {
         <div className="mt-6 flex justify-center">
           <button
             type="button"
-            onClick={handleSave}
+            onClick={() => {
+              if(!(cowID === undefined)){
+                
+              }else if(knowsLastCalvingDate === 'inService'){
+
+              }else if(knowsLastCalvingDate === 'pregnant'){
+                
+              }else if(knowsLastCalvingDate === 'no'){
+                if(milkCycle === 'kuruda' && calvingCycle === 'serviste'){
+                  alert(t('A cow cannot be both dry and in service.'));
+                }else if((milkCycle === 'sağımda' && calvingCycle === 'serviste')||(milkCycle === 'sağımda' && calvingCycle === 'gebe')||(milkCycle === 'kuruda' && calvingCycle === 'gebe')){
+                  
+                }else{
+                  alert(t('Make a loop selection.'))
+                }
+              }else{
+                handleSave();
+              }
+            }}
             className="px-4 py-2 w-full bg-[#016b00] text-white rounded-md shadow hover:bg-[#014d00] focus:ring-2 focus:ring-[#016b00]"
           >
             {t('Save')}
