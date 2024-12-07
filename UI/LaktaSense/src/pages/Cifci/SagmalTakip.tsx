@@ -13,12 +13,13 @@ import IconTrashLines from '../../components/Icon/IconTrashLines';
 import 'tippy.js/dist/tippy.css';
 import { Dialog, Transition } from '@headlessui/react';
 import IconX from '../../components/Icon/IconX';
+import axios from 'axios';
 
 
 
 
 interface CowData {
-    İnekID: string;
+    inekID: string;
     ad: string;
     irk: string;
     durum: string;
@@ -64,7 +65,28 @@ const MultipleTables = () => {
     direction: 'asc',
   });
   const [modal21, setModal21] = useState(false);
+  const [selectedDate, setSelectedDate] = useState("");
+  const handleSave = async (ID:number) => {
+    if (!selectedDate) {
+      alert(t("Please select a date!"));
+      return;
+    }
 
+    try {
+      const response = await axios.post("http://localhost:3030/api/sagim/postSagimAksiyon", {
+        ID: ID, 
+        Tarih: selectedDate,
+      });
+
+      console.log(response.data);
+      alert(t("Saved successfully!"));
+      setModal21(false); // Modalı kapat.
+      window.location.reload();
+    } catch (error) {
+      console.error(error);
+      alert(t("An error occurred while saving!")+ error);
+    }
+  };
   useEffect(() => {
     const from = (page2 - 1) * pageSize2;
     const to = from + pageSize2;
@@ -104,7 +126,7 @@ const MultipleTables = () => {
         setInitialRecords(() => {
             return rowData.filter((item) => {
                 return (
-                    item.İnekID.toString().toLowerCase().includes(search.toLowerCase()) ||
+                    item.inekID.toString().toLowerCase().includes(search.toLowerCase()) ||
                     item.ad.toLowerCase().includes(search.toLowerCase()) ||
                     item.durum.toLowerCase().includes(search.toLowerCase()) ||
                     item.kalanGun.toString().toLowerCase().includes(search.toLowerCase())
@@ -180,7 +202,7 @@ const MultipleTables = () => {
                             {
                                 accessor: 'Actions',
                                 title: t('Actions'),
-                                render: () => (
+                                render: ({ inekID }) => (
                                   <div className="flex items-center gap-2">
                                     <Tippy content="Edit">
                                       <button type="button"onClick={() => setModal21(true)} className="btn btn-primary">
@@ -194,7 +216,7 @@ const MultipleTables = () => {
                                           <div className="flex min-h-screen items-center justify-center px-4">
                                             <Dialog.Panel className="panel my-8 w-full max-w-sm overflow-hidden rounded-lg py-1 px-4 text-black dark:text-white-dark">
                                               <div className="flex items-center justify-between p-5">
-                                                <h5> {t('Pass to other loop')}</h5>
+                                                <h5> {t('Pass to other loop')} </h5>
                                                 <button
                                                   type="button"
                                                   onClick={() => setModal21(false)}
@@ -206,10 +228,14 @@ const MultipleTables = () => {
                                               <div className="p-5">
                                                 <form>
                                                   <div className="relative mb-4">
-                                                    <input type="date" placeholder="Tarih" className="form-input" id="tarih" />
+                                                    <input type="date" placeholder="Tarih" className="form-input" id="tarih" value={selectedDate} onChange={(e) => setSelectedDate(e.target.value)}/>
                                                   </div>
-                                                  <button type="button" className="btn btn-primary w-full">
-                                                  {t('Save')}
+                                                  <button
+                                                    type="button"
+                                                    onClick={() => handleSave(Number(inekID))} // Kaydetme fonksiyonu çağrısı
+                                                    className="btn btn-primary w-full"
+                                                  >
+                                                    {t("Save")}
                                                   </button>
                                                 </form>
                                               </div>

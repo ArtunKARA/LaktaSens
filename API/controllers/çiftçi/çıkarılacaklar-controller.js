@@ -2,12 +2,12 @@ const { poolPromise } = require("../../service/connection.js");
 
 exports.postCikarilacaklar = async (req, res) => {
     const {
-        id
+        ID
       } = req.body;
     try {
         const pool = await poolPromise;
         const result = await pool.request()
-        .input("id",id)
+        .input("ID",ID)
         .query(
             `       SELECT 
                         inek.inekID AS "İnekID",
@@ -24,6 +24,8 @@ exports.postCikarilacaklar = async (req, res) => {
                                 CONCAT('Gebe ', DATEDIFF(DAY, inek.sonDollenme, GETDATE()) - 280, ' gün gecikme')
                             WHEN inek.sonDogurmaTarihi > inek.sonDollenme AND inek.tuttuMu = NULL  AND DATEDIFF(DAY, inek.sonDogurmaTarihi, GETDATE()) > 127 THEN 
                                 CONCAT('Servis ', DATEDIFF(DAY, inek.sonDollenme, GETDATE()) - 127, ' gün gecikme')
+							WHEN inek.dollenmeSayisi > 2 THEN 
+                                CONCAT('Servis ', inek.dollenmeSayisi, ' adet döllneme sayısı')
                             ELSE NULL
                         END AS "Sebep",
 
@@ -40,7 +42,7 @@ exports.postCikarilacaklar = async (req, res) => {
                     JOIN 
                         kullanicilar ON inek.firmaID = kullanicilar.firmaID
                     WHERE 
-                        kullanicilar.kullaniciID = 2
+                        kullanicilar.kullaniciID = @ID
                         AND (
                             DATEDIFF(DAY, inek.sonDogurmaTarihi, GETDATE()) > 305 
                             OR DATEDIFF(DAY, inek.sonKuruTarihi, GETDATE()) > 60 
@@ -53,6 +55,7 @@ exports.postCikarilacaklar = async (req, res) => {
                                 WHEN inek.sonDogurmaTarihi > inek.sonKuruTarihi AND DATEDIFF(DAY, inek.sonDogurmaTarihi, GETDATE()) > 305 THEN 1
                                 WHEN inek.sonKuruTarihi > inek.sonDogurmaTarihi AND DATEDIFF(DAY, inek.sonKuruTarihi, GETDATE()) > 60 THEN 1
                                 WHEN inek.sonDollenme > inek.sonDogurmaTarihi AND inek.tuttuMu = 'E' AND DATEDIFF(DAY, inek.sonDollenme, GETDATE()) > 280 THEN 1
+								WHEN inek.dollenmeSayisi > 2 THEN 1
                                 ELSE NULL
                             END IS NOT NULL
                         );`

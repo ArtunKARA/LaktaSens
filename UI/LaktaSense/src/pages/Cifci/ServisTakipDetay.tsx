@@ -1,16 +1,52 @@
 import { useTranslation } from 'react-i18next';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { setPageTitle } from '../../store/themeConfigSlice';
 import { useDispatch } from 'react-redux';
-
+import { useLocation, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 const Layouts = () => {
+  const navigate = useNavigate()
   const { t } = useTranslation();
   const dispatch = useDispatch();
+  const location = useLocation();
+  const [selectedDate, setSelectedDate] = useState("");
+  const [selectedStatus, setselectedStatus] = useState("");
+  const { cowID, ad, dollenmeSayisi } = location.state || {};
+
+  const handleSave = async (ID:number) => {
+    if (!selectedDate) {
+      alert(t("Please select a date!"));
+      return;
+    }    
+    if (!selectedStatus) {
+      alert(t("Please select a status!"));
+      return;
+    }
+
+    try {
+      const response = await axios.post("http://localhost:3030/api/servis/postServisEkle", {
+        ID: ID, 
+        Tarih: selectedDate,
+        dollenmeSayisi: dollenmeSayisi, 
+        tuttuMu: selectedStatus,
+      });
+
+      console.log(response.data);
+      alert(t("Saved successfully!"));
+      navigate('/cifci/ServisTakip');
+    } catch (error) {
+      console.error(error);
+      alert(t("An error occurred while saving!")+ error);
+    }
+  };
 
   useEffect(() => {
-    dispatch(setPageTitle('Layouts'));
+    dispatch(setPageTitle(t('Fertilization Tracking')));
   }, [dispatch]);
 
+  const handleStatusChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setselectedStatus(event.target.value);  // Seçilen durumu güncelle
+  };
   return (
     <div className="min-h-screen bg-white flex justify-center items-center">
       {/* Form Container */}
@@ -28,6 +64,7 @@ const Layouts = () => {
                 type="text"
                 placeholder={t('Name')}
                 className="form-input w-full"
+                value={ad || ''}
                 readOnly
               />
             </div>
@@ -36,13 +73,16 @@ const Layouts = () => {
                 type="date"
                 placeholder={t('Last Fertilization Date')}
                 className="form-input w-full"
+                id="tarih" 
+                value={selectedDate} 
+                onChange={(e) => setSelectedDate(e.target.value)}
               />
             </div>
             <div>
               <input
                 type="text"
                 placeholder={t('Escaped Fertilization')}
-                value="dollenme sayısı"
+                value={dollenmeSayisi || ''}
                 readOnly
                 className="form-input w-full"
               />
@@ -57,8 +97,10 @@ const Layouts = () => {
                 <input
                   type="radio"
                   name="fertilization"
-                  value="yes"
+                  value="E"
                   className="mr-2"
+                  checked={selectedStatus === "E"}
+                  onChange={handleStatusChange}
                 />
                 {t('Yes')}
               </label>
@@ -66,8 +108,10 @@ const Layouts = () => {
                 <input
                   type="radio"
                   name="fertilization"
-                  value="no"
+                  value="H"
                   className="mr-2"
+                  checked={selectedStatus === "H"}
+                  onChange={handleStatusChange}
                 />
                 {t('No')}
               </label>
@@ -77,7 +121,9 @@ const Layouts = () => {
      
 
           {/* Submit Button */}
-          <button type="submit" className="btn btn-primary w-full">
+          <button type="button" className="btn btn-primary w-full"
+            onClick={() => handleSave(Number(cowID))}
+          >
             {t('Submit')}
           </button>
         </form>

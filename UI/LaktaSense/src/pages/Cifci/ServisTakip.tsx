@@ -14,7 +14,7 @@ import { useNavigate } from 'react-router-dom'; // Yönlendirme için ekledik
 
 
 interface CowData {
-    İnekID: string;
+    inekID: string;
     ad: string;
     irk: string;
     durum: string;
@@ -23,13 +23,13 @@ interface CowData {
 }
 
 const MultipleTables = () => {
+    const handleDetailClick = (İnekID : any, ad:string, dollenmeSayisi:number) => {
+        navigate('/cifci/ServisTakipDetay', { state: { cowID: İnekID, ad: ad,dollenmeSayisi: dollenmeSayisi } });
+    };
     const storedUserInfo = localStorage.getItem('userInfo');
     const userInfo = storedUserInfo ? JSON.parse(storedUserInfo) : null;
     const [rowData, setRowData] = useState<CowData[]>([]);
     const navigate = useNavigate(); // Yönlendirme için kullanılıyor
-    const handleEditServisTakipDetay = () => {
-        navigate('/cifci/ServisTakipDetay'); // Doğru rota ile yönlendir
-      };
     useEffect(() => {
         // API'yi çağırma
         const fetchData = async () => {
@@ -88,7 +88,7 @@ const MultipleTables = () => {
         setInitialRecords(() => {
             return rowData.filter((item) => {
                 return (
-                    item.İnekID.toString().toLowerCase().includes(search.toLowerCase()) ||
+                    item.inekID.toString().toLowerCase().includes(search.toLowerCase()) ||
                     item.ad.toLowerCase().includes(search.toLowerCase()) ||
                     item.durum.toLowerCase().includes(search.toLowerCase()) ||
                     item.guncelGunSayisi.toString().toLowerCase().includes(search.toLowerCase())
@@ -166,10 +166,10 @@ const MultipleTables = () => {
                                 accessor: 'Düzenle',
                                 title: t('Edit'),
                                 titleClassName: '!text-center',
-                                render: () => (
+                                render: ({inekID,ad,dollenmeSayisi}) => (
                                     <div className="flex items-center w-max mx-auto gap-2">
                                         <Tippy content="Edit">
-                                            <button type="button" onClick={handleEditServisTakipDetay}>
+                                            <button type="button" onClick={() => handleDetailClick(inekID,ad,dollenmeSayisi)}>
                                                 <IconPencil />
                                             </button>
                                         </Tippy>

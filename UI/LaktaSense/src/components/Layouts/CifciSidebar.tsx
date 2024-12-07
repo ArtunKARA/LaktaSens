@@ -199,14 +199,47 @@ const Sidebar = () => {
                                         </button>
 
                                         <AnimateHeight duration={300} height={currentMenu === 'Sensor Tracking' ? 'auto' : 0}>
+                                        <li className="menu nav-item">
+                                                <button
+                                                        type="button"
+                                                        className={`${
+                                                            errorSubMenu ? 'open' : ''
+                                                        } w-full before:bg-gray-300 before:w-[5px] before:h-[5px] before:rounded ltr:before:mr-2 rtl:before:ml-2 dark:text-[#888ea8] hover:bg-gray-100 dark:hover:bg-gray-900`}
+                                                        onClick={() => setErrorSubMenu(!errorSubMenu)}
+                                                    >
+                                                        {t('Definitions')}
+                                                        <div className={`${errorSubMenu ? 'rtl:rotate-90 -rotate-90' : ''} ltr:ml-auto rtl:mr-auto`}>
+                                                            <IconCaretsDown fill={true} className="w-4 h-4" />
+                                                        </div>
+                                                    </button>
+                                                    <AnimateHeight duration={300} height={errorSubMenu ? 'auto' : 0}>
+                                                    <ul className="sub-menu text-gray-500">
+                                                        <li>
+                                                            <a href="/pages/error404" target="_blank">
+                                                                {t('Barns')}
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="/pages/error500" target="_blank">
+                                                                {t('Ambars')}
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="/pages/error503" target="_blank">
+                                                                {t('Sensors')}
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </AnimateHeight>
+                                            </li>
                                             <ul className="sub-menu text-gray-500">
                                                 <li>
                                                     <NavLink to="/cifci/GomuluSensor">{t('Barn Tracking')}</NavLink>
                                                 </li>
                                                 <li>
                                                     <NavLink to="/cifci/DepoSensorTakip">{t('Feed Warehouse Tracking')}</NavLink>
-                                                </li>
-                                              
+                                                </li>                                        
+                                                
                                             </ul>
                                         </AnimateHeight>
                                     </li>

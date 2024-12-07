@@ -238,6 +238,13 @@
     "Milk Cycle Analysis": "Süt Döngü Analizi",
     "Calving Cycle Analysis": "Yavrulama Döngü Analizi",
     "Must be Checked": "Kontrol Edilmeli",
-    "Calving": "Yavrulama"
-    
+    "Calving": "Yavrulama",
+    "Saved successfully!":"Kayıt Başarılı",
+    "Definitions":"Tanımlamalar",
+    "Add Barn":"Ahır Ekle",
+    "Add Warehouse" : "Ambar Ekle",
+    "Add Sensor":"Sensör Ekle",
+    "Barns":"Ahırlar",
+    "Ambars" : "Ambarlar",
+    "Sensors" :"Sensörler"
 }
