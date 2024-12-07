@@ -249,5 +249,8 @@
     "Sensors" :"Sensörler",
     "Pregnancy and date of last fertilization are known": "Gebe ve Son Döllenme tarihi biliniyor",
     "İn service and due date is known":"Serviste ve Son Doğurma tarihi biliniyor",
-    "last fertilization date": "Son Döllenme tarihi"
+    "last fertilization date": "Son Döllenme tarihi",
+    "Sensor Name": "Sensör Adı",
+    "Sensor Analyzes": "Sensör Analizleri",
+    "Barn Sensor Tracking": "Ahır Sensör Takibi"
 }

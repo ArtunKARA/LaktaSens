@@ -92,6 +92,10 @@ const MultipleTables = () => {
     const handleEditNemSensorTakip = () => {
         navigate('/cifci/NemSensorTakip'); // Doğru rota ile yönlendir
       };
+      const handleEditCowsTemperatureSensor = () => {
+        navigate('/cifci/NemSensorTakip'); // Doğru rota ile yönlendir
+    };
+    
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(setPageTitle('Multiple Tables'));
@@ -203,76 +207,117 @@ const MultipleTables = () => {
         return status[random];
     };
 
-    return (
-        <div>
-            <div className="panel mt-6">
-                <div className="flex md:items-center md:flex-row flex-col mb-5 gap-5">
-                    <h5 className="font-semibold text-lg dark:text-white-light">{t('Feed Warehouse Temperature Sensor Tracking')}</h5>
-                    <div className="ltr:ml-auto rtl:mr-auto">
-                        <input type="text" className="form-input w-auto" placeholder="Search..." value={search2} onChange={(e) => setSearch2(e.target.value)} />
-                    </div>
-                </div>
-                <div className="datatables">
-                    <DataTable
-                        className="whitespace-nowrap table-hover"
-                        records={recordsData2}
-                        columns={[
-                            {
-                                accessor: 'Sensor',
-                                title: t('Sensor'),
-                                sortable: true,
-                                render: ({ firstName, lastName, id }) => (
-                                    <div className="flex items-center w-max">
-                                        <img className="w-9 h-9 rounded-full ltr:mr-2 rtl:ml-2 object-cover" src={`/assets/images/profile-${id}.jpeg`} alt="" />
-                                        <div>{firstName + ' ' + lastName}</div>
-                                    </div>
-                                ),
-                            },
-                          
-                            {
-                                accessor: 'Sensor Data',
-                                title: t('Sensor Data'),
-                                sortable: true,
-                            },
+    
 
-                           
-                            {
-                                accessor: 'status',
-                                title: t('Status'),
-                                sortable: true,
-                                render: () => <span className={`badge bg-${randomColor()} `}>{randomStatus()}</span>,
-                            },
-                            {
-                              accessor: 'Sensor detay ve anlık bilgi',
-                              title: t('Sensor details and instant information'),
+    return (
+      <div>
+          {/* Header Section */}
+          <div className="panel mt-6">
+          
+              {/* Form Section */}
+          
+                  <form className="grid grid-cols-3 gap-6">
+                  <div className="flex md:items-center md:flex-row flex-col mb-5 gap-5">
+                  <h5 className="font-semibold text-lg dark:text-white-light">{t('Barn Sensor Tracking')}</h5>
+              </div>
+                      {/* Temperature Sensor */}
+                      <div className="relative">
+                          <label htmlFor="temperatureSensor" className="block font-semibold mb-1">
+                              {t('Temperature Sensor')}
+                          </label>
+                          <input id="temperatureSensor" type="text" className="form-input w-full" />
+                      </div>
+
+
+                      {/* Cows Body Temperature */}
+                      <div className="relative">
+                          <label htmlFor="humiditySensor" className="block font-semibold mb-1">
+                              {t('Humidity Sensor')}
+                          </label>
+                          <div className="flex items-center">
+                              <input id="humiditySensor" type="text" className="form-input w-full" />
+                              <button
+                                  type="button"
+                                  className="ml-2 p-2 bg-gray-200 rounded hover:bg-gray-300"
+                                  title={t('Edit')}
+                                  onClick={handleEditCowsTemperatureSensor}
+                              >
+                                  <IconPencil className="text-gray-500" />
+                              </button>
+                          </div>
+                      </div>
+                  </form>
+              </div>
+
+              {/* Data Table Section */}
+              <div className="datatables">
+                  <DataTable
+                      className="whitespace-nowrap table-hover"
+                      records={recordsData}
+                      columns={[
+                          {
+                              accessor: 'Sensor',
+                              title: t('Sensor'),
+                              sortable: true,
+                              render: ({ firstName, lastName, id }) => (
+                                  <div className="flex items-center w-max">
+                                      <img 
+                                          className="w-9 h-9 rounded-full ltr:mr-2 rtl:ml-2 object-cover" 
+                                          src={`/assets/images/profile-${id}.jpeg`} 
+                                          alt="" 
+                                      />
+                                      <div>{firstName + ' ' + lastName}</div>
+                                  </div>
+                              ),
+                          },
+                          {
+                              accessor: 'Sensor Name',
+                              title: t('Sensor Name'),
+                              sortable: true,
+                          },
+                          {
+                              accessor: 'Sensor Data',
+                              title: t('Sensor Data'),
+                              sortable: true,
+                          },
+                          {
+                              accessor: 'status',
+                              title: t('Status'),
+                              sortable: true,
+                              render: () => <span className={`badge bg-success`}>Active</span>,
+                          },
+                          {
+                              accessor: 'Sensor Analizleri',
+                              title: t('Sensor Analyzes'),
                               titleClassName: '!text-center',
                               render: () => (
                                   <div className="flex items-center w-max mx-auto gap-2">
                                       <Tippy content="Edit">
-                                          <button type="button" onClick={handleEditNemSensorTakip}>
+                                          <button type="button" onClick={handleEditCowsTemperatureSensor}>
                                               <IconPencil />
                                           </button>
                                       </Tippy>
                                   </div>
                               ),
                           },
-                          
-                        ]}
-                        totalRecords={initialRecords2.length}
-                        recordsPerPage={pageSize2}
-                        page={page2}
-                        onPageChange={(p) => setPage2(p)}
-                        recordsPerPageOptions={PAGE_SIZES}
-                        onRecordsPerPageChange={setPageSize2}
-                        sortStatus={sortStatus2}
-                        onSortStatusChange={setSortStatus2}
-                        minHeight={200}
-                        paginationText={({ from, to, totalRecords }) => `Showing  ${from} to ${to} of ${totalRecords} entries`}
-                    />
-                </div>
-            </div>
-        </div>
-    );
+                      ]}
+                      totalRecords={initialRecords.length}
+                      recordsPerPage={pageSize}
+                      page={page}
+                      onPageChange={(p) => setPage(p)}
+                      recordsPerPageOptions={[10, 20, 30, 50, 100]}
+                      onRecordsPerPageChange={setPageSize}
+                      sortStatus={sortStatus}
+                      onSortStatusChange={setSortStatus}
+                      minHeight={200}
+                      paginationText={({ from, to, totalRecords }) => `Showing  ${from} to ${to} of ${totalRecords} entries`}
+                  />
+              </div>
+          </div>
+      
+    
+  );
 };
+
 
 export default MultipleTables;
