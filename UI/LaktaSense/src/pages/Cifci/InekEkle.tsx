@@ -14,7 +14,7 @@ const Layouts = () => {
   const [breed, setBreed] = useState('Holstein Friesian');
   const [birthDate, setBirthDate] = useState('2019-04-15');
   const [weight, setWeight] = useState('600');
-  const [knowsLastCalvingDate, setKnowsLastCalvingDate] = useState(false); // Başlangıçta 'Hayır' seçili
+  const [knowsLastCalvingDate, setKnowsLastCalvingDate] = useState('no');// Başlangıçta 'Hayır' seçili
   const [lastCalvingDate, setLastCalvingDate] = useState('');
 
   useEffect(() => {
@@ -96,73 +96,95 @@ const Layouts = () => {
             <div>
   <label className="text-gray-700 font-semibold">{t('Do you know the last calving date?')}</label>
   <div className="mt-2 flex justify-center gap-6">
+    
     <label className="flex items-center">
       <input
         type="radio"
         name="calvingDate"
-        value="yes"
-        onChange={() => setKnowsLastCalvingDate(true)} // 'Evet' seçildiğinde true
-        checked={knowsLastCalvingDate === true}
+        value="inService"
+        onChange={() => setKnowsLastCalvingDate('inService')} // İlk durum
+        checked={knowsLastCalvingDate === 'inService'}
         className="mr-2"
       />
-      {t('Yes')}
+      {t('İn service and due date is known')}
+    </label>
+    <label className="flex items-center">
+      <input
+        type="radio"
+        name="calvingDate"
+        value="pregnant"
+        onChange={() => setKnowsLastCalvingDate('pregnant')} // İkinci durum
+        checked={knowsLastCalvingDate === 'pregnant'}
+        className="mr-2"
+      />
+      {t('Pregnancy and date of last fertilization are known')}
     </label>
     <label className="flex items-center">
       <input
         type="radio"
         name="calvingDate"
         value="no"
-        onChange={() => setKnowsLastCalvingDate(false)} // 'Hayır' seçildiğinde false
-        checked={knowsLastCalvingDate === false}
+        onChange={() => setKnowsLastCalvingDate('no')} // Üçüncü durum
+        checked={knowsLastCalvingDate === 'no'}
         className="mr-2"
       />
       {t('No')}
     </label>
   </div>
-              </div>
+</div>
 
-              {knowsLastCalvingDate && (
-                <div>
-                  <label className="text-gray-700 font-semibold">
-                    {t('Last Calving Date')}
-                  </label>
-                  <input
-                    type="date"
-                    value={lastCalvingDate}
-                    onChange={(e) => setLastCalvingDate(e.target.value)}
-                    className="mt-2 p-2 w-full bg-gray-100 border border-gray-300 rounded-md"
-                  />
-                </div>
-              )}
+{/* Koşullara Göre Alanlar */}
+{knowsLastCalvingDate === 'inService' && (
+  <div>
+    <label className="text-gray-700 font-semibold">{t('Last Calving Date')}</label>
+    <input
+      type="date"
+      value={lastCalvingDate}
+      onChange={(e) => setLastCalvingDate(e.target.value)}
+      className="mt-2 p-2 w-full bg-gray-100 border border-gray-300 rounded-md"
+    />
+  </div>
+)}
+{knowsLastCalvingDate === 'pregnant' && (
+  <div>
+    <label className="text-gray-700 font-semibold">{t('last fertilization date')}</label>
+    <input
+      type="date"
+      value={lastCalvingDate}
+      onChange={(e) => setLastCalvingDate(e.target.value)}
+      className="mt-2 p-2 w-full bg-gray-100 border border-gray-300 rounded-md"
+    />
+  </div>
+)}
 
-{!knowsLastCalvingDate && (
-    <div className="mt-4 flex gap-6">
-      <div className="w-full sm:w-1/2">
-        <label className="text-gray-700 font-semibold">{t('Milk Cycle')}</label>
-        <select
-          value={milkCycle}
-          onChange={(e) => setMilkCycle(e.target.value)}
-          className="mt-2 p-2 w-full bg-white border border-gray-300 rounded-md"
-        >
-          <option value="" disabled>{t('Select Milk Cycle')}</option>
-          <option value="sağımda">{t('Sağımda')}</option>
-          <option value="kuruda">{t('Dry')}</option>
-        </select>
-      </div>
-      <div className="w-full sm:w-1/2">
-        <label className="text-gray-700 font-semibold">{t('Calving Cycle')}</label>
-        <select
-          value={calvingCycle}
-          onChange={(e) => setCalvingCycle(e.target.value)}
-          className="mt-2 p-2 w-full bg-white border border-gray-300 rounded-md"
-        >
-          <option value="" disabled>{t('Select Calving Cycle')}</option>
-          <option value="gebe">{t('Pregnant')}</option>
-          <option value="serviste">{t('In Service')}</option>
-        </select>
-      </div>
+{knowsLastCalvingDate === 'no' && (
+  <div className="mt-4 flex gap-6">
+    <div className="w-full sm:w-1/2">
+      <label className="text-gray-700 font-semibold">{t('Milk Cycle')}</label>
+      <select
+        value={milkCycle}
+        onChange={(e) => setMilkCycle(e.target.value)}
+        className="mt-2 p-2 w-full bg-white border border-gray-300 rounded-md"
+      >
+        <option value="" disabled>{t('Select Milk Cycle')}</option>
+        <option value="sağımda">{t('Sağımda')}</option>
+        <option value="kuruda">{t('Dry')}</option>
+      </select>
     </div>
-  )}
+    <div className="w-full sm:w-1/2">
+      <label className="text-gray-700 font-semibold">{t('Calving Cycle')}</label>
+      <select
+        value={calvingCycle}
+        onChange={(e) => setCalvingCycle(e.target.value)}
+        className="mt-2 p-2 w-full bg-white border border-gray-300 rounded-md"
+      >
+        <option value="" disabled>{t('Select Calving Cycle')}</option>
+        <option value="gebe">{t('Pregnant')}</option>
+        <option value="serviste">{t('In Service')}</option>
+      </select>
+    </div>
+  </div>
+)}
             </>
           )}
         </form>

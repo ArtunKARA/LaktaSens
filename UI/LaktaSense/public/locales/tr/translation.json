@@ -246,5 +246,8 @@
     "Add Sensor":"Sensör Ekle",
     "Barns":"Ahırlar",
     "Ambars" : "Ambarlar",
-    "Sensors" :"Sensörler"
+    "Sensors" :"Sensörler",
+    "Pregnancy and date of last fertilization are known": "Gebe ve Son Döllenme tarihi biliniyor",
+    "İn service and due date is known":"Serviste ve Son Doğurma tarihi biliniyor",
+    "last fertilization date": "Son Döllenme tarihi"
 }
