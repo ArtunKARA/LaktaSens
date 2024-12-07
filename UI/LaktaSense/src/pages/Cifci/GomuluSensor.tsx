@@ -256,8 +256,8 @@ const MultipleTables = () => {
                       records={recordsData}
                       columns={[
                           {
-                              accessor: 'Sensor',
-                              title: t('Sensor'),
+                              accessor: 'Sensor ID',
+                              title: t('Sensor ID'),
                               sortable: true,
                               render: ({ firstName, lastName, id }) => (
                                   <div className="flex items-center w-max">

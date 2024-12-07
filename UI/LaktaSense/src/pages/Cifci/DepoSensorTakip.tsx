@@ -1,7 +1,5 @@
-
-//GömülüSensorTakip sayfası kopyası
 import { useTranslation } from 'react-i18next';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { setPageTitle } from '../../store/themeConfigSlice';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom'; // Yönlendirme için ekledik
@@ -12,11 +10,27 @@ const Layouts = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate(); // Yönlendirme için kullanılıyor
 
+  // Başlığı tutacak state
+  const [sensorTrackingTitle, setSensorTrackingTitle] = useState('');
+
   useEffect(() => {
     dispatch(setPageTitle('Layouts'));
+
+    // Veritabanından başlık çekmek için API çağrısı
+    const fetchSensorTrackingTitle = async () => {
+      try {
+        const response = await fetch('/api/sensor-tracking-title'); // Örnek API endpoint
+        const data = await response.json();
+        setSensorTrackingTitle(data.title); // Gelen başlığı state'e kaydet
+      } catch (error) {
+        console.error('Başlık alınırken bir hata oluştu:', error);
+      }
+    };
+
+    fetchSensorTrackingTitle();
   }, [dispatch]);
 
-  // Yönlendirme işlemi için bir fonksiyon tanımlıyoruz
+  // Yönlendirme işlemi için fonksiyonlar
   const handleEditTemperatureSensor = () => {
     navigate('/cifci/SicaklikSensorTakip'); // Doğru rota ile yönlendir
   };
@@ -28,85 +42,49 @@ const Layouts = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white flex justify-center items-center">
-      {/* Form Container */}
-      <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-2xl -mt-20">
-        <h5 className="font-semibold text-lg text-gray-700 mb-6 text-center">
-          {t('Sensor Tracking')}
-        </h5>
+    <div>
+        {/* Header Section */}
+        <div className="panel mt-6">
+        
+            {/* Form Section */}
+        
+                <form className="grid grid-cols-3 gap-6">
+                <div className="flex md:items-center md:flex-row flex-col mb-5 gap-5">
+                <h5 className="font-semibold text-lg dark:text-white-light">{t('Warehouse Sensor Tracking')}</h5>
+            </div>
+                    {/* Temperature Sensor */}
+                    <div className="relative">
+                        <label htmlFor="temperatureSensor" className="block font-semibold mb-1">
+                            {t('Temperature Sensor')}
+                        </label>
+                        <input id="temperatureSensor" type="text" className="form-input w-full" />
+                    </div>
 
-        {/* Form Fields */}
-        <form className="space-y-5">
-          <div className="grid gap-6">
-            {/* Input Field with Edit Button */}
-            <div className="relative">
-              <label htmlFor="temperatureSensor" className="block font-semibold mb-1">
-                {t('Temperature Sensor')}
-              </label>
-              <div className="flex items-center">
-                <input
-                  id="temperatureSensor"
-                  type="text"
-                  className="form-input w-full"
-                />
-                <button
-                  type="button"
-                  className="ml-2 p-2 bg-gray-200 rounded hover:bg-gray-300"
-                  title={t('Edit')}
-                  onClick={handleEditTemperatureSensor} // Butona tıklanınca yönlendir
-                >
-                  <IconPencil className="text-gray-500" />
-                </button>
-              </div>
+
+                    {/* Cows Body Temperature */}
+                    <div className="relative">
+                        <label htmlFor="humiditySensor" className="block font-semibold mb-1">
+                            {t('Humidity Sensor')}
+                        </label>
+                        <div className="flex items-center">
+                            <input id="humiditySensor" type="text" className="form-input w-full" />
+                            <button
+                                type="button"
+                                className="ml-2 p-2 bg-gray-200 rounded hover:bg-gray-300"
+                                title={t('Edit')}
+                                onClick={handleEditCowsTemperatureSensor}
+                            >
+                                <IconPencil className="text-gray-500" />
+                            </button>
+                        </div>
+                    </div>
+                </form>
             </div>
 
-            <div className="relative">
-              <label htmlFor="humiditySensor" className="block font-semibold mb-1">
-                {t('Humidity Sensor')}
-              </label>
-              <div className="flex items-center">
-                <input
-                  id="humiditySensor"
-                  type="text"
-                  className="form-input w-full"
-                />
-                <button
-                  type="button"
-                  className="ml-2 p-2 bg-gray-200 rounded hover:bg-gray-300"
-                  title={t('Edit')}
-                  onClick={handleEditHumiditySensor} // Butona tıklanınca yönlendir
-                >
-                  <IconPencil className="text-gray-500" />
-                </button>
-              </div>
-            </div>
-
-            <div className="relative">
-              <label htmlFor="Fire Sensor" className="block font-semibold mb-1">
-                {t('Fire Sensor')}
-              </label>
-              <div className="flex items-center">
-                <input
-                  id="Fire Sensor"
-                  type="text"
-                  className="form-input w-full"
-                />
-                <button
-                  type="button"
-                  className="ml-2 p-2 bg-gray-200 rounded hover:bg-gray-300"
-                  title={t('Edit')}
-                  onClick={handleEditCowsTemperatureSensor} // Butona tıklanınca yönlendir
-
-                >
-                  <IconPencil className="text-gray-500" />
-                </button>
-              </div>
-            </div>
-          </div>
-        </form>
-      </div>
-    </div>
-  );
+        </div>
+    
+  
+);
 };
 
 export default Layouts;

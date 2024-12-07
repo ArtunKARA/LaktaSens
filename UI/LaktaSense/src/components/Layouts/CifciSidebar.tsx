@@ -238,7 +238,10 @@ const Sidebar = () => {
                                                 </li>
                                                 <li>
                                                     <NavLink to="/cifci/DepoSensorTakip">{t('Feed Warehouse Tracking')}</NavLink>
-                                                </li>                                        
+                                                </li>         
+                                                <li>
+                                                    <NavLink to="/cifci/DepoNemSensorTakip">{t('Add Sensor')}</NavLink>
+                                                </li>                                
                                                 
                                             </ul>
                                         </AnimateHeight>
