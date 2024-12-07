@@ -20,6 +20,7 @@ const DepoNemSensorTakip= lazy(() => import('../pages/Cifci/DepoNemSensorTakip')
 const DepoSicaklikSensorTakip= lazy(() => import('../pages/Cifci/DepoSicaklikSensorTakip'));
 const DepoSensorTakip= lazy(() => import('../pages/Cifci/DepoSensorTakip'))
 const AdminBasvuruDuzenleme= lazy(() => import('../pages/Cifci/AdminBasvuruDuzenleme'))
+const YenidoganTakip= lazy(() => import('../pages/Cifci/YenidoganTakip'))
 const KayitSayfasi = lazy(() => import('../pages/Authentication/KayitSayfasi'));
 const routes = [
     //login page
@@ -143,6 +144,12 @@ const routes = [
         element: <DepoNemSensorTakip />,
         layout : 'cifci',
     },
+//Yenidoğan takip takip sayfası
+{
+  path: '/cifci/YenidoganTakip',
+  element: <YenidoganTakip />,
+  layout : 'cifci',
+},
     
 ];
 

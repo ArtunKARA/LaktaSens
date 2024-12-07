@@ -254,10 +254,10 @@
     "Sensor Analyzes": "Sensör Analizleri",
     "Barn Sensor Tracking": "Ahır Sensör Takibi",
     "Warehouse Sensor Tracking":"Depo Sensör Takibi",
-    "Sensor Name": "Sensör Adı",
     "Sensor Type": "Sensör Tipi",
     "Barn Sensor": "Ahır Sensörü",
     "Warehouse Sensor": "Depo Sensörü",
     "Leash Sensor": "Tasma Sensörü",
-    "Add Sensor":"Sensör Ekle"
+    "Newborn":  "Yenidoğan"
+
 }
