@@ -260,5 +260,9 @@
     "Leash Sensor": "Tasma Sensörü",
     "Newborn":  "Yenidoğan",
     "A cow cannot be both dry and in service.":"Bir inek hem kuruda ve servis durumda olamaz",
-    "Make a loop selection.":"Döngü seçimi yapınız"
+    "Make a loop selection.":"Döngü seçimi yapınız",
+    "Adult":"Erişkin",
+    "Calf":"Yavru",
+    "Calf Cycle Analysis":"Yavru Döngü Analizi",
+    "Analysis of the Number of Animals in the Cycle":"Döngüdeki Hayvan Sayısı Analiz"
 }

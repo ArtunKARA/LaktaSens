@@ -353,7 +353,7 @@ const Index = () => {
 
      //aklimaGelmedi
      const aklimaGelmedi: any = {
-        series: [985, 737, 270],
+        series: [985, 737],
         options: {
             chart: {
                 type: 'donut',
@@ -417,7 +417,7 @@ const Index = () => {
                     },
                 },
             },
-            labels: [t('Calving'), t('Service'), t('Must be Checked')],
+            labels: [t('Adult'), t('Calf')],
             states: {
                 hover: {
                     filter: {
@@ -454,10 +454,10 @@ const Index = () => {
             </ul>
 
             <div className="pt-5">
-                <div className="grid xl:grid-cols-2 gap-6 mb-6">
+                <div className="grid xl:grid-cols-3 gap-6 mb-6">
                 <div className="panel h-full">
                         <div className="flex items-center mb-5">
-                            <h5 className="font-semibold text-lg dark:text-white-light">Süt Döngü Analizi</h5>
+                            <h5 className="font-semibold text-lg dark:text-white-light">{t('Milk Cycle Analysis')}</h5>
                         </div>
                         <div>
                             <div className="bg-white dark:bg-black rounded-lg overflow-hidden">
@@ -473,7 +473,7 @@ const Index = () => {
                     </div>
                     <div className="panel h-full">
                         <div className="flex items-center mb-5">
-                            <h5 className="font-semibold text-lg dark:text-white-light">Yavru Döngü Analizi</h5>
+                            <h5 className="font-semibold text-lg dark:text-white-light">{t('Calf Cycle Analysis')}</h5>
                         </div>
                         <div>
                             <div className="bg-white dark:bg-black rounded-lg overflow-hidden">
@@ -483,6 +483,23 @@ const Index = () => {
                                     </div>
                                 ) : (
                                     <ReactApexChart series={YavruDongu.series} options={YavruDongu.options} type="donut" height={460} />
+                                )}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="panel h-full">
+                        <div className="flex items-center mb-5">
+                            <h5 className="font-semibold text-lg dark:text-white-light">{t('Analysis of the Number of Animals in the Cycle')}</h5>
+                        </div>
+                        <div>
+                            <div className="bg-white dark:bg-black rounded-lg overflow-hidden">
+                                {loading ? (
+                                    <div className="min-h-[325px] grid place-content-center bg-white-light/30 dark:bg-dark dark:bg-opacity-[0.08] ">
+                                        <span className="animate-spin border-2 border-black dark:border-white !border-l-transparent  rounded-full w-5 h-5 inline-flex"></span>
+                                    </div>
+                                ) : (
+                                    <ReactApexChart series={aklimaGelmedi.series} options={aklimaGelmedi.options} type="donut" height={460} />
                                 )}
                             </div>
                         </div>

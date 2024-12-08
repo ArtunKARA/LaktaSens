@@ -2,12 +2,14 @@ import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
 import { setPageTitle } from '../../store/themeConfigSlice';
 import { useDispatch } from 'react-redux';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const Layouts = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
-
+  const navigate = useNavigate();
+  
   const location = useLocation();
   const { cowID } = location.state || {}; // State üzerinden gelen ID
   const [isOlderThanTwoYears, setIsOlderThanTwoYears] = useState(false);
@@ -19,6 +21,123 @@ const Layouts = () => {
   const [weight, setWeight] = useState('');
   const [knowsLastCalvingDate, setKnowsLastCalvingDate] = useState('no');// Başlangıçta 'Hayır' seçili
   const [lastCalvingDate, setLastCalvingDate] = useState('');
+  const storedUserInfo = localStorage.getItem('userInfo');
+  const userInfo = storedUserInfo ? JSON.parse(storedUserInfo) : null;
+
+  const gebeSave = async () => {
+    if (!lastCalvingDate) {
+      alert(t("Please select a date!"));
+      return;
+    }
+    try {
+      const response = await axios.post("http://localhost:3030/api/inekEkle/postGebeTarih", {
+        ad: name, 
+        irk: breed,
+        kilo: weight, 
+        dogumTarih: birthDate,
+        sonDollenme: lastCalvingDate,
+        firmaID: userInfo.firmaID,
+      });
+
+      console.log(response.data);
+      alert(t("Saved successfully!"));
+      navigate('/cifci/dashboard');
+    } catch (error) {
+      console.error(error);
+      alert(t("An error occurred while saving!")+ error);
+    }
+  };
+
+  const servisSave = async () => {
+    if (!lastCalvingDate) {
+      alert(t("Please select a date!"));
+      return;
+    }
+
+    try {
+      const response = await axios.post("http://localhost:3030/api/inekEkle/postSonDogumTarih", {
+        ad: name, 
+        irk: breed,
+        kilo: weight, 
+        dogumTarih: birthDate,
+        sonDogurmaTarihi: lastCalvingDate,
+        firmaID: userInfo.firmaID,
+      });
+
+      console.log(response.data);
+      alert(t("Saved successfully!"));
+      navigate('/cifci/dashboard');
+    } catch (error) {
+      console.error(error);
+      alert(t("An error occurred while saving!")+ error);
+    }
+  };
+
+  const bilinmeyenSave = async () => { 
+
+    try {
+      const response = await axios.post("http://localhost:3030/api/inekEkle/postBilinmeyenTarih", {
+        ad: name, 
+        irk: breed,
+        kilo: weight, 
+        dogumTarih: birthDate,
+        sutDongusu: milkCycle,
+        yavrulamaDongusu: calvingCycle,
+        firmaID: userInfo.firmaID,
+      });
+
+      console.log(response.data);
+      alert(t("Saved successfully!"));
+      navigate('/cifci/dashboard');
+    } catch (error) {
+      console.error(error);
+      alert(t("An error occurred while saving!")+ error);
+    }
+  };
+
+  const yeniSave = async () => {
+    if (!cowID) {
+      alert(t("NO Mom ID"));
+      return;
+    }
+
+    try {
+      const response = await axios.post("http://localhost:3030/api/gebe/postYavruEkle", {
+        anneId: cowID,
+        ad: name,
+        irk: breed,
+        kilo: weight,
+        dogumTarih: birthDate,
+        firmaID: userInfo.firmaID,
+      });
+
+      console.log(response.data);
+      alert(t("Saved successfully!"));
+      navigate('/cifci/dashboard');
+    } catch (error) {
+      console.error(error);
+      alert(t("An error occurred while saving!")+ error);
+    }
+  };
+
+  const disaridanYeniYavru = async () => {
+    try {
+      const response = await axios.post("http://localhost:3030/api/inekEkle/postYavru", {
+        ad: name,
+        irk: breed,
+        kilo: weight,
+        dogumTarih: birthDate,
+        firmaID: userInfo.firmaID,
+      });
+
+      console.log(response.data);
+      alert(t("Saved successfully!"));
+      navigate('/cifci/dashboard');
+    } catch (error) {
+      console.error(error);
+      alert(t("An error occurred while saving!")+ error);
+    }
+  };
 
   useEffect(() => {
     dispatch(setPageTitle('Add Cow'));
@@ -198,16 +317,18 @@ const Layouts = () => {
             type="button"
             onClick={() => {
               if(!(cowID === undefined)){
-                
+                yeniSave();
               }else if(knowsLastCalvingDate === 'inService'){
-
+                servisSave();
               }else if(knowsLastCalvingDate === 'pregnant'){
-                
+                gebeSave();
               }else if(knowsLastCalvingDate === 'no'){
                 if(milkCycle === 'kuruda' && calvingCycle === 'serviste'){
                   alert(t('A cow cannot be both dry and in service.'));
                 }else if((milkCycle === 'sağımda' && calvingCycle === 'serviste')||(milkCycle === 'sağımda' && calvingCycle === 'gebe')||(milkCycle === 'kuruda' && calvingCycle === 'gebe')){
-                  
+                  bilinmeyenSave();
+                }else if(!isOlderThanTwoYears){
+                  disaridanYeniYavru();
                 }else{
                   alert(t('Make a loop selection.'))
                 }

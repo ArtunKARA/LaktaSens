@@ -44,12 +44,22 @@ exports.postAllGebe = async (req, res) => {
 
 exports.postYavruEkle = async (req, res) => {
     const {
-        id
+        anneId,
+        ad,
+        irk,
+        kilo,
+        dogumTarih,
+        firmaID
       } = req.body;
     try {
         const pool = await poolPromise;
         const result = await pool.request()
-        .input("id",id)
+        .input("anneId",anneId)
+        .input("ad",ad)
+        .input("irk",irk)
+        .input("kilo",kilo)
+        .input("dogumTarih",dogumTarih)
+        .input("firmaID",firmaID)
         .query(
             `INSERT INTO [laktasens].[dbo].[inek]
                 ([inekQR], [ad], [irk], [kilo], [dogumTarihi], [sonDogurmaTarihi], [firmaID], [anneID], [sonDollenme], [dollenmeSayisi], [tuttuMu], [sonKuruTarihi], [sonSutOlcumTarihi])
@@ -63,21 +73,27 @@ exports.postYavruEkle = async (req, res) => {
                     @irk, --IRK
                     @kilo, --KİLO
                     @dogumTarih, --DOĞUM TARİHİ
-                    DATEADD(DAY, -85, @sonDollenme), --DOĞURMA TARİHİ
+                    NULL, --DOĞURMA TARİHİ
                     @firmaID, --FİRMA ID
-                    NULL, --ANNE ID
-                    @sonDollenme, --SON DÖLLENME
+                    @anneId, --ANNE ID
+                    NULL, --SON DÖLLENME
                     1, -- DÖLLEME SAYISI
-                    'E', -- TUTUMU
-                    DATEADD(DAY, -145, @sonDollenme), --SON KURU
+                    NULL, -- TUTUMU
+                    NULL, --SON KURU
                     NULL --SONSÜTÖLÇÜM
                 );
+            UPDATE inek
+            SET 
+                tuttuMu = NULL,-- Yeni döllenme durumu ('E': Evet, 'H': Hayir)
+                sonDogurmaTarihi = @dogumTarih,   -- Yeni döllenme tarihi
+                dollenmeSayisi = 1   -- Yeni döllenme sayisi
+            WHERE inekID = @anneId; 
 `
         );
-        if (result.recordset.length === 0) {
-          return res.status(404).json(null);
-        }
-        return res.json(result.recordset);
+        if (result.rowsAffected[0] === 0) {
+            return res.status(404).json({ message: "Kayıt eklenemedi." });
+          }
+        return res.json({ message: "Kayıt başarıyla eklendi." });
       } catch (error) {
         console.error('Customer could not be retrieved:', error);
         return res.status(500).json({ error: 'Internal server error' });
