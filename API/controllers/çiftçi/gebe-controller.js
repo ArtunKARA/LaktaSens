@@ -25,10 +25,15 @@ exports.postAllGebe = async (req, res) => {
                 JOIN 
                     kullanicilar ON inek.firmaID = kullanicilar.firmaID
                 WHERE 
-                    kullanicilar.kullaniciID = @id
-                    AND NOT(inek.sonDogurmaTarihi IS NULL AND inek.sonDollenme IS NULL AND inek.sonKuruTarihi IS NULL) 
-                    AND inek.sonDollenme > inek.sonDogurmaTarihi 
-                    AND inek.tuttuMu = 'E';
+                    kullanicilar.kullaniciID = 2
+                    AND (
+                        (inek.sonDogurmaTarihi IS NULL AND inek.sonSutOlcumTarihi IS NULL AND inek.tuttuMu = 'E')
+                        OR 
+                        (NOT(inek.sonDogurmaTarihi IS NULL AND inek.sonDollenme IS NULL AND inek.sonKuruTarihi IS NULL) 
+                        AND inek.sonDollenme > inek.sonDogurmaTarihi 
+                        AND inek.tuttuMu = 'E')
+                    );
+
 
 `
         );

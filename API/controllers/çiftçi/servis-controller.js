@@ -11,7 +11,7 @@ exports.postServis = async (req, res) => {
         .query(
             `USE laktasens;
 
-                SELECT 
+   SELECT 
                     servisteInekler.inekID,
                     servisteInekler.ad,
                     servisteInekler.kalanGun AS guncelGunSayisi,
@@ -40,11 +40,12 @@ exports.postServis = async (req, res) => {
                         JOIN 
                             kullanicilar ON inek.firmaID = kullanicilar.firmaID
                         WHERE 
-                            kullanicilar.kullaniciID = @ID
+                            kullanicilar.kullaniciID = 2
                             AND NOT(inek.sonDogurmaTarihi IS NULL AND inek.sonDollenme IS NULL AND inek.sonKuruTarihi IS NULL)
                             AND (
                                 (inek.sonDollenme < inek.sonDogurmaTarihi AND (inek.tuttuMu = 'H' OR inek.tuttuMu IS NULL))
                                 OR (inek.sonDollenme > inek.sonDogurmaTarihi AND (inek.tuttuMu = 'H' OR inek.tuttuMu IS NULL))
+                                OR (inek.sonDogurmaTarihi IS NULL AND inek.sonKuruTarihi IS NULL AND inek.sonSutOlcumTarihi IS NULL AND inek.tuttuMu != 'E')
                             )
                     ) AS servisteInekler;`
         );

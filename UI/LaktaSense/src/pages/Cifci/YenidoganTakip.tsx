@@ -14,12 +14,14 @@ import { useNavigate } from 'react-router-dom'; // Yönlendirme için ekledik
 
 
 interface CowData {
-    inekID: string;
-    ad: string;
-    irk: string;
-    durum: string;
-    dollenmeSayisi: number;
-    guncelGunSayisi: number;
+    İnekID: string;
+    İnekAdı: string;
+    Irkı: string;
+    DoğumTarihi: Date;
+    Yaşı: number;
+    Durum: string;
+    
+    
 }
 
 const MultipleTables = () => {
@@ -34,7 +36,7 @@ const MultipleTables = () => {
         // API'yi çağırma
         const fetchData = async () => {
           try {
-            const response = await fetch('http://localhost:3030/api/servis/postServis', {
+            const response = await fetch('http://localhost:3030/api/yeniDogan/postYeniDoganlar', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
@@ -56,7 +58,7 @@ const MultipleTables = () => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
     useEffect(() => {
-        dispatch(setPageTitle(t('Service')));
+        dispatch(setPageTitle(t('Newborn')));
     });
     const [page, setPage] = useState(1);
     const PAGE_SIZES = [10, 20, 30, 50, 100];
@@ -88,10 +90,11 @@ const MultipleTables = () => {
         setInitialRecords(() => {
             return rowData.filter((item) => {
                 return (
-                    item.inekID.toString().toLowerCase().includes(search.toLowerCase()) ||
-                    item.ad.toLowerCase().includes(search.toLowerCase()) ||
-                    item.durum.toLowerCase().includes(search.toLowerCase()) ||
-                    item.guncelGunSayisi.toString().toLowerCase().includes(search.toLowerCase())
+                    item.İnekID.toString().toLowerCase().includes(search.toLowerCase()) ||
+                    item.DoğumTarihi.toDateString().toString().toLowerCase().includes(search.toLowerCase()) ||
+                    item.İnekAdı.toLowerCase().includes(search.toLowerCase()) ||
+                    item.Durum.toLowerCase().includes(search.toLowerCase()) ||
+                    item.Yaşı.toString().toLowerCase().includes(search.toLowerCase())
                 );
             });
         });
@@ -107,7 +110,7 @@ const MultipleTables = () => {
 
     const statusColor = (durum : String) => {
         const color = ['primary', 'secondary', 'success', 'danger', 'warning', 'info'];
-        if(durum == "Serviste"){
+        if(durum == "Normal"){
             return color[2]
         }else if(durum == "Döllenmeli"){
             return color[4]
@@ -132,44 +135,44 @@ const MultipleTables = () => {
                         records={recordsData}
                         columns={[
                             {
-                                accessor: 'inekID',
+                                accessor: 'İnekID',
                                 title: t('ID'),
                                 sortable: true
                             },
                             {
-                                accessor: 'ad',
+                                accessor: 'İnekAdı',
                                 title: t('Name'),
                                 sortable: true
                             },
                             {
-                                accessor: 'irk',
+                                accessor: 'Irkı',
                                 title: t('Breed'),
                                 sortable: true,
                             },
                             {
-                                accessor: 'doğum tarihi',
+                                accessor: 'DoğumTarihi',
                                 title: t('Birth Date'),
                                 sortable: true,
                             },    
                             {
-                                accessor: 'yaşı',
+                                accessor: 'Yaşı',
                                 title: t('Age'),
                                 sortable: true,
                             },                                                
                             {
-                                accessor: 'durum',
+                                accessor: 'Durum',
                                 title: t('Status'),
                                 sortable: true,
-                                render: ({ durum }) => <span className={`badge bg-${statusColor(durum)}`}>{durum}</span>,
+                                render: ({ Durum }) => <span className={`badge bg-${statusColor(Durum)}`}>{Durum}</span>,
                             },
                             {
                                 accessor: 'Düzenle',
                                 title: t('Edit'),
                                 titleClassName: '!text-center',
-                                render: ({inekID,ad,dollenmeSayisi}) => (
+                                render: ({İnekID,İnekAdı}) => (
                                     <div className="flex items-center w-max mx-auto gap-2">
                                         <Tippy content="Edit">
-                                            <button type="button" onClick={() => handleDetailClick(inekID,ad,dollenmeSayisi)}>
+                                            <button type="button" onClick={() => handleDetailClick(İnekID,İnekAdı,1)}>
                                                 <IconPencil />
                                             </button>
                                         </Tippy>
