@@ -26,166 +26,99 @@ const Index = () => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
     useEffect(() => {
-        dispatch(setPageTitle('Sales Admin'));
+        dispatch(setPageTitle('Main Menu'));
     });
+    const storedUserInfo = localStorage.getItem('userInfo');
+    const userInfo = storedUserInfo ? JSON.parse(storedUserInfo) : null;
     const isDark = useSelector((state: IRootState) => state.themeConfig.theme === 'dark' || state.themeConfig.isDarkMode);
     const isRtl = useSelector((state: IRootState) => state.themeConfig.rtlClass) === 'rtl' ? true : false;
-
+    
     const [loading] = useState(false);
 
-    //Revenue Chart
-    const revenueChart: any = {
-        series: [
-            {
-                name: 'Income',
-                data: [16800, 16800, 15500, 17800, 15500, 17000, 19000, 16000, 15000, 17000, 14000, 17000],
-            },
-            {
-                name: 'Expenses',
-                data: [16500, 17500, 16200, 17300, 16000, 19500, 16000, 17000, 16000, 19000, 18000, 19000],
-            },
-        ],
-        options: {
-            chart: {
-                height: 325,
-                type: 'area',
-                fontFamily: 'Nunito, sans-serif',
-                zoom: {
-                    enabled: false,
-                },
-                toolbar: {
-                    show: false,
-                },
-            },
+    const [kuruda_olanlar, kuruda_olanlarSet] = useState<number>();
+    const [sagimda_olanlar, sagimda_olanlarSet] = useState<number>();
+    const [cikarilmasi_gerekenlerSut, cikarilmasi_gerekenlerSutSet] = useState<number>();
+    useEffect(() => {
+        // API'yi çağırma
+        const fetchData = async () => {
+          try {
+            const response = await fetch('http://localhost:3030/api/cifciAnaliz/postSutDongusuAnaliz', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ ID:userInfo.kullaniciID}), // Kullanıcı ID'sini gönderiyorsunuz
+            });
+            const data = await response.json();
+            kuruda_olanlarSet(data["kuruda_olanlar"])
+            sagimda_olanlarSet(data["sagimda_olanlar"])
+            cikarilmasi_gerekenlerSutSet(data["cikarilmasi_gerekenler"])
+            console.log('Gelen veri:', data);
+            ; // Sadece doğrudan kullanılabilecek bir dizi olduğunda kullanı
+          } catch (error) {
+            console.error('API çağrısı sırasında bir hata oluştu:', error);
+          }
+        };
+    
+        fetchData();
+      }, []);
 
-            dataLabels: {
-                enabled: false,
-            },
-            stroke: {
-                show: true,
-                curve: 'smooth',
-                width: 2,
-                lineCap: 'square',
-            },
-            dropShadow: {
-                enabled: true,
-                opacity: 0.2,
-                blur: 10,
-                left: -7,
-                top: 22,
-            },
-            colors: isDark ? ['#2196F3', '#E7515A'] : ['#1B55E2', '#E7515A'],
-            markers: {
-                discrete: [
-                    {
-                        seriesIndex: 0,
-                        dataPointIndex: 6,
-                        fillColor: '#1B55E2',
-                        strokeColor: 'transparent',
-                        size: 7,
-                    },
-                    {
-                        seriesIndex: 1,
-                        dataPointIndex: 5,
-                        fillColor: '#E7515A',
-                        strokeColor: 'transparent',
-                        size: 7,
-                    },
-                ],
-            },
-            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-            xaxis: {
-                axisBorder: {
-                    show: false,
-                },
-                axisTicks: {
-                    show: false,
-                },
-                crosshairs: {
-                    show: true,
-                },
-                labels: {
-                    offsetX: isRtl ? 2 : 0,
-                    offsetY: 5,
-                    style: {
-                        fontSize: '12px',
-                        cssClass: 'apexcharts-xaxis-title',
-                    },
-                },
-            },
-            yaxis: {
-                tickAmount: 7,
-                labels: {
-                    formatter: (value: number) => {
-                        return value / 1000 + 'K';
-                    },
-                    offsetX: isRtl ? -30 : -10,
-                    offsetY: 0,
-                    style: {
-                        fontSize: '12px',
-                        cssClass: 'apexcharts-yaxis-title',
-                    },
-                },
-                opposite: isRtl ? true : false,
-            },
-            grid: {
-                borderColor: isDark ? '#191E3A' : '#E0E6ED',
-                strokeDashArray: 5,
-                xaxis: {
-                    lines: {
-                        show: true,
-                    },
-                },
-                yaxis: {
-                    lines: {
-                        show: false,
-                    },
-                },
-                padding: {
-                    top: 0,
-                    right: 0,
-                    bottom: 0,
-                    left: 0,
-                },
-            },
-            legend: {
-                position: 'top',
-                horizontalAlign: 'right',
-                fontSize: '16px',
-                markers: {
-                    width: 10,
-                    height: 10,
-                    offsetX: -2,
-                },
-                itemMargin: {
-                    horizontal: 10,
-                    vertical: 5,
-                },
-            },
-            tooltip: {
-                marker: {
-                    show: true,
-                },
-                x: {
-                    show: false,
-                },
-            },
-            fill: {
-                type: 'gradient',
-                gradient: {
-                    shadeIntensity: 1,
-                    inverseColors: !1,
-                    opacityFrom: isDark ? 0.19 : 0.28,
-                    opacityTo: 0.05,
-                    stops: isDark ? [100, 100] : [45, 100],
-                },
-            },
-        },
-    };
+    const [gebe_olanlar, gebe_olanlarSet] = useState<number>();
+    const [serviste_olanlar, serviste_olanlarSet] = useState<number>();
+    const [cikarilmasi_gerekenlerYavru, cikarilmasi_gerekenlerYavruSet] = useState<number>();
+    useEffect(() => {
+        // API'yi çağırma
+        const fetchData = async () => {
+          try {
+            const response = await fetch('http://localhost:3030/api/cifciAnaliz/postYavruDonguAnaliz', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ ID:userInfo.kullaniciID}), // Kullanıcı ID'sini gönderiyorsunuz
+            });
+            const data = await response.json();
+            gebe_olanlarSet(data["gebe_olanlar"])
+            serviste_olanlarSet(data["serviste_olanlar"])
+            cikarilmasi_gerekenlerYavruSet(data["cikarilmasi_gerekenler"])
+            console.log('Gelen veri:', data);
+            ; // Sadece doğrudan kullanılabilecek bir dizi olduğunda kullanı
+          } catch (error) {
+            console.error('API çağrısı sırasında bir hata oluştu:', error);
+          }
+        };
+    
+        fetchData();
+      }, []);
 
+    const [eriskin_olanlar, eriskin_olanlarSet] = useState<number>();
+    const [yavru_olanlar, yavru_olanlarSet] = useState<number>();
+    useEffect(() => {
+        // API'yi çağırma
+        const fetchData = async () => {
+          try {
+            const response = await fetch('http://localhost:3030/api/cifciAnaliz/postDongudekiIneklerAnaliz', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ ID:userInfo.kullaniciID}), // Kullanıcı ID'sini gönderiyorsunuz
+            });
+            const data = await response.json();
+            eriskin_olanlarSet(data["eriskin_olanlar"])
+            yavru_olanlarSet(data["yavru_olanlar"])
+            console.log('Gelen veri:', data);
+            ; // Sadece doğrudan kullanılabilecek bir dizi olduğunda kullanı
+          } catch (error) {
+            console.error('API çağrısı sırasında bir hata oluştu:', error);
+          }
+        };
+    
+        fetchData();
+      }, []);
     //SutDongu
     const SutDongu: any = {
-        series: [985, 737, 270],
+        series: [kuruda_olanlar, sagimda_olanlar, cikarilmasi_gerekenlerSut],
         options: {
             chart: {
                 type: 'donut',
@@ -269,7 +202,7 @@ const Index = () => {
 
      //YavruDongu
      const YavruDongu: any = {
-        series: [985, 737, 270],
+        series: [gebe_olanlar, serviste_olanlar, cikarilmasi_gerekenlerYavru],
         options: {
             chart: {
                 type: 'donut',
@@ -353,7 +286,7 @@ const Index = () => {
 
      //aklimaGelmedi
      const aklimaGelmedi: any = {
-        series: [985, 737],
+        series: [eriskin_olanlar, yavru_olanlar],
         options: {
             chart: {
                 type: 'donut',

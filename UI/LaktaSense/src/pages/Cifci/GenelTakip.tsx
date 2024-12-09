@@ -56,7 +56,7 @@ const MultipleTables = () => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
     useEffect(() => {
-        dispatch(setPageTitle(t('Generel Follow Up')));
+        dispatch(setPageTitle(t('General Follow Up')));
     });
     const [page, setPage] = useState(1);
     const PAGE_SIZES = [10, 20, 30, 50, 100];

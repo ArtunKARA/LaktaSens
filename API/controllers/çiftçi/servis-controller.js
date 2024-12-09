@@ -40,12 +40,13 @@ exports.postServis = async (req, res) => {
                         JOIN 
                             kullanicilar ON inek.firmaID = kullanicilar.firmaID
                         WHERE 
-                            kullanicilar.kullaniciID = 2
+                            kullanicilar.kullaniciID = @ID
                             AND NOT(inek.sonDogurmaTarihi IS NULL AND inek.sonDollenme IS NULL AND inek.sonKuruTarihi IS NULL)
                             AND (
                                 (inek.sonDollenme < inek.sonDogurmaTarihi AND (inek.tuttuMu = 'H' OR inek.tuttuMu IS NULL))
                                 OR (inek.sonDollenme > inek.sonDogurmaTarihi AND (inek.tuttuMu = 'H' OR inek.tuttuMu IS NULL))
                                 OR (inek.sonDogurmaTarihi IS NULL AND inek.sonKuruTarihi IS NULL AND inek.sonSutOlcumTarihi IS NULL AND inek.tuttuMu != 'E')
+                                OR (inek.sonKuruTarihi IS NULL AND inek.tuttuMu IS NULL)
                             )
                     ) AS servisteInekler;`
         );

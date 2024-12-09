@@ -25,7 +25,7 @@ exports.postAllGebe = async (req, res) => {
                 JOIN 
                     kullanicilar ON inek.firmaID = kullanicilar.firmaID
                 WHERE 
-                    kullanicilar.kullaniciID = 2
+                    kullanicilar.kullaniciID = @ID
                     AND (
                         (inek.sonDogurmaTarihi IS NULL AND inek.sonSutOlcumTarihi IS NULL AND inek.tuttuMu = 'E')
                         OR 

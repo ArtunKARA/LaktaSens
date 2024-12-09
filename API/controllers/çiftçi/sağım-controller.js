@@ -24,12 +24,11 @@ exports.postSagim = async (req, res) => {
             JOIN 
                 kullanicilar ON inek.firmaID = kullanicilar.firmaID
             WHERE 
-                kullanicilar.kullaniciID = 2
+                kullanicilar.kullaniciID = @ID
                 AND((inek.sonDogurmaTarihi IS NOT NULL AND inek.sonDollenme IS NOT NULL AND inek.sonKuruTarihi IS NULL)
                 OR 
                 (NOT(inek.sonDogurmaTarihi IS NULL AND inek.sonDollenme IS NULL AND inek.sonKuruTarihi IS NULL)
-                AND sonDogurmaTarihi > sonKuruTarihi 
-                AND DATEDIFF(DAY, sonDogurmaTarihi, GETDATE()) <= 305));`
+                AND sonDogurmaTarihi > sonKuruTarihi ));`
         );
         if (result.recordset.length === 0) {
           return res.status(404).json(null);
