@@ -50,7 +50,8 @@ exports.postSutDongusuAnaliz = async (req, res) => {
             JOIN 
                 kullanicilar ON inek.firmaID = kullanicilar.firmaID
             WHERE 
-                kullanicilar.kullaniciID = @ID;
+                kullanicilar.kullaniciID = @ID
+                AND inek.dollenmeSayisi > 0;
 
 
 
@@ -149,6 +150,7 @@ FROM
             kullanicilar ON inek.firmaID = kullanicilar.firmaID
         WHERE 
             kullanicilar.kullaniciID = @ID
+            AND inek.dollenmeSayisi > 0
     ) AS servisteInekler;
 
 
@@ -181,14 +183,14 @@ exports.postDongudekiIneklerAnaliz = async (req, res) => {
                 SUM(CASE 
                         -- Erişkin olanlar
                         WHEN 
-                            NOT(inek.sonDogurmaTarihi IS NULL AND inek.sonDollenme IS NULL AND inek.sonKuruTarihi IS NULL)
+                            NOT(inek.sonDogurmaTarihi IS NULL AND inek.sonDollenme IS NULL AND inek.sonKuruTarihi IS NULL AND inek.dollenmeSayisi > 0)
                         THEN 1 
                         ELSE 0 
                     END) AS eriskin_olanlar,
                 SUM(CASE 
                         -- Yavru olanlar
                         WHEN 
-                           (inek.sonDogurmaTarihi IS NULL AND inek.sonDollenme IS NULL AND inek.sonKuruTarihi IS NULL)
+                           (inek.sonDogurmaTarihi IS NULL AND inek.sonDollenme IS NULL AND inek.sonKuruTarihi IS NULL AND inek.dollenmeSayisi > 0)
                         THEN 1 
                         ELSE 0 
                     END) AS yavru_olanlar

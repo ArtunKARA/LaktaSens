@@ -26,6 +26,7 @@ exports.postAllGebe = async (req, res) => {
                     kullanicilar ON inek.firmaID = kullanicilar.firmaID
                 WHERE 
                     kullanicilar.kullaniciID = @ID
+                    AND inek.dollenmeSayisi > 0
                     AND (
                         (inek.sonDogurmaTarihi IS NULL AND inek.sonSutOlcumTarihi IS NULL AND inek.tuttuMu = 'E')
                         OR 

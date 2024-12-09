@@ -43,6 +43,7 @@ exports.postCikarilacaklar = async (req, res) => {
                         kullanicilar ON inek.firmaID = kullanicilar.firmaID
                     WHERE 
                         kullanicilar.kullaniciID = @ID
+                        AND inek.dollenmeSayisi > 0
                         AND NOT(inek.sonDogurmaTarihi IS NULL AND inek.sonDollenme IS NULL AND inek.sonKuruTarihi IS NULL)
                         AND (
                             DATEDIFF(DAY, inek.sonDogurmaTarihi, GETDATE()) > 305 
