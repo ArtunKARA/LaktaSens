@@ -4,39 +4,38 @@ import { setPageTitle } from '../../store/themeConfigSlice';
 import { useDispatch } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { Formik, Field, Form } from 'formik';
+import * as Yup from 'yup';
+
 const Layouts = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const location = useLocation();
-  const [selectedDate, setSelectedDate] = useState("");
-  const [selectedStatus, setselectedStatus] = useState("");
+  const [selectedDate, setSelectedDate] = useState('');
+  const [selectedStatus, setSelectedStatus] = useState('');
   const { cowID, ad, dollenmeSayisi } = location.state || {};
 
-  const handleSave = async (ID:number) => {
-    if (!selectedDate) {
-      alert(t("Please select a date!"));
-      return;
-    }    
-    if (!selectedStatus) {
-      alert(t("Please select a status!"));
-      return;
-    }
+  const validationSchema = Yup.object({
+    date: Yup.string().required(t('Please select a date!')),
+    status: Yup.string().required(t('Please select a status!')),
+  });
 
+  const handleSave = async (ID: number, values: any) => {
     try {
-      const response = await axios.post("http://localhost:3030/api/servis/postServisEkle", {
-        ID: ID, 
-        Tarih: selectedDate,
-        dollenmeSayisi: dollenmeSayisi, 
-        tuttuMu: selectedStatus,
+      const response = await axios.post('http://localhost:3030/api/servis/postServisEkle', {
+        ID: ID,
+        Tarih: values.date,
+        dollenmeSayisi: dollenmeSayisi,
+        tuttuMu: values.status,
       });
 
       console.log(response.data);
-      alert(t("Saved successfully!"));
+      alert(t('Saved successfully!'));
       navigate('/cifci/ServisTakip');
     } catch (error) {
       console.error(error);
-      alert(t("An error occurred while saving!")+ error);
+      alert(t('An error occurred while saving!') + error);
     }
   };
 
@@ -44,9 +43,6 @@ const Layouts = () => {
     dispatch(setPageTitle(t('Fertilization Tracking')));
   }, [dispatch]);
 
-  const handleStatusChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setselectedStatus(event.target.value);  // Seçilen durumu güncelle
-  };
   return (
     <div className="min-h-screen bg-white flex justify-center items-center">
       {/* Form Container */}
@@ -56,80 +52,95 @@ const Layouts = () => {
         </h5>
 
         {/* Form Fields */}
-        <form className="space-y-5">
-          <div className="grid gap-6">
-            {/* Input Fields */}
-            <div>
-              <input
-                type="text"
-                placeholder={t('Name')}
-                className="form-input w-full"
-                value={ad || ''}
-                readOnly
-              />
-            </div>
-            <div>
-              <input
-                type="date"
-                placeholder={t('Last Fertilization Date')}
-                className="form-input w-full"
-                id="tarih" 
-                value={selectedDate} 
-                onChange={(e) => setSelectedDate(e.target.value)}
-              />
-            </div>
-            <div>
-              <input
-                type="text"
-                placeholder={t('Escaped Fertilization')}
-                value={dollenmeSayisi || ''}
-                readOnly
-                className="form-input w-full"
-              />
-            </div>
-          </div>
+        <Formik
+  initialValues={{
+    date: selectedDate,
+    status: selectedStatus,
+  }}
+  validationSchema={validationSchema}
+  onSubmit={(values) => {
+    if (Object.keys(values).length === 2 && values.date && values.status) {
+      handleSave(Number(cowID), values);
+    }
+  }}
+>
+  {({ errors, touched, setFieldValue, values }) => (
+    <Form className="space-y-5">
+      <div className="grid gap-6">
+        {/* Input Fields */}
+        <div>
+          <Field
+            type="text"
+            placeholder={t('Name')}
+            className="form-input w-full"
+            value={ad || ''}
+            readOnly
+          />
+        </div>
+        <div>
+          <Field
+            type="date"
+            placeholder={t('Last Fertilization Date')}
+            className="form-input w-full"
+            id="tarih"
+            name="date"
+            value={values.date}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFieldValue('date', e.target.value)} 
+          />
+          {errors.date && touched.date && <div className="text-danger">{errors.date}</div>}
+        </div>
+        <div>
+          <Field
+            type="text"
+            placeholder={t('Escaped Fertilization')}
+            value={dollenmeSayisi || ''}
+            readOnly
+            className="form-input w-full"
+          />
+        </div>
+      </div>
 
-          {/* Döllenme Tuttu Mu? Radio Buttons */}
-          <div className="mb-4">
-            <span className="block font-semibold mb-2">{t('Did the fertilization take?')}</span>
-            <div className="flex items-center space-x-4">
-              <label className="flex items-center">
-                <input
-                  type="radio"
-                  name="fertilization"
-                  value="E"
-                  className="mr-2"
-                  checked={selectedStatus === "E"}
-                  onChange={handleStatusChange}
-                />
-                {t('Yes')}
-              </label>
-              <label className="flex items-center">
-                <input
-                  type="radio"
-                  name="fertilization"
-                  value="H"
-                  className="mr-2"
-                  checked={selectedStatus === "H"}
-                  onChange={handleStatusChange}
-                />
-                {t('No')}
-              </label>
-            </div>
-          </div>
+      {/* Döllenme Tuttu Mu? Radio Buttons */}
+      <div className="mb-4">
+        <span className="block font-semibold mb-2">{t('Did the fertilization take?')}</span>
+        <div className="flex items-center space-x-4">
+          <label className="flex items-center">
+            <Field
+              type="radio"
+              name="status"
+              value="E"
+              className="mr-2"
+              checked={values.status === 'E'}
+              onChange={() => setFieldValue('status', 'E')}
+            />
+            {t('Yes')}
+          </label>
+          <label className="flex items-center">
+            <Field
+              type="radio"
+              name="status"
+              value="H"
+              className="mr-2"
+              checked={values.status === 'H'}
+              onChange={() => setFieldValue('status', 'H')}
+            />
+            {t('No')}
+          </label>
+        </div>
+        {errors.status && touched.status && <div className="text-danger">{errors.status}</div>}
+      </div>
 
-     
+      {/* Submit Button */}
+      <button type="submit" className="btn btn-primary w-full">
+        {t('Submit')}
+      </button>
+    </Form>
+  )}
+</Formik>
 
-          {/* Submit Button */}
-          <button type="button" className="btn btn-primary w-full"
-            onClick={() => handleSave(Number(cowID))}
-          >
-            {t('Submit')}
-          </button>
-        </form>
       </div>
     </div>
   );
 };
 
-export default Layouts;
+export default Layouts;  
