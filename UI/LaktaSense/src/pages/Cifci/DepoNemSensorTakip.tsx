@@ -6,38 +6,51 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const Layouts = () => {
+  const storedUserInfo = localStorage.getItem('userInfo');
+  const userInfo = storedUserInfo ? JSON.parse(storedUserInfo) : null;
   const navigate = useNavigate();
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const location = useLocation();
-  const [selectedDate, setSelectedDate] = useState("");
-  const [sensorType, setSensorType] = useState("temperature"); // Default sensor type
-  const { cowID, ad, dollenmeSayisi } = location.state || {};
+  const [SensorQR, setSensorQR] = useState("");
+  const [sensorName, setsensorName] = useState("");
+  const [sensorType, setSensorType] = useState(1); // Default sensor type
 
-  const handleSave = async (ID:number) => {
-    if (!selectedDate) {
-      alert(t("Please select a date!"));
+  const handleSave = async () => {
+    if (!SensorQR) {
+      alert("Please write Sensor QR");
       return;
     }
     if (!sensorType) {
-      alert(t("Please select a sensor type!"));
+      alert("Please select a Sensor Type!");
       return;
     }
-
+    if (!sensorName) {
+      alert("Please write a Sensor Name!");
+      return;
+    }
+  
     try {
-      const response = await axios.post("http://localhost:3030/api/servis/postServisEkle", {
-        ID: ID,
-        Tarih: selectedDate,
-        dollenmeSayisi: dollenmeSayisi,
-        sensorType: sensorType,
-      });
-
+      const response = await axios.post(
+        "/apie/sensor/kayit",
+        {
+          SensorQR: SensorQR,
+          Tipi: sensorType,
+          FirmaID: userInfo.kullaniciID,
+          SensorAdi: sensorName,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json", // JSON formatını belirtin
+          },
+        }
+      );
+  
       console.log(response.data);
-      alert(t("Saved successfully!"));
-      navigate('/cifci/ServisTakip');
+      alert("Saved successfully!");
     } catch (error) {
       console.error(error);
-      alert(t("An error occurred while saving!") + error);
+      alert("An error occurred while saving: " + error);
     }
   };
 
@@ -65,8 +78,8 @@ const Layouts = () => {
                 type="text"
                 placeholder={t('Sensor QR')}
                 className="form-input w-full"
-                value={selectedDate}
-                onChange={(e) => setSelectedDate(e.target.value)} // Update state
+                value={SensorQR}
+                onChange={(e) => setSensorQR(e.target.value)} // Update state
           
               />
             </div>
@@ -80,8 +93,8 @@ const Layouts = () => {
                 type="text"
                 placeholder={t('Sensor Name')}
                 className="form-input w-full"
-                value={selectedDate}
-                onChange={(e) => setSelectedDate(e.target.value)} // Update state
+                value={sensorName}
+                onChange={(e) => setsensorName(e.target.value)} // Update state
               />
             </div>
 
@@ -94,11 +107,11 @@ const Layouts = () => {
                 id="sensorType"
                 className="form-input w-full"
                 value={sensorType} // Bind to state
-                onChange={(e) => setSensorType(e.target.value)} // Update state
+                onChange={(e) => setSensorType(Number(e.target.value))} // Update state
               >
-                <option value="temperature">{t('Barn Sensor')}</option>
-                <option value="humidity">{t('Warehouse Sensor')}</option>
-                <option value="pressure">{t('Leash Sensor')}</option>
+                {/* <option value="1" >{t('Barn Sensor')}</option>
+                <option value="2">{t('Warehouse Sensor')}</option>*/}
+                <option value="3">{t('Leash Sensor')}</option>
               </select>
             </div>
           </div>
@@ -108,7 +121,7 @@ const Layouts = () => {
             type="button"
             style={{ backgroundColor: '#9ed895', color: 'white' }} // Butonu yeşil yapmka için kullandım
             className="btn btn-primary w-full"
-            onClick={() => handleSave(Number(cowID))}
+            onClick={() => handleSave()}
           >
             {t('Save')}
           </button>

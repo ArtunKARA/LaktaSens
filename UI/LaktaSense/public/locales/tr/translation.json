@@ -264,5 +264,7 @@
     "Adult":"Erişkin",
     "Calf":"Yavru",
     "Calf Cycle Analysis":"Yavru Döngü Analizi",
-    "Analysis of the Number of Animals in the Cycle":"Döngüdeki Hayvan Sayısı Analiz"
+    "Analysis of the Number of Animals in the Cycle":"Döngüdeki Hayvan Sayısı Analiz",
+    "Please write Sensor QR":"Sensör QR bilgisini giriniz.",
+    "Please write a Sensor Name!":"Sensör ismini giriniz."
 }

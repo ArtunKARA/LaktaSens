@@ -202,7 +202,7 @@ const Sidebar = () => {
                                         </button>
 
                                         <AnimateHeight duration={300} height={currentMenu === 'Sensor Tracking' ? 'auto' : 0}>
-                                        <li className="menu nav-item">
+                                        {/*<li className="menu nav-item">
                                                 <button
                                                         type="button"
                                                         className={`${
@@ -234,7 +234,7 @@ const Sidebar = () => {
                                                         </li>
                                                     </ul>
                                                 </AnimateHeight>
-                                            </li>
+                                            </li> */}
                                             <ul className="sub-menu text-gray-500">
                                                 <li>
                                                     <NavLink to="/cifci/GomuluSensor">{t('Barn Tracking')}</NavLink>

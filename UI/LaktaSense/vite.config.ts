@@ -2,7 +2,6 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
 
-// https://vitejs.dev/config/
 export default defineConfig({
     plugins: [
         react(),
@@ -10,6 +9,16 @@ export default defineConfig({
     resolve: {
         alias: {
             '@': path.resolve(__dirname, './src'),
+        },
+    },
+    server: {
+        proxy: {
+            // '/apie' ile başlayan istekleri yönlendir
+            '/apie': {
+                target: 'https://confoni.com',
+                changeOrigin: true, // Proxy başlıklarını ayarlar
+                rewrite: (path) => path.replace(/^\/apie/, ''), // '/apie' kısmını kaldır
+            },
         },
     },
 });
