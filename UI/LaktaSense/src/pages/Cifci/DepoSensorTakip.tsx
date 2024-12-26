@@ -68,14 +68,7 @@ const Layouts = () => {
                         </label>
                         <div className="flex items-center">
                             <input id="humiditySensor" type="text" className="form-input w-full" />
-                            <button
-                                type="button"
-                                className="ml-2 p-2 bg-gray-200 rounded hover:bg-gray-300"
-                                title={t('Edit')}
-                                onClick={handleEditCowsTemperatureSensor}
-                            >
-                                <IconPencil className="text-gray-500" />
-                            </button>
+                           
                         </div>
                     </div>
                 </form>

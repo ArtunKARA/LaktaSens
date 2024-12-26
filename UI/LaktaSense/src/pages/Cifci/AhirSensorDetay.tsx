@@ -248,74 +248,7 @@ const MultipleTables = () => {
                       </div>
                   </form>
               </div>
-
-              {/* Data Table Section */}
-              <div className="datatables">
-                  <DataTable
-                      className="whitespace-nowrap table-hover"
-                      records={recordsData}
-                      columns={[
-                          {
-                              accessor: 'Sensor ID',
-                              title: t('Sensor ID'),
-                              sortable: true,
-                              render: ({ firstName, lastName, id }) => (
-                                  <div className="flex items-center w-max">
-                                      <img 
-                                          className="w-9 h-9 rounded-full ltr:mr-2 rtl:ml-2 object-cover" 
-                                          src={`/assets/images/profile-${id}.jpeg`} 
-                                          alt="" 
-                                      />
-                                      <div>{firstName + ' ' + lastName}</div>
-                                  </div>
-                              ),
-                          },
-                          {
-                              accessor: 'Sensor Name',
-                              title: t('Sensor Name'),
-                              sortable: true,
-                          },
-                          {
-                              accessor: 'Sensor Data',
-                              title: t('Sensor Data'),
-                              sortable: true,
-                          },
-                          {
-                              accessor: 'status',
-                              title: t('Status'),
-                              sortable: true,
-                              render: () => <span className={`badge bg-success`}>Active</span>,
-                          },
-                          {
-                              accessor: 'Sensor Analizleri',
-                              title: t('Sensor Analyzes'),
-                              titleClassName: '!text-center',
-                              render: () => (
-                                  <div className="flex items-center w-max mx-auto gap-2">
-                                      <Tippy content="Edit">
-                                          <button type="button" onClick={handleEditCowsTemperatureSensor}>
-                                              <IconPencil />
-                                          </button>
-                                      </Tippy>
-                                  </div>
-                              ),
-                          },
-                      ]}
-                      totalRecords={initialRecords.length}
-                      recordsPerPage={pageSize}
-                      page={page}
-                      onPageChange={(p) => setPage(p)}
-                      recordsPerPageOptions={[10, 20, 30, 50, 100]}
-                      onRecordsPerPageChange={setPageSize}
-                      sortStatus={sortStatus}
-                      onSortStatusChange={setSortStatus}
-                      minHeight={200}
-                      paginationText={({ from, to, totalRecords }) => `Showing  ${from} to ${to} of ${totalRecords} entries`}
-                  />
-              </div>
           </div>
-      
-    
   );
 };
 

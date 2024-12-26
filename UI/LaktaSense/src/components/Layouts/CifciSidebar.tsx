@@ -237,13 +237,13 @@ const Sidebar = () => {
                                             </li> */}
                                             <ul className="sub-menu text-gray-500">
                                                 <li>
-                                                    <NavLink to="/cifci/GomuluSensor">{t('Barn Tracking')}</NavLink>
+                                                    <NavLink to="/cifci/AhirSensorTakip">{t('Barn Tracking')}</NavLink>
                                                 </li>
                                                 <li>
                                                     <NavLink to="/cifci/DepoSensorTakip">{t('Feed Warehouse Tracking')}</NavLink>
                                                 </li>         
                                                 <li>
-                                                    <NavLink to="/cifci/DepoNemSensorTakip">{t('Add Sensor')}</NavLink>
+                                                    <NavLink to="/cifci/SensorEkle">{t('Add Sensor')}</NavLink>
                                                 </li>         
                                                                        
                                                 

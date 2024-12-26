@@ -12,11 +12,11 @@ const CikarilacaklarTakip = lazy(() => import('../pages/Cifci/CikarilacaklarTaki
 const GenelTakipDetay = lazy(() => import('../pages/Cifci/GenelTakipDetay'));
 const InekEkle= lazy(() => import('../pages/Cifci/InekEkle'));
 const ServisTakipDetay= lazy(() => import('../pages/Cifci/ServisTakipDetay'));
-const GomuluSensor= lazy(() => import('../pages/Cifci/GomuluSensor'));
+const AhirSensorTakip= lazy(() => import('../pages/Cifci/AhirSensorTakip'));
 const SicaklikSensorTakip= lazy(() => import('../pages/Cifci/SicaklikSensorTakip'));
-const InekSicaklikSensorTakip= lazy(() => import('../pages/Cifci/InekSicaklikSensorTakip'));
-const NemSensorTakip= lazy(() => import('../pages/Cifci/NemSensorTakip'));
-const DepoNemSensorTakip= lazy(() => import('../pages/Cifci/DepoNemSensorTakip'));
+const AhirSensorDetay= lazy(() => import('../pages/Cifci/AhirSensorDetay'));
+const InekSensorDetay= lazy(() => import('../pages/Cifci/InekSensorDetay'));
+const SensorEkle= lazy(() => import('../pages/Cifci/SensorEkle'));
 const DepoSicaklikSensorTakip= lazy(() => import('../pages/Cifci/DepoSicaklikSensorTakip'));
 const DepoSensorTakip= lazy(() => import('../pages/Cifci/DepoSensorTakip'))
 const AdminBasvuruDuzenleme= lazy(() => import('../pages/Cifci/AdminBasvuruDuzenleme'))
@@ -95,10 +95,10 @@ const routes = [
         element: <ServisTakipDetay />,
         layout : 'cifci',
     },
-    //Farmer gomuluSensor sayfası
+    //Farmer AhırSensorTakip sayfası
     {
-            path: '/cifci/GomuluSensor',
-            element: <GomuluSensor />,
+            path: '/cifci/AhirSensorTakip',
+            element: <AhirSensorTakip />,
             layout : 'cifci',
     },
     //Farmer sıcaklık sensor takip sayfası
@@ -109,14 +109,14 @@ const routes = [
     },
       //Farmer nem sensor takip sayfası
       {
-        path: '/cifci/NemSensorTakip',
-        element: <NemSensorTakip />,
+        path: '/cifci/InekSensorDetay',
+        element: <InekSensorDetay />,
         layout : 'cifci',
     },
       //Farmer inek sıcaklık sensor takip sayfası
       {
-        path: '/cifci/InekSicaklikSensorTakip',
-        element: <InekSicaklikSensorTakip />,
+        path: '/cifci/AhirSensorDetay',
+        element: <AhirSensorDetay />,
         layout : 'cifci',
     },
        //Admin basvuru düzenlemesayfası
@@ -140,8 +140,8 @@ const routes = [
     },
       //Farmer depo nem sensor takip sayfası
       {
-        path: '/cifci/DepoNemSensorTakip',
-        element: <DepoNemSensorTakip />,
+        path: '/cifci/SensorEkle',
+        element: <SensorEkle />,
         layout : 'cifci',
     },
 //Yenidoğan takip takip sayfası
