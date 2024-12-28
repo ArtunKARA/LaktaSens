@@ -23,11 +23,11 @@ const Index = () => {
         series: [
             {
                 name: 'Nem Değerleri',
-                data: [16800, 16800, 15500, 17800, 15500, 17000, 19000, 16000, 15000, 17000, 14000, 17000],
+                data: [40.00, 40.05, 40.04, 40.05, 40.08, 40.07, 40.06, 40.00, 40.00, 40.05, 40.06, 40.07, 40.00, 40.05, 40.04, 40.05, 40.08, 40.07, 40.06, 40.00, 40.00, 40.05, 40.00, 40.05,],
             },
             {
                 name: 'Sıcaklık Değerleri',
-                data: [16500, 17500, 16200, 17300, 16000, 19500, 16000, 17000, 16000, 19000, 18000, 19000],
+                data: [20.00, 20.05, 20.04, 20.05, 20.08, 21.07, 21.06, 21.00, 20.00, 20.05, 20.06, 20.07, 20.00, 21.05, 21.04, 22.05, 22.08, 21.07, 21.06, 21.00, 21.00, 20.05, 20.00, 20.05,],
             },
         ],
         options: {
@@ -78,33 +78,34 @@ const Index = () => {
                     },
                 ],
             },
-            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            labels: ['01.00', '02.00', '03.00', '04.00', '05.00', '06.00', '07.00', '08.00','09.00', '10.00', '11.00', '12.00', '13.00', '14.00', '15.00', '16.00', '17.00', '18.00', '19.00', '20.00', '21.00', '22.00', '23.00', '00.00'],
             xaxis: {
-                axisBorder: {
-                    show: false,
-                },
-                axisTicks: {
-                    show: false,
-                },
-                crosshairs: {
-                    show: true,
-                },
-                labels: {
-                    offsetX: isRtl ? 2 : 0,
-                    offsetY: 5,
-                    style: {
-                        fontSize: '12px',
-                        cssClass: 'apexcharts-xaxis-title',
-                    },
-                },
-            },
+              axisBorder: {
+                  show: false,
+              },
+              axisTicks: {
+                  show: false,
+              },
+              crosshairs: {
+                  show: true,
+              },
+              tickAmount: 24, // 24 saat için detaylı aralık
+              labels: {
+                  offsetX: isRtl ? 2 : 0,
+                  offsetY: 7,
+                  style: {
+                      fontSize: '12px',
+                      cssClass: 'apexcharts-xaxis-title',
+                  },
+              },
+          },
             yaxis: {
                 tickAmount: 7,
                 labels: {
                     formatter: (value: number) => {
-                        return value / 1000 + 'K';
+                        return value / 1 ;
                     },
-                    offsetX: isRtl ? -30 : -10,
+                    offsetX: isRtl ? -40 : -10,
                     offsetY: 0,
                     style: {
                         fontSize: '12px',
@@ -115,7 +116,7 @@ const Index = () => {
             },
             grid: {
                 borderColor: isDark ? '#191E3A' : '#E0E6ED',
-                strokeDashArray: 5,
+                strokeDashArray: 10,
                 xaxis: {
                     lines: {
                         show: true,
@@ -168,91 +169,7 @@ const Index = () => {
         },
     };
 
-    //Sales By Category
-    const salesByCategory: any = {
-        series: [985, 737, 270],
-        options: {
-            chart: {
-                type: 'donut',
-                height: 460,
-                fontFamily: 'Nunito, sans-serif',
-            },
-            dataLabels: {
-                enabled: false,
-            },
-            stroke: {
-                show: true,
-                width: 25,
-                colors: isDark ? '#0e1726' : '#fff',
-            },
-            colors: isDark ? ['#5c1ac3', '#e2a03f', '#e7515a', '#e2a03f'] : ['#e2a03f', '#5c1ac3', '#e7515a'],
-            legend: {
-                position: 'bottom',
-                horizontalAlign: 'center',
-                fontSize: '14px',
-                markers: {
-                    width: 10,
-                    height: 10,
-                    offsetX: -2,
-                },
-                height: 50,
-                offsetY: 20,
-            },
-            plotOptions: {
-                pie: {
-                    donut: {
-                        size: '65%',
-                        background: 'transparent',
-                        labels: {
-                            show: true,
-                            name: {
-                                show: true,
-                                fontSize: '29px',
-                                offsetY: -10,
-                            },
-                            value: {
-                                show: true,
-                                fontSize: '26px',
-                                color: isDark ? '#bfc9d4' : undefined,
-                                offsetY: 16,
-                                formatter: (val: any) => {
-                                    return val;
-                                },
-                            },
-                            total: {
-                                show: true,
-                                label: 'Total',
-                                color: '#888ea8',
-                                fontSize: '29px',
-                                formatter: (w: any) => {
-                                    return w.globals.seriesTotals.reduce(function (a: any, b: any) {
-                                        return a + b;
-                                    }, 0);
-                                },
-                            },
-                        },
-                    },
-                },
-            },
-            labels: ['Apparel', 'Sports', 'Others'],
-            states: {
-                hover: {
-                    filter: {
-                        type: 'none',
-                        value: 0.15,
-                    },
-                },
-                active: {
-                    filter: {
-                        type: 'none',
-                        value: 0.15,
-                    },
-                },
-            },
-        },
-    };
-
-    
+   
    
     return (
         <div>
@@ -311,19 +228,32 @@ const Index = () => {
 
                     <div className="panel h-full">
                         <div className="flex items-center mb-5">
-                            <h5 className="font-semibold text-lg dark:text-white-light">Sales By Category</h5>
+                            <h5 className="font-semibold text-lg dark:text-white-light">Sıcaklık ve Nem Aralıkları</h5>
                         </div>
-                        <div>
-                            <div className="bg-white dark:bg-black rounded-lg overflow-hidden">
-                                {loading ? (
-                                    <div className="min-h-[325px] grid place-content-center bg-white-light/30 dark:bg-dark dark:bg-opacity-[0.08] ">
-                                        <span className="animate-spin border-2 border-black dark:border-white !border-l-transparent  rounded-full w-5 h-5 inline-flex"></span>
-                                    </div>
-                                ) : (
-                                    <ReactApexChart series={salesByCategory.series} options={salesByCategory.options} type="donut" height={460} />
-                                )}
-                            </div>
-                        </div>
+                         {/* Form container */}
+        <form className="pt-5 grid  gap-6">
+          <div>
+          <label className="text-gray-700 font-semibold">
+             10-20°C ve %50-70 nem: İdeal koşullar.
+            </label>
+          </div>
+          <div>
+          <label className="text-gray-700 font-semibold">
+             20-30°C ve %50-70 nem: Normal ancak dikat edilmeli.
+            </label>
+          </div>
+          <div>
+          <label className="text-gray-700 font-semibold">
+          30-35°C ve %60-80 nem: Sıcak, stres riski başlar.
+            </label>
+          </div>
+          <div>
+            <label className="text-gray-700 font-semibold">
+            35-40°C ve %70-90 nem: Ölümcül, yüksek risk.
+            </label>
+          </div>
+
+        </form>
                     </div>
                 </div>
 
