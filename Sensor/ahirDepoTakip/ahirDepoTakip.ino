@@ -1,106 +1,251 @@
-#include <SoftwareSerial.h>
-#include <DHT.h>  // DHT kütüphanesi
+#include <DHT.h>
+#include <ESP8266WiFi.h>
+#include <ESP8266HTTPClient.h>
 
-#define DHTPIN 7         // DHT sensör pin numarası
-#define DHTTYPE DHT11    // DHT sensör tipi (DHT11)
-#define MQ2pin A0        // MQ2 gaz sensörü analog pini
-#define GREEN_LED 13     // Yeşil LED pini (WiFi durumu için)
-#define Threshold 400    // Gaz sensörü eşik değeri
-
-// ESP8266 bağlantı pinleri
-#define ESP_RX 2         // Arduino RX
-#define ESP_TX 3         // Arduino TX
+// DHT11 sensör pin ve tür tanımları
+#define DHTPIN D4 // NodeMCU D4 pinine bağlı (GPIO2)
+#define DHTTYPE DHT11 // DHT11 sensör kullanılıyor
+#define MQ2pin A0  // MQ2 gaz sensörü analog pini
+#define GREEN_LED D0     // Yeşil LED pini (WiFi durumu için)
+#define RED_LED1 D1      // Kırmızı LED 1
+#define RED_LED2 D2      // Kırmızı LED 2
+#define RED_LED3 D3      // Kırmızı LED 3
+float mq2Value;
 
 // WiFi ayarları
-const char* ssid = "*";       // WiFi SSID (Türkçe karakter kaldırıldı)
-const char* password = "*";         // WiFi şifre
+const char* ssid = "Redmi";       // WiFi SSID
+const char* password = "ankara06";         // WiFi şire
+const char* serverUrl = "https://confoni.com/sensor/veri"; // Veri gönderim URL'si
+const char* onlineUrl = "https://confoni.com/sensor/aktif"; // online gönderim URL'si
+const char* SensorQR = "123456789";
 
-// Yazılımsal seri iletişim
-SoftwareSerial espSerial(ESP_RX, ESP_TX);
+WiFiClient client;
+// DHT nesnesi oluşturma
 DHT dht(DHTPIN, DHTTYPE);
 
 void setup() {
-  // Seri iletişim
-  Serial.begin(9600);         // Bilgisayar ile iletişim
-  espSerial.begin(115200);    // ESP8266 ile iletişim
-
+  Serial.begin(115200); // Seri haberleşme başlatılıyor
+  dht.begin();          // DHT sensörü başlatılıyor
+  Serial.println("DHT11 ile Sıcaklık ve Nem Ölçümü");
   // Pin ayarları
   pinMode(GREEN_LED, OUTPUT);
-  pinMode(10, OUTPUT);  // LED çıkış pinleri
-  pinMode(11, OUTPUT);
-  pinMode(12, OUTPUT);
+  pinMode(RED_LED1, OUTPUT);
+  pinMode(RED_LED2, OUTPUT);
+  pinMode(RED_LED3, OUTPUT);
 
-  // DHT sensör başlat
-  dht.begin();
+  digitalWrite(GREEN_LED, LOW);
+  digitalWrite(RED_LED1, LOW);
+  digitalWrite(RED_LED2, LOW);
+  digitalWrite(RED_LED3, LOW);
+  delay(200);
+  digitalWrite(GREEN_LED, HIGH);
+  digitalWrite(RED_LED1, HIGH);
+  digitalWrite(RED_LED2, HIGH);
+  digitalWrite(RED_LED3, HIGH);
+  delay(1000);
+  digitalWrite(GREEN_LED, LOW);
+  digitalWrite(RED_LED1, LOW);
+  digitalWrite(RED_LED2, LOW);
+  digitalWrite(RED_LED3, LOW);
 
   // WiFi bağlantısı
   connectToWiFi();
+  sendOnlineStaus();
 }
 
 void loop() {
-  // Yeşil LED: Bağlı kalındığını göstermek için sürekli açık
-  digitalWrite(GREEN_LED, HIGH);
 
-  // DHT sensör verileri
-  float temperature = dht.readTemperature();
-  float humidity = dht.readHumidity();
+  // Sensörden sıcaklık ve nem değerlerini okuma
+  float nem = dht.readHumidity();
+  float sicaklik = dht.readTemperature();
 
-  // Sensör hatasını kontrol et
-  if (isnan(temperature) || isnan(humidity)) {
-    Serial.println("DHT sensör okuma hatası!");
+  // Sensörden okuma hatası kontrolü
+  if (isnan(nem) || isnan(sicaklik)) {
+    Serial.println("Sensörden veri alınamadı! Lütfen bağlantıları kontrol edin.");
     return;
   }
-
-  // Sensör verilerini yazdır
-  Serial.print("Sıcaklık: ");
-  Serial.print(temperature);
-  Serial.println("°C");
-  Serial.print("Nem: ");
-  Serial.print(humidity);
-  Serial.println("%");
-
-  // MQ2 sensör verisi
-  int mq2Value = analogRead(MQ2pin);
-  Serial.print("MQ2 Sensör Değeri: ");
-  Serial.println(mq2Value);
-
-  // Gaz algılama
-  if (mq2Value > Threshold) {
-    Serial.println("Duman algılandı!");
-    digitalWrite(10, HIGH);
-    digitalWrite(11, HIGH);
-    digitalWrite(12, HIGH);
-  } else {
-    digitalWrite(10, LOW);
-    digitalWrite(11, LOW);
-    digitalWrite(12, LOW);
+  mq2Value = analogRead(MQ2pin);
+  Serial.print("Sensor Value: ");
+  Serial.print(mq2Value);
+  
+  if(mq2Value > 300)
+  {
+    Serial.print(" | Smoke detected!");
   }
+  
+  Serial.println("");
+  // Ölçülen değerleri seri monitörde görüntüleme
+  Serial.print("Nem: ");
+  Serial.print(nem);
+  Serial.println(" %");
 
-  delay(2000); // Döngü arası gecikme
+  Serial.print("Sıcaklık: ");
+  Serial.print(sicaklik);
+  Serial.println(" °C");
+
+  // Verileri sunucuya gönder ve yanıt al
+  String response = sendSensorData(sicaklik, nem, mq2Value);
+
+  // Yanıt üzerinden LED durumunu güncelle
+  updateLEDStatusFromResponse(response);
 }
 
 // WiFi ağına bağlanma
 void connectToWiFi() {
   Serial.println("WiFi ağına bağlanılıyor...");
-  espSerial.println("AT"); // ESP8266 ile bağlantıyı test et
-  delay(500);
+  WiFi.begin(ssid, password);
 
-  // WiFi bağlantısını kur
-  String cmd = "AT+CWJAP=\"" + String(ssid) + "\",\"" + String(password) + "\"";
-  espSerial.println(cmd);
-  delay(5000); // Bağlantı süresi
-
-  // Bağlantı durumunu kontrol et
-  if (espSerial.available()) {
-    String response = espSerial.readString();
-    Serial.println("ESP8266 Yanıtı: " + response);
-
-    if (response.indexOf("OK") != -1) {
-      Serial.println("WiFi'ye başarıyla bağlanıldı!");
-      digitalWrite(GREEN_LED, HIGH); // Bağlıysa yeşil LED açık
-    } else {
-      Serial.println("WiFi bağlantısı başarısız!");
-      digitalWrite(GREEN_LED, LOW); // Bağlanamazsa yeşil LED kapalı
+  while (WiFi.status() != WL_CONNECTED) {
+    blinkLEDGreen(1,500);
+    Serial.print(".");
   }
- }
+
+  digitalWrite(GREEN_LED, HIGH);
+  Serial.println("\nWiFi'ye başarıyla bağlanıldı!");
 }
+
+// Sunucuya veri gönder ve yanıt al
+String sendSensorData(float temperature, float humidity, int mq2Value) {
+if (WiFi.status() == WL_CONNECTED) {
+    WiFiClientSecure client; // HTTPS için WiFiClientSecure kullanımı
+    client.setInsecure();    // Test amaçlı sertifika doğrulama kapalı
+    HTTPClient http;
+    http.setFollowRedirects(HTTPC_STRICT_FOLLOW_REDIRECTS); // Yönlendirme takibi
+    http.begin(client, serverUrl);
+    http.addHeader("Content-Type", "application/json");
+
+    String jsonData = "{";
+      jsonData += "\"SensorQR\":\"" + String(SensorQR) + "\",";
+      jsonData += "\"Sıcaklık\":" + String(temperature) + ",";
+      jsonData += "\"Nem\":" + String(humidity) + ",";
+      jsonData += "\"Gaz\":" + String(mq2Value);
+      jsonData += "}";
+
+    // POST isteği gönder
+    int httpResponseCode = http.POST(jsonData);
+    if (httpResponseCode > 0) {
+      Serial.println("HTTP Yanıt Kodu: " + String(httpResponseCode));
+      String response = http.getString();
+      Serial.println("Sunucu yanıtı: " + response);
+      http.end();
+      return response;
+    } else {
+      Serial.println("HTTP isteği başarısız! Hata: " + String(httpResponseCode));
+      Serial.println("Muhtemel hata: " + http.errorToString(httpResponseCode));
+      http.end();
+      return "";
+    }
+  } else {
+    indicateFailure();
+    Serial.println("WiFi bağlantısı yok!");
+    return "";
+  }
+}
+
+String sendOnlineStaus() {
+  if (WiFi.status() == WL_CONNECTED) {
+    WiFiClientSecure client; // HTTPS için WiFiClientSecure kullanımı
+    client.setInsecure();    // Test amaçlı sertifika doğrulama kapalı
+    HTTPClient http;
+    http.setFollowRedirects(HTTPC_STRICT_FOLLOW_REDIRECTS); // Yönlendirme takibi
+    http.begin(client, onlineUrl);
+    http.addHeader("Content-Type", "application/json");
+
+    // JSON veri oluştur
+    String jsonData = "{\"SensorQR\":"+String(SensorQR)+"}";
+
+    // POST isteği gönder
+    int httpResponseCode = http.POST(jsonData);
+    if (httpResponseCode > 0) {
+      Serial.println("HTTP Yanıt Kodu: " + String(httpResponseCode));
+      String response = http.getString();
+      Serial.println("Sunucu yanıtı: " + response);
+      http.end();
+      return response;
+    } else {
+      Serial.println("HTTP isteği başarısız! Hata: " + String(httpResponseCode));
+      Serial.println("Muhtemel hata: " + http.errorToString(httpResponseCode));
+      http.end();
+      return "";
+    }
+  } else {
+    indicateFailure();
+    Serial.println("WiFi bağlantısı yok!");
+    return "";
+  }
+}
+
+// Durum göstergeleri
+void indicateSearching() {
+  digitalWrite(GREEN_LED, HIGH);
+  delay(500);
+  digitalWrite(GREEN_LED, LOW);
+  delay(500);
+}
+
+void indicateConnected() {
+  digitalWrite(GREEN_LED, HIGH);
+}
+
+void indicateFailure() {
+  for (int i = 0; i < 3; i++) {
+    digitalWrite(RED_LED1, HIGH);
+    digitalWrite(RED_LED2, HIGH);
+    digitalWrite(RED_LED3, HIGH);
+    delay(300);
+    digitalWrite(RED_LED1, LOW);
+    digitalWrite(RED_LED2, LOW);
+    digitalWrite(RED_LED3, LOW);
+    delay(300);
+  }
+}
+
+// Yanıt üzerinden LED durumunu güncelle
+void updateLEDStatusFromResponse(String response) {
+  if (response.indexOf("sicaklik\":\"Düşük") != -1) {
+    digitalWrite(RED_LED1, HIGH);
+    delay(1000);
+    digitalWrite(RED_LED1, LOW);
+  } else if (response.indexOf("sicaklik\":\"Normal") != -1) {
+    blinkLED(RED_LED1, 1, 500);
+  } else if (response.indexOf("sicaklik\":\"Yüksek") != -1) {
+    blinkLED(RED_LED1, 2, 250);
+  } else if (response.indexOf("sicaklik\":\"Tehlikeli") != -1) {
+    blinkLED(RED_LED1, 5, 100);
+  }
+
+  if (response.indexOf("nem\":\"Düşük") != -1) {
+    digitalWrite(RED_LED1, HIGH);
+    delay(1000);
+    digitalWrite(RED_LED1, LOW);
+  } else if (response.indexOf("nem\":\"Yüksek") != -1) {
+    blinkLED(RED_LED2, 2, 250);
+  } else if (response.indexOf("nem\":\"Tehlikeli") != -1) {
+    blinkLED(RED_LED2, 5, 100);
+  }
+
+  if (response.indexOf("Gaz\":\"Yok") != -1) {
+    delay(1000);
+  } else if (response.indexOf("gaz\":\"Var") != -1) {
+    blinkLED(RED_LED3, 5, 100);
+  }
+}
+
+// LED yanıp sönme fonksiyonu
+void blinkLED(int ledPin, int times, int delayMs) {
+  for (int i = 0; i < times; i++) {
+    digitalWrite(ledPin, HIGH);
+    delay(delayMs);
+    digitalWrite(ledPin, LOW);
+    delay(delayMs);
+  }
+}
+
+void blinkLEDGreen(int times, int delayMs) {
+  for (int i = 0; i < times; i++) {
+    digitalWrite(GREEN_LED, HIGH);
+    delay(delayMs);
+    digitalWrite(GREEN_LED, LOW);
+    delay(delayMs);
+  }
+} 
