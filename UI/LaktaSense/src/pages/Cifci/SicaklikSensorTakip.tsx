@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { IRootState } from '/Users/esmg2/OneDrive/Masaüstü/LaktaSens/UI/LaktaSense/src/store/index';
+import { IRootState } from '../../store/index';
 import ReactApexChart from 'react-apexcharts';
-import Dropdown from '/Users/esmg2/OneDrive/Masaüstü/LaktaSens/UI/LaktaSense/src/components/Dropdown';
-import { setPageTitle } from '/Users/esmg2/OneDrive/Masaüstü/LaktaSens/UI/LaktaSense/src/store/themeConfigSlice';
-import IconHorizontalDots from '/Users/esmg2/OneDrive/Masaüstü/LaktaSens/UI/LaktaSense/src/components/Icon/IconHorizontalDots';
+import Dropdown from '../../components/Dropdown';
+import { setPageTitle } from '../../store/themeConfigSlice';
+import IconHorizontalDots from '../../components/Icon/IconHorizontalDots';
 
 
 const Index = () => {
@@ -29,6 +29,10 @@ const Index = () => {
                 name: 'Sıcaklık Değerleri',
                 data: [20.00, 20.05, 20.04, 20.05, 20.08, 21.07, 21.06, 21.00, 20.00, 20.05, 20.06, 20.07, 20.00, 21.05, 21.04, 22.05, 22.08, 21.07, 21.06, 21.00, 21.00, 20.05, 20.00, 20.05,],
             },
+            {
+              name: 'Tasma Değerleri',
+              data: [30.00, 30.05, 30.04, 30.05, 30.08, 31.07, 31.06, 31.00, 30.00, 30.05, 30.06, 30.07, 30.00, 31.05, 31.04, 32.05, 30.08, 31.07, 31.06, 31.00, 31.00, 30.05, 30.00, 30.05,],
+          },
         ],
         options: {
             chart: {
@@ -59,7 +63,7 @@ const Index = () => {
                 left: -7,
                 top: 22,
             },
-            colors: isDark ? ['#2196F3', '#E7515A'] : ['#1B55E2', '#E7515A'],
+            colors: isDark ? ['#2196F3', '#E7515A', '#32CD32'] : ['#1B55E2', '#E7515A', '#32CD32'],
             markers: {
                 discrete: [
                     {
@@ -76,6 +80,14 @@ const Index = () => {
                         strokeColor: 'transparent',
                         size: 7,
                     },
+                    {
+                      seriesIndex: 1,
+                      dataPointIndex: 5,
+                      fillColor: '#E7515A',
+                      strokeColor: 'transparent',
+                      size: 7,
+                  },
+            
                 ],
             },
             labels: ['01.00', '02.00', '03.00', '04.00', '05.00', '06.00', '07.00', '08.00','09.00', '10.00', '11.00', '12.00', '13.00', '14.00', '15.00', '16.00', '17.00', '18.00', '19.00', '20.00', '21.00', '22.00', '23.00', '00.00'],
@@ -91,7 +103,7 @@ const Index = () => {
               },
               tickAmount: 24, // 24 saat için detaylı aralık
               labels: {
-                  offsetX: isRtl ? 2 : 0,
+                  offsetX: isRtl ? 3 : 0,
                   offsetY: 7,
                   style: {
                       fontSize: '12px',
@@ -189,25 +201,7 @@ const Index = () => {
                     <div className="panel h-full xl:col-span-2">
                         <div className="flex items-center justify-between dark:text-white-light mb-5">
                             <h5 className="font-semibold text-lg">Nem - Sıcaklık</h5>
-                            <div className="dropdown">
-                                <Dropdown
-                                    offset={[0, 1]}
-                                    placement={`${isRtl ? 'bottom-start' : 'bottom-end'}`}
-                                    button={<IconHorizontalDots className="text-black/70 dark:text-white/70 hover:!text-primary" />}
-                                >
-                                    <ul>
-                                        <li>
-                                            <button type="button">Weekly</button>
-                                        </li>
-                                        <li>
-                                            <button type="button">Monthly</button>
-                                        </li>
-                                        <li>
-                                            <button type="button">Yearly</button>
-                                        </li>
-                                    </ul>
-                                </Dropdown>
-                            </div>
+                           
                         </div>
                         {/*
                         <p className="text-lg dark:text-white-light/90">
@@ -228,28 +222,32 @@ const Index = () => {
 
                     <div className="panel h-full">
                         <div className="flex items-center mb-5">
-                            <h5 className="font-semibold text-lg dark:text-white-light">Sıcaklık ve Nem Aralıkları</h5>
+                            <h5 className="font-semibold text-lg dark:text-white-light">İnek Vücut Sıcaklığı Aralıkları</h5>
                         </div>
                          {/* Form container */}
         <form className="pt-5 grid  gap-6">
           <div>
           <label className="text-gray-700 font-semibold">
-             10-20°C ve %50-70 nem: İdeal koşullar.
+          38,0-39,0°C (İdeal): Normal vücut sıcaklığı, sağlıklı ve rahat inekler.
+
+
             </label>
           </div>
           <div>
           <label className="text-gray-700 font-semibold">
-             20-30°C ve %50-70 nem: Normal ancak dikat edilmeli.
+          39,0-40,0°C (Sıcak): Hafif yüksek sıcaklık, stres belirtileri gözlemlenebilir, su tüketimi artabilir.
+
             </label>
           </div>
           <div>
           <label className="text-gray-700 font-semibold">
-          30-35°C ve %60-80 nem: Sıcak, stres riski başlar.
+          40,0-41,0°C (Yüksek): Aşırı sıcaklık, ineklerde stres, yem tüketiminde azalma, verim kaybı görülebilir.
+         
             </label>
           </div>
           <div>
             <label className="text-gray-700 font-semibold">
-            35-40°C ve %70-90 nem: Ölümcül, yüksek risk.
+            41,0°C ve üzeri (Tehlikeli): Hayati risk, termal şok, acil müdahale gereklidir.
             </label>
           </div>
 

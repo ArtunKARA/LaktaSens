@@ -1,127 +1,263 @@
-import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { IRootState } from '../../store/index';
+import ReactApexChart from 'react-apexcharts';
+import Dropdown from '../../components/Dropdown';
 import { setPageTitle } from '../../store/themeConfigSlice';
-import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom'; // Yönlendirme için ekledik
-import IconPencil from '../../components/Icon/IconPencil';
+import IconHorizontalDots from '../../components/Icon/IconHorizontalDots';
 
-const Layouts = () => {
-  const { t } = useTranslation();
-  const dispatch = useDispatch();
-  const navigate = useNavigate(); // Yönlendirme için kullanılıyor
 
-  // Başlığı tutacak state
-  const [sensorTrackingTitle, setSensorTrackingTitle] = useState('');
+const Index = () => {
+    const dispatch = useDispatch();
+    useEffect(() => {
+        dispatch(setPageTitle('Sales Admin'));
+    });
+    const isDark = useSelector((state: IRootState) => state.themeConfig.theme === 'dark' || state.themeConfig.isDarkMode);
+    const isRtl = useSelector((state: IRootState) => state.themeConfig.rtlClass) === 'rtl' ? true : false;
 
-  useEffect(() => {
-    dispatch(setPageTitle('Layouts'));
+    const [loading] = useState(false);
 
-    // Veritabanından başlık çekmek için API çağrısı
-    const fetchSensorTrackingTitle = async () => {
-      try {
-        const response = await fetch('/api/sensor-tracking-title'); // Örnek API endpoint
-        const data = await response.json();
-        setSensorTrackingTitle(data.title); // Gelen başlığı state'e kaydet
-      } catch (error) {
-        console.error('Başlık alınırken bir hata oluştu:', error);
-      }
+    //Revenue Chart
+    const revenueChart: any = {
+        series: [
+            {
+                name: 'Nem Değerleri',
+                data: [40.00, 40.05, 40.04, 40.05, 40.08, 40.07, 40.06, 40.00, 40.00, 40.05, 40.06, 40.07, 40.00, 40.05, 40.04, 40.05, 40.08, 40.07, 40.06, 40.00, 40.00, 40.05, 40.00, 40.05,],
+            },
+            {
+                name: 'Sıcaklık Değerleri',
+                data: [20.00, 20.05, 20.04, 20.05, 20.08, 21.07, 21.06, 21.00, 20.00, 20.05, 20.06, 20.07, 20.00, 21.05, 21.04, 22.05, 22.08, 21.07, 21.06, 21.00, 21.00, 20.05, 20.00, 20.05,],
+            },
+            {
+              name: 'Tasma Değerleri',
+              data: [30.00, 30.05, 30.04, 30.05, 30.08, 31.07, 31.06, 31.00, 30.00, 30.05, 30.06, 30.07, 30.00, 31.05, 31.04, 32.05, 30.08, 31.07, 31.06, 31.00, 31.00, 30.05, 30.00, 30.05,],
+          },
+        ],
+        options: {
+            chart: {
+                height: 325,
+                type: 'area',
+                fontFamily: 'Nunito, sans-serif',
+                zoom: {
+                    enabled: false,
+                },
+                toolbar: {
+                    show: false,
+                },
+            },
+
+            dataLabels: {
+                enabled: false,
+            },
+            stroke: {
+                show: true,
+                curve: 'smooth',
+                width: 2,
+                lineCap: 'square',
+            },
+            dropShadow: {
+                enabled: true,
+                opacity: 0.2,
+                blur: 10,
+                left: -7,
+                top: 22,
+            },
+            colors: isDark ? ['#2196F3', '#E7515A', '#32CD32'] : ['#1B55E2', '#E7515A', '#32CD32'],
+            markers: {
+                discrete: [
+                    {
+                        seriesIndex: 0,
+                        dataPointIndex: 6,
+                        fillColor: '#1B55E2',
+                        strokeColor: 'transparent',
+                        size: 7,
+                    },
+                    {
+                        seriesIndex: 1,
+                        dataPointIndex: 5,
+                        fillColor: '#E7515A',
+                        strokeColor: 'transparent',
+                        size: 7,
+                    },
+                    {
+                      seriesIndex: 1,
+                      dataPointIndex: 5,
+                      fillColor: '#E7515A',
+                      strokeColor: 'transparent',
+                      size: 7,
+                  },
+            
+                ],
+            },
+            labels: ['01.00', '02.00', '03.00', '04.00', '05.00', '06.00', '07.00', '08.00','09.00', '10.00', '11.00', '12.00', '13.00', '14.00', '15.00', '16.00', '17.00', '18.00', '19.00', '20.00', '21.00', '22.00', '23.00', '00.00'],
+            xaxis: {
+              axisBorder: {
+                  show: false,
+              },
+              axisTicks: {
+                  show: false,
+              },
+              crosshairs: {
+                  show: true,
+              },
+              tickAmount: 24, // 24 saat için detaylı aralık
+              labels: {
+                  offsetX: isRtl ? 3 : 0,
+                  offsetY: 7,
+                  style: {
+                      fontSize: '12px',
+                      cssClass: 'apexcharts-xaxis-title',
+                  },
+              },
+          },
+            yaxis: {
+                tickAmount: 7,
+                labels: {
+                    formatter: (value: number) => {
+                        return value / 1 ;
+                    },
+                    offsetX: isRtl ? -40 : -10,
+                    offsetY: 0,
+                    style: {
+                        fontSize: '12px',
+                        cssClass: 'apexcharts-yaxis-title',
+                    },
+                },
+                opposite: isRtl ? true : false,
+            },
+            grid: {
+                borderColor: isDark ? '#191E3A' : '#E0E6ED',
+                strokeDashArray: 10,
+                xaxis: {
+                    lines: {
+                        show: true,
+                    },
+                },
+                yaxis: {
+                    lines: {
+                        show: false,
+                    },
+                },
+                padding: {
+                    top: 0,
+                    right: 0,
+                    bottom: 0,
+                    left: 0,
+                },
+            },
+            legend: {
+                position: 'top',
+                horizontalAlign: 'right',
+                fontSize: '16px',
+                markers: {
+                    width: 10,
+                    height: 10,
+                    offsetX: -2,
+                },
+                itemMargin: {
+                    horizontal: 10,
+                    vertical: 5,
+                },
+            },
+            tooltip: {
+                marker: {
+                    show: true,
+                },
+                x: {
+                    show: false,
+                },
+            },
+            fill: {
+                type: 'gradient',
+                gradient: {
+                    shadeIntensity: 1,
+                    inverseColors: !1,
+                    opacityFrom: isDark ? 0.19 : 0.28,
+                    opacityTo: 0.05,
+                    stops: isDark ? [100, 100] : [45, 100],
+                },
+            },
+        },
     };
 
-    fetchSensorTrackingTitle();
-  }, [dispatch]);
+   
+   
+    return (
+        <div>
+            <ul className="flex space-x-2 rtl:space-x-reverse">
+                <li>
+                    <Link to="/" className="text-primary hover:underline">
+                        Ahır
+                    </Link>
+                </li>
+                <li className="before:content-['/'] ltr:before:mr-2 rtl:before:ml-2">
+                    <span>Nem - Sıcaklık</span>
+                </li>
+            </ul>
 
-  // Yönlendirme işlemi için fonksiyonlar
-  const handleEditTemperatureSensor = () => {
-    navigate('/cifci/SicaklikSensorTakip'); // Doğru rota ile yönlendir
-  };
-  const handleEditCowsTemperatureSensor = () => {
-    navigate('/cifci/InekSicaklikSensorTakip'); // Doğru rota ile yönlendir
-  };
-  const handleEditHumiditySensor = () => {
-    navigate('/cifci/NemSensorTakip'); // Doğru rota ile yönlendir
-  };
+            <div className="pt-5">
+                <div className="grid xl:grid-cols-3 gap-6 mb-6">
+                    <div className="panel h-full xl:col-span-2">
+                        <div className="flex items-center justify-between dark:text-white-light mb-5">
+                            <h5 className="font-semibold text-lg">Nem - Sıcaklık</h5>
+                           
+                        </div>
+                        {/*
+                        <p className="text-lg dark:text-white-light/90">
+                            Total Profit <span className="text-primary ml-2">$10,840</span>
+                        </p>*/}
+                        <div className="relative">
+                            <div className="bg-white dark:bg-black rounded-lg overflow-hidden">
+                                {loading ? (
+                                    <div className="min-h-[325px] grid place-content-center bg-white-light/30 dark:bg-dark dark:bg-opacity-[0.08] ">
+                                        <span className="animate-spin border-2 border-black dark:border-white !border-l-transparent  rounded-full w-5 h-5 inline-flex"></span>
+                                    </div>
+                                ) : (
+                                    <ReactApexChart series={revenueChart.series} options={revenueChart.options} type="area" height={325} />
+                                )}
+                            </div>
+                        </div>
+                    </div>
 
-  return (
-    <div className="min-h-screen bg-white flex justify-center items-center">
-      {/* Form Container */}
-      <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-6xl -mt-20">
-        <form className="grid grid-cols-3 gap-6">
-          {/* Başlık */}
-          <div className="col-span-3 text-center mb-6">
-            <label className="font-semibold text-lg text-gray-700">
-              {sensorTrackingTitle || t('Loading...')} {/* Başlık geldiğinde göster */}
+                    <div className="panel h-full">
+                        <div className="flex items-center mb-5">
+                            <h5 className="font-semibold text-lg dark:text-white-light">İnek Vücut Sıcaklığı Aralıkları</h5>
+                        </div>
+                         {/* Form container */}
+        <form className="pt-5 grid  gap-6">
+          <div>
+          <label className="text-gray-700 font-semibold">
+          38,0-39,0°C (İdeal): Normal vücut sıcaklığı, sağlıklı ve rahat inekler.
+
+
+            </label>
+          </div>
+          <div>
+          <label className="text-gray-700 font-semibold">
+          39,0-40,0°C (Sıcak): Hafif yüksek sıcaklık, stres belirtileri gözlemlenebilir, su tüketimi artabilir.
+
+            </label>
+          </div>
+          <div>
+          <label className="text-gray-700 font-semibold">
+          40,0-41,0°C (Yüksek): Aşırı sıcaklık, ineklerde stres, yem tüketiminde azalma, verim kaybı görülebilir.
+         
+            </label>
+          </div>
+          <div>
+            <label className="text-gray-700 font-semibold">
+            41,0°C ve üzeri (Tehlikeli): Hayati risk, termal şok, acil müdahale gereklidir.
             </label>
           </div>
 
-          {/* Temperature Sensor */}
-          <div className="relative">
-            <label htmlFor="temperatureSensor" className="block font-semibold mb-1">
-              {t('Temperature Sensor')}
-            </label>
-            <div className="flex items-center">
-              <input
-                id="temperatureSensor"
-                type="text"
-                className="form-input w-full"
-              />
-              <button
-                type="button"
-                className="ml-2 p-2 bg-gray-200 rounded hover:bg-gray-300"
-                title={t('Edit')}
-                onClick={handleEditTemperatureSensor}
-              >
-                <IconPencil className="text-gray-500" />
-              </button>
-            </div>
-          </div>
-
-          {/* Humidity Sensor */}
-          <div className="relative">
-            <label htmlFor="humiditySensor" className="block font-semibold mb-1">
-              {t('Humidity Sensor')}
-            </label>
-            <div className="flex items-center">
-              <input
-                id="humiditySensor"
-                type="text"
-                className="form-input w-full"
-              />
-              <button
-                type="button"
-                className="ml-2 p-2 bg-gray-200 rounded hover:bg-gray-300"
-                title={t('Edit')}
-                onClick={handleEditHumiditySensor}
-              >
-                <IconPencil className="text-gray-500" />
-              </button>
-            </div>
-          </div>
-
-          {/* Cows Body Temperature */}
-          <div className="relative">
-            <label htmlFor="cowsBodyTemperature" className="block font-semibold mb-1">
-              {t('Cows Body Temperature')}
-            </label>
-            <div className="flex items-center">
-              <input
-                id="cowsBodyTemperature"
-                type="text"
-                className="form-input w-full"
-              />
-              <button
-                type="button"
-                className="ml-2 p-2 bg-gray-200 rounded hover:bg-gray-300"
-                title={t('Edit')}
-                onClick={handleEditCowsTemperatureSensor}
-              >
-                <IconPencil className="text-gray-500" />
-              </button>
-            </div>
-          </div>
         </form>
-      </div>
-    </div>
-  );
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    );
 };
 
-export default Layouts;
+export default Index;
