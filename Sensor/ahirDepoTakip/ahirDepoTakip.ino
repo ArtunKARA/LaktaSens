@@ -68,7 +68,7 @@ void loop() {
   Serial.print("Sensor Value: ");
   Serial.print(mq2Value);
   
-  if(mq2Value > 300)
+  if(mq2Value > 400)
   {
     Serial.print(" | Smoke detected!");
   }
