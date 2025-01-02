@@ -11,104 +11,140 @@ import IconXCircle from '../../components/Icon/IconXCircle';
 import IconPencil from '../../components/Icon/IconPencil';
 import IconTrashLines from '../../components/Icon/IconTrashLines';
 import { useNavigate } from 'react-router-dom'; // Yönlendirme için ekledik
-
-const rowData = [
-    {
-        id: 1,
-        firstName: 'Caroline',
-        lastName: 'Jensen',
-        sensorData: 'Temperature: 22°C',
-        status: 'active',
-      },
-      {
-        id: 2,
-        firstName: 'Celeste',
-        lastName: 'Grant',
-        sensorData: 'Humidity: 45%',
-        status: 'inactive',
-      },
-      {
-        id: 3,
-        firstName: 'Tillman',
-        lastName: 'Forbes',
-        sensorData: 'Temperature: 18°C',
-        status: 'inactive',
-      },
-      {
-        id: 4,
-        firstName: 'Daisy',
-        lastName: 'Whitley',
-        sensorData: 'Pressure: 1020 hPa',
-        status: 'active',
-      },
-      {
-        id: 5,
-        firstName: 'Weber',
-        lastName: 'Bowman',
-        sensorData: 'Humidity: 60%',
-        status: 'inactive',
-      },
-      {
-        id: 6,
-        firstName: 'Buckley',
-        lastName: 'Townsend',
-        sensorData: 'Temperature: 25°C',
-        status: 'active',
-      },
-      {
-        id: 7,
-        firstName: 'Latoya',
-        lastName: 'Bradshaw',
-        sensorData: 'Pressure: 1015 hPa',
-        status: 'active',
-      },
-      {
-        id: 8,
-        firstName: 'Kate',
-        lastName: 'Lindsay',
-        sensorData: 'Temperature: 20°C',
-        status: 'active',
-      },
-      {
-        id: 9,
-        firstName: 'Marva',
-        lastName: 'Sandoval',
-        sensorData: 'Humidity: 50%',
-        status: 'inactive',
-      },
-      {
-        id: 10,
-        firstName: 'Decker',
-        lastName: 'Russell',
-        sensorData: 'Pressure: 1018 hPa',
-        status: 'inactive',
-      },
-];
-
+import axios from 'axios';
+interface sensor {
+    SensorAdi: string; Durum: string; SensorID: string; SonSicaklikVerisi: string;
+}
 const MultipleTables = () => {
   
     const { t } = useTranslation();
+    const [data, setData] = useState<{ status: string; message: string; sensorData: { Sicaklik?: string; Nem?: string } | null }>({ status: 'passive', message: '', sensorData: null });
+    const [rowData, setRowData] = useState<sensor[]>([]);    
+    const storedUserInfo = localStorage.getItem('userInfo');
+    const userInfo = storedUserInfo ? JSON.parse(storedUserInfo) : null;
     const navigate = useNavigate(); // Yönlendirme için kullanılıyor
     const handleEditAhirSensorDetay = () => {
         navigate('/cifci/AhirSensorDetay'); // Doğru rota ile yönlendir
       };
-      const handleEditCowsTemperatureSensor = () => {
-        navigate('/cifci/InekSensorDetay'); // Doğru rota ile yönlendir
+    const handleEditCowsTemperatureSensor = (id : any) => {
+        navigate('/cifci/InekSensorDetay',{ state: { tasmaID: id } }); // Doğru rota ile yönlendir
     };
     
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(setPageTitle('Multiple Tables'));
     });
+    useEffect(() => {
+        const fetchData = async () => {
+          try {
+            const response = await axios.post(
+              '/apie/veri/ahirCanli',
+              {
+                FirmaID: userInfo.firmaID,
+              },
+              {
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+              }
+            );
+            setData(response.data);
+            console.log('Response data:', response.data);
+          } catch (error) {
+            console.error('Error fetching data:', error);
+          }
+        };
+    
+        const interval = setInterval(fetchData, 1000);
+    
+        return () => clearInterval(interval);
+      }, []);
+            useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await axios.post('/apie/veri/tasmalar', { FirmaID: userInfo.firmaID });
+                const formattedData = response.data.map((item: any) => ({
+                    SensorID: item.SensorID,
+                    SensorAdi: item.SensorAdi,
+                    SonSicaklikVerisi: item.SonSicaklikVerisi || 'N/A',
+                    Durum: item.Durum || 'Inactive',
+                }));
+                setRowData(formattedData);
+                console.log(formattedData)
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+        fetchData();
+        const interval = setInterval(fetchData, 10000);
+        return () => clearInterval(interval);
+ 
+    }, []);
+      const renderGauge = (value: number | null, label: string, tur: string) => {
+        
+        let barColor = "bg-info"; // Varsayılan renk
+        let percentage;
+        if (value !== null) {
+            if(tur == "sicaklik"){
+                const min = -10;
+                const max = 50;
+                percentage = value !== null ? Math.min(Math.max(((value - min) / (max - min)) * 100, 0), 100) : 0;// Yüzdelik hesaplama
+                if (value >= 10 && value < 20) {
+                    barColor = "bg-green-500"; // İdeal koşullar
+                  } else if (value >= 20 && value < 30) {
+                    barColor = "bg-yellow-500"; // Normal, dikkat edilmeli
+                  } else if (value >= 30 && value < 35) {
+                    barColor = "bg-orange-500"; // Stres riski
+                  } else if (value >= 35) {
+                    barColor = "bg-red-500"; // Ölümcül, yüksek risk
+                  }else{
+                    barColor = "bg-blue-500";
+                  }
+            }else{
+            percentage = value !== null ? Math.min(Math.max((value / 100) * 100, 0), 100) : 0; // Yüzdelik hesaplama
+                if (percentage >= 50 && percentage < 65) {
+                    barColor = "bg-green-500"; // İdeal koşullar
+                  } else if (percentage >= 65 && percentage < 75) {
+                    barColor = "bg-orange-500"; // Stres riski
+                  } else if (percentage >= 75 ) {
+                    barColor = "bg-red-500"; // Ölümcül, yüksek risk
+                  }else{
+                    barColor = "bg-blue-500";
+                  }
+            }
+        }else{
+            percentage = 100;
+            barColor = "bg-gray-500";
+        }
+      
+        return (
+          <div className="mb-5 space-y-5 max-w-lg w-full">
+            <div className="w-full h-4 bg-[#ebedf2] dark:bg-dark/40 rounded-full">
+              <div
+                className={`${barColor} h-4 rounded-full text-center text-white text-xs`}
+                style={{ width: `${percentage}%` }}
+              >
+                {value !== null ? (tur == "sicaklik" ? `${value.toFixed(1)}°C`:`${value.toFixed(1)}%`  ) : 'OFFLINE'}
+              </div>
+            </div>
+            <div className="text-center font-medium text-sm">{label}</div>
+          </div>
+        );
+      };
+      
+    
+      const temperature = data.status === 'active' ? parseFloat(data.sensorData?.Sicaklik || 'NaN') : null;
+      const humidity = data.status === 'active' ? parseFloat(data.sensorData?.Nem || 'NaN') : null;
+    
     const [page, setPage] = useState(1);
     const PAGE_SIZES = [10, 20, 30, 50, 100];
     const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
-    const [initialRecords, setInitialRecords] = useState(sortBy(rowData, 'firstName'));
+    const [initialRecords, setInitialRecords] = useState(sortBy(rowData, 'SensorID'));
     const [recordsData, setRecordsData] = useState(initialRecords);
 
     const [search, setSearch] = useState('');
     const [sortStatus, setSortStatus] = useState<DataTableSortStatus>({
-        columnAccessor: 'firstName',
+        columnAccessor: 'SensorID',
         direction: 'asc',
     });
     useEffect(() => {
@@ -125,11 +161,10 @@ const MultipleTables = () => {
         setInitialRecords(() => {
             return rowData.filter((item) => {
                 return (
-                    item.firstName.toLowerCase().includes(search.toLowerCase()) ||
-                    item.lastName.toLowerCase().includes(search.toLowerCase()) ||
-                    item.id.toString().toLowerCase().includes(search.toLowerCase()) ||
-                    item.sensorData.toLowerCase().includes(search.toLowerCase()) ||
-                    item.status.toLowerCase().includes(search.toLowerCase()) 
+                    item.SensorID.toLowerCase().includes(search.toLowerCase()) ||
+                    item.SensorAdi.toLowerCase().includes(search.toLowerCase()) ||
+                    item.Durum.toString().toLowerCase().includes(search.toLowerCase()) ||
+                    item.SonSicaklikVerisi.toLowerCase().includes(search.toLowerCase())
                 );
             });
         });
@@ -143,47 +178,6 @@ const MultipleTables = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [sortStatus]);
 
-    const [page2, setPage2] = useState(1);
-    const [pageSize2, setPageSize2] = useState(PAGE_SIZES[0]);
-    const [initialRecords2, setInitialRecords2] = useState(sortBy(rowData, 'firstName'));
-    const [recordsData2, setRecordsData2] = useState(initialRecords2);
-
-    const [search2, setSearch2] = useState('');
-    const [sortStatus2, setSortStatus2] = useState<DataTableSortStatus>({
-        columnAccessor: 'firstName',
-        direction: 'asc',
-    });
-
-    useEffect(() => {
-        setPage2(1);
-    }, [pageSize2]);
-
-    useEffect(() => {
-        const from = (page2 - 1) * pageSize2;
-        const to = from + pageSize2;
-        setRecordsData2([...initialRecords2.slice(from, to)]);
-    }, [page2, pageSize2, initialRecords2]);
-
-    useEffect(() => {
-        setInitialRecords2(() => {
-            return rowData.filter((item: any) => {
-                return (
-                    item.firstName.toLowerCase().includes(search.toLowerCase()) ||
-                    item.lastName.toLowerCase().includes(search.toLowerCase()) ||
-                    item.id.toString().toLowerCase().includes(search.toLowerCase()) ||
-                    item.sensorData.toLowerCase().includes(search.toLowerCase()) ||
-                    item.status.toLowerCase().includes(search.toLowerCase()) 
-                );
-            });
-        });
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [search2]);
-
-    useEffect(() => {
-        const data2 = sortBy(initialRecords2, sortStatus2.columnAccessor);
-        setInitialRecords2(sortStatus2.direction === 'desc' ? data2.reverse() : data2);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [sortStatus2]);
 
     const formatDate = (date: string | number | Date) => {
         if (date) {
@@ -207,8 +201,28 @@ const MultipleTables = () => {
         return status[random];
     };
 
-    
+    useEffect(() => {
+        console.log('Initial Records:', initialRecords); // Sıralama sonrası tabloya gönderilen verileri kontrol edin
+    }, [initialRecords]);
 
+    useEffect(() => {
+        console.log('Records Data (Paginated):', recordsData); // Tabloya yansıyacak son veriler
+    }, [recordsData]);
+
+    useEffect(() => {
+        if (rowData.length > 0) {
+            setInitialRecords(sortBy(rowData, 'SensorAdi'));
+        }
+    }, [rowData]);
+
+    const statusColor = (durum : String) => {
+        const color = ['primary', 'secondary', 'success', 'danger', 'warning', 'info'];
+        if(durum != "Aktif"){
+            return color[3]
+        }else{
+            return color[2]
+        }
+    };
     return (
       <div>
           {/* Header Section */}
@@ -216,36 +230,25 @@ const MultipleTables = () => {
           
               {/* Form Section */}
           
-                  <form className="grid grid-cols-3 gap-6">
-                  <div className="flex md:items-center md:flex-row flex-col mb-5 gap-5">
+                <form className="grid grid-cols-[20%_60%_20%] gap-5">
+                <div className="flex md:items-center md:flex-row flex-col mb-5 gap-6">
                   <h5 className="font-semibold text-lg dark:text-white-light">{t('Barn Sensor Tracking')}</h5>
-              </div>
+                </div>
                       {/* Temperature Sensor */}
-                      <div className="relative">
-                          <label htmlFor="temperatureSensor" className="block font-semibold mb-1">
-                              {t('Temperature Sensor')}
-                          </label>
-                          <input id="temperatureSensor" type="text" className="form-input w-full" />
-                      </div>
-
-
-                      {/* Cows Body Temperature */}
-                      <div className="relative">
-                          <label htmlFor="humiditySensor" className="block font-semibold mb-1">
-                              {t('Humidity Sensor')}
-                          </label>
-                          <div className="flex items-center">
-                              <input id="humiditySensor" type="text" className="form-input w-full" />
-                              <button
-                                  type="button"
-                                  className="ml-2 p-2 bg-gray-200 rounded hover:bg-gray-300"
-                                  title={t('Edit')}
-                                  onClick={handleEditAhirSensorDetay }
-                              >
-                                  <IconPencil className="text-gray-500" />
-                              </button>
-                          </div>
-                      </div>
+                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'row' }}>
+                        {renderGauge(temperature, t('Temperature Sensor'),"sicaklik")}
+                        {renderGauge(humidity, t('Humidity Sensor'),"nem")}
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'row' }}>
+                    <button
+                            type="button"
+                            className="ml-2 p-2 bg-gray-200 rounded hover:bg-gray-300"
+                            title={t('Edit')}
+                            onClick={handleEditAhirSensorDetay }
+                            >
+                            <IconPencil className="text-gray-500" />
+                    </button>
+                    </div>
                   </form>
               </div>
 
@@ -253,47 +256,37 @@ const MultipleTables = () => {
               <div className="datatables">
                   <DataTable
                       className="whitespace-nowrap table-hover"
-                      records={recordsData}
+                      records={initialRecords}
                       columns={[
+                        {
+                            accessor: 'SensorID',
+                            title: t('Sensor ID'),
+                            sortable: true,
+                        },
                           {
-                              accessor: 'Sensor ID',
-                              title: t('Sensor ID'),
-                              sortable: true,
-                              render: ({ firstName, lastName, id }) => (
-                                  <div className="flex items-center w-max">
-                                      <img 
-                                          className="w-9 h-9 rounded-full ltr:mr-2 rtl:ml-2 object-cover" 
-                                          src={`/assets/images/profile-${id}.jpeg`} 
-                                          alt="" 
-                                      />
-                                      <div>{firstName + ' ' + lastName}</div>
-                                  </div>
-                              ),
-                          },
-                          {
-                              accessor: 'Sensor Name',
+                              accessor: 'SensorAdi',
                               title: t('Sensor Name'),
                               sortable: true,
                           },
                           {
-                              accessor: 'Sensor Data',
+                              accessor: 'SonSicaklikVerisi',
                               title: t('Sensor Data'),
                               sortable: true,
                           },
                           {
-                              accessor: 'status',
-                              title: t('Status'),
-                              sortable: true,
-                              render: () => <span className={`badge bg-success`}>Active</span>,
-                          },
+                            accessor: 'Durum',
+                            title: t('Status'),
+                            sortable: true,
+                            render: ({ Durum }) => <span className={`badge bg-${statusColor(Durum)}`}>{Durum}</span>,
+                        },
                           {
                               accessor: 'Sensor Analizleri',
                               title: t('Sensor Analyzes'),
                               titleClassName: '!text-center',
-                              render: () => (
+                              render: ({ SensorID }) => (
                                   <div className="flex items-center w-max mx-auto gap-2">
                                       <Tippy content="Edit">
-                                          <button type="button" onClick={handleEditCowsTemperatureSensor}>
+                                          <button type="button" onClick={() =>handleEditCowsTemperatureSensor(SensorID)}>
                                               <IconPencil />
                                           </button>
                                       </Tippy>

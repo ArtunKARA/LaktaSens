@@ -6,7 +6,8 @@ import ReactApexChart from 'react-apexcharts';
 import Dropdown from '../../components/Dropdown';
 import { setPageTitle } from '../../store/themeConfigSlice';
 import IconHorizontalDots from '../../components/Icon/IconHorizontalDots';
-
+import axios from 'axios';
+import { downloadExcel } from 'react-export-table-to-excel';
 
 const Index = () => {
     const dispatch = useDispatch();
@@ -15,19 +16,66 @@ const Index = () => {
     });
     const isDark = useSelector((state: IRootState) => state.themeConfig.theme === 'dark' || state.themeConfig.isDarkMode);
     const isRtl = useSelector((state: IRootState) => state.themeConfig.rtlClass) === 'rtl' ? true : false;
-
+    const [analiz, setAnaliz] = useState<{status: string; data: { zamanGrubu: string; ortalamaSicaklik: string; ortalamaNem: string; ortalamaGaz: string; }[]; }>({ status: 'success', data: [], });
+    const storedUserInfo = localStorage.getItem('userInfo');
+    const userInfo = storedUserInfo ? JSON.parse(storedUserInfo) : null;
     const [loading] = useState(false);
+
+    useEffect(() => {
+        const fetchDatas = async () => {
+          try {
+            const response = await axios.post(
+              '/apie/veri/ahirAnaliz',
+              {
+                FirmaID: userInfo.firmaID,
+                timeFrame:"saatlik"
+              },
+              {
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+              }
+            );
+            setAnaliz(response.data);
+            console.log('Response datas:', response.data);
+          } catch (error) {
+            console.error('Error fetching data:', error);
+          }
+        };
+        fetchDatas();
+    }, []);
+
+    async function sellect(timeFrame:String){
+        try {
+          const response = await axios.post(
+            '/apie/veri/ahirAnaliz',
+            {
+              FirmaID: userInfo.firmaID,
+              timeFrame: timeFrame
+            },
+            {
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            }
+          );
+          setAnaliz(response.data);
+          console.log('Response datas:', response.data);
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        }
+      }
 
     //Revenue Chart
     const revenueChart: any = {
         series: [
             {
                 name: 'Nem Değerleri',
-                data: [40.00, 40.05, 40.04, 40.05, 40.08, 40.07, 40.06, 40.00, 40.00, 40.05, 40.06, 40.07, 40.00, 40.05, 40.04, 40.05, 40.08, 40.07, 40.06, 40.00, 40.00, 40.05, 40.00, 40.05,],
+                data: analiz.data.map(item => parseFloat(item.ortalamaNem).toFixed(2)),
             },
             {
                 name: 'Sıcaklık Değerleri',
-                data: [20.00, 20.05, 20.04, 20.05, 20.08, 21.07, 21.06, 21.00, 20.00, 20.05, 20.06, 20.07, 20.00, 21.05, 21.04, 22.05, 22.08, 21.07, 21.06, 21.00, 21.00, 20.05, 20.00, 20.05,],
+                data:  analiz.data.map(item => parseFloat(item.ortalamaSicaklik).toFixed(2)),
             },
         ],
         options: {
@@ -64,21 +112,19 @@ const Index = () => {
                 discrete: [
                     {
                         seriesIndex: 0,
-                        dataPointIndex: 6,
                         fillColor: '#1B55E2',
                         strokeColor: 'transparent',
                         size: 7,
                     },
                     {
                         seriesIndex: 1,
-                        dataPointIndex: 5,
                         fillColor: '#E7515A',
                         strokeColor: 'transparent',
                         size: 7,
                     },
                 ],
             },
-            labels: ['01.00', '02.00', '03.00', '04.00', '05.00', '06.00', '07.00', '08.00','09.00', '10.00', '11.00', '12.00', '13.00', '14.00', '15.00', '16.00', '17.00', '18.00', '19.00', '20.00', '21.00', '22.00', '23.00', '00.00'],
+            labels: analiz.data.map(item => item.zamanGrubu),
             xaxis: {
               axisBorder: {
                   show: false,
@@ -168,7 +214,23 @@ const Index = () => {
             },
         },
     };
-
+    const header = ['zamanGrubu', 'ortalamaSicaklik', 'ortalamaNem', 'ortalamaGaz'];
+    function handleDownloadExcel() {
+      const cleanData = analiz.data.map(item => [
+          item.zamanGrubu, 
+          parseFloat(item.ortalamaSicaklik).toFixed(2),
+          parseFloat(item.ortalamaNem).toFixed(2),
+          parseFloat(item.ortalamaGaz).toFixed(2),
+      ]);
+      downloadExcel({
+          fileName: 'Ahır Analiz',
+          sheet: 'Ahır Sensör Verileri',
+          tablePayload: {
+              header,
+              body: cleanData,
+          },
+      });
+  }
    
    
     return (
@@ -195,15 +257,15 @@ const Index = () => {
                                     placement={`${isRtl ? 'bottom-start' : 'bottom-end'}`}
                                     button={<IconHorizontalDots className="text-black/70 dark:text-white/70 hover:!text-primary" />}
                                 >
-                                    <ul>
+                                <ul>
                                         <li>
-                                            <button type="button">Weekly</button>
+                                        <button type="button" onClick={e => sellect("saatlik")}>Saatlik</button>
                                         </li>
                                         <li>
-                                            <button type="button">Monthly</button>
+                                        <button type="button" onClick={e => sellect("gunluk")}>Günlük</button>
                                         </li>
                                         <li>
-                                            <button type="button">Yearly</button>
+                                        <button type="button" onClick={e => sellect("haftalik")}>Haftalık</button>
                                         </li>
                                     </ul>
                                 </Dropdown>
@@ -252,6 +314,7 @@ const Index = () => {
             35-40°C ve %70-90 nem: Ölümcül, yüksek risk.
             </label>
           </div>
+          <button type="button" className="btn btn-success btn-sm m-1" onClick={handleDownloadExcel}>EXCEL Olarak Verileri İndir</button>
 
         </form>
                     </div>

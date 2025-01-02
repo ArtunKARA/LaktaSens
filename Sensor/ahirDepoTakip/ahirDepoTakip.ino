@@ -17,7 +17,7 @@ const char* ssid = "Redmi";       // WiFi SSID
 const char* password = "ankara06";         // WiFi şire
 const char* serverUrl = "https://confoni.com/sensor/veri"; // Veri gönderim URL'si
 const char* onlineUrl = "https://confoni.com/sensor/aktif"; // online gönderim URL'si
-const char* SensorQR = "123456789";
+const char* SensorQR = "KdhMgxl43GqVVJ6w";
 
 WiFiClient client;
 // DHT nesnesi oluşturma
