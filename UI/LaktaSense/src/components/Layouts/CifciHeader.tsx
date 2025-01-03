@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState,useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { IRootState } from '../../store';
@@ -32,10 +32,34 @@ import IconMenuDatatables from '../Icon/Menu/IconMenuDatatables';
 import IconMenuForms from '../Icon/Menu/IconMenuForms';
 import IconMenuPages from '../Icon/Menu/IconMenuPages';
 import IconMenuMore from '../Icon/Menu/IconMenuMore';
+import YouTube from 'react-youtube';
+import axios from 'axios';
+
+interface Notification {
+    id: number;
+    status: string;
+    message: string;
+    url: string;
+    time: string;
+}
+
+declare global {
+    interface Window {
+        onYouTubeIframeAPIReady: () => void;
+        YT: any;
+    }
+}
+
 
 const CifciHeader = () => {
+
     const storedUserInfo = localStorage.getItem('userInfo');
     const userInfo = storedUserInfo ? JSON.parse(storedUserInfo) : null;
+    const [notifications, setNotifications] = useState<Notification[]>([]);
+    const [nextId, setNextId] = useState(1);
+    const [popupVisible, setPopupVisible] = useState(false);
+    const [currentVideoUrl, setCurrentVideoUrl] = useState<string | null>(null);
+    const [lastRequestTime, setLastRequestTime] = useState<number>(0); // Son istek zamanı
 
     const location = useLocation();
     useEffect(() => {
@@ -101,30 +125,173 @@ const CifciHeader = () => {
     const removeMessage = (value: number) => {
         setMessages(messages.filter((user) => user.id !== value));
     };
+    const audioRef = useRef<HTMLAudioElement | null>(null);
+    useEffect(() => {
+        const fetchData = async () => {
+            const now = Date.now();
 
-    const [notifications, setNotifications] = useState([
-        {
-            id: 1,
-            profile: 'user-profile.jpeg',
-            message: '<strong className="text-sm mr-1">John Doe</strong>invite you to <strong>Prototyping</strong>',
-            time: '45 min ago',
-        },
-        {
-            id: 2,
-            profile: 'profile-34.jpeg',
-            message: '<strong className="text-sm mr-1">Adam Nolan</strong>mentioned you to <strong>UX Basics</strong>',
-            time: '9h Ago',
-        },
-        {
-            id: 3,
-            profile: 'profile-16.jpeg',
-            message: '<strong className="text-sm mr-1">Anna Morgan</strong>Upload a file',
-            time: '9h Ago',
-        },
-    ]);
+            // Eğer son istek 2 dakikadan kısa bir süre önce yapıldıysa, yeni istek atma
+            if (now - lastRequestTime < 120000) {
+                return;
+            }
 
-    const removeNotification = (value: number) => {
-        setNotifications(notifications.filter((user) => user.id !== value));
+            try {
+                const response = await axios.post(
+                    '/apie/veri/depoYangin',
+                    {
+                        FirmaID: userInfo.firmaID,
+                    },
+                    {
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    }
+                );
+
+                const message = response.data;
+
+                // Eğer status "Var" ise pop-up aç ve ses çal
+                if (message.status === "Var") {
+                    setCurrentVideoUrl(message.url);
+                    console.log(message.url);
+
+                    // Yeni bildirim oluştur
+                    const newNotification = {
+                        id: nextId,
+                        status: message.status,
+                        message: (message.message + "Depo") || "Yangın tespit edildi!",
+                        url: message.url || "",
+                        time: new Date().toISOString(),
+                    };
+
+                    setNotifications((prevNotifications) => [...prevNotifications, newNotification]);
+                    setNextId((prevId) => prevId + 1);
+
+                    // Ses çal
+                    if (audioRef.current) {
+                        audioRef.current.play();
+                    }
+
+                    setPopupVisible(true);
+                    setLastRequestTime(now);
+                    console.log("Yangın durumu tespit edildi, pop-up açıldı ve mesaj kaydedildi.");
+                    return;
+                }
+
+                // Eğer aynı status daha önce kaydedildiyse ekleme yapma
+                if (notifications.some((notification) => notification.status === message.status)) {
+                    console.log("Bu durum zaten mevcut, yeni bildirim eklenmedi.");
+                    return;
+                }
+
+                // Yeni bildirim ekleme
+                const newNotification = {
+                    id: nextId,
+                    status: message.status || "Bilinmiyor",
+                    message: (message.message + " Depo") || "Mesaj mevcut değil",
+                    url: message.url || "",
+                    time: new Date().toISOString(),
+                };
+
+                setNotifications((prevNotifications) => [...prevNotifications, newNotification]);
+                setNextId((prevId) => prevId + 1);
+            } catch (error) {
+                console.error('Veri çekilirken hata oluştu:', error);
+            }
+        };
+
+        const interval = setInterval(fetchData, 1000); // Her saniye istek at
+        return () => clearInterval(interval); // Temizlik
+    }, [lastRequestTime, notifications, nextId]);
+
+      
+      useEffect(() => {
+        const fetchData = async () => {
+            const now = Date.now();
+
+            // Eğer son istek 2 dakikadan kısa bir süre önce yapıldıysa, yeni istek atma
+            if (now - lastRequestTime < 120000) {
+                return;
+            }
+
+            try {
+                const response = await axios.post(
+                    '/apie/veri/ahirYangin',
+                    {
+                        FirmaID: userInfo.firmaID,//3,
+                    },
+                    {
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    }
+                );
+
+                const message = response.data;
+
+                // Eğer status "Var" ise pop-up aç ve ses çal
+                if (message.status === "Var") {
+                    setCurrentVideoUrl(message.url);
+                    console.log(message.url);
+
+                    // Yeni bildirim oluştur
+                    const newNotification = {
+                        id: nextId,
+                        status: message.status,
+                        message: (message.message + " Ahır") || "Yangın tespit edildi!",
+                        url: message.url || "",
+                        time: new Date().toISOString(),
+                    };
+
+                    setNotifications((prevNotifications) => [...prevNotifications, newNotification]);
+                    setNextId((prevId) => prevId + 1);
+
+                    // Ses çal
+                    if (audioRef.current) {
+                        audioRef.current.play();
+                    }
+
+                    setPopupVisible(true);
+                    setLastRequestTime(now);
+                    console.log("Yangın durumu tespit edildi, pop-up açıldı ve mesaj kaydedildi.");
+                    return;
+                }
+
+                // Eğer aynı status daha önce kaydedildiyse ekleme yapma
+                if (notifications.some((notification) => notification.status === message.status)) {
+                    console.log("Bu durum zaten mevcut, yeni bildirim eklenmedi.");
+                    return;
+                }
+
+                // Yeni bildirim ekleme
+                const newNotification = {
+                    id: nextId,
+                    status: message.status || "Bilinmiyor",
+                    message: (message.message + " Ahır") || "Mesaj mevcut değil",
+                    url: message.url || "",
+                    time: new Date().toISOString(),
+                };
+
+                setNotifications((prevNotifications) => [...prevNotifications, newNotification]);
+                setNextId((prevId) => prevId + 1);
+            } catch (error) {
+                console.error('Veri çekilirken hata oluştu:', error);
+            }
+        };
+
+        const interval = setInterval(fetchData, 1000); // Her saniye istek at
+        return () => clearInterval(interval); // Temizlik
+    }, [lastRequestTime, notifications, nextId]);
+
+    const closePopup = () => {
+        setPopupVisible(false);
+        setCurrentVideoUrl(null);
+    };
+
+    const removeNotification = (value:number) => {
+        setNotifications((prevNotifications) =>
+            prevNotifications.filter((notification) => notification.id !== value)
+        );
     };
 
     const [search, setSearch] = useState(false);
@@ -140,11 +307,56 @@ const CifciHeader = () => {
     const [flag, setFlag] = useState(themeConfig.locale);
 
     const { t } = useTranslation();
-
+    useEffect(() => {
+        if (popupVisible && audioRef.current) {
+          audioRef.current.volume = 1; // Ses seviyesi
+          audioRef.current.currentTime = 0; // Baştan başla
+          audioRef.current
+            .play()
+            .then(() => console.log("Ses çalınıyor."))
+            .catch((error) => console.error("Ses çalma hatası:", error));
+        }
+      }, [popupVisible]);
     return (
         <header className={`z-40 ${themeConfig.semidark && themeConfig.menu === 'horizontal' ? 'dark' : ''}`}>
             <div className="shadow-sm">
                 <div className="relative bg-white flex w-full items-center px-5 py-2.5 dark:bg-black">
+                                {/* Pop-up */}
+                                {popupVisible && (
+                                    <div>
+                                        {/* Arka Plan Karartma */}
+                                        <div className="fixed inset-0 bg-black bg-opacity-50 z-40"></div>
+
+                                        {/* Pop-up */}
+                                        <div className="fixed inset-0 flex items-center justify-center z-50">
+                                            <div className="relative flex items-center border p-3.5 rounded before:inline-block before:absolute before:top-1/2 ltr:before:right-0 rtl:before:left-0 rtl:before:rotate-180 before:-mt-2 before:border-r-8 before:border-t-8 before:border-b-8 before:border-t-transparent before:border-b-transparent before:border-r-inherit text-danger bg-danger-light border-danger ltr:border-r-[64px] rtl:border-l-[64px] dark:bg-danger-dark-light">
+                                                <span className="absolute ltr:-right-11 rtl:-left-11 inset-y-0 text-white w-6 h-6 m-auto">
+                                                    <svg>...</svg>
+                                                </span>
+                                                <span className="ltr:pr-2 rtl:pl-2">
+                                                    <strong className="ltr:mr-1 rtl:ml-1">DİKKAT!</strong>Yangın tespit edildi!
+                                                </span>
+                                                    {/* Sadece Ses Oynatımı */}
+                                                    <audio
+                                                    ref={audioRef}
+                                                    src={currentVideoUrl!}
+                                                    preload="auto"
+                                                    muted={false}
+                                                    onLoadedData={() => console.log("Ses yüklendi")}
+                                                    onError={() => console.error("Ses yüklenemedi")}
+                                                    ></audio>
+                                                <button
+                                                    type="button"
+                                                    className="ltr:ml-auto rtl:mr-auto hover:opacity-80"
+                                                    onClick={closePopup}
+                                                >
+                                                    <svg>...</svg>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+
                     <div className="horizontal-logo flex lg:hidden justify-between items-center ltr:mr-2 rtl:ml-2">
                         <Link to="/" className="main-logo flex items-center shrink-0">
                             <img className="w-8 ltr:-ml-1 rtl:-mr-1 inline" src="/assets/images/laktasenselogo.png" alt="logo" />
@@ -362,7 +574,7 @@ const CifciHeader = () => {
                                     <li onClick={(e) => e.stopPropagation()}>
                                         <div className="flex items-center px-4 py-2 justify-between font-semibold">
                                             <h4 className="text-lg">Notification</h4>
-                                            {notifications.length ? <span className="badge bg-primary/80">{notifications.length}New</span> : ''}
+                                            {notifications.length ? <span className="badge bg-primary/80">{notifications.length} New</span> : ''}
                                         </div>
                                     </li>
                                     {notifications.length > 0 ? (
@@ -372,10 +584,6 @@ const CifciHeader = () => {
                                                     <li key={notification.id} className="dark:text-white-light/90" onClick={(e) => e.stopPropagation()}>
                                                         <div className="group flex items-center px-4 py-2">
                                                             <div className="grid place-content-center rounded">
-                                                                <div className="w-12 h-12 relative">
-                                                                    <img className="w-12 h-12 rounded-full object-cover" alt="profile" src={`/assets/images/${notification.profile}`} />
-                                                                    <span className="bg-success w-2 h-2 rounded-full block absolute right-[6px] bottom-0"></span>
-                                                                </div>
                                                             </div>
                                                             <div className="ltr:pl-3 rtl:pr-3 flex flex-auto">
                                                                 <div className="ltr:pr-3 rtl:pl-3">
@@ -398,11 +606,6 @@ const CifciHeader = () => {
                                                     </li>
                                                 );
                                             })}
-                                            <li>
-                                                <div className="p-4">
-                                                    <button className="btn btn-primary block w-full btn-small">Read All Notifications</button>
-                                                </div>
-                                            </li>
                                         </>
                                     ) : (
                                         <li onClick={(e) => e.stopPropagation()}>

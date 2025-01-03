@@ -10,7 +10,7 @@ const char* ssid = "Redmi";        // WiFi SSID
 const char* password = "ankara06"; // WiFi şifre
 const char* onlineUrl = "https://confoni.com/sensor/aktif"; // Veri gönderim URL'si
 const char* serverUrl = "https://confoni.com/sensor/veri"; // Veri gönderim URL'si
-const char* SensorQR = "123456789";
+const char* SensorQR = "f2dw2iGzdQXgT0cp";
 
 void setup() {
   Serial.begin(115200);
@@ -72,7 +72,7 @@ String sendSensorData(float temperature) {
     http.addHeader("Content-Type", "application/json");
 
     // JSON veri oluştur
-    String jsonData = "{\"SensorQR\":"+String(SensorQR)+",\"Sıcaklık\":" + String(temperature) + "}";
+    String jsonData = "{\"SensorQR\":\""+String(SensorQR)+"\",\"Sıcaklık\":" + String(temperature) + "}";
 
     // POST isteği gönder
     int httpResponseCode = http.POST(jsonData);
@@ -106,12 +106,13 @@ String sendOnlineStaus() {
     http.addHeader("Content-Type", "application/json");
 
     // JSON veri oluştur
-    String jsonData = "{\"SensorQR\":"+String(SensorQR)+"}";
+    String jsonData = "{\"SensorQR\":\""+String(SensorQR)+"\"}";
 
     // POST isteği gönder
     int httpResponseCode = http.POST(jsonData);
     if (httpResponseCode > 0) {
       Serial.println("HTTP Yanıt Kodu: " + String(httpResponseCode));
+      Serial.println("HTTP  Kodu: " + jsonData);
       String response = http.getString();
       Serial.println("Sunucu yanıtı: " + response);
       http.end();
