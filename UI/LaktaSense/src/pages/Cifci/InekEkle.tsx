@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { setPageTitle } from '../../store/themeConfigSlice';
 import { useDispatch } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
+import * as Yup from 'yup';
 import axios from 'axios';
 
 const Layouts = () => {
@@ -140,7 +141,7 @@ const Layouts = () => {
   };
 
   useEffect(() => {
-    dispatch(setPageTitle('Add Cow'));
+    dispatch(setPageTitle(t('Add Cow')));
 
     console.log(cowID);
     const currentYear = new Date().getFullYear();
@@ -164,6 +165,7 @@ const Layouts = () => {
     alert(t('Form has been not saved!'));
   };
 
+
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col">
       <div className="w-full flex-grow p-6 bg-white rounded-lg shadow-lg mx-auto">
@@ -179,6 +181,7 @@ const Layouts = () => {
               value={name}
               onChange={(e) => setName(e.target.value)}
               className="mt-2 p-2 w-full bg-gray-100 border border-gray-300 rounded-md"
+              required 
             />
           </div>
           <div>
@@ -188,6 +191,7 @@ const Layouts = () => {
               value={breed}
               onChange={(e) => setBreed(e.target.value)}
               className="mt-2 p-2 w-full bg-gray-100 border border-gray-300 rounded-md"
+              required 
             />
           </div>
           <div>
@@ -316,24 +320,34 @@ const Layouts = () => {
           <button
             type="button"
             onClick={() => {
-              if(!(cowID === undefined)){
-                yeniSave();
-              }else if(knowsLastCalvingDate === 'inService'){
-                servisSave();
-              }else if(knowsLastCalvingDate === 'pregnant'){
-                gebeSave();
-              }else if(knowsLastCalvingDate === 'no'){
-                if(milkCycle === 'kuruda' && calvingCycle === 'serviste'){
-                  alert(t('A cow cannot be both dry and in service.'));
-                }else if((milkCycle === 'sağımda' && calvingCycle === 'serviste')||(milkCycle === 'sağımda' && calvingCycle === 'gebe')||(milkCycle === 'kuruda' && calvingCycle === 'gebe')){
-                  bilinmeyenSave();
-                }else if(!isOlderThanTwoYears){
-                  disaridanYeniYavru();
-                }else{
-                  alert(t('Make a loop selection.'))
-                }
+              if(name.length == 0){
+                alert(t('Please write a Cow Name!'))
+              }else if(breed.length == 0){
+                alert(t('Please write a Breed!'))
+              }else if(birthDate.length === 0){
+                alert(t('Please select a Birth Date!'))
+              }else if(weight.length === 0){
+                alert(t('Please write a Weigth!'))
               }else{
-                handleSave();
+                if(!(cowID === undefined)){
+                  yeniSave();
+                }else if(knowsLastCalvingDate === 'inService'){
+                  servisSave();
+                }else if(knowsLastCalvingDate === 'pregnant'){
+                  gebeSave();
+                }else if(knowsLastCalvingDate === 'no'){
+                  if(milkCycle === 'kuruda' && calvingCycle === 'serviste'){
+                    alert(t('A cow cannot be both dry and in service.'));
+                  }else if((milkCycle === 'sağımda' && calvingCycle === 'serviste')||(milkCycle === 'sağımda' && calvingCycle === 'gebe')||(milkCycle === 'kuruda' && calvingCycle === 'gebe')){
+                    bilinmeyenSave();
+                  }else if(!isOlderThanTwoYears){
+                    disaridanYeniYavru();
+                  }else{
+                    alert(t('Make a loop selection.'))
+                  }
+                }else{
+                  handleSave();
+                }
               }
             }}
             className="px-4 py-2 w-full bg-[#016b00] text-white rounded-md shadow hover:bg-[#014d00] focus:ring-2 focus:ring-[#016b00]"
