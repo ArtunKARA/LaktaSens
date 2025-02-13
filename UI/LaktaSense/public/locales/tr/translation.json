@@ -272,5 +272,8 @@
     "Please select a Birth Date!":"Lütfen doğum tarihini giriniz",
     "Please write a Weigth!":"Lütfen ağırlık bilgisni giriniz",
     "Please select a date!":"Lütfen tarih seçiniz!",
-    "Please select a status!":"Lütfen durum seçiniz!"
+    "Please select a status!":"Lütfen durum seçiniz!",
+    "Action Cycle":"Aksiyon Döngüsü",
+    "Out to the loop":"Döngüden çıkart",
+    "Removed Cows":"Sürüden Çıkarılanlar"
 }

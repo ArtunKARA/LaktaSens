@@ -13,7 +13,7 @@ exports.postCikarilacaklar = async (req, res) => {
                         inek.inekID AS "İnekID",
                         inek.ad AS "Ad",
                         inek.irk AS "Irkı",
-                        
+                        inek.dollenmeSayisi AS "DöllenmeSayısı",
                         -- Gecikme durumunu belirten metin
                         CASE 
                             WHEN inek.sonDogurmaTarihi > inek.sonKuruTarihi AND DATEDIFF(DAY, inek.sonDogurmaTarihi, GETDATE()) > 305 THEN 
@@ -28,6 +28,20 @@ exports.postCikarilacaklar = async (req, res) => {
                                 CONCAT('Servis ', inek.dollenmeSayisi, ' adet döllneme sayısı')
                             ELSE NULL
                         END AS "Sebep",
+
+						CASE 
+                            WHEN inek.sonDogurmaTarihi > inek.sonKuruTarihi AND DATEDIFF(DAY, inek.sonDogurmaTarihi, GETDATE()) > 305 THEN 
+                                'Sağım'
+                            WHEN inek.sonKuruTarihi > inek.sonDogurmaTarihi AND DATEDIFF(DAY, inek.sonKuruTarihi, GETDATE()) > 60 THEN 
+                                'Servis'
+                            WHEN inek.sonDollenme > inek.sonDogurmaTarihi AND inek.tuttuMu = 'E' AND DATEDIFF(DAY, inek.sonDollenme, GETDATE()) > 280 THEN 
+                                'Gebe'
+                            WHEN inek.sonDogurmaTarihi > inek.sonDollenme AND inek.tuttuMu = NULL  AND DATEDIFF(DAY, inek.sonDogurmaTarihi, GETDATE()) > 127 THEN 
+                                'Servis'
+							WHEN inek.dollenmeSayisi > 2 THEN 
+                                'Servis'
+                            ELSE NULL
+                        END AS "AksiyonAlınacakDöngü",
 
                         -- Kalan gün sayısı
                         CASE 
@@ -49,17 +63,15 @@ exports.postCikarilacaklar = async (req, res) => {
                             DATEDIFF(DAY, inek.sonDogurmaTarihi, GETDATE()) > 305 
                             OR DATEDIFF(DAY, inek.sonKuruTarihi, GETDATE()) > 60 
                             OR (inek.sonDollenme > inek.sonDogurmaTarihi AND inek.tuttuMu = 'E' AND DATEDIFF(DAY, inek.sonDollenme, GETDATE()) > 280)
+							OR (inek.dollenmeSayisi > 2)
                         )
                         -- Sebep sütununun NULL olmadığı durumlar
                         AND 
                         (
-                            CASE 
-                                WHEN inek.sonDogurmaTarihi > inek.sonKuruTarihi AND DATEDIFF(DAY, inek.sonDogurmaTarihi, GETDATE()) > 305 THEN 1
-                                WHEN inek.sonKuruTarihi > inek.sonDogurmaTarihi AND DATEDIFF(DAY, inek.sonKuruTarihi, GETDATE()) > 60 THEN 1
-                                WHEN inek.sonDollenme > inek.sonDogurmaTarihi AND inek.tuttuMu = 'E' AND DATEDIFF(DAY, inek.sonDollenme, GETDATE()) > 280 THEN 1
-								WHEN inek.dollenmeSayisi > 2 THEN 1
-                                ELSE NULL
-                            END IS NOT NULL
+							inek.sonDogurmaTarihi > inek.sonKuruTarihi AND DATEDIFF(DAY, inek.sonDogurmaTarihi, GETDATE()) > 305 
+							OR inek.sonKuruTarihi > inek.sonDogurmaTarihi AND DATEDIFF(DAY, inek.sonKuruTarihi, GETDATE()) > 60 
+							OR inek.sonDollenme > inek.sonDogurmaTarihi AND inek.tuttuMu = 'E' AND DATEDIFF(DAY, inek.sonDollenme, GETDATE()) > 280
+							OR inek.dollenmeSayisi > 2 
                         );`
         );
         if (result.recordset.length === 0) {
@@ -69,5 +81,42 @@ exports.postCikarilacaklar = async (req, res) => {
       } catch (error) {
         console.error('Customer could not be retrieved:', error);
         return res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
+exports.postCikarilanInek = async (req, res) => {
+    const {
+        İnekID,
+        CikarilmaTarihi,
+        CikarilmaSebebi
+      } = req.body;
+    try {
+        const pool = await poolPromise;
+        const result = await pool.request()
+        .input("İnekID",İnekID)
+        .input("CikarilmaTarihi",CikarilmaTarihi)
+        .input("CikarilmaSebebi",CikarilmaSebebi)
+        .query(
+            `       
+                    DECLARE @inekID INT = @İnekID  -- Güncellenecek ve eklenecek inek ID
+                    DECLARE @Cikarilma_Tarihi DATE = @CikarilmaTarihi  -- Bugünün tarihi otomatik olarak alınır
+                    DECLARE @Cikarilma_Sebebi NVARCHAR(255) = @CikarilmaSebebi  -- Çıkarılma nedeni
+
+                    UPDATE [laktasens].[dbo].[inek]
+                    SET [dollenmeSayisi] = 0
+                    WHERE [inekID] = @inekID;
+
+                    INSERT INTO [laktasens].[dbo].[SürüdenÇıkarma] ([inekID], [cikarilmaTarihi], [cikarilmaSebebi])
+                    VALUES (@inekID, @Cikarilma_Tarihi, @Cikarilma_Sebebi);`
+        );
+        if (result.rowsAffected[0] === 0) {
+          return res.status(404).json(null);
+        }
+        return res.json(result.recordset);
+      } catch (error) {
+        console.error('Customer could not be retrieved:', error);
+        console.error(İnekID,CikarilmaSebebi,CikarilmaTarihi);
+        return res.status(500).json({ error: "dssdsd" });
+        
     }
 };

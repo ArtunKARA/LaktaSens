@@ -46,6 +46,15 @@ CREATE TABLE inek (
 );
 GO
 
+CREATE TABLE SürüdenÇıkarma (
+    id INT IDENTITY(1,1) PRIMARY KEY,  
+    inekID INT NOT NULL,              
+    cikarilmaTarihi DATE NOT NULL,     
+    cikarilmaSebebi NVARCHAR(255) NOT NULL,  
+    FOREIGN KEY (inekID) REFERENCES inek(inekID) ON DELETE CASCADE  
+);
+GO
+
 CREATE TABLE dogurma (
     dogurmaID INT PRIMARY KEY IDENTITY(1,1),
     dogurmaTarihi DATE,

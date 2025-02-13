@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { DataTable, DataTableSortStatus } from 'mantine-datatable';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Fragment } from 'react';
 import sortBy from 'lodash/sortBy';
 import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
@@ -10,19 +10,30 @@ import IconBell from '../../components/Icon/IconBell';
 import IconXCircle from '../../components/Icon/IconXCircle';
 import IconPencil from '../../components/Icon/IconPencil';
 import IconTrashLines from '../../components/Icon/IconTrashLines';
+import 'tippy.js/dist/tippy.css';
+import { Dialog, Transition } from '@headlessui/react';
+import IconX from '../../components/Icon/IconX';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import Add from '../Apps/Invoice/Add';
+import { toNumber } from 'lodash';
 
 interface CowData {
     İnekID: string;
     Ad: string;
     Irkı: string;
     Sebep: string;
+    AksiyonAlınacakDöngü: string;
     KalanGün: number;
+    DöllenmeSayısı: number;
 }
 
 const MultipleTables = () => {
     const storedUserInfo = localStorage.getItem('userInfo');
     const userInfo = storedUserInfo ? JSON.parse(storedUserInfo) : null;
     const [rowData, setRowData] = useState<CowData[]>([]);
+    const [selectedDate, setSelectedDate] = useState("");
+    const [reson, setReson] = useState("");
     useEffect(() => {
         // API'yi çağırma
         const fetchData = async () => {
@@ -61,7 +72,8 @@ const MultipleTables = () => {
     }, [rowData]);
     
     const [recordsData, setRecordsData] = useState(initialRecords);
-
+    const [modal21, setModal21] = useState(false);
+    const [modal22, setModal22] = useState(false);
     const [search, setSearch] = useState('');
     const [sortStatus, setSortStatus] = useState<DataTableSortStatus>({
         columnAccessor: 'inekID',
@@ -85,7 +97,8 @@ const MultipleTables = () => {
                     item.KalanGün.toString().toLowerCase().includes(search.toLowerCase()) ||
                     item.Ad.toLowerCase().includes(search.toLowerCase()) ||
                     item.Sebep.toLowerCase().includes(search.toLowerCase()) ||
-                    item.Irkı.toString().toLowerCase().includes(search.toLowerCase())
+                    item.Irkı.toString().toLowerCase().includes(search.toLowerCase()) ||
+                    item.AksiyonAlınacakDöngü.toString().toLowerCase().includes(search.toLowerCase())
                 );
             });
         });
@@ -99,20 +112,73 @@ const MultipleTables = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [sortStatus]);
 
-    const statusColor = (durum : String) => {
-        const color = ['primary', 'secondary', 'success', 'danger', 'warning', 'info'];
-        if(durum != "Sagimda"){
-            return color[3]
-        }else{
-            return color[2]
+    const handleSave = async (ID:number) => {
+        if (!selectedDate) {
+          alert(t("Please select a date!"));
+          return;
+        }
+    
+        try {
+          const response = await axios.post("http://localhost:3030/api/sagim/postSagimAksiyon", {
+            ID: ID, 
+            Tarih: selectedDate,
+          });
+    
+          console.log(response.data);
+          alert(t("Saved successfully!"));
+          setModal21(false); // Modalı kapat.
+          window.location.reload();
+        } catch (error) {
+          console.error(error);
+          alert(t("An error occurred while saving!")+ error);
+        }
+      };
+    const navigate = useNavigate();
+    const handleDetailClickService = (İnekID : any, ad:string, dollenmeSayisi:number) => {
+        navigate('/cifci/ServisTakipDetay', { state: { cowID: İnekID, ad: ad,dollenmeSayisi: dollenmeSayisi } });
+    };
+    const handleEditInekEkle = (id : any) => {
+        navigate('/cifci/InekEkle', { state: { cowID: id } });
+    };
+    
+    const inCycle = (İnekID : string, BulunduğuDöngü : string, DöllenmeSayısı: number,Ad: string) => {
+        if(BulunduğuDöngü == "Sagim"){
+          setModal21(true);
+        }else if(BulunduğuDöngü == "Gebe"){
+          handleEditInekEkle(İnekID);
+        }else if(BulunduğuDöngü == "Servis"){
+          handleDetailClickService(İnekID,Ad,DöllenmeSayısı);
         }
     };
 
+    const handleOutCycle = async (İnekID : number) =>{
+      if (!selectedDate) {
+        alert(t("Please select a date!"));
+        return;
+      }
+  
+      try {
+        const response = await axios.post("http://localhost:3030/api/cikarilacaklar/postCikarilanInek", {
+          İnekID: İnekID, 
+          CikarilmaTarihi: selectedDate,
+          CikarilmaSebebi: reson
+        });
+  
+        console.log(response.data);
+        alert(t("Saved successfully!"));
+        setModal22(false); // Modalı kapat.
+        window.location.reload();
+      } catch (error) {
+        console.error(error);
+        alert(t("An error occurred while saving!")+ error);
+      }
+    } 
     return (
         <div>
             <div className="panel mt-6">
                 <div className="flex md:items-center md:flex-row flex-col mb-5 gap-5">
                     <h5 className="font-semibold text-lg dark:text-white-light">{t('Will Be Removed')}</h5>
+                    <button type="button" className="btn btn-info ltr:ml-auto rtl:mr-auto">{t('Removed Cows')}</button>
                     <div className="ltr:ml-auto rtl:mr-auto">
                         <input type="text" className="form-input w-auto" placeholder="Search..." value={search} onChange={(e) => setSearch(e.target.value)} />
                     </div>
@@ -147,18 +213,59 @@ const MultipleTables = () => {
                                 title: t('Delayed Day'),
                                 sortable: true,
                             },
-                           
+                            {
+                                accessor: 'AksiyonAlınacakDöngü',
+                                title: t('Action Cycle'),
+                                sortable: true,
+                            },
                             {
                                 accessor: 'Döngüye Al',
                                 title: t('Loop'),
                                 sortable: true,
-                                render: () => (
+                                render: ({İnekID, AksiyonAlınacakDöngü,DöllenmeSayısı,Ad}) => (
                                     <div className="flex items-center w-max mx-auto gap-2">
                                         <Tippy content="Edit">
-                                            <button type="button">
+                                            <button type="button"
+                                            onClick={() => inCycle(İnekID,AksiyonAlınacakDöngü,DöllenmeSayısı,Ad)}>
                                                 <IconPencil />
                                             </button>
                                         </Tippy>
+
+                                      <Transition appear show={modal21} as={Fragment}>
+                                      <Dialog as="div" open={modal21} onClose={() => setModal21(false)}>
+                                        <div className="fixed inset-0 z-10 overflow-y-auto bg-[black]/10">
+                                          <div className="flex min-h-screen items-center justify-center px-4">
+                                            <Dialog.Panel className="panel my-8 w-full max-w-sm overflow-hidden rounded-lg py-1 px-4 text-black dark:text-white-dark">
+                                              <div className="flex items-center justify-between p-5">
+                                                <h5> {t('Pass to other loop')} </h5>
+                                                <button
+                                                  type="button"
+                                                  onClick={() => setModal21(false)}
+                                                  className="text-white-dark hover:text-dark"
+                                                >
+                                                  <IconX className="w-5 h-5" />
+                                                </button>
+                                              </div>
+                                              <div className="p-5">
+                                                <form>
+                                                  <div className="relative mb-4">
+                                                    <input type="date" placeholder="Tarih" className="form-input" id="tarih" value={selectedDate} onChange={(e) => setSelectedDate(e.target.value)}/>
+                                                  </div>
+                                                  <button
+                                                    type="button"
+                                                    onClick={() => handleSave(Number(İnekID))} // Kaydetme fonksiyonu çağrısı
+                                                    className="btn btn-primary w-full"
+                                                  >
+                                                    {t("Save")}
+                                                  </button>
+                                                </form>
+                                              </div>
+                                            </Dialog.Panel>
+                                          </div>
+                                        </div>
+                                      </Dialog>
+                                    </Transition>
+
                                     </div>
                                 ),
                             },
@@ -166,14 +273,66 @@ const MultipleTables = () => {
                                 accessor: 'Sürüden Çıkar',
                                 title: t('Leave The Herd'),
                                 titleClassName: '!text-center',
-                                render: () => (
+                                render: ({İnekID}) => (
                                     <div className="flex items-center w-max mx-auto gap-2">
                                         <Tippy content="Delete">
-                                            <button type="button">
+                                            <button type="button"
+                                            onClick={() => setModal22(true)}>
                                                 <IconTrashLines />
                                             </button>
                                         </Tippy>
-                                   
+                                      <Transition appear show={modal22} as={Fragment}>
+                                      <Dialog as="div" open={modal22} onClose={() => setModal22(false)}>
+                                        <div className="fixed inset-0 z-10 overflow-y-auto bg-[black]/10">
+                                          <div className="flex min-h-screen items-center justify-center px-4">
+                                            <Dialog.Panel className="panel my-8 w-full max-w-sm overflow-hidden rounded-lg py-1 px-4 text-black dark:text-white-dark">
+                                              <div className="flex items-center justify-between p-5">
+                                                <h5> {t('Out to the loop')} </h5>
+                                                <button
+                                                  type="button"
+                                                  onClick={() => setModal22(false)}
+                                                  className="text-white-dark hover:text-dark"
+                                                >
+                                                  <IconX className="w-5 h-5" />
+                                                </button>
+                                              </div>
+                                              <div className="p-5">
+                                                <form>
+                                                  <div className="relative mb-4">
+                                                  <label htmlFor="tarih" className="text-sm text-gray-500">Döngüden Çıkartılma Tarihi</label>
+                                                    <input 
+                                                        type="date" 
+                                                        placeholder="Tarih" 
+                                                        className="form-input border border-gray-300 rounded-lg p-2 text-gray-700" 
+                                                        id="tarih" 
+                                                        value={selectedDate} 
+                                                        onChange={(e) => setSelectedDate(e.target.value)} 
+                                                    />
+
+                                                    <label htmlFor="neden" className="text-sm text-gray-500">Döngüden Çıkarma Nedeni</label>
+                                                    <input 
+                                                        type="text" 
+                                                        placeholder="Neden?" 
+                                                        className="form-input border border-gray-300 rounded-lg p-2 text-gray-700" 
+                                                        id="neden" 
+                                                        value={reson} 
+                                                        onChange={(e) => setReson(e.target.value)} 
+                                                    />
+                                                  </div>
+                                                  <button
+                                                    type="button"
+                                                    onClick={() => handleOutCycle(toNumber(İnekID))} // Kaydetme fonksiyonu çağrısı
+                                                    className="btn btn-primary w-full"
+                                                  >
+                                                    {t("Save")}
+                                                  </button>
+                                                </form>
+                                              </div>
+                                            </Dialog.Panel>
+                                          </div>
+                                        </div>
+                                      </Dialog>
+                                    </Transition>
                                 </div>
                                      
                                 ),
