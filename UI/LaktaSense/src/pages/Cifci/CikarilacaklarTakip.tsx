@@ -172,13 +172,29 @@ const MultipleTables = () => {
         console.error(error);
         alert(t("An error occurred while saving!")+ error);
       }
-    } 
+    }
+
+    const handleCikarilanlar = () => {
+      navigate('/cifci/Cikarilanlar');
+    };
+    const statusColor = (durum : String) => {
+      const color = ['primary', 'secondary', 'success', 'danger', 'warning', 'info'];
+      if(durum == "Sagım"){
+          return color[0]
+      }else if(durum == "Servis"){
+          return color[1]
+      }else if(durum == "Gebe"){
+        return color[2]
+      }else{
+        return color[3]
+      }
+    }; 
     return (
         <div>
             <div className="panel mt-6">
                 <div className="flex md:items-center md:flex-row flex-col mb-5 gap-5">
                     <h5 className="font-semibold text-lg dark:text-white-light">{t('Will Be Removed')}</h5>
-                    <button type="button" className="btn btn-info ltr:ml-auto rtl:mr-auto">{t('Removed Cows')}</button>
+                    <button type="button" className="btn btn-info ltr:ml-auto rtl:mr-auto" onClick={() => handleCikarilanlar()}>{t('Removed Cows')}</button>
                     <div className="ltr:ml-auto rtl:mr-auto">
                         <input type="text" className="form-input w-auto" placeholder="Search..." value={search} onChange={(e) => setSearch(e.target.value)} />
                     </div>
@@ -206,7 +222,7 @@ const MultipleTables = () => {
                             { 
                                 accessor: 'Sebep',
                                 title: t('Reason'), 
-                                sortable: true 
+                                sortable: true
                             },
                             {
                                 accessor: 'KalanGün',
@@ -217,6 +233,7 @@ const MultipleTables = () => {
                                 accessor: 'AksiyonAlınacakDöngü',
                                 title: t('Action Cycle'),
                                 sortable: true,
+                                render: ({ AksiyonAlınacakDöngü }) => <span className={`badge bg-${statusColor(AksiyonAlınacakDöngü)}`}>{AksiyonAlınacakDöngü}</span>, 
                             },
                             {
                                 accessor: 'Döngüye Al',
@@ -299,7 +316,7 @@ const MultipleTables = () => {
                                               <div className="p-5">
                                                 <form>
                                                   <div className="relative mb-4">
-                                                  <label htmlFor="tarih" className="text-sm text-gray-500">Döngüden Çıkartılma Tarihi</label>
+                                                  <label htmlFor="tarih" className="text-sm text-gray-500">{t('Date of Removal from the Loop')}</label>
                                                     <input 
                                                         type="date" 
                                                         placeholder="Tarih" 

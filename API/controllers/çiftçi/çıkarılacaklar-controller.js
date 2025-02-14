@@ -120,3 +120,33 @@ exports.postCikarilanInek = async (req, res) => {
         
     }
 };
+
+exports.postCikarilanlar = async (req, res) => {
+    const {
+        firmaID
+      } = req.body;
+    try {
+        const pool = await poolPromise;
+        const result = await pool.request()
+        .input("firmaID",firmaID)
+        .query(
+            `SELECT
+                i.inekID AS İnekID,
+                i.ad AS Ad,
+                i.irk AS Irkı,
+                CONVERT(varchar, s.cikarilmaTarihi, 23) AS CikarilmaTarihi,
+                s.cikarilmaSebebi AS CikarilmaSebebi
+            FROM [laktasens].[dbo].[inek] i
+            LEFT JOIN [laktasens].[dbo].[SürüdenÇıkarma] s ON i.inekID = s.inekID
+            WHERE i.firmaID = @firmaID
+            AND i.dollenmeSayisi = 0;`
+        );
+        if (result.recordset.length === 0) {
+          return res.status(404).json(null);
+        }
+        return res.json(result.recordset);
+      } catch (error) {
+        console.error('Customer could not be retrieved:', error);
+        return res.status(500).json({ error: 'Internal server error' });
+    }
+};

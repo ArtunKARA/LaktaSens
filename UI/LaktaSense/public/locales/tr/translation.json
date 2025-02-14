@@ -275,5 +275,7 @@
     "Please select a status!":"Lütfen durum seçiniz!",
     "Action Cycle":"Aksiyon Döngüsü",
     "Out to the loop":"Döngüden çıkart",
-    "Removed Cows":"Sürüden Çıkarılanlar"
+    "Removed Cows":"Sürüden Çıkarılanlar",
+    "Date of Removal from the Loop":"Döngüden Çıkartılma Tarihi",
+    "Reason for Decommissioning":"Döngüden Çıkarma Nedeni   "
 }

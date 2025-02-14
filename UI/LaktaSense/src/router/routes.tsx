@@ -22,6 +22,7 @@ const DepoSensorTakip= lazy(() => import('../pages/Cifci/DepoSensorTakip'))
 const AdminBasvuruDuzenleme= lazy(() => import('../pages/Cifci/AdminBasvuruDuzenleme'))
 const YenidoganTakip= lazy(() => import('../pages/Cifci/YenidoganTakip'))
 const KayitSayfasi = lazy(() => import('../pages/Authentication/KayitSayfasi'));
+const Cikarilanlar = lazy(() => import('../pages/Cifci/Cikarilacaklanlar'));
 const routes = [
     //login page
     {
@@ -80,76 +81,81 @@ const routes = [
     //Farmer genel takip detay sayfası
     {
         path: '/cifci/GenelTakipDetay',
-       element: <GenelTakipDetay />,
+       element: <AuthGuard allowedRoles={['c']}><GenelTakipDetay /></AuthGuard>,
         layout : 'cifci',
     },
     //Farmer inek ekle sayfası
     {
         path: '/cifci/InekEkle',
-        element: <InekEkle />,
+        element: <AuthGuard allowedRoles={['c']}><InekEkle /></AuthGuard>,
         layout : 'cifci',
     },
     //Farmer servis detay sayfası
     {
         path: '/cifci/ServisTakipDetay',
-        element: <ServisTakipDetay />,
+        element: <AuthGuard allowedRoles={['c']}><ServisTakipDetay /></AuthGuard>,
         layout : 'cifci',
     },
     //Farmer AhırSensorTakip sayfası
     {
-            path: '/cifci/AhirSensorTakip',
-            element: <AhirSensorTakip />,
-            layout : 'cifci',
+        path: '/cifci/AhirSensorTakip',
+        element: <AuthGuard allowedRoles={['c']}><AhirSensorTakip /></AuthGuard>,
+        layout : 'cifci',
     },
     //Farmer sıcaklık sensor takip sayfası
     {
         path: '/cifci/SicaklikSensorTakip',
-        element: <SicaklikSensorTakip />,
+        element: <AuthGuard allowedRoles={['c']}><SicaklikSensorTakip /></AuthGuard>,
         layout : 'cifci',
     },
-      //Farmer nem sensor takip sayfası
-      {
+    //Farmer nem sensor takip sayfası
+    {
         path: '/cifci/InekSensorDetay',
-        element: <InekSensorDetay />,
+        element: <AuthGuard allowedRoles={['c']}><InekSensorDetay /></AuthGuard>,
         layout : 'cifci',
     },
-      //Farmer inek sıcaklık sensor takip sayfası
-      {
+    //Farmer inek sıcaklık sensor takip sayfası
+    {
         path: '/cifci/AhirSensorDetay',
-        element: <AhirSensorDetay />,
+        element: <AuthGuard allowedRoles={['c']}><AhirSensorDetay /></AuthGuard>,
         layout : 'cifci',
     },
        //Admin basvuru düzenlemesayfası
        {
         path: '/cifci/AdminBasvuruDuzenleme',
-        element: <AdminBasvuruDuzenleme />,
+        element: <AuthGuard allowedRoles={['c']}><AdminBasvuruDuzenleme /></AuthGuard>,
         layout : 'cifci',
     },
-        //Depo sensor takip ayfası
-        {
-            path: '/cifci/DepoSensorTakip',
-            element: <DepoSensorTakip />,
-            layout : 'cifci',
-        },
-
-         //Farmer depo sıcaklık sensor takip sayfası
+    //Depo sensor takip ayfası
+    {
+        path: '/cifci/DepoSensorTakip',
+        element: <AuthGuard allowedRoles={['c']}><DepoSensorTakip /></AuthGuard>,
+        layout : 'cifci',
+    },
+    //Farmer depo sıcaklık sensor takip sayfası
     {
         path: '/cifci/DepoSicaklikSensorTakip',
-        element: <DepoSicaklikSensorTakip />,
+        element: <AuthGuard allowedRoles={['c']}><DepoSicaklikSensorTakip /></AuthGuard>,
         layout : 'cifci',
     },
-      //Farmer depo nem sensor takip sayfası
-      {
+    //Farmer depo nem sensor takip sayfası
+    {
         path: '/cifci/SensorEkle',
-        element: <SensorEkle />,
+        element: <AuthGuard allowedRoles={['c']}><SensorEkle /></AuthGuard>,
         layout : 'cifci',
     },
-//Yenidoğan takip takip sayfası
-{
-  path: '/cifci/YenidoganTakip',
-  element: <YenidoganTakip />,
-  layout : 'cifci',
-},
+    //Yenidoğan takip takip sayfası
+    {
+        path: '/cifci/YenidoganTakip',
+        element: <AuthGuard allowedRoles={['c']}><YenidoganTakip /></AuthGuard>,
+        layout : 'cifci',
+    },
+    //Cikarilanlar takip takip sayfası
+    {
+        path: '/cifci/Cikarilanlar',
+        element: <AuthGuard allowedRoles={['c']}><Cikarilanlar /></AuthGuard>,
+        layout : 'cifci',
+    },
     
 ];
 
