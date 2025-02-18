@@ -18,15 +18,27 @@ exports.postGenelTakip = async (req, res) => {
               
               -- Süt döngüsünün durumu
               CASE 
-                  WHEN inek.sonDogurmaTarihi > inek.sonKuruTarihi THEN 'Sağımda'
-                  WHEN inek.sonKuruTarihi > inek.sonDogurmaTarihi THEN 'Kuruda'
+                  WHEN  inek.dollenmeSayisi > 0
+						AND((inek.sonDogurmaTarihi IS NOT NULL AND inek.sonDollenme IS NOT NULL AND inek.sonKuruTarihi IS NULL)
+						OR 
+						(NOT(inek.sonDogurmaTarihi IS NULL AND inek.sonDollenme IS NULL AND inek.sonKuruTarihi IS NULL)
+						AND sonDogurmaTarihi > sonKuruTarihi))  THEN 'Sağımda'
+                  WHEN  inek.dollenmeSayisi > 0
+						AND NOT(inek.sonDogurmaTarihi IS NULL AND inek.sonDollenme IS NULL AND inek.sonKuruTarihi IS NULL) 
+						AND inek.sonKuruTarihi > inek.sonDogurmaTarihi THEN 'Kuruda'
                   ELSE 'Bilinmiyor'
               END AS "SütDöngüsüDurumu",
               
               -- Süt döngüsünde kalan gün sayısı ve durumu
               CASE 
-                  WHEN inek.sonDogurmaTarihi > inek.sonKuruTarihi THEN 305 - DATEDIFF(DAY, inek.sonDogurmaTarihi, GETDATE())
-                  WHEN inek.sonKuruTarihi > inek.sonDogurmaTarihi THEN 60 - DATEDIFF(DAY, inek.sonKuruTarihi, GETDATE())
+                  WHEN inek.dollenmeSayisi > 0
+						AND((inek.sonDogurmaTarihi IS NOT NULL AND inek.sonDollenme IS NOT NULL AND inek.sonKuruTarihi IS NULL)
+						OR 
+						(NOT(inek.sonDogurmaTarihi IS NULL AND inek.sonDollenme IS NULL AND inek.sonKuruTarihi IS NULL)
+						AND sonDogurmaTarihi > sonKuruTarihi)) THEN 305 - DATEDIFF(DAY, inek.sonDogurmaTarihi, GETDATE())
+                  WHEN  inek.dollenmeSayisi > 0
+						AND NOT(inek.sonDogurmaTarihi IS NULL AND inek.sonDollenme IS NULL AND inek.sonKuruTarihi IS NULL) 
+						AND inek.sonKuruTarihi > inek.sonDogurmaTarihi THEN 60 - DATEDIFF(DAY, inek.sonKuruTarihi, GETDATE())
                   ELSE NULL
               END AS "SütKalanGünSayısı",
               
@@ -38,9 +50,22 @@ exports.postGenelTakip = async (req, res) => {
 
               -- Yavru döngüsünün durumu
               CASE 
-                  WHEN inek.sonDollenme > inek.sonDogurmaTarihi AND inek.tuttuMu = 'E' THEN 'Gebe'
-                  WHEN (inek.sonDollenme < inek.sonDogurmaTarihi AND (inek.tuttuMu = 'H' OR inek.tuttuMu IS NULL)) 
-                      OR (inek.sonDollenme > inek.sonDogurmaTarihi AND (inek.tuttuMu = 'H' OR inek.tuttuMu IS NULL)) THEN 'Serviste'
+                  WHEN inek.dollenmeSayisi > 0
+						AND (
+							(inek.sonDogurmaTarihi IS NULL AND inek.sonSutOlcumTarihi IS NULL AND inek.tuttuMu = 'E')
+							OR 
+							(NOT(inek.sonDogurmaTarihi IS NULL AND inek.sonDollenme IS NULL AND inek.sonKuruTarihi IS NULL) 
+							AND inek.sonDollenme > inek.sonDogurmaTarihi 
+							AND inek.tuttuMu = 'E')
+						) THEN 'Gebe'
+                  WHEN  inek.dollenmeSayisi > 0
+                        AND NOT(inek.sonDogurmaTarihi IS NULL AND inek.sonDollenme IS NULL AND inek.sonKuruTarihi IS NULL)
+                        AND (
+                            (inek.sonDollenme < inek.sonDogurmaTarihi AND (inek.tuttuMu = 'H' OR inek.tuttuMu IS NULL))
+                            OR (inek.sonDollenme > inek.sonDogurmaTarihi AND (inek.tuttuMu = 'H' OR inek.tuttuMu IS NULL))
+                            OR (inek.sonDogurmaTarihi IS NULL AND inek.sonKuruTarihi IS NULL AND inek.sonSutOlcumTarihi IS NULL AND inek.tuttuMu != 'E')
+                            OR (inek.sonKuruTarihi IS NULL AND inek.tuttuMu IS NULL)
+                        )THEN 'Serviste'
                   ELSE 'Çıkarılmalı'
               END AS "YavruDöngüsüDurumu",
 
@@ -48,11 +73,18 @@ exports.postGenelTakip = async (req, res) => {
               CASE 
                   WHEN inek.sonDollenme > inek.sonDogurmaTarihi AND inek.tuttuMu = 'E' THEN 280 - DATEDIFF(DAY, inek.sonDollenme, GETDATE())
                   WHEN (inek.sonDollenme < inek.sonDogurmaTarihi AND (inek.tuttuMu = 'H' OR inek.tuttuMu IS NULL)) 
-                      OR (inek.sonDollenme > inek.sonDogurmaTarihi AND (inek.tuttuMu = 'H' OR inek.tuttuMu IS NULL)) THEN
+                      OR NOT(inek.sonDogurmaTarihi IS NULL AND inek.sonDollenme IS NULL AND inek.sonKuruTarihi IS NULL)
+							AND (
+								(inek.sonDollenme < inek.sonDogurmaTarihi AND (inek.tuttuMu = 'H' OR inek.tuttuMu IS NULL))
+								OR (inek.sonDollenme > inek.sonDogurmaTarihi AND (inek.tuttuMu = 'H' OR inek.tuttuMu IS NULL))
+								OR (inek.sonDogurmaTarihi IS NULL AND inek.sonKuruTarihi IS NULL AND inek.sonSutOlcumTarihi IS NULL AND inek.tuttuMu != 'E')
+								OR (inek.sonKuruTarihi IS NULL AND inek.tuttuMu IS NULL)
+							) THEN
                       CASE 
-                          WHEN inek.tuttuMu IS NULL THEN 85 - DATEDIFF(DAY, inek.sonDogurmaTarihi, GETDATE())
-                          WHEN inek.dollenmeSayisi > 0 THEN 21 - DATEDIFF(DAY, inek.sonDollenme, GETDATE())
-                          ELSE NULL
+						WHEN inek.tuttuMu IS NULL THEN 85 - DATEDIFF(DAY, inek.sonDogurmaTarihi, GETDATE())
+						WHEN inek.dollenmeSayisi = 1 THEN 21 - DATEDIFF(DAY, inek.sonDollenme, GETDATE()) -- 106
+						WHEN inek.dollenmeSayisi = 2 THEN 21 - DATEDIFF(DAY, inek.sonDollenme, GETDATE()) -- 127
+						ELSE -DATEDIFF(DAY, inek.sonDogurmaTarihi, GETDATE())
                       END
                   ELSE NULL
               END AS "YavruKalanGünSayısı",
@@ -73,7 +105,8 @@ exports.postGenelTakip = async (req, res) => {
               kullanicilar ON inek.firmaID = kullanicilar.firmaID
           WHERE 
               kullanicilar.kullaniciID = @ID
-              AND NOT(inek.sonDogurmaTarihi IS NULL AND inek.sonDollenme IS NULL AND inek.sonKuruTarihi IS NULL);`
+              AND NOT(inek.sonDogurmaTarihi IS NULL AND inek.sonDollenme IS NULL AND inek.sonKuruTarihi IS NULL)
+			  AND NOT(inek.dollenmeSayisi = 0);`
         );
         if (result.recordset.length === 0) {
           return res.status(404).json(null);
