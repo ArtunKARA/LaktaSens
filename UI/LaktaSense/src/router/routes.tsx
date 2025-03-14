@@ -23,6 +23,7 @@ const AdminBasvuruDuzenleme= lazy(() => import('../pages/Cifci/AdminBasvuruDuzen
 const YenidoganTakip= lazy(() => import('../pages/Cifci/YenidoganTakip'))
 const KayitSayfasi = lazy(() => import('../pages/Authentication/KayitSayfasi'));
 const Cikarilanlar = lazy(() => import('../pages/Cifci/Cikarilacaklanlar'));
+const Profil = lazy(() => import('../pages/Cifci/Profil'));
 const routes = [
     //login page
     {
@@ -154,6 +155,12 @@ const routes = [
     {
         path: '/cifci/Cikarilanlar',
         element: <AuthGuard allowedRoles={['c']}><Cikarilanlar /></AuthGuard>,
+        layout : 'cifci',
+    },
+    //Profil takip takip sayfası
+    {
+        path: '/cifci/Profil',
+        element: <AuthGuard allowedRoles={['c']}><Profil /></AuthGuard>,
         layout : 'cifci',
     },
     

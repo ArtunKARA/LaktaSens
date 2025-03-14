@@ -625,16 +625,16 @@ const CifciHeader = () => {
                                 offset={[0, 8]}
                                 placement={`${isRtl ? 'bottom-start' : 'bottom-end'}`}
                                 btnClassName="relative group block"
-                                button={<img className="w-9 h-9 rounded-full object-cover saturate-50 group-hover:saturate-100" src="/assets/images/user-profile.jpeg" alt="userProfile" />}
+                                button={
+                                <IconUser className="w-6 h-6 ltr:mr-2 rtl:ml-2 shrink-0" />}
                             >
                                 <ul className="text-dark dark:text-white-dark !py-0 w-[230px] font-semibold dark:text-white-light/90">
                                     <li>
                                         <div className="flex items-center px-4 py-4">
-                                            <img className="rounded-md w-10 h-10 object-cover" src="/assets/images/user-profile.jpeg" alt="userProfile" />
                                             <div className="ltr:pl-4 rtl:pr-4 truncate">
                                                 <h4 className="text-base">
                                                     {userInfo?.isim+" "+userInfo?.soyisim}
-                                                    <span className="text-xs bg-warning-light rounded text-warning px-1 ltr:ml-2 rtl:ml-2">Farmer</span>
+                                                    <span className="text-xs bg-warning-light rounded text-warning px-1 ltr:ml-2 rtl:ml-2">{t('Farmer')}</span>
                                                 </h4>
                                                 <button type="button" className="text-black/60 hover:text-primary dark:text-dark-light/60 dark:hover:text-white">
                                                     {userInfo?.eposta}
@@ -643,7 +643,7 @@ const CifciHeader = () => {
                                         </div>
                                     </li>
                                     <li>
-                                        <Link to="/users/profile" className="dark:hover:text-white">
+                                        <Link to="/cifci/Profil" className="dark:hover:text-white">
                                             <IconUser className="w-4.5 h-4.5 ltr:mr-2 rtl:ml-2 shrink-0" />
                                             Profile
                                         </Link>

@@ -15,6 +15,7 @@ exports.postGiris = async (req, res) => {
                 kullaniciID,
                 kullaniciTuru,
                 hesapDurumu,
+                hesapFirmaYetkisi,
                 eposta,
                 isim,
                 soyisim,

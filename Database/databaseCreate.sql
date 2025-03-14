@@ -16,14 +16,40 @@ GO
 USE laktasens;
 GO
 
+GO
+/****** Object:  Table [dbo].[bolgeler]    Script Date: 26.09.2022 15:57:49 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[bolgeler](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[SehirIlceMahalleAdi] [nvarchar](max) NULL,
+	[UstID] [int] NULL,
+	[minlongitude] [nvarchar](max) NULL,
+	[minlatitude] [nvarchar](max) NULL,
+	[maxlongitude] [nvarchar](max) NULL,
+	[maxlatitude] [nvarchar](max) NULL,
+	[MahalleID] [nvarchar](max) NULL,
+ CONSTRAINT [PK_bolgeler] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
 -- Tabloları yeniden oluştur
 CREATE TABLE firmalar (
     firmaID INT PRIMARY KEY IDENTITY(1,1),
     firmaAdi NVARCHAR(50),
     telefonNo NVARCHAR(10),
     firmaAdresi NVARCHAR(250),
+    sehirID INT NOT NULL,
+    ilceID INT NOT NULL, 
     bolge CHAR(1),
-    hesapDurumu CHAR(1)
+    hesapDurumu CHAR(1),
+    FOREIGN KEY (sehirID) REFERENCES bolgeler(ID),
+    FOREIGN KEY (ilceID) REFERENCES bolgeler(ID)
 );
 GO
 
@@ -110,6 +136,7 @@ CREATE TABLE kullanicilar (
     isim NVARCHAR(50),
     soyisim NVARCHAR(50),
     telefonNo NVARCHAR(10),
+    hesapFirmaYetkisi CHAR(1), -- a admin, k kulanıcı 
     hesapDurumu CHAR(1), -- a aktif, p pasif,b beklemede 
     firmaID INT,
     FOREIGN KEY (firmaID) REFERENCES firmalar(firmaID)
