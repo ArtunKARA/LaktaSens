@@ -20,6 +20,7 @@ exports.postGiris = async (req, res) => {
                 isim,
                 soyisim,
                 telefonNo,
+                tcNo,
                 firmaID
                 FROM 
                 kullanicilar

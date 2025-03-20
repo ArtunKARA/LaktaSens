@@ -67,6 +67,7 @@ const LoginBoxed = () => {
                 isim: data.isim,
                 soyisim: data.soyisim,
                 telefonNo: data.telefonNo,
+                tcNo: data.tcNo,
                 firmaID: data.firmaID
             };
             localStorage.setItem('userInfo', JSON.stringify(userInfo));

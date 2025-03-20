@@ -10,7 +10,8 @@ const servis = require("./çiftçi/servis.js");
 const çıkarılacaklar = require("./çiftçi/çıkarılacaklar.js");
 const inekEkle = require("./çiftçi/inek-ekle.js");
 const yeniDogan = require("./çiftçi/yeni-dogan.js");
-const cifciAnaliz = require("./çiftçi/analiz-cifci.js")
+const cifciAnaliz = require("./çiftçi/analiz-cifci.js");
+const firma = require("./firma.js");
 
 const router = express.Router();
 
@@ -30,6 +31,7 @@ router.use("/api/servis",servis);
 router.use("/api/cikarilacaklar",çıkarılacaklar);
 router.use("/api/inekEkle",inekEkle);
 router.use("/api/yeniDogan",yeniDogan);
-router.use("/api/cifciAnaliz",cifciAnaliz)
+router.use("/api/cifciAnaliz",cifciAnaliz);
+router.use("/api/firma",firma);
 
 module.exports = router;

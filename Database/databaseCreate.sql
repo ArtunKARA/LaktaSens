@@ -42,12 +42,14 @@ GO
 CREATE TABLE firmalar (
     firmaID INT PRIMARY KEY IDENTITY(1,1),
     firmaAdi NVARCHAR(50),
+    firmaTur CHAR(1), --c ciftlik,t - tedarikci
     telefonNo NVARCHAR(10),
+    firmaMail NVARCHAR(50),
     firmaAdresi NVARCHAR(250),
     sehirID INT NOT NULL,
     ilceID INT NOT NULL, 
     bolge CHAR(1),
-    hesapDurumu CHAR(1),
+    hesapDurumu CHAR(1), 
     FOREIGN KEY (sehirID) REFERENCES bolgeler(ID),
     FOREIGN KEY (ilceID) REFERENCES bolgeler(ID)
 );
@@ -129,7 +131,7 @@ GO
 
 CREATE TABLE kullanicilar (
     kullaniciID INT PRIMARY KEY IDENTITY(1,1),
-    kullaniciAdi NVARCHAR(50),
+    tcNo NVARCHAR(50),
     eposta NVARCHAR(50),
     parola NVARCHAR(50),
     kullaniciTuru CHAR(1), -- a admin,c ciftci,t tedarikçi  

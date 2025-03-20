@@ -179,10 +179,10 @@ const MultipleTables = () => {
     };
     const statusColor = (durum : String) => {
       const color = ['primary', 'secondary', 'success', 'danger', 'warning', 'info'];
-      if(durum == "Sagım"){
-          return color[0]
+      if(durum == "Sagim"){
+          return color[2]
       }else if(durum == "Servis"){
-          return color[1]
+          return color[4]
       }else if(durum == "Gebe"){
         return color[2]
       }else{

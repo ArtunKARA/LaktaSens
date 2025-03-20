@@ -18,6 +18,9 @@ import sortBy from 'lodash/sortBy';
 import Tippy from '@tippyjs/react';
 import IconTrashLines from '../../components/Icon/IconTrashLines';
 import IconX from '../../components/Icon/IconX';
+import { strict } from 'assert';
+import { padEnd } from 'lodash';
+import IconPencilPaper from '../../components/Icon/IconPencilPaper';
 
 const AccountSetting = () => {
     interface OptionType {
@@ -27,15 +30,31 @@ const AccountSetting = () => {
 
     interface UserData {
         kullaniciID: string;
+        tcNo: string;
         isim: string;
         soyisim: string;
         eposta: string;
-        parola: string;
         telefonNo: string;
         hesapFirmaYetkisi: string;
         hesapDurumu: string;
+        firmaID: number;
+        firmaAdi: string;
+    }
+    interface firmaInfo {
+        firmaAdi: string;
+        telefonNo: string;
+        firmaAdresi: string;
+        sehirID: string;
+        ilceID: string;
+        bolge: string;
+        hesapDurumu: string;
+        firmaMail: string;
     }
 
+    const storedUserInfo = localStorage.getItem('userInfo');
+    const userInfo = storedUserInfo ? JSON.parse(storedUserInfo) : null;
+    const [firmaInfo, setFirmaInfo] = useState<firmaInfo | undefined>(undefined);
+    const [firmaInfoUsers, setFirmaInfoUsers] = useState<UserData[]>([]);
     const [cityOpitons, setCityOptions] = useState<OptionType[]>([]);
     const [districtOpitons, setDistrictOptions] = useState<OptionType[]>([]);
     const [hesapSil, setHesapSil] = useState(false);
@@ -45,6 +64,7 @@ const AccountSetting = () => {
     const dispatch = useDispatch();
     const [isVisibleCiftlikBilgi, setisVisibleCiftlikBilgi] = useState(false);
     const [isVisibleCiftlikKullanici, setisVisibleCiftlikKullanici] = useState(false);
+    const [isVisibleCiftlikKullaniciEkle, setisVisibleCiftlikKullaniciEkle] = useState(false);
     const [search, setSearch] = useState('');
     const [initialRecords, setInitialRecords] = useState<UserData[]>([]);
     const [rowData, setRowData] = useState<UserData[]>([]);
@@ -53,13 +73,35 @@ const AccountSetting = () => {
     const [page, setPage] = useState(1);
     const [recordsData, setRecordsData] = useState(initialRecords);
     const [modal22, setModal22] = useState(false);
+    const [selectedUser, setSelectedUser] = useState<UserData | null>(null);
+    
     const [sortStatus, setSortStatus] = useState<DataTableSortStatus>({
         columnAccessor: 'kullaniciID',
         direction: 'asc',
     });
+
+    const optionsFirmaKullanıcıYetkis = [
+        { value: 'a', label: t('Admin') },
+        { value: 'k', label: t('User') },
+        { value: 'n', label: t('NaN') },
+    ];
+
+    const statusOptions = [
+        { value: 'a', label: t('Active') },
+        { value: 'p', label: t('Passive') },
+        { value: 'b', label: t('On hold') },
+        { value: 'n', label: 'NaN' }
+    ];
+
+    
     useEffect(() => {
         setPage(1);
     }, [pageSize]);
+
+    useEffect(() => {
+        const sortedData = sortBy(rowData, 'kullaniciID');
+        setInitialRecords(sortedData);
+    }, [rowData]);
 
     useEffect(() => {
         const from = (page - 1) * pageSize;
@@ -83,6 +125,33 @@ const AccountSetting = () => {
         });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [search]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await fetch('http://localhost:3030/api/firma/postFirmaKullanicilarGetir', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ firmaID: userInfo.firmaID }),
+                });
+    
+                if (!response.ok) {
+                    throw new Error("Network response was not ok");
+                }
+    
+                const data: UserData[] = await response.json();
+                console.log('Gelen veri:', data);
+                setRowData(data);
+    
+            } catch (error) {
+                console.error('API çağrısı sırasında bir hata oluştu:', error);
+            }
+        };
+    
+        fetchData();
+    }, []); // Boş bağımlılık dizisi, component mount olduğunda sadece bir kez çalıştırılır
 
     useEffect(() => {
         const data = sortBy(initialRecords, sortStatus.columnAccessor);
@@ -121,7 +190,21 @@ const AccountSetting = () => {
             return rule10 && rule11;
         }),
         email: Yup.string().email('Invalid email').required('Please fill the Email'),
+        password: Yup.string()
+            .trim()
+            .required('Please enter a password')
+            .min(6, 'Password must be at least 6 characters')
+            .matches(/[A-Z]/, 'Password must contain at least one uppercase letter')
+            .matches(/[a-z]/, 'Password must contain at least one lowercase letter')
+            .matches(/\d/, 'Password must contain at least one number'),
+        confirmPassword: Yup.string()
+            .trim()
+            .required('Please confirm your password')
+            .oneOf([Yup.ref('password')], 'Passwords must match'),
+        telefonNo: Yup.string().required('Please fill the telephone'),
         agree: Yup.bool().oneOf([true], 'You must agree before submitting.'),
+        firmaAdi: Yup.string().required('Please fill Commpany Name'),
+        firmaAdresi: Yup.string().required('Please fill Commpany Address'),
     });
 
     const submitForm = (values: any) => {
@@ -191,54 +274,102 @@ const AccountSetting = () => {
             });
     };
 
-    const getCityList = () => {
-        axios.get('http://localhost:3030/api/options/cityList')
-            .then(response => {
-                const cityOpitons = response.data.map((city: any) => ({
-                    value: city.ID,
-                    label: city.SehirIlceMahalleAdi
-                }));
-                setCityOptions(cityOpitons);
-                console.log(cityOpitons);
-            })
-            .catch(error => {
-                console.error('Error fetching city options:', error);
+    useEffect(() => {
+        const fetchData = async () => {
+          try {
+            const response = await axios.post("http://localhost:3030/api/firma/postFirmaBilgileriGetir", {
+              firmaID: userInfo.firmaID,
             });
-    };
+            console.log(response.data);
+
+            const firmaInfo = {
+                firmaAdi: response.data.firmaAdi,
+                telefonNo: response.data.telefonNo,
+                firmaAdresi: response.data.firmaAdresi,
+                sehirID: response.data.sehirID,
+                ilceID: response.data.ilceID,
+                bolge: response.data.bolge,
+                hesapDurumu: response.data.hesapDurumu,
+                firmaMail: response.data.firmaMail
+            };
+            setFirmaInfo(firmaInfo);
+            getDistrictList(firmaInfo!.sehirID);
+          } catch (error) {
+            console.error(error);
+            alert(t("An error occurred while saving!") + error);
+          }
+
+          axios.get('http://localhost:3030/api/options/cityList')
+          .then(response => {
+              const cityOpitons = response.data.map((city: any) => ({
+                  value: city.ID,
+                  label: city.SehirIlceMahalleAdi
+              }));
+              setCityOptions(cityOpitons);
+              console.log(cityOpitons);
+          })
+          .catch(error => {
+              console.error('Error fetching city options:', error);
+          });
+        };
+        fetchData();
+    }, []);
 
     const handleKullaniciEkle = () => {
        alert("Dev");
     }; 
+
     const statusColorYetki = (durum : String) => {
         const color = ['primary', 'secondary', 'success', 'danger', 'warning', 'info'];
-        if(durum == "Aktif"){
+        if(durum == "a"){
             return color[2]
-        }else if(durum == "Pasif"){
-            return color[1]
-        }else if(durum == "Aktif"){
-          return color[2]
+        }else if(durum == "k"){
+            return color[0]
         }else{
           return color[3]
         }
     };
+
+    const statusNameYetki = (durum : String) => {
+        if(durum == "a"){
+            return "Admin"
+        }else if(durum == "k"){
+            return "Kullanıcı"
+        }else{
+          return "NaN"
+        }
+    };
+
     const statusColorDurum = (durum : String) => {
         const color = ['primary', 'secondary', 'success', 'danger', 'warning', 'info'];
-        if(durum == "Aktif"){
+        if(durum == "a"){
             return color[2]
-        }else if(durum == "Pasif"){
-            return color[1]
-        }else if(durum == "Aktif"){
-          return color[2]
+        }else if(durum == "p"){
+            return color[3]
+        }else if(durum == "b"){
+          return color[4]
         }else{
           return color[3]
         }
-    };  
+    }; 
+    
+    const statusNameDurum = (durum : String) => {
+        if(durum == "a"){
+            return "Admin"
+        }else if(durum == "p"){
+            return "Pasif"
+        }else if(durum == "b"){
+          return "Beklemede"
+        }else{
+          return "NaN"
+        }
+    }; 
 
     return (
         <div>
             <div className="pt-5">
                 <div className="flex items-center justify-between mb-5">
-                    <h5 className="font-semibold text-lg dark:text-white-light">{t('Profile')} <span className="text-s bg-warning-light rounded text-warning px-4 ltr:ml-8 rtl:ml-8">{t('Farmer')}</span><span className="text-s badge badge-outline-primary px-4 ltr:ml-8 rtl:ml-8">{"Bombastik Çiftlik"}</span></h5>
+                    <h5 className="font-semibold text-lg dark:text-white-light">{t('Profile')} <span className="text-s bg-warning-light rounded text-warning px-4 ltr:ml-8 rtl:ml-8">{t('Farmer')}</span><span className="text-s badge badge-outline-primary px-4 ltr:ml-8 rtl:ml-8">{firmaInfo?.firmaAdi}</span></h5>
                 </div>
                 <div>
                     <ul className="sm:flex font-semibold border-b border-[#ebedf2] dark:border-[#191e3a] mb-5 whitespace-nowrap overflow-y-auto">
@@ -251,24 +382,34 @@ const AccountSetting = () => {
                                 {t('Home')}
                             </button>
                         </li>
-                        <li className="inline-block">
-                            <button
+                        
+                        {userInfo.hesapFirmaYetkisi === 'a' && (
+                            <li className="inline-block">
+                                <button
                                 onClick={() => toggleTabs('payment-details')}
-                                className={`flex gap-2 p-4 border-b border-transparent hover:border-primary hover:text-primary ${tabs === 'payment-details' ? '!border-primary text-primary' : ''}`}
-                            >
+                                className={`flex gap-2 p-4 border-b border-transparent hover:border-primary hover:text-primary ${
+                                    tabs === 'payment-details' ? '!border-primary text-primary' : ''
+                                }`}
+                                >
                                 <IconDollarSignCircle />
                                 {t("Payment Details")}
-                            </button>
-                        </li>
+                                </button>
+                            </li>
+                            )}
+
+                        {userInfo.hesapFirmaYetkisi === 'a' && (
                         <li className="inline-block">
                             <button
-                                onClick={() => toggleTabs('manage-farm')}
-                                className={`flex gap-2 p-4 border-b border-transparent hover:border-primary hover:text-primary ${tabs === 'manage-farm' ? '!border-primary text-primary' : ''}`}
+                            onClick={() => toggleTabs('manage-farm')}
+                            className={`flex gap-2 p-4 border-b border-transparent hover:border-primary hover:text-primary ${
+                                tabs === 'manage-farm' ? '!border-primary text-primary' : ''
+                            }`}
                             >
-                                <IconNotes />
-                                {t("Manage Farm")}
+                            <IconNotes />
+                            {t("Manage Farm")}
                             </button>
                         </li>
+                        )}
                         <li className="inline-block">
                             <button
                                 onClick={() => toggleTabs('danger-zone')}
@@ -284,14 +425,14 @@ const AccountSetting = () => {
                     <div>
                         <Formik
                             initialValues={{
-                                firstname: '',
-                                lastname: '',
-                                tcNumber: '',
-                                email: '',
-                                companyName: '',
-                                city: '',
-                                district: '',
-                                address: '',
+                                kullaniciID: userInfo.kullaniciID,
+                                firstname:  userInfo.isim,
+                                lastname: userInfo.soyisim,
+                                tcNumber: userInfo.tcNo,
+                                email: userInfo.eposta,
+                                telefonNo: userInfo.telefonNo,
+                                password: '',
+                                confirmPassword:'',
                                 agree: false,
                             }}
                             validationSchema={submitFormValidation}
@@ -306,7 +447,7 @@ const AccountSetting = () => {
                                             <Field name="firstname" id="firstname" type="text" className="form-input" />
                                             {submitCount ? (
                                                 errors.firstname ? (
-                                                    <div className="text-danger mt-1">{errors.firstname}</div>
+                                                    <div className="text-danger mt-1">{errors.firstname?.toString()}</div>
                                                 ) : (
                                                     <div className="text-[#1abc9c] mt-1">{t('Looks Good!')}</div>
                                                 )
@@ -319,7 +460,7 @@ const AccountSetting = () => {
                                             <Field name="lastname" id="lastname" type="text" className="form-input" />
                                             {submitCount ? (
                                                 errors.lastname ? (
-                                                    <div className="text-danger mt-1">{errors.lastname}</div>
+                                                    <div className="text-danger mt-1">{errors.lastname?.toString()}</div>
                                                 ) : (
                                                     <div className="text-[#1abc9c] mt-1">{t('Looks Good!')}</div>
                                                 )
@@ -328,12 +469,12 @@ const AccountSetting = () => {
                                             )}
                                         </div>
                                         <div>
-                                            <label htmlFor="tcNumber">{t('TC Number')}</label>
-                                            <Field name="tcNumber" type="text" id="tcNumber" placeholder={t('Enter TC Number')} className="form-input" />
+                                            <label htmlFor="telefonNo">{t('Telephone')}</label>
+                                            <Field name="telefonNo" type="text" id="telefonNo" placeholder={t('Enter Telephone')} className="form-input" />
 
                                             {submitCount ? (
-                                                errors.tcNumber ? (
-                                                    <div className="text-danger mt-1">{errors.tcNumber}</div>
+                                                errors.telefonNo ? (
+                                                    <div className="text-danger mt-1">{errors.telefonNo?.toString()}</div>
                                                 ) : (
                                                     <div className="text-success mt-1">{t('Looks Good!')}</div>
                                                 )
@@ -346,38 +487,73 @@ const AccountSetting = () => {
                                             <label htmlFor="Email">{t('Email')}</label>
                                             <Field name="email" type="text" id="Email" placeholder={t('Enter Email')} className="form-input" />
 
-                                            {submitCount ? errors.email ? <div className="text-danger mt-1">{errors.email}</div> : <div className="text-success mt-1">Looks Good!</div> : ''}
+                                            {submitCount ? errors.email ? <div className="text-danger mt-1">{errors.email?.toString()}</div> : <div className="text-success mt-1">{t('Looks Good!')}</div> : ''}
                                         </div>
-                                        <div className="form-group">
-                                            <label htmlFor="city">{t('City')}</label>
-                                            <Field 
-                                                    name="city"
-                                                    component={CitySelect}
-                                                    options={cityOpitons}
-                                            />
+                                        <div>
+                                            <label htmlFor="tcNumber">{t('TC Number')}</label>
+                                            <Field name="tcNumber" type="text" id="tcNumber" placeholder={t('Enter TC Number')} className="form-input" />
+
                                             {submitCount ? (
-                                                errors.city ? (
-                                                    <div className="text-danger mt-1">{errors.city}</div>
+                                                errors.tcNumber ? (
+                                                    <div className="text-danger mt-1">{errors.tcNumber?.toString()}</div>
                                                 ) : (
-                                                    <div className="text-[#1abc9c] mt-1">{t('Looks Good!')}</div>
+                                                    <div className="text-success mt-1">{t('Looks Good!')}</div>
                                                 )
                                             ) : (
                                                 ''
                                             )}
                                         </div>
+                                        <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-5">
+                                            <div>
+                                                <label htmlFor="hesapFirmaYetkisi">{t('Account Company Authorization')}</label>
+                                                {(() => {
+                                                    if (userInfo.hesapFirmaYetkisi === 'a') {
+                                                        return <span id="hesapFirmaYetkisi" className="badge bg-success text-lg block mx-auto text-center">Admin</span>;
+                                                    } else if (userInfo.hesapFirmaYetkisi === 'k')  {
+                                                        return <span id="hesapFirmaYetkisi"  className="badge bg-primary text-lg block mx-auto text-center">{t('User')}</span>;
+                                                    } else {
+                                                        return <span id="hesapFirmaYetkisi"  className="badge bg-dark text-lg block mx-auto text-center">NaN</span>;; // Return nothing if no condition matches
+                                                    }
+                                                })()}
+                                            </div>
+                                            <div>
+                                                <label htmlFor="hesapDurumu">{t('Account Status')}</label>
+                                                {(() => {
+                                                    if (userInfo.hesapDurumu === 'a') {
+                                                        return <span id="hesapFirmaYetkisi" className="badge bg-success text-lg block mx-auto text-center">{t('Active')}</span>;
+                                                    } else if (userInfo.hesapDurumu === 'p')  {
+                                                        return <span id="hesapFirmaYetkisi"  className="badge bg-primary text-lg block mx-auto text-center">{t('Passive')}</span>;
+                                                    } else if (userInfo.hesapDurumu === 'b')  {
+                                                        return <span id="hesapFirmaYetkisi"  className="badge bg-warning text-lg block mx-auto text-center">{t('On hold')}</span>;
+                                                    }else {
+                                                        return <span id="hesapFirmaYetkisi"  className="badge bg-dark text-lg block mx-auto text-center">NaN</span>;; // Return nothing if no condition matches
+                                                    }
+                                                })()}
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label htmlFor="password">{t('Password')}</label>
+                                            <Field name="password" type="password" id="password" placeholder={t('Enter Password')} className="form-input" />
 
-                                        <div className="form-group">
-                                            <label htmlFor="district">{t('District')}</label>
-                                            <Field 
-                                                    name="district"
-                                                    component={DistrictSelect}
-                                                    options={values.city.length == 0 ? [{value: '', label: 'Please select a city first'}] : districtOpitons}
-                                            />
                                             {submitCount ? (
-                                                errors.district ? (
-                                                    <div className="text-danger mt-1">{errors.district}</div>
+                                                errors.password ? (
+                                                    <div className="text-danger mt-1">{errors.password}</div>
                                                 ) : (
-                                                    <div className="text-[#1abc9c] mt-1">{t('Looks Good!')}</div>
+                                                    <div className="text-success mt-1">{t('Looks Good!')}</div>
+                                                )
+                                            ) : (
+                                                ''
+                                            )}
+                                        </div>
+                                        <div>
+                                            <label htmlFor="confirmPassword">{t('Confirm Password')}</label>
+                                            <Field name="confirmPassword" type="password" id="confirmPassword" placeholder={t('Enter Password')} className="form-input" />
+
+                                            {submitCount ? (
+                                                errors.confirmPassword ? (
+                                                    <div className="text-danger mt-1">{errors.confirmPassword}</div>
+                                                ) : (
+                                                    <div className="text-success mt-1">{t('Looks Good!')}</div>
                                                 )
                                             ) : (
                                                 ''
@@ -735,29 +911,26 @@ const AccountSetting = () => {
                         {isVisibleCiftlikBilgi && <div>
                             <Formik
                                 initialValues={{
-                                    firstname: '',
-                                    lastname: '',
-                                    tcNumber: '',
-                                    email: '',
-                                    companyName: '',
-                                    city: '',
-                                    district: '',
-                                    address: '',
-                                    agree: false,
+                                    firmaAdi: firmaInfo?.firmaAdi,
+                                    telefonNo: firmaInfo?.telefonNo,
+                                    firmaAdresi: firmaInfo?.firmaAdresi,
+                                    email: firmaInfo?.firmaMail,
+                                    city: firmaInfo?.sehirID,
+                                    district: firmaInfo?.ilceID,
+                                    
                                 }}
                                 validationSchema={submitFormValidation}
                                 onSubmit={() => {}}
                             >{({ errors, submitCount, touched, values }) => (
-                                <Form className="border border-[#ebedf2] dark:border-[#191e3a] rounded-md p-4 mb-5 bg-white dark:bg-black">
+                                <Form className="border border-[#ebedf2] dark:border-[#191e3a] rounded-md p-4 mb-5 bg-white dark:bg-black panel mt-6">
                                     <h6 className="text-lg font-bold mb-5">{t('Farm Info')}</h6>
-                                    <div className="flex flex-col sm:flex-row">
-                                        <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-5">
+                                        <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-5" style={{ paddingTop: '1%'}}>
                                             <div>
-                                                <label htmlFor="firstname">{t('Farm Name')}</label>
-                                                <Field name="firstname" id="firstname" type="text" className="form-input" />
+                                                <label htmlFor="firmaAdi">{t('Farm Name')}</label>
+                                                <Field name="firmaAdi" id="firmaAdi" type="text" className="form-input" />
                                                 {submitCount ? (
-                                                    errors.firstname ? (
-                                                        <div className="text-danger mt-1">{errors.firstname}</div>
+                                                    errors.firmaAdi ? (
+                                                        <div className="text-danger mt-1">{errors.firmaAdi}</div>
                                                     ) : (
                                                         <div className="text-[#1abc9c] mt-1">{t('Looks Good!')}</div>
                                                     )
@@ -765,39 +938,69 @@ const AccountSetting = () => {
                                                     ''
                                                 )}
                                             </div>
+                                            <div className="flex-1 grid grid-cols-2 sm:grid-cols-2 gap-5">
                                             <div>
-                                                <label htmlFor="lastname">{t('Last Name')}</label>
-                                                <Field name="lastname" id="lastname" type="text" className="form-input" />
-                                                {submitCount ? (
-                                                    errors.lastname ? (
-                                                        <div className="text-danger mt-1">{errors.lastname}</div>
-                                                    ) : (
-                                                        <div className="text-[#1abc9c] mt-1">{t('Looks Good!')}</div>
-                                                    )
-                                                ) : (
-                                                    ''
-                                                )}
+                                                <label htmlFor="firmaBollge">{t('Company Area')}</label>
+                                                {(() => {
+                                                    if (firmaInfo?.bolge === 'a') {
+                                                        return <span id="firmaBollge" className="badge bg-success text-lg block mx-auto text-center">İç Anadolu</span>;
+                                                    } else if (firmaInfo?.bolge === 'b')  {
+                                                        return <span id="firmaBollge"  className="badge bg-primary text-lg block mx-auto text-center">Marmara</span>;
+                                                    } else {
+                                                        return <span id="firmaBollge"  className="badge bg-dark text-lg block mx-auto text-center">NaN</span>;; // Return nothing if no condition matches
+                                                    }
+                                                })()}
                                             </div>
                                             <div>
-                                                <label htmlFor="tcNumber">{t('TC Number')}</label>
-                                                <Field name="tcNumber" type="text" id="tcNumber" placeholder={t('Enter TC Number')} className="form-input" />
-
-                                                {submitCount ? (
-                                                    errors.tcNumber ? (
-                                                        <div className="text-danger mt-1">{errors.tcNumber}</div>
-                                                    ) : (
-                                                        <div className="text-success mt-1">{t('Looks Good!')}</div>
-                                                    )
-                                                ) : (
-                                                    ''
-                                                )}
+                                                <label htmlFor="hesapDurumu">{t('Account Status')}</label>
+                                                {(() => {
+                                                    if (firmaInfo?.hesapDurumu === 'a') {
+                                                        return <span id="hesapDurumu" className="badge bg-success text-lg block mx-auto text-center">{t('Active')}</span>;
+                                                    } else if (userInfo.hesapDurumu === 'p')  {
+                                                        return <span id="hesapDurumu"  className="badge bg-primary text-lg block mx-auto text-center">{t('Passive')}</span>;
+                                                    } else if (userInfo.hesapDurumu === 'b')  {
+                                                        return <span id="hesapDurumu"  className="badge bg-primary text-lg block mx-auto text-center">{t('On hold')}</span>;
+                                                    }else {
+                                                        return <span id="hesapDurumu"  className="badge bg-dark text-lg block mx-auto text-center">NaN</span>;; // Return nothing if no condition matches
+                                                    }
+                                                })()}
                                             </div>
-
+                                            </div>
+                                        </div>
+                                        <div className="flex-1 grid grid-cols-1 sm:grid-cols-1 gap-5" style={{ paddingTop: '1%'}}>
+                                            <div>
+                                                <label htmlFor="firmaAdresi">{t('Address')}</label>
+                                                <Field className="form-textarea" as="textarea" name="firmaAdresi" id="firmaAdresi" rows="3"  placeholder={t('Enter Address')} />
+                                                {submitCount ? (
+                                                        errors.firmaAdresi ? (
+                                                            <div className="text-danger mt-1">{errors.firmaAdresi}</div>
+                                                        ) : (
+                                                            <div className="text-[#1abc9c] mt-1">Looks Good!</div>
+                                                        )
+                                                    ) : (
+                                                        ''
+                                                    )}
+                                            </div>
+                                        </div>
+                                        <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-5" style={{ paddingTop: '1%'}}>
                                             <div>
                                                 <label htmlFor="Email">{t('Email')}</label>
                                                 <Field name="email" type="text" id="Email" placeholder={t('Enter Email')} className="form-input" />
 
                                                 {submitCount ? errors.email ? <div className="text-danger mt-1">{errors.email}</div> : <div className="text-success mt-1">Looks Good!</div> : ''}
+                                            </div>
+                                            <div>
+                                                <label htmlFor="telefonNo">{t('Telephone')}</label>
+                                                <Field name="telefonNo" id="lastname" type="text" className="form-input" />
+                                                {submitCount ? (
+                                                    errors.telefonNo ? (
+                                                        <div className="text-danger mt-1">{errors.telefonNo}</div>
+                                                    ) : (
+                                                        <div className="text-[#1abc9c] mt-1">{t('Looks Good!')}</div>
+                                                    )
+                                                ) : (
+                                                    ''
+                                                )}
                                             </div>
                                             <div className="form-group">
                                                 <label htmlFor="city">{t('City')}</label>
@@ -816,13 +1019,12 @@ const AccountSetting = () => {
                                                     ''
                                                 )}
                                             </div>
-
                                             <div className="form-group">
                                                 <label htmlFor="district">{t('District')}</label>
                                                 <Field 
                                                         name="district"
                                                         component={DistrictSelect}
-                                                        options={values.city.length == 0 ? [{value: '', label: 'Please select a city first'}] : districtOpitons}
+                                                        options={values.city === null ? [{value: '', label: 'Please select a city first'}] : districtOpitons}
                                                 />
                                                 {submitCount ? (
                                                     errors.district ? (
@@ -834,6 +1036,7 @@ const AccountSetting = () => {
                                                     ''
                                                 )}
                                             </div>
+                                            
                                             <div className="sm:col-span-2 mt-3">
                                             <button
                                                     type="submit"
@@ -849,7 +1052,6 @@ const AccountSetting = () => {
                                                 </button>
                                             </div>
                                         </div>
-                                    </div>
                                 </Form>)}
                             </Formik>
                         </div>}
@@ -857,11 +1059,203 @@ const AccountSetting = () => {
                             <div className="panel mt-6">
                                 <div className="flex md:items-center md:flex-row flex-col mb-5 gap-5">
                                     <h5 className="font-semibold text-lg dark:text-white-light">{t('Farm Users')}</h5>
-                                    <button type="button" className="btn btn-warning ltr:ml-auto rtl:mr-auto" onClick={() => handleKullaniciEkle()}>{t('Add User')}</button>
+                                    <button type="button" className="btn btn-warning ltr:ml-auto rtl:mr-auto" onClick={() => {setisVisibleCiftlikKullaniciEkle(!isVisibleCiftlikKullaniciEkle);}}>{t('Add User')}</button>
                                     <div className="ltr:ml-auto rtl:mr-auto">
                                         <input type="text" className="form-input w-auto" placeholder="Search..." value={search} onChange={(e) => setSearch(e.target.value)} />
                                     </div>
-                                </div>
+                                    <Transition appear show={isVisibleCiftlikKullaniciEkle} as={Fragment}>
+                                        <Dialog as="div" open={isVisibleCiftlikKullaniciEkle} onClose={() => setisVisibleCiftlikKullaniciEkle(false)}>
+                                        <div className="fixed inset-0 z-10 overflow-y-auto bg-[black]/10">
+                                            <div className="flex min-h-screen items-center justify-center px-4">
+                                            <Dialog.Panel className="panel my-8 w-full max-w-3xl overflow-hidden rounded-lg py-1 px-4 text-black dark:text-white-dark">
+
+                                                <div className="flex items-center justify-between p-5">
+                                                <h5> {t('Manage User')} </h5>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setisVisibleCiftlikKullaniciEkle(false)}
+                                                    className="text-white-dark hover:text-dark"
+                                                >
+                                                    <IconX className="w-5 h-5" />
+                                                </button>
+                                                </div>
+                                                <div>
+                                                <Formik
+                                                    enableReinitialize={true} 
+                                                    initialValues={{
+                                                        kullaniciID: '',
+                                                        firstname: '',
+                                                        lastname: '',
+                                                        tcNumber: '',
+                                                        email: '',
+                                                        telefonNo: '',
+                                                        password: '',
+                                                        confirmPassword: ''
+                                                    }}
+                                                    validationSchema={submitFormValidation}
+                                                    onSubmit={() => {}}
+                                                >{({ errors, submitCount, touched, values }) => (
+                                                    <Form className="border border-[#ebedf2] dark:border-[#191e3a] rounded-md p-4 mb-5 bg-white dark:bg-black">
+                                                        <div className="flex flex-col sm:flex-row">
+                                                            <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-5">
+                                                                <div>
+                                                                    <label htmlFor="firstname">{t('Name')}</label>
+                                                                    <Field name="firstname" id="firstname" type="text" className="form-input" />
+                                                                    {submitCount ? (
+                                                                        errors.firstname ? (
+                                                                            <div className="text-danger mt-1">{errors.firstname?.toString()}</div>
+                                                                        ) : (
+                                                                            <div className="text-[#1abc9c] mt-1">{t('Looks Good!')}</div>
+                                                                        )
+                                                                    ) : (
+                                                                        ''
+                                                                    )}
+                                                                </div>
+                                                                <div>
+                                                                    <label htmlFor="lastname">{t('Last Name')}</label>
+                                                                    <Field name="lastname" id="lastname" type="text" className="form-input" />
+                                                                    {submitCount ? (
+                                                                        errors.lastname ? (
+                                                                            <div className="text-danger mt-1">{errors.lastname?.toString()}</div>
+                                                                        ) : (
+                                                                            <div className="text-[#1abc9c] mt-1">{t('Looks Good!')}</div>
+                                                                        )
+                                                                    ) : (
+                                                                        ''
+                                                                    )}
+                                                                </div>
+                                                                <div>
+                                                                    <label htmlFor="telefonNo">{t('Telephone')}</label>
+                                                                    <Field name="telefonNo" type="text" id="telefonNo" placeholder={t('Enter Telephone')} className="form-input" />
+
+                                                                    {submitCount ? (
+                                                                        errors.telefonNo ? (
+                                                                            <div className="text-danger mt-1">{errors.telefonNo?.toString()}</div>
+                                                                        ) : (
+                                                                            <div className="text-success mt-1">{t('Looks Good!')}</div>
+                                                                        )
+                                                                    ) : (
+                                                                        ''
+                                                                    )}
+                                                                </div>
+
+                                                                <div>
+                                                                    <label htmlFor="Email">{t('Email')}</label>
+                                                                    <Field name="email" type="text" id="Email" placeholder={t('Enter Email')} className="form-input" />
+
+                                                                    {submitCount ? errors.email ? <div className="text-danger mt-1">{errors.email?.toString()}</div> : <div className="text-success mt-1">{t('Looks Good!')}</div> : ''}
+                                                                </div>
+                                                                <div>
+                                                                    <label htmlFor="tcNumber">{t('TC Number')}</label>
+                                                                    <Field name="tcNumber" type="text" id="tcNumber" placeholder={t('Enter TC Number')} className="form-input" />
+
+                                                                    {submitCount ? (
+                                                                        errors.tcNumber ? (
+                                                                            <div className="text-danger mt-1">{errors.tcNumber?.toString()}</div>
+                                                                        ) : (
+                                                                            <div className="text-success mt-1">{t('Looks Good!')}</div>
+                                                                        )
+                                                                    ) : (
+                                                                        ''
+                                                                    )}
+                                                                </div>
+                                                                <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-5">
+                                                                <div>
+                                                                        <label htmlFor="hesapFirmaYetkisi">{t('Account Company Authorization')}</label>
+                                                                        <Select
+                                                                            id="hesapFirmaYetkisi"
+                                                                            options={optionsFirmaKullanıcıYetkis}
+                                                                            isSearchable={false}
+                                                                            onChange={(selectedOption) => {
+                                                                                if (!selectedUser) return; // Prevents null errors
+
+                                                                                setSelectedUser((prev) => ({
+                                                                                    ...(prev as UserData), // Ensures full UserData type
+                                                                                    hesapFirmaYetkisi: selectedOption!.value
+                                                                                }));
+                                                                            }}
+                                                                        />
+
+                                                                    </div>
+                                                                    <div>
+                                                                        <label htmlFor="hesapDurumu">{t('Account Status')}</label>
+                                                                        <Select
+                                                                            id="hesapDurumu"
+                                                                            options={statusOptions}
+                                                                            isSearchable={false}                                                                            onChange={(selectedOption) => {
+                                                                                if (!selectedUser) return; // Prevents null errors
+
+                                                                                setSelectedUser((prev) => ({
+                                                                                    ...(prev as UserData), // Ensures full UserData structure is kept
+                                                                                    hesapDurumu: selectedOption!.value
+                                                                                }));
+                                                                            }}
+                                                                        />
+                                                                    </div>
+                                                                </div>
+                                                                <div>
+                                                                    <label htmlFor="password">{t('Password')}</label>
+                                                                    <Field name="password" type="password" id="password" placeholder={t('Enter Password')} className="form-input" />
+
+                                                                    {submitCount ? (
+                                                                        errors.password ? (
+                                                                            <div className="text-danger mt-1">{errors.password}</div>
+                                                                        ) : (
+                                                                            <div className="text-success mt-1">{t('Looks Good!')}</div>
+                                                                        )
+                                                                    ) : (
+                                                                        ''
+                                                                    )}
+                                                                </div>
+                                                                <div>
+                                                                    <label htmlFor="confirmPassword">{t('Confirm Password')}</label>
+                                                                    <Field name="confirmPassword" type="password" id="confirmPassword" placeholder={t('Enter Password')} className="form-input" />
+
+                                                                    {submitCount ? (
+                                                                        errors.confirmPassword ? (
+                                                                            <div className="text-danger mt-1">{errors.confirmPassword}</div>
+                                                                        ) : (
+                                                                            <div className="text-success mt-1">{t('Looks Good!')}</div>
+                                                                        )
+                                                                    ) : (
+                                                                        ''
+                                                                    )}
+                                                                </div>
+                                                                <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-5">
+                                                                <button
+                                                                        type="submit"
+                                                                        className="btn btn-primary !mt-6"
+                                                                        onClick={() => {
+                                                                            console.log(Object.keys(errors));
+                                                                            if (Object.keys(touched).length !== 0 && Object.keys(errors).length === 0) {
+                                                                                submitForm(values);
+                                                                            }
+                                                                        }}
+                                                                    >
+                                                                        {t('Save')}
+                                                                    </button>
+                                                                    <button
+                                                                        type="submit"
+                                                                        className="btn btn-danger !mt-6"
+                                                                        onClick={() => {
+                                                                            setisVisibleCiftlikKullaniciEkle(false)
+                                                                        }}
+                                                                    >
+                                                                        {t('Cancel')}
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </Form>)}
+                                                </Formik>
+                                            </div>
+                                            </Dialog.Panel>
+                                            </div>
+                                        </div>
+                                        </Dialog>
+                                    </Transition>
+                                </div>    
+                                
                                 <div className="datatables">
                                     <DataTable
                                         className="whitespace-nowrap table-hover"
@@ -879,50 +1273,65 @@ const AccountSetting = () => {
                                             },
                                             {
                                                 accessor: 'soyisim',
-                                                title: t('Breed'),
+                                                title: t('Last Name'),
                                                 sortable: true,
                                             },
                                             {
                                                 accessor: 'eposta',
-                                                title: t('Date of Removal from the Loop'),
+                                                title: t('Email'),
                                                 sortable: true,
                                             },
                                             {
                                                 accessor: 'telefonNo',
-                                                title: t('Reason for Decommissioning'),
+                                                title: t('Telephone'),
                                                 sortable: true,
                                             },
                                             {
                                                 accessor: 'hesapFirmaYetkisi',
-                                                title: t('Action Cycle'),
+                                                title: t('Account Company Authorization'),
                                                 sortable: true,
-                                                render: ({ hesapFirmaYetkisi }) => <span className={`badge bg-${statusColorYetki(hesapFirmaYetkisi)}`}>{hesapFirmaYetkisi}</span>, 
+                                                render: ({ hesapFirmaYetkisi }) => <span className={`badge bg-${statusColorYetki(hesapFirmaYetkisi)}`}>{statusNameYetki(hesapFirmaYetkisi)}</span>, 
                                             },
                                             {
                                                 accessor: 'hesapDurumu',
-                                                title: t('Action Cycle'),
+                                                title: t('Account Status'),
                                                 sortable: true,
-                                                render: ({ hesapDurumu }) => <span className={`badge bg-${statusColorDurum(hesapDurumu)}`}>{hesapDurumu}</span>, 
+                                                render: ({ hesapDurumu }) => <span className={`badge bg-${statusColorDurum(hesapDurumu)}`}>{statusNameDurum(hesapDurumu)}</span>, 
                                             },
                                             {
-                                                accessor: 'Sürüden Çıkar',
-                                                title: t('Leave The Herd'),
+                                                accessor: 'manage',
+                                                title: t('Manage'),
                                                 titleClassName: '!text-center',
-                                                render: ({kullaniciID}) => (
+                                                render: ({kullaniciID, isim, soyisim, tcNo, eposta, telefonNo, hesapFirmaYetkisi, hesapDurumu, firmaID}) => (
                                                     <div className="flex items-center w-max mx-auto gap-2">
-                                                        <Tippy content="Delete">
+                                                        <Tippy>
                                                             <button type="button"
-                                                            onClick={() => setModal22(true)}>
-                                                                <IconTrashLines />
+                                                            onClick={() => {
+                                                                setSelectedUser({
+                                                                    kullaniciID: kullaniciID,
+                                                                    isim: isim,
+                                                                    soyisim: soyisim,
+                                                                    tcNo: tcNo,
+                                                                    eposta: eposta,
+                                                                    telefonNo: telefonNo,
+                                                                    hesapFirmaYetkisi: hesapFirmaYetkisi,
+                                                                    hesapDurumu: hesapDurumu,
+                                                                    firmaID: firmaID,                     
+                                                                    firmaAdi: ' '
+                                                                });
+                                                                setModal22(true);
+                                                            }}>
+                                                                <IconPencilPaper/>
                                                             </button>
                                                         </Tippy>
                                                       <Transition appear show={modal22} as={Fragment}>
                                                       <Dialog as="div" open={modal22} onClose={() => setModal22(false)}>
                                                         <div className="fixed inset-0 z-10 overflow-y-auto bg-[black]/10">
                                                           <div className="flex min-h-screen items-center justify-center px-4">
-                                                            <Dialog.Panel className="panel my-8 w-full max-w-sm overflow-hidden rounded-lg py-1 px-4 text-black dark:text-white-dark">
+                                                          <Dialog.Panel className="panel my-8 w-full max-w-3xl overflow-hidden rounded-lg py-1 px-4 text-black dark:text-white-dark">
+
                                                               <div className="flex items-center justify-between p-5">
-                                                                <h5> {t('Out to the loop')} </h5>
+                                                                <h5> {t('Manage User')} </h5>
                                                                 <button
                                                                   type="button"
                                                                   onClick={() => setModal22(false)}
@@ -931,34 +1340,170 @@ const AccountSetting = () => {
                                                                   <IconX className="w-5 h-5" />
                                                                 </button>
                                                               </div>
-                                                              <div className="p-5">
-                                                                <form>
-                                                                  <div className="relative mb-4">
-                                                                  <label htmlFor="tarih" className="text-sm text-gray-500">{t('Date of Removal from the Loop')}</label>
-                                                                    <input 
-                                                                        type="date" 
-                                                                        placeholder="Tarih" 
-                                                                        className="form-input border border-gray-300 rounded-lg p-2 text-gray-700" 
-                                                                        id="tarih" 
-                                                                    />
-                
-                                                                    <label htmlFor="neden" className="text-sm text-gray-500">Döngüden Çıkarma Nedeni</label>
-                                                                    <input 
-                                                                        type="text" 
-                                                                        placeholder="Neden?" 
-                                                                        className="form-input border border-gray-300 rounded-lg p-2 text-gray-700" 
-                                                                        id="neden" 
-                                                                    />
-                                                                  </div>
-                                                                  <button
-                                                                    type="button"
-                                                                    onClick={() => alert("alarms")} // Kaydetme fonksiyonu çağrısı
-                                                                    className="btn btn-primary w-full"
-                                                                  >
-                                                                    {t("Save")}
-                                                                  </button>
-                                                                </form>
-                                                              </div>
+                                                              <div>
+                                                              <Formik
+                                                                    enableReinitialize={true} 
+                                                                    initialValues={{
+                                                                        kullaniciID: selectedUser?.kullaniciID || '',
+                                                                        firstname: selectedUser?.isim || '',
+                                                                        lastname: selectedUser?.soyisim || '',
+                                                                        tcNumber: selectedUser?.tcNo || '',
+                                                                        email: selectedUser?.eposta || '',
+                                                                        telefonNo: selectedUser?.telefonNo || '',
+                                                                        password: '',
+                                                                        confirmPassword: ''
+                                                                    }}
+                                                                    validationSchema={submitFormValidation}
+                                                                    onSubmit={() => {}}
+                                                                >{({ errors, submitCount, touched, values }) => (
+                                                                    <Form className="border border-[#ebedf2] dark:border-[#191e3a] rounded-md p-4 mb-5 bg-white dark:bg-black">
+                                                                        <div className="flex flex-col sm:flex-row">
+                                                                            <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-5">
+                                                                                <div>
+                                                                                    <label htmlFor="firstname">{t('Name')}</label>
+                                                                                    <Field name="firstname" id="firstname" type="text" className="form-input" />
+                                                                                    {submitCount ? (
+                                                                                        errors.firstname ? (
+                                                                                            <div className="text-danger mt-1">{errors.firstname?.toString()}</div>
+                                                                                        ) : (
+                                                                                            <div className="text-[#1abc9c] mt-1">{t('Looks Good!')}</div>
+                                                                                        )
+                                                                                    ) : (
+                                                                                        ''
+                                                                                    )}
+                                                                                </div>
+                                                                                <div>
+                                                                                    <label htmlFor="lastname">{t('Last Name')}</label>
+                                                                                    <Field name="lastname" id="lastname" type="text" className="form-input" />
+                                                                                    {submitCount ? (
+                                                                                        errors.lastname ? (
+                                                                                            <div className="text-danger mt-1">{errors.lastname?.toString()}</div>
+                                                                                        ) : (
+                                                                                            <div className="text-[#1abc9c] mt-1">{t('Looks Good!')}</div>
+                                                                                        )
+                                                                                    ) : (
+                                                                                        ''
+                                                                                    )}
+                                                                                </div>
+                                                                                <div>
+                                                                                    <label htmlFor="telefonNo">{t('Telephone')}</label>
+                                                                                    <Field name="telefonNo" type="text" id="telefonNo" placeholder={t('Enter Telephone')} className="form-input" />
+
+                                                                                    {submitCount ? (
+                                                                                        errors.telefonNo ? (
+                                                                                            <div className="text-danger mt-1">{errors.telefonNo?.toString()}</div>
+                                                                                        ) : (
+                                                                                            <div className="text-success mt-1">{t('Looks Good!')}</div>
+                                                                                        )
+                                                                                    ) : (
+                                                                                        ''
+                                                                                    )}
+                                                                                </div>
+
+                                                                                <div>
+                                                                                    <label htmlFor="Email">{t('Email')}</label>
+                                                                                    <Field name="email" type="text" id="Email" placeholder={t('Enter Email')} className="form-input" />
+
+                                                                                    {submitCount ? errors.email ? <div className="text-danger mt-1">{errors.email?.toString()}</div> : <div className="text-success mt-1">{t('Looks Good!')}</div> : ''}
+                                                                                </div>
+                                                                                <div>
+                                                                                    <label htmlFor="tcNumber">{t('TC Number')}</label>
+                                                                                    <Field name="tcNumber" type="text" id="tcNumber" placeholder={t('Enter TC Number')} className="form-input" />
+
+                                                                                    {submitCount ? (
+                                                                                        errors.tcNumber ? (
+                                                                                            <div className="text-danger mt-1">{errors.tcNumber?.toString()}</div>
+                                                                                        ) : (
+                                                                                            <div className="text-success mt-1">{t('Looks Good!')}</div>
+                                                                                        )
+                                                                                    ) : (
+                                                                                        ''
+                                                                                    )}
+                                                                                </div>
+                                                                                <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-5">
+                                                                                <div>
+                                                                                        <label htmlFor="hesapFirmaYetkisi">{t('Account Company Authorization')}</label>
+                                                                                        <Select
+                                                                                            id="hesapFirmaYetkisi"
+                                                                                            options={optionsFirmaKullanıcıYetkis}
+                                                                                            isSearchable={false}
+                                                                                            defaultValue={optionsFirmaKullanıcıYetkis.find(optionsFirmaKullanıcıYetkis => optionsFirmaKullanıcıYetkis.value === selectedUser?.hesapFirmaYetkisi)}
+                                                                                            onChange={(selectedOption) => {
+                                                                                                if (!selectedUser) return; // Prevents null errors
+
+                                                                                                setSelectedUser((prev) => ({
+                                                                                                    ...(prev as UserData), // Ensures full UserData type
+                                                                                                    hesapFirmaYetkisi: selectedOption!.value
+                                                                                                }));
+                                                                                            }}
+                                                                                        />
+
+                                                                                    </div>
+                                                                                    <div>
+                                                                                        <label htmlFor="hesapDurumu">{t('Account Status')}</label>
+                                                                                        <Select
+                                                                                            id="hesapDurumu"
+                                                                                            options={statusOptions}
+                                                                                            isSearchable={false}
+                                                                                            defaultValue={statusOptions.find(option => option.value === selectedUser?.hesapDurumu)}
+                                                                                            onChange={(selectedOption) => {
+                                                                                                if (!selectedUser) return; // Prevents null errors
+
+                                                                                                setSelectedUser((prev) => ({
+                                                                                                    ...(prev as UserData), // Ensures full UserData structure is kept
+                                                                                                    hesapDurumu: selectedOption!.value
+                                                                                                }));
+                                                                                            }}
+                                                                                        />
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div>
+                                                                                    <label htmlFor="password">{t('Password')}</label>
+                                                                                    <Field name="password" type="password" id="password" placeholder={t('Enter Password')} className="form-input" />
+
+                                                                                    {submitCount ? (
+                                                                                        errors.password ? (
+                                                                                            <div className="text-danger mt-1">{errors.password}</div>
+                                                                                        ) : (
+                                                                                            <div className="text-success mt-1">{t('Looks Good!')}</div>
+                                                                                        )
+                                                                                    ) : (
+                                                                                        ''
+                                                                                    )}
+                                                                                </div>
+                                                                                <div>
+                                                                                    <label htmlFor="confirmPassword">{t('Confirm Password')}</label>
+                                                                                    <Field name="confirmPassword" type="password" id="confirmPassword" placeholder={t('Enter Password')} className="form-input" />
+
+                                                                                    {submitCount ? (
+                                                                                        errors.confirmPassword ? (
+                                                                                            <div className="text-danger mt-1">{errors.confirmPassword}</div>
+                                                                                        ) : (
+                                                                                            <div className="text-success mt-1">{t('Looks Good!')}</div>
+                                                                                        )
+                                                                                    ) : (
+                                                                                        ''
+                                                                                    )}
+                                                                                </div>
+                                                                                <div className="sm:col-span-2 mt-3">
+                                                                                <button
+                                                                                        type="submit"
+                                                                                        className="btn btn-primary !mt-6"
+                                                                                        onClick={() => {
+                                                                                            console.log(Object.keys(errors));
+                                                                                            if (Object.keys(touched).length !== 0 && Object.keys(errors).length === 0) {
+                                                                                                submitForm(values);
+                                                                                            }
+                                                                                        }}
+                                                                                    >
+                                                                                        {t('Save')}
+                                                                                    </button>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </Form>)}
+                                                                </Formik>
+                                                            </div>
                                                             </Dialog.Panel>
                                                           </div>
                                                         </div>

@@ -58468,10 +58468,10 @@ SET IDENTITY_INSERT [dbo].[bolgeler] OFF
 GO
 
 -- Firmalar tablosuna veri ekleme
-INSERT INTO firmalar (firmaAdi, telefonNo, firmaAdresi, sehirID, ilceID, bolge, hesapDurumu) VALUES
-(N'Çiftlik A', '1234567890', N'Adres 1, Şehir',1,1056, 'A', 'A'),
-(N'Çiftlik B', '0987654321', N'Adres 2, Şehir',1,1056, 'B', 'A'),
-(N'MaxTedarik', '1234567890', N'Adres 3, Şehir',1,1056, 'A', 'A');
+INSERT INTO firmalar (firmaAdi,firmaTur, telefonNo, firmaMail, firmaAdresi, sehirID, ilceID, bolge, hesapDurumu) VALUES
+(N'Çiftlik A','c', '1234567890','info@ciftlik1.com', N'Adres 1, Şehir',1,1056, 'a', 'a'),
+(N'Çiftlik B','c','0987654321','info@ciftlik2.com', N'Adres 2, Şehir',1,1056, 'b', 'a'),
+(N'MaxTedarik','t','1234567890','info@MaxTedarik.com', N'Adres 3, Şehir',1,1056, 'a', 'a');
 GO
 
 -- İnek tablosuna veri ekleme
@@ -58597,18 +58597,18 @@ INSERT INTO sutOlcum (makineID, sutMiktar, inekID, sagimTarihi) VALUES
 GO
 
 -- Kullanıcılar tablosuna veri ekleme
-INSERT INTO kullanicilar (kullaniciAdi, eposta, parola, kullaniciTuru, hesapFirmaYetkisi, isim, soyisim, telefonNo, hesapDurumu, firmaID)
+INSERT INTO kullanicilar (tcNo, eposta, parola, kullaniciTuru, hesapFirmaYetkisi, isim, soyisim, telefonNo, hesapDurumu, firmaID)
 VALUES
 -- Admin Kullanıcısı
-('admin1', 'admin1@example.com', 'password123', 'a', 'a', 'Ahmet', 'Yılmaz', '5301234567', 'a', 1),
+('32469827348', 'admin1@example.com', 'password123', 'a', 'a', 'Ahmet', 'Yılmaz', '5301234567', 'a', 1),
 
 -- Çiftçi Kullanıcıları
-('ciftci1', 'ciftci1@example.com', 'password123', 'c', 'a', 'Ali', 'Kaya', '5312345678', 'a', 2),
-('ciftci2', 'ciftci2@example.com', 'password123', 'c', 'k', 'Ayşe', 'Demir', '5323456789', 'p', 2),
-('ciftci3', 'ciftci3@example.com', 'password123', 'c', 'k', 'Mehmet', 'Çelik', '5334567890', 'b', 2),
+('64964677470', 'ciftci1@example.com', 'password123', 'c', 'a', 'Ali', 'Kaya', '5312345678', 'a', 2),
+('58828817850', 'ciftci2@example.com', 'password123', 'c', 'k', 'Ayşe', 'Demir', '5323456789', 'p', 2),
+('18134486140', 'ciftci3@example.com', 'password123', 'c', 'k', 'Mehmet', 'Çelik', '5334567890', 'b', 2),
 
 -- Tedarikçi Kullanıcıları
-('tedarikci1', 'tedarikci1@example.com', 'password123', 't', 'a', 'Zeynep', 'Şahin', '5345678901', 'a', 3),
-('tedarikci2', 'tedarikci2@example.com', 'password123', 't', 'k', 'Fatma', 'Eren', '5356789012', 'p', 3),
-('tedarikci3', 'tedarikci3@example.com', 'password123', 't','k', 'Hakan', 'Koç', '5367890123', 'b', 3);
+('47264317352', 'tedarikci1@example.com', 'password123', 't', 'a', 'Zeynep', 'Şahin', '5345678901', 'a', 3),
+('43323783496', 'tedarikci2@example.com', 'password123', 't', 'k', 'Fatma', 'Eren', '5356789012', 'p', 3),
+('16684246344', 'tedarikci3@example.com', 'password123', 't','k', 'Hakan', 'Koç', '5367890123', 'b', 3);
 GO
