@@ -169,11 +169,9 @@ const AccountSetting = () => {
         setTabs(name);
     };
 
-    const submitFormValidation = Yup.object().shape({
+    const submitUserFormValidation = Yup.object().shape({
         firstname: Yup.string().required('Please fill the first name'),
         lastname: Yup.string().required('Please fill the last name'),
-        city: Yup.string().required('Please provide a valid city'),
-        district: Yup.string().required('Please provide a valid District'),
         tcNumber: Yup.string()
         .required('Please provide a valid TC Number')
         .matches(/^[1-9][0-9]{10}$/, 'TC Number must be 11 digits and cannot start with 0')
@@ -202,12 +200,21 @@ const AccountSetting = () => {
             .required('Please confirm your password')
             .oneOf([Yup.ref('password')], 'Passwords must match'),
         telefonNo: Yup.string().required('Please fill the telephone'),
-        agree: Yup.bool().oneOf([true], 'You must agree before submitting.'),
+        hesapFirmaYetkisi: Yup.string().required('Please fill the Company Auth'),
+        hesapDurumu: Yup.string().required('Please fill the Account Status'),
+    });
+
+    const submitFarmFormValidation = Yup.object().shape({
+        city: Yup.string().required('Please provide a valid city'),
+        district: Yup.string().required('Please provide a valid District'),
+        email: Yup.string().email('Invalid email').required('Please fill the Email'),
+        telefonNo: Yup.string().required('Please fill the telephone'),
         firmaAdi: Yup.string().required('Please fill Commpany Name'),
         firmaAdresi: Yup.string().required('Please fill Commpany Address'),
     });
 
-    const submitForm = (values: any) => {
+
+    const submitUpdateUserForm = (values: any) => {
         const toast = Swal.mixin({
             toast: true,
             position: 'top',
@@ -216,11 +223,55 @@ const AccountSetting = () => {
         });
         toast.fire({
             icon: 'success',
-            title: 'Form submitted successfully',
+            title: 'Form user update dev',
             padding: '10px 20px',
         });
         console.log(values);    
-        //navigate("/cifci/dashboard");
+    };
+
+    const submitUpdateFarmForm = (values: any) => {
+        const toast = Swal.mixin({
+            toast: true,
+            position: 'top',
+            showConfirmButton: false,
+            timer: 3000,
+        });
+        toast.fire({
+            icon: 'success',
+            title: 'Form Farm update dev',
+            padding: '10px 20px',
+        });
+        console.log(values);    
+    };
+
+    const submitAddFarmUserForm = (values: any) => {
+        const toast = Swal.mixin({
+            toast: true,
+            position: 'top',
+            showConfirmButton: false,
+            timer: 3000,
+        });
+        toast.fire({
+            icon: 'success',
+            title: 'Form Add Farm user update dev',
+            padding: '10px 20px',
+        });
+        console.log(values);    
+    };
+
+    const submitUpdateFarmUserForm = (values: any) => {
+        const toast = Swal.mixin({
+            toast: true,
+            position: 'top',
+            showConfirmButton: false,
+            timer: 3000,
+        });
+        toast.fire({
+            icon: 'success',
+            title: 'Form Update Farm user update dev',
+            padding: '10px 20px',
+        });
+        console.log(values);    
     };
 
     const CitySelect = ({ field, form, options }: { field: any; form: any; options: OptionType[] }) => {
@@ -433,9 +484,8 @@ const AccountSetting = () => {
                                 telefonNo: userInfo.telefonNo,
                                 password: '',
                                 confirmPassword:'',
-                                agree: false,
                             }}
-                            validationSchema={submitFormValidation}
+                            validationSchema={submitUserFormValidation}
                             onSubmit={() => {}}
                         >{({ errors, submitCount, touched, values }) => (
                             <Form className="border border-[#ebedf2] dark:border-[#191e3a] rounded-md p-4 mb-5 bg-white dark:bg-black">
@@ -566,7 +616,7 @@ const AccountSetting = () => {
                                                 onClick={() => {
                                                     console.log(Object.keys(errors));
                                                     if (Object.keys(touched).length !== 0 && Object.keys(errors).length === 0) {
-                                                        submitForm(values);
+                                                        submitUpdateUserForm(values);
                                                     }
                                                 }}
                                             >
@@ -917,9 +967,8 @@ const AccountSetting = () => {
                                     email: firmaInfo?.firmaMail,
                                     city: firmaInfo?.sehirID,
                                     district: firmaInfo?.ilceID,
-                                    
                                 }}
-                                validationSchema={submitFormValidation}
+                                validationSchema={submitFarmFormValidation}
                                 onSubmit={() => {}}
                             >{({ errors, submitCount, touched, values }) => (
                                 <Form className="border border-[#ebedf2] dark:border-[#191e3a] rounded-md p-4 mb-5 bg-white dark:bg-black panel mt-6">
@@ -1044,7 +1093,7 @@ const AccountSetting = () => {
                                                     onClick={() => {
                                                         console.log(Object.keys(errors));
                                                         if (Object.keys(touched).length !== 0 && Object.keys(errors).length === 0) {
-                                                            submitForm(values);
+                                                            submitUpdateFarmForm(values);
                                                         }
                                                     }}
                                                 >
@@ -1090,9 +1139,11 @@ const AccountSetting = () => {
                                                         email: '',
                                                         telefonNo: '',
                                                         password: '',
-                                                        confirmPassword: ''
+                                                        confirmPassword: '',
+                                                        hesapFirmaYetkisi: '',
+                                                        hesapDurumu: '',
                                                     }}
-                                                    validationSchema={submitFormValidation}
+                                                    validationSchema={submitUserFormValidation}
                                                     onSubmit={() => {}}
                                                 >{({ errors, submitCount, touched, values }) => (
                                                     <Form className="border border-[#ebedf2] dark:border-[#191e3a] rounded-md p-4 mb-5 bg-white dark:bg-black">
@@ -1167,15 +1218,18 @@ const AccountSetting = () => {
                                                                             options={optionsFirmaKullanıcıYetkis}
                                                                             isSearchable={false}
                                                                             onChange={(selectedOption) => {
-                                                                                if (!selectedUser) return; // Prevents null errors
-
-                                                                                setSelectedUser((prev) => ({
-                                                                                    ...(prev as UserData), // Ensures full UserData type
-                                                                                    hesapFirmaYetkisi: selectedOption!.value
-                                                                                }));
+                                                                                values.hesapFirmaYetkisi = selectedOption!.value
                                                                             }}
                                                                         />
-
+                                                                         {submitCount ? (
+                                                                            errors.hesapFirmaYetkisi ? (
+                                                                                <div className="text-danger mt-1">{errors.hesapFirmaYetkisi}</div>
+                                                                            ) : (
+                                                                                <div className="text-[#1abc9c] mt-1">{t('Looks Good!')}</div>
+                                                                            )
+                                                                        ) : (
+                                                                            ''
+                                                                        )}
                                                                     </div>
                                                                     <div>
                                                                         <label htmlFor="hesapDurumu">{t('Account Status')}</label>
@@ -1183,14 +1237,18 @@ const AccountSetting = () => {
                                                                             id="hesapDurumu"
                                                                             options={statusOptions}
                                                                             isSearchable={false}                                                                            onChange={(selectedOption) => {
-                                                                                if (!selectedUser) return; // Prevents null errors
-
-                                                                                setSelectedUser((prev) => ({
-                                                                                    ...(prev as UserData), // Ensures full UserData structure is kept
-                                                                                    hesapDurumu: selectedOption!.value
-                                                                                }));
+                                                                                values.hesapDurumu = selectedOption!.value
                                                                             }}
                                                                         />
+                                                                      {submitCount ? (
+                                                                            errors.hesapDurumu ? (
+                                                                                <div className="text-danger mt-1">{errors.hesapDurumu}</div>
+                                                                            ) : (
+                                                                                <div className="text-[#1abc9c] mt-1">{t('Looks Good!')}</div>
+                                                                            )
+                                                                        ) : (
+                                                                            ''
+                                                                        )}
                                                                     </div>
                                                                 </div>
                                                                 <div>
@@ -1228,7 +1286,7 @@ const AccountSetting = () => {
                                                                         onClick={() => {
                                                                             console.log(Object.keys(errors));
                                                                             if (Object.keys(touched).length !== 0 && Object.keys(errors).length === 0) {
-                                                                                submitForm(values);
+                                                                                submitAddFarmUserForm(values);
                                                                             }
                                                                         }}
                                                                     >
@@ -1351,9 +1409,11 @@ const AccountSetting = () => {
                                                                         email: selectedUser?.eposta || '',
                                                                         telefonNo: selectedUser?.telefonNo || '',
                                                                         password: '',
-                                                                        confirmPassword: ''
+                                                                        confirmPassword: '',
+                                                                        hesapFirmaYetkisi: '',
+                                                                        hesapDurumu: '',
                                                                     }}
-                                                                    validationSchema={submitFormValidation}
+                                                                    validationSchema={submitUserFormValidation}
                                                                     onSubmit={() => {}}
                                                                 >{({ errors, submitCount, touched, values }) => (
                                                                     <Form className="border border-[#ebedf2] dark:border-[#191e3a] rounded-md p-4 mb-5 bg-white dark:bg-black">
@@ -1492,7 +1552,7 @@ const AccountSetting = () => {
                                                                                         onClick={() => {
                                                                                             console.log(Object.keys(errors));
                                                                                             if (Object.keys(touched).length !== 0 && Object.keys(errors).length === 0) {
-                                                                                                submitForm(values);
+                                                                                                submitUpdateFarmUserForm(values);
                                                                                             }
                                                                                         }}
                                                                                     >
