@@ -51,7 +51,7 @@ declare global {
 }
 
 
-const AdminHeader = () => {
+const TedarikciHeader = () => {
 
     const storedUserInfo = localStorage.getItem('userInfo');
     const userInfo = storedUserInfo ? JSON.parse(storedUserInfo) : null;
@@ -441,7 +441,7 @@ const AdminHeader = () => {
                                             <div className="ltr:pl-4 rtl:pr-4 truncate">
                                                 <h4 className="text-base">
                                                     {userInfo?.isim+" "+userInfo?.soyisim}
-                                                    <span className="text-xs bg-primary-light rounded text-primary px-1 ltr:ml-2 rtl:ml-2">{t('Admin')}</span>
+                                                    <span className="text-xs bg-success-light rounded text-success px-1 ltr:ml-2 rtl:ml-2">{t('Supplier')}</span>
                                                 </h4>
                                                 <button type="button" className="text-black/60 hover:text-primary dark:text-dark-light/60 dark:hover:text-white">
                                                     {userInfo?.eposta}
@@ -450,7 +450,7 @@ const AdminHeader = () => {
                                         </div>
                                     </li>
                                     <li>
-                                        <Link to="/tedarikci/Profil" className="dark:hover:text-white">
+                                        <Link to="/admin/Profil" className="dark:hover:text-white">
                                             <IconUser className="w-4.5 h-4.5 ltr:mr-2 rtl:ml-2 shrink-0" />
                                             {t('Profile')}
                                         </Link>
@@ -477,4 +477,4 @@ const AdminHeader = () => {
     );
 };
 
-export default AdminHeader;
+export default TedarikciHeader;

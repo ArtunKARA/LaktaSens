@@ -376,5 +376,14 @@
     "Active Suppliers":"Aktif Tedarikçiler",
     "Pasive Suppliers":"Pasif Tedarikçiler",
     "Active Farms":"Aktif Çiftlikler",
-    "Pasive Farms":"Pasif Çiftlikler"
+    "Pasive Farms":"Pasif Çiftlikler",
+    "Active Orders Report":"Aktif Siparişler Raporu",
+    "All Orders Report":"Tüm Siparişler Raporu",
+    "Tenders Report":"İhaleler Raporu",
+    "Orders":"Siparişler",
+    "Active Orders":"Aktif Siparişler",
+    "Current Orders":"Devam Eden Siparişler",
+    "Finished Orders":"Tamamlanan Siparişler",
+    "Defination":"Tanımlamalar",
+    "Feed":"Yem"
 }
