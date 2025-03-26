@@ -375,17 +375,6 @@ const Index = () => {
 
     return (
         <div>
-            <ul className="flex space-x-2 rtl:space-x-reverse">
-                <li>
-                    <Link to="/" className="text-primary hover:underline">
-                        Dashboard
-                    </Link>
-                </li>
-                <li className="before:content-['/'] ltr:before:mr-2 rtl:before:ml-2">
-                    <span>Sales</span>
-                </li>
-            </ul>
-
             <div className="pt-5">
                 <div className="grid xl:grid-cols-3 gap-6 mb-6">
                 <div className="panel h-full">

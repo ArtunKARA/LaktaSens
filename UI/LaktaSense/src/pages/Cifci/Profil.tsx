@@ -986,8 +986,8 @@ const AccountSetting = () => {
                                                 ) : (
                                                     ''
                                                 )}
-                                            </div>
-                                            <div className="flex-1 grid grid-cols-2 sm:grid-cols-2 gap-5">
+                                        </div>
+                                        <div className="flex-1 grid grid-cols-2 sm:grid-cols-2 gap-5">
                                             <div>
                                                 <label htmlFor="firmaBollge">{t('Company Area')}</label>
                                                 {(() => {

@@ -2,9 +2,11 @@ const express = require("express");
 const router = express.Router();
 
 const {
-    postGiris
+    postGiris,
+    postKayit
 } = require("../controllers/login-controller.js");
 
-router.post("/giris", postGiris); //get login control
+router.post("/giris", postGiris); //post login control
+router.post("/postKayit", postKayit); 
 
 module.exports = router;    

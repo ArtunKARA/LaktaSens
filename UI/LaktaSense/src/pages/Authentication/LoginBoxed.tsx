@@ -9,6 +9,7 @@ import i18next from 'i18next';
 import IconCaretDown from '../../components/Icon/IconCaretDown';
 import IconMail from '../../components/Icon/IconMail';
 import IconLockDots from '../../components/Icon/IconLockDots';
+import BasvuruDurum from './BasvuruDurum';
 
 const LoginBoxed = () => {
     const dispatch = useDispatch();
@@ -72,21 +73,25 @@ const LoginBoxed = () => {
             };
             localStorage.setItem('userInfo', JSON.stringify(userInfo));
 
-            if(data.hesapDurumu == "a"){
+            if(data.hesapDurumu == "a" && data.firmaHesapDurumu == "a"){
                 switch (data.kullaniciTuru) {
                     case "a":
-                        
+                        navigate('/admin/dashboard');
                         break;
                     case "c":
                         navigate('/cifci/dashboard');
                         break;
                     case "t":
-                        
+                        navigate('/tedarikci/dashboard');
                         break;
                     default:
                         setErrorMessage(data.message || t('A type of user that does not exist.'));
                         break;
                 }
+            }else if(data.firmaHesapDurumu == "b"){
+                navigate('/basvuruDurum' , {state: { BasvuruDurum: data.firmaHesapDurumu }});
+            }else if(data.firmaHesapDurumu == "p"){
+                navigate('/basvuruDurum', {state: { BasvuruDurum: data.firmaHesapDurumu }});
             }else{
                 setErrorMessage(data.message || t('Your account has been suspended.'));
             }

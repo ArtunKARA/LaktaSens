@@ -1,0 +1,423 @@
+import { useTranslation } from 'react-i18next';
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { IRootState } from '../../store';
+import ReactApexChart from 'react-apexcharts';
+import PerfectScrollbar from 'react-perfect-scrollbar';
+import Dropdown from '../../components/Dropdown';
+import { setPageTitle } from '../../store/themeConfigSlice';
+
+const Index = () => {
+    const { t } = useTranslation();
+    const dispatch = useDispatch();
+    useEffect(() => {
+        dispatch(setPageTitle('Main Menu'));
+    });
+    const storedUserInfo = localStorage.getItem('userInfo');
+    const userInfo = storedUserInfo ? JSON.parse(storedUserInfo) : null;
+    const isDark = useSelector((state: IRootState) => state.themeConfig.theme === 'dark' || state.themeConfig.isDarkMode);
+    const isRtl = useSelector((state: IRootState) => state.themeConfig.rtlClass) === 'rtl' ? true : false;
+    
+    const [loading] = useState(false);
+
+    const [kuruda_olanlar, kuruda_olanlarSet] = useState<number>();
+    const [sagimda_olanlar, sagimda_olanlarSet] = useState<number>();
+    const [cikarilmasi_gerekenlerSut, cikarilmasi_gerekenlerSutSet] = useState<number>();
+    useEffect(() => {
+        // API'yi çağırma
+        const fetchData = async () => {
+          try {
+            const response = await fetch('http://localhost:3030/api/cifciAnaliz/postSutDongusuAnaliz', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ ID:userInfo.kullaniciID}), // Kullanıcı ID'sini gönderiyorsunuz
+            });
+            const data = await response.json();
+            kuruda_olanlarSet(data["kuruda_olanlar"])
+            sagimda_olanlarSet(data["sagimda_olanlar"])
+            cikarilmasi_gerekenlerSutSet(data["cikarilmasi_gerekenler"])
+            console.log('Gelen veri:', data);
+            ; // Sadece doğrudan kullanılabilecek bir dizi olduğunda kullanı
+          } catch (error) {
+            console.error('API çağrısı sırasında bir hata oluştu:', error);
+          }
+        };
+    
+        fetchData();
+      }, []);
+
+    const [gebe_olanlar, gebe_olanlarSet] = useState<number>();
+    const [serviste_olanlar, serviste_olanlarSet] = useState<number>();
+    const [cikarilmasi_gerekenlerYavru, cikarilmasi_gerekenlerYavruSet] = useState<number>();
+    useEffect(() => {
+        // API'yi çağırma
+        const fetchData = async () => {
+          try {
+            const response = await fetch('http://localhost:3030/api/cifciAnaliz/postYavruDonguAnaliz', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ ID:userInfo.kullaniciID}), // Kullanıcı ID'sini gönderiyorsunuz
+            });
+            const data = await response.json();
+            gebe_olanlarSet(data["gebe_olanlar"])
+            serviste_olanlarSet(data["serviste_olanlar"])
+            cikarilmasi_gerekenlerYavruSet(data["cikarilmasi_gerekenler"])
+            console.log('Gelen veri:', data);
+            ; // Sadece doğrudan kullanılabilecek bir dizi olduğunda kullanı
+          } catch (error) {
+            console.error('API çağrısı sırasında bir hata oluştu:', error);
+          }
+        };
+    
+        fetchData();
+      }, []);
+
+    const [eriskin_olanlar, eriskin_olanlarSet] = useState<number>();
+    const [yavru_olanlar, yavru_olanlarSet] = useState<number>();
+    useEffect(() => {
+        // API'yi çağırma
+        const fetchData = async () => {
+          try {
+            const response = await fetch('http://localhost:3030/api/cifciAnaliz/postDongudekiIneklerAnaliz', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ ID:userInfo.kullaniciID}), // Kullanıcı ID'sini gönderiyorsunuz
+            });
+            const data = await response.json();
+            eriskin_olanlarSet(data["eriskin_olanlar"])
+            yavru_olanlarSet(data["yavru_olanlar"])
+            console.log('Gelen veri:', data);
+            ; // Sadece doğrudan kullanılabilecek bir dizi olduğunda kullanı
+          } catch (error) {
+            console.error('API çağrısı sırasında bir hata oluştu:', error);
+          }
+        };
+    
+        fetchData();
+      }, []);
+    //SutDongu
+    const SutDongu: any = {
+        series: [kuruda_olanlar, sagimda_olanlar, cikarilmasi_gerekenlerSut],
+        options: {
+            chart: {
+                type: 'donut',
+                height: 460,
+                fontFamily: 'Nunito, sans-serif',
+            },
+            dataLabels: {
+                enabled: false,
+            },
+            stroke: {
+                show: true,
+                width: 25,
+                colors: isDark ? '#0e1726' : '#fff',
+            },
+            colors: isDark ? ['#5c1ac3', '#e2a03f', '#e7515a', '#e2a03f'] : ['#e2a03f', '#5c1ac3', '#e7515a'],
+            legend: {
+                position: 'bottom',
+                horizontalAlign: 'center',
+                fontSize: '14px',
+                markers: {
+                    width: 10,
+                    height: 10,
+                    offsetX: -2,
+                },
+                height: 50,
+                offsetY: 20,
+            },
+            plotOptions: {
+                pie: {
+                    donut: {                 
+                        size: '65%',
+                        background: 'transparent',
+                        labels: {
+                            show: true,
+                            name: {
+                                show: true,
+                                fontSize: '29px',
+                                offsetY: -10,
+                            },
+                            value: {
+                                show: true,
+                                fontSize: '26px',
+                                color: isDark ? '#bfc9d4' : undefined,
+                                offsetY: 16,
+                                formatter: (val: any) => {
+                                    return val;
+                                },
+                            },
+                            total: {
+                                show: true,
+                                label: 'Total',
+                                color: '#888ea8',
+                                fontSize: '29px',
+                                formatter: (w: any) => {
+                                    return w.globals.seriesTotals.reduce(function (a: any, b: any) {
+                                        return a + b;
+                                    }, 0);
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+            labels: [t('Dry'), t('Milking'), t('Must be Checked')],
+            states: {
+                hover: {
+                    filter: {
+                        type: 'none',
+                        value: 0.15,
+                    },
+                },
+                active: {
+                    filter: {
+                        type: 'none',
+                        value: 0.15,
+                    },
+                },
+            },
+        },
+    };
+
+     //YavruDongu
+     const YavruDongu: any = {
+        series: [gebe_olanlar, serviste_olanlar, cikarilmasi_gerekenlerYavru],
+        options: {
+            chart: {
+                type: 'donut',
+                height: 460,
+                fontFamily: 'Nunito, sans-serif',
+            },
+            dataLabels: {
+                enabled: false,
+            },
+            stroke: {
+                show: true,
+                width: 25,
+                colors: isDark ? '#0e1726' : '#fff',
+            },
+            colors: isDark ? ['#5c1ac3', '#e2a03f', '#e7515a', '#e2a03f'] : ['#e2a03f', '#5c1ac3', '#e7515a'],
+            legend: {
+                position: 'bottom',
+                horizontalAlign: 'center',
+                fontSize: '14px',
+                markers: {
+                    width: 10,
+                    height: 10,
+                    offsetX: -2,
+                },
+                height: 50,
+                offsetY: 20,
+            },
+            plotOptions: {
+                pie: {
+                    donut: {
+                        size: '65%',
+                        background: 'transparent',
+                        labels: {
+                            show: true,
+                            name: {
+                                show: true,
+                                fontSize: '29px',
+                                offsetY: -10,
+                            },
+                            value: {
+                                show: true,
+                                fontSize: '26px',
+                                color: isDark ? '#bfc9d4' : undefined,
+                                offsetY: 16,
+                                formatter: (val: any) => {
+                                    return val;
+                                },
+                            },
+                            total: {
+                                show: true,
+                                label: 'Total',
+                                color: '#888ea8',
+                                fontSize: '29px',
+                                formatter: (w: any) => {
+                                    return w.globals.seriesTotals.reduce(function (a: any, b: any) {
+                                        return a + b;
+                                    }, 0);
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+            labels: [t('Calving'), t('Service'), t('Must be Checked')],
+            states: {
+                hover: {
+                    filter: {
+                        type: 'none',
+                        value: 0.15,
+                    },
+                },
+                active: {
+                    filter: {
+                        type: 'none',
+                        value: 0.15,
+                    },
+                },
+            },
+        },
+    };
+
+     //aklimaGelmedi
+     const aklimaGelmedi: any = {
+        series: [eriskin_olanlar, yavru_olanlar],
+        options: {
+            chart: {
+                type: 'donut',
+                height: 460,
+                fontFamily: 'Nunito, sans-serif',
+            },
+            dataLabels: {
+                enabled: false,
+            },
+            stroke: {
+                show: true,
+                width: 25,
+                colors: isDark ? '#0e1726' : '#fff',
+            },
+            colors: isDark ? ['#5c1ac3', '#e2a03f', '#e7515a', '#e2a03f'] : ['#e2a03f', '#5c1ac3', '#e7515a'],
+            legend: {
+                position: 'bottom',
+                horizontalAlign: 'center',
+                fontSize: '14px',
+                markers: {
+                    width: 10,
+                    height: 10,
+                    offsetX: -2,
+                },
+                height: 50,
+                offsetY: 20,
+            },
+            plotOptions: {
+                pie: {
+                    donut: {
+                        size: '65%',
+                        background: 'transparent',
+                        labels: {
+                            show: true,
+                            name: {
+                                show: true,
+                                fontSize: '29px',
+                                offsetY: -10,
+                            },
+                            value: {
+                                show: true,
+                                fontSize: '26px',
+                                color: isDark ? '#bfc9d4' : undefined,
+                                offsetY: 16,
+                                formatter: (val: any) => {
+                                    return val;
+                                },
+                            },
+                            total: {
+                                show: true,
+                                label: 'Total',
+                                color: '#888ea8',
+                                fontSize: '29px',
+                                formatter: (w: any) => {
+                                    return w.globals.seriesTotals.reduce(function (a: any, b: any) {
+                                        return a + b;
+                                    }, 0);
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+            labels: [t('Adult'), t('Calf')],
+            states: {
+                hover: {
+                    filter: {
+                        type: 'none',
+                        value: 0.15,
+                    },
+                },
+                active: {
+                    filter: {
+                        type: 'none',
+                        value: 0.15,
+                    },
+                },
+            },
+        },
+    };
+
+
+    
+
+    
+
+    return (
+        <div>
+            <div className="pt-5">
+                <div className="grid xl:grid-cols-3 gap-6 mb-6">
+                <div className="panel h-full">
+                        <div className="flex items-center mb-5">
+                            <h5 className="font-semibold text-lg dark:text-white-light">{t('Milk Cycle Analysis')}</h5>
+                        </div>
+                        <div>
+                            <div className="bg-white dark:bg-black rounded-lg overflow-hidden">
+                                {loading ? (
+                                    <div className="min-h-[325px] grid place-content-center bg-white-light/30 dark:bg-dark dark:bg-opacity-[0.08] ">
+                                        <span className="animate-spin border-2 border-black dark:border-white !border-l-transparent  rounded-full w-5 h-5 inline-flex"></span>
+                                    </div>
+                                ) : (
+                                    <ReactApexChart series={SutDongu.series} options={SutDongu.options} type="donut" height={460} />
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                    <div className="panel h-full">
+                        <div className="flex items-center mb-5">
+                            <h5 className="font-semibold text-lg dark:text-white-light">{t('Calf Cycle Analysis')}</h5>
+                        </div>
+                        <div>
+                            <div className="bg-white dark:bg-black rounded-lg overflow-hidden">
+                                {loading ? (
+                                    <div className="min-h-[325px] grid place-content-center bg-white-light/30 dark:bg-dark dark:bg-opacity-[0.08] ">
+                                        <span className="animate-spin border-2 border-black dark:border-white !border-l-transparent  rounded-full w-5 h-5 inline-flex"></span>
+                                    </div>
+                                ) : (
+                                    <ReactApexChart series={YavruDongu.series} options={YavruDongu.options} type="donut" height={460} />
+                                )}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="panel h-full">
+                        <div className="flex items-center mb-5">
+                            <h5 className="font-semibold text-lg dark:text-white-light">{t('Analysis of the Number of Animals in the Cycle')}</h5>
+                        </div>
+                        <div>
+                            <div className="bg-white dark:bg-black rounded-lg overflow-hidden">
+                                {loading ? (
+                                    <div className="min-h-[325px] grid place-content-center bg-white-light/30 dark:bg-dark dark:bg-opacity-[0.08] ">
+                                        <span className="animate-spin border-2 border-black dark:border-white !border-l-transparent  rounded-full w-5 h-5 inline-flex"></span>
+                                    </div>
+                                ) : (
+                                    <ReactApexChart series={aklimaGelmedi.series} options={aklimaGelmedi.options} type="donut" height={460} />
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+       
+    );
+};
+
+export default Index;
+    

@@ -24,6 +24,9 @@ const YenidoganTakip= lazy(() => import('../pages/Cifci/YenidoganTakip'))
 const KayitSayfasi = lazy(() => import('../pages/Authentication/KayitSayfasi'));
 const Cikarilanlar = lazy(() => import('../pages/Cifci/Cikarilacaklanlar'));
 const Profil = lazy(() => import('../pages/Cifci/Profil'));
+const BasvuruDurum = lazy(() => import('../pages/Authentication/BasvuruDurum'));
+const AdminDashboard = lazy(() => import('../pages/Admin/AdminDashboard'));
+
 const routes = [
     //login page
     {
@@ -37,6 +40,14 @@ const routes = [
         element: <KayitSayfasi />,
         layout : 'blank',
     },
+    // BasvuruDurum
+    {
+        path: '/basvuruDurum',
+        element: <BasvuruDurum />,
+        layout : 'blank',
+    },
+
+    //Çiftçi
     //farmer dashboard
     {
         path: '/cifci/dashboard',
@@ -121,10 +132,10 @@ const routes = [
         element: <AuthGuard allowedRoles={['c']}><AhirSensorDetay /></AuthGuard>,
         layout : 'cifci',
     },
-       //Admin basvuru düzenlemesayfası
-       {
+    //Admin basvuru düzenlemesayfası
+    {
         path: '/cifci/AdminBasvuruDuzenleme',
-        element: <AuthGuard allowedRoles={['c']}><AdminBasvuruDuzenleme /></AuthGuard>,
+        element: <AdminBasvuruDuzenleme />,
         layout : 'cifci',
     },
     //Depo sensor takip ayfası
@@ -163,7 +174,20 @@ const routes = [
         element: <AuthGuard allowedRoles={['c']}><Profil /></AuthGuard>,
         layout : 'cifci',
     },
-    
+    //Admin
+    //Admin Dashboard
+    {
+        path: '/admin/dashboard',
+        element:<AuthGuard allowedRoles={['a']}><AdminDashboard /></AuthGuard>,
+        layout : 'admin',
+    },
+    //Tedarikçi
+    //Tedarikçi Dashboard
+    {
+        path: '/tedarikci/dashboard',
+        element:<AuthGuard allowedRoles={['t']}><AdminDashboard /></AuthGuard>,
+        layout : 'tedarikci',
+    },
 ];
 
 export { routes };

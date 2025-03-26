@@ -73,26 +73,45 @@ const KayitSayfasi = () => {
     const [flag, setFlag] = useState(themeConfig.locale);
 
 
-    const submitForm = (values: any) => {
+    const submitForm = async (values: any) => {
         const toast = Swal.mixin({
             toast: true,
             position: 'top',
             showConfirmButton: false,
             timer: 3000,
         });
-        toast.fire({
-            icon: 'success',
-            title: 'Form submitted successfully',
-            padding: '10px 20px',
-        });
-        console.log(values);    
-        //navigate("/cifci/dashboard");
+    
+        try {
+            const response = await axios.post("http://localhost:3030/api/login/postKayit", values); // Burayı kendi API endpoint'inle değiştir
+    
+            if (response.status === 200 || response.status === 201) {
+                toast.fire({
+                    icon: 'success',
+                    title: 'Başvuru Başarı İle Alıdı',
+                    padding: '10px 20px',
+                });
+    
+                navigate("/"); // başarıyla yönlendir
+            } else {
+                // İsteğin başarılı olmaması durumunda
+                toast.fire({
+                    icon: 'error',
+                    title: 'Something went wrong, please try again',
+                    padding: '10px 20px',
+                });
+            }
+        } catch (error: any) {
+            // Sunucu hatası veya bağlantı hatası durumunda
+            toast.fire({
+                icon: 'error',
+                title: error.response?.data?.message || 'Registration failed',
+                padding: '10px 20px',
+            });
+        }
     };
     const submitFormValidation = Yup.object().shape({
         firstname: Yup.string().required('Please fill the first name'),
         lastname: Yup.string().required('Please fill the last name'),
-        city: Yup.string().required('Please provide a valid city'),
-        district: Yup.string().required('Please provide a valid District'),
         tcNumber: Yup.string()
         .required('Please provide a valid TC Number')
         .matches(/^[1-9][0-9]{10}$/, 'TC Number must be 11 digits and cannot start with 0')
@@ -109,13 +128,40 @@ const KayitSayfasi = () => {
             return rule10 && rule11;
         }),
         email: Yup.string().email('Invalid email').required('Please fill the Email'),
-        agree: Yup.bool().oneOf([true], 'You must agree before submitting.'),
+        password: Yup.string()
+            .trim()
+            .required('Please enter a password')
+            .min(6, 'Password must be at least 6 characters')
+            .matches(/[A-Z]/, 'Password must contain at least one uppercase letter')
+            .matches(/[a-z]/, 'Password must contain at least one lowercase letter')
+            .matches(/\d/, 'Password must contain at least one number'),
+        confirmPassword: Yup.string()
+            .trim()
+            .required('Please confirm your password')
+            .oneOf([Yup.ref('password')], 'Passwords must match'),
+        telefonNo: Yup.string().required('Please fill the telephone'),
+
+        city: Yup.string().required('Please provide a valid city'),
+        district: Yup.string().required('Please provide a valid District'),
+        firmaEmail: Yup.string().email('Invalid email').required('Please fill the Email'),
+        firmaTelefonNo: Yup.string().required('Please fill the telephone'),
+        firmaAdi: Yup.string().required('Please fill Commpany Name'),
+        firmaAdresi: Yup.string().required('Please fill Commpany Address'),
+        agree: Yup.boolean()
+            .oneOf([true], 'You must accept the terms and conditions')
+            .required('You must accept the terms and conditions'), 
+        firmaTipi: Yup.string().required('Please provide a valid company type'),
     });
 
     interface OptionType {
         value: string;
         label: string;
     }
+
+    const companyTypeOptions = [
+        { value: 'c', label: t('Farm') },
+        { value: 't', label: t('Supplier') }
+    ];
     
     const CitySelect = ({ field, form, options }: { field: any; form: any; options: OptionType[] }) => {
         const handleChange = (selectedOption: SingleValue<OptionType> | null) => {
@@ -209,19 +255,26 @@ const KayitSayfasi = () => {
                         <div className="mx-auto w-full max-w-[440px]">
                             <div className="mb-10">
                                 <h1 className="text-3xl font-extrabold uppercase !leading-snug text-primary md:text-4xl">{t('Sign Up')}</h1>
-                                <p className="text-base font-bold leading-normal text-white-dark">{t('Enter your email and password to register')}</p>
+                                <p className="text-base font-bold leading-normal text-white-dark">{t('Enter your personal information to register')}</p>
                             </div>
                                 <Formik
                                     initialValues={{
-                                        referenceType : '',
                                         firstname: '',
                                         lastname: '',
                                         tcNumber: '',
                                         email: '',
-                                        companyName: '',
-                                        city: '',
-                                        district: '',
-                                        address: '',
+                                        telefonNo: '',
+                                        password: '',
+                                        confirmPassword: '',
+
+                                        firmaTipi:  '',
+                                        firmaAdi:  '',
+                                        firmaTelefonNo:  '',
+                                        firmaAdresi:  '',
+                                        firmaEmail:  '',
+                                        city:  '',
+                                        district:  '',
+                                        
                                         agree: false,
                                     }}
                                     validationSchema={submitFormValidation}
@@ -238,7 +291,7 @@ const KayitSayfasi = () => {
                                                         errors.firstname ? (
                                                             <div className="text-danger mt-1">{errors.firstname}</div>
                                                         ) : (
-                                                            <div className="text-success mt-1">Looks Good!</div>
+                                                            <div className="text-success mt-1">{t('Looks Good!')}</div>
                                                         )
                                                     ) : (
                                                         ''
@@ -246,10 +299,10 @@ const KayitSayfasi = () => {
                                                 </div>
 
                                                 <div>
-                                                    <label htmlFor="fullName">{t('Last Name')}</label>
+                                                    <label htmlFor="lastname">{t('Last Name')}</label>
                                                     <Field name="lastname" type="text" id="lastname" placeholder={t('Enter Last Name')} className="form-input" />
 
-                                                    {submitCount ? errors.lastname ? <div className="text-danger mt-1">{errors.lastname}</div> : <div className="text-success mt-1">Looks Good!</div> : ''}
+                                                    {submitCount ? errors.lastname ? <div className="text-danger mt-1">{errors.lastname}</div> : <div className="text-success mt-1">{t('Looks Good!')}</div> : ''}
                                                 </div>
                                             </div>
                                             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -261,7 +314,7 @@ const KayitSayfasi = () => {
                                                         errors.tcNumber ? (
                                                             <div className="text-danger mt-1">{errors.tcNumber}</div>
                                                         ) : (
-                                                            <div className="text-success mt-1">Looks Good!</div>
+                                                            <div className="text-success mt-1">{t('Looks Good!')}</div>
                                                         )
                                                     ) : (
                                                         ''
@@ -272,9 +325,115 @@ const KayitSayfasi = () => {
                                                     <label htmlFor="Email">{t('Email')}</label>
                                                     <Field name="email" type="text" id="Email" placeholder={t('Enter Email')} className="form-input" />
 
-                                                    {submitCount ? errors.email ? <div className="text-danger mt-1">{errors.email}</div> : <div className="text-success mt-1">Looks Good!</div> : ''}
+                                                    {submitCount ? errors.email ? <div className="text-danger mt-1">{errors.email}</div> : <div className="text-success mt-1">{t('Looks Good!')}</div> : ''}
                                                 </div>
                                             </div>
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                                <div>
+                                                    <label htmlFor="telefonNo">{t('Telephone')}</label>
+                                                    <Field name="telefonNo" type="text" id="telefonNo" placeholder={t('Enter Telephone Number')} className="form-input" />
+
+                                                    {submitCount ? (
+                                                        errors.telefonNo ? (
+                                                            <div className="text-danger mt-1">{errors.telefonNo}</div>
+                                                        ) : (
+                                                            <div className="text-success mt-1">{t('Looks Good!')}</div>
+                                                        )
+                                                    ) : (
+                                                        ''
+                                                    )}
+                                                </div>
+                                            </div>
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                                <div>
+                                                    <label htmlFor="password">{t('Password')}</label>
+                                                    <Field name="password" type="password" id="password" placeholder={t('Enter Password')} className="form-input" />
+
+                                                    {submitCount ? (
+                                                        errors.password ? (
+                                                            <div className="text-danger mt-1">{errors.password}</div>
+                                                        ) : (
+                                                            <div className="text-success mt-1">{t('Looks Good!')}</div>
+                                                        )
+                                                    ) : (
+                                                        ''
+                                                    )}
+                                                </div>
+                                                <div>
+                                                    <label htmlFor="confirmPassword">{t('Confirm Password')}</label>
+                                                    <Field name="confirmPassword" type="password" id="confirmPassword" placeholder={t('Enter Password')} className="form-input" />
+
+                                                    {submitCount ? (
+                                                        errors.confirmPassword ? (
+                                                            <div className="text-danger mt-1">{errors.confirmPassword}</div>
+                                                        ) : (
+                                                            <div className="text-success mt-1">{t('Looks Good!')}</div>
+                                                        )
+                                                    ) : (
+                                                        ''
+                                                    )}
+                                                </div>
+                                            </div>
+                                            <div className="relative my-7 text-center md:mb-9 grid">
+                                                <span className="absolute inset-x-0 top-1/2 h-px w-full -translate-y-1/2 bg-white-light dark:bg-white-dark"></span>
+                                            </div>
+                                            <div className="mb-10">
+                                                <p className="text-base font-bold leading-normal text-white-dark">{t('Enter your commpany information to register')}</p>
+                                            </div>
+                                            <div>
+                                                <label htmlFor="hesapDurumu">{t('Company Type')}</label>
+                                                <Select
+                                                    id="hesapDurumu"
+                                                    options={companyTypeOptions}
+                                                    isSearchable={false}                                                                            onChange={(selectedOption) => {
+                                                        values.firmaTipi = selectedOption!.value
+                                                    }}
+                                                />
+                                                {submitCount ? (
+                                                        errors.firmaTipi ? (
+                                                            <div className="text-danger mt-1">{errors.firmaTipi}</div>
+                                                        ) : (
+                                                            <div className="text-[#1abc9c] mt-1">{t('Looks Good!')}</div>
+                                                        )
+                                                    ) : (
+                                                        ''
+                                                    )}
+                                            </div>
+                                            <div>
+                                                <label htmlFor="firmaAdi">{t('Company Name')}</label>
+                                                <Field name="firmaAdi" id="firmaAdi" type="text" className="form-input" />
+                                                {submitCount ? (
+                                                    errors.firmaAdi ? (
+                                                        <div className="text-danger mt-1">{errors.firmaAdi}</div>
+                                                    ) : (
+                                                        <div className="text-[#1abc9c] mt-1">{t('Looks Good!')}</div>
+                                                    )
+                                                ) : (
+                                                    ''
+                                                )}
+                                            </div>
+                                            <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-5" style={{ paddingTop: '1%'}}>
+                                                <div>
+                                                    <label htmlFor="firmaEmail">{t('Email')}</label>
+                                                    <Field name="firmaEmail" type="text" id="firmaEmail" placeholder={t('Enter Email')} className="form-input" />
+
+                                                    {submitCount ? errors.firmaEmail ? <div className="text-danger mt-1">{errors.firmaEmail}</div> : <div className="text-success mt-1">Looks Good!</div> : ''}
+                                                </div>
+                                                <div>
+                                                    <label htmlFor="firmaTelefonNo">{t('Telephone')}</label>
+                                                    <Field name="firmaTelefonNo" id="firmaTelefonNo" type="text" className="form-input" />
+                                                    {submitCount ? (
+                                                        errors.firmaTelefonNo ? (
+                                                            <div className="text-danger mt-1">{errors.firmaTelefonNo}</div>
+                                                        ) : (
+                                                            <div className="text-[#1abc9c] mt-1">{t('Looks Good!')}</div>
+                                                        )
+                                                    ) : (
+                                                        ''
+                                                    )}
+                                                </div>
+                                            </div>
+
                                             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                                                 <div className="form-group">
                                                     <label htmlFor="city">{t('City')}</label>
@@ -287,7 +446,7 @@ const KayitSayfasi = () => {
                                                         errors.city ? (
                                                             <div className="text-danger mt-1">{errors.city}</div>
                                                         ) : (
-                                                            <div className="text-[#1abc9c] mt-1">Looks Good!</div>
+                                                            <div className="text-[#1abc9c] mt-1">{t('Looks Good!')}</div>
                                                         )
                                                     ) : (
                                                         ''
@@ -305,7 +464,7 @@ const KayitSayfasi = () => {
                                                         errors.district ? (
                                                             <div className="text-danger mt-1">{errors.district}</div>
                                                         ) : (
-                                                            <div className="text-[#1abc9c] mt-1">Looks Good!</div>
+                                                            <div className="text-[#1abc9c] mt-1">{t('Looks Good!')}</div>
                                                         )
                                                     ) : (
                                                         ''
@@ -313,11 +472,11 @@ const KayitSayfasi = () => {
                                                 </div>
                                             </div>
                                             <div>
-                                                <label htmlFor="address">{t('Address')}</label>
-                                                <textarea id="address" rows={3} className="form-textarea" placeholder={t('Enter Address')} required></textarea>
+                                                <label htmlFor="firmaAdresi">{t('Address')}</label>
+                                                <Field className="form-textarea" as="textarea" name="firmaAdresi" id="firmaAdresi" rows="3"  placeholder={t('Enter Address')} />
                                                 {submitCount ? (
-                                                        errors.address ? (
-                                                            <div className="text-danger mt-1">{errors.address}</div>
+                                                        errors.firmaAdresi ? (
+                                                            <div className="text-danger mt-1">{errors.firmaAdresi}</div>
                                                         ) : (
                                                             <div className="text-[#1abc9c] mt-1">Looks Good!</div>
                                                         )

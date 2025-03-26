@@ -43,13 +43,13 @@ CREATE TABLE firmalar (
     firmaID INT PRIMARY KEY IDENTITY(1,1),
     firmaAdi NVARCHAR(50),
     firmaTur CHAR(1), --c ciftlik,t - tedarikci
-    telefonNo NVARCHAR(10),
+    telefonNo NVARCHAR(15),
     firmaMail NVARCHAR(50),
     firmaAdresi NVARCHAR(250),
     sehirID INT NOT NULL,
     ilceID INT NOT NULL, 
     bolge CHAR(1),
-    hesapDurumu CHAR(1), 
+    hesapDurumu CHAR(1), -- a aktif, p pasif, b beklemede
     FOREIGN KEY (sehirID) REFERENCES bolgeler(ID),
     FOREIGN KEY (ilceID) REFERENCES bolgeler(ID)
 );
@@ -137,9 +137,9 @@ CREATE TABLE kullanicilar (
     kullaniciTuru CHAR(1), -- a admin,c ciftci,t tedarikçi  
     isim NVARCHAR(50),
     soyisim NVARCHAR(50),
-    telefonNo NVARCHAR(10),
+    telefonNo NVARCHAR(15),
     hesapFirmaYetkisi CHAR(1), -- a admin, k kulanıcı 
-    hesapDurumu CHAR(1), -- a aktif, p pasif,b beklemede 
+    hesapDurumu CHAR(1), -- a aktif, p pasif,b beklemede
     firmaID INT,
     FOREIGN KEY (firmaID) REFERENCES firmalar(firmaID)
 );
