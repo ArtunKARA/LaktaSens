@@ -12,6 +12,8 @@ const inekEkle = require("./çiftçi/inek-ekle.js");
 const yeniDogan = require("./çiftçi/yeni-dogan.js");
 const cifciAnaliz = require("./çiftçi/analiz-cifci.js");
 const firma = require("./firma.js");
+const adminAnaliz = require("./admin/analiz.js");
+
 
 const router = express.Router();
 
@@ -33,5 +35,6 @@ router.use("/api/inekEkle",inekEkle);
 router.use("/api/yeniDogan",yeniDogan);
 router.use("/api/cifciAnaliz",cifciAnaliz);
 router.use("/api/firma",firma);
+router.use("/api/adminAnaliz",adminAnaliz);
 
 module.exports = router;

@@ -385,5 +385,14 @@
     "Current Orders":"Devam Eden Siparişler",
     "Finished Orders":"Tamamlanan Siparişler",
     "Defination":"Tanımlamalar",
-    "Feed":"Yem"
+    "Feed":"Yem",
+    "Company":"Firma",
+    "Company Breakdown Ratio Analysis":"Şirket Dağılım Oranı Analizi",
+    "Supplier Account Status":"Tedarikçi Hesap Durumu",
+    "Farm Account Status":"Çiftlik Hesap Durumu",
+    "Pending":"Beklemede",
+    "Manage the company info.":"Firma bilgilerini yönet.",
+    "Company Info":"Firma Bilgileri",
+    "Manage users connected to the company":"Firmaya bağlı kullanıcıları yönetme",
+    "Company Users":"Firma Kullanıcıları"
 }

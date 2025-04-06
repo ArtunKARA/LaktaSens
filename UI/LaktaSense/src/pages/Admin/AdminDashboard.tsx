@@ -17,28 +17,26 @@ const Index = () => {
     const storedUserInfo = localStorage.getItem('userInfo');
     const userInfo = storedUserInfo ? JSON.parse(storedUserInfo) : null;
     const isDark = useSelector((state: IRootState) => state.themeConfig.theme === 'dark' || state.themeConfig.isDarkMode);
-    const isRtl = useSelector((state: IRootState) => state.themeConfig.rtlClass) === 'rtl' ? true : false;
-    
+        
     const [loading] = useState(false);
 
-    const [kuruda_olanlar, kuruda_olanlarSet] = useState<number>();
-    const [sagimda_olanlar, sagimda_olanlarSet] = useState<number>();
-    const [cikarilmasi_gerekenlerSut, cikarilmasi_gerekenlerSutSet] = useState<number>();
+    const [aktif_cifci, aktif_cifciSet] = useState<number>();
+    const [pasif_cifci, pasif_cifciSet] = useState<number>();
+    const [beklemede_cifci, beklemede_cifciSet] = useState<number>();
     useEffect(() => {
         // API'yi çağırma
         const fetchData = async () => {
           try {
-            const response = await fetch('http://localhost:3030/api/cifciAnaliz/postSutDongusuAnaliz', {
-              method: 'POST',
+            const response = await fetch('http://localhost:3030/api/adminAnaliz/getCifciDagilimAnaliz', {
+              method: 'GET',
               headers: {
                 'Content-Type': 'application/json',
               },
-              body: JSON.stringify({ ID:userInfo.kullaniciID}), // Kullanıcı ID'sini gönderiyorsunuz
             });
             const data = await response.json();
-            kuruda_olanlarSet(data["kuruda_olanlar"])
-            sagimda_olanlarSet(data["sagimda_olanlar"])
-            cikarilmasi_gerekenlerSutSet(data["cikarilmasi_gerekenler"])
+            aktif_cifciSet(data["aktif_cifci"])
+            pasif_cifciSet(data["pasif_cifci"])
+            beklemede_cifciSet(data["beklemede_cifci"])
             console.log('Gelen veri:', data);
             ; // Sadece doğrudan kullanılabilecek bir dizi olduğunda kullanı
           } catch (error) {
@@ -49,24 +47,23 @@ const Index = () => {
         fetchData();
       }, []);
 
-    const [gebe_olanlar, gebe_olanlarSet] = useState<number>();
-    const [serviste_olanlar, serviste_olanlarSet] = useState<number>();
-    const [cikarilmasi_gerekenlerYavru, cikarilmasi_gerekenlerYavruSet] = useState<number>();
+    const [aktif_tedarikci, aktif_tedarikciSet] = useState<number>();
+    const [pasif_tedarikci, pasif_tedarikciSet] = useState<number>();
+    const [beklemede_tedarikci, beklemede_tedarikciSet] = useState<number>();
     useEffect(() => {
         // API'yi çağırma
         const fetchData = async () => {
           try {
-            const response = await fetch('http://localhost:3030/api/cifciAnaliz/postYavruDonguAnaliz', {
-              method: 'POST',
+            const response = await fetch('http://localhost:3030/api/adminAnaliz/getTedarikciDagilimAnaliz', {
+              method: 'GET',
               headers: {
                 'Content-Type': 'application/json',
               },
-              body: JSON.stringify({ ID:userInfo.kullaniciID}), // Kullanıcı ID'sini gönderiyorsunuz
             });
             const data = await response.json();
-            gebe_olanlarSet(data["gebe_olanlar"])
-            serviste_olanlarSet(data["serviste_olanlar"])
-            cikarilmasi_gerekenlerYavruSet(data["cikarilmasi_gerekenler"])
+            aktif_tedarikciSet(data["aktif_tedarikci"])
+            pasif_tedarikciSet(data["pasif_tedarikci"])
+            beklemede_tedarikciSet(data["beklemede_tedarikci"])
             console.log('Gelen veri:', data);
             ; // Sadece doğrudan kullanılabilecek bir dizi olduğunda kullanı
           } catch (error) {
@@ -77,22 +74,21 @@ const Index = () => {
         fetchData();
       }, []);
 
-    const [eriskin_olanlar, eriskin_olanlarSet] = useState<number>();
-    const [yavru_olanlar, yavru_olanlarSet] = useState<number>();
+    const [supplier, supplierSet] = useState<number>();
+    const [farm, farmSet] = useState<number>();
     useEffect(() => {
         // API'yi çağırma
         const fetchData = async () => {
           try {
-            const response = await fetch('http://localhost:3030/api/cifciAnaliz/postDongudekiIneklerAnaliz', {
-              method: 'POST',
+            const response = await fetch('http://localhost:3030/api/adminAnaliz/getFirmaDagilimAnaliz', {
+              method: 'GET',
               headers: {
                 'Content-Type': 'application/json',
               },
-              body: JSON.stringify({ ID:userInfo.kullaniciID}), // Kullanıcı ID'sini gönderiyorsunuz
             });
             const data = await response.json();
-            eriskin_olanlarSet(data["eriskin_olanlar"])
-            yavru_olanlarSet(data["yavru_olanlar"])
+            supplierSet(data["supplier"])
+            farmSet(data["farm"])
             console.log('Gelen veri:', data);
             ; // Sadece doğrudan kullanılabilecek bir dizi olduğunda kullanı
           } catch (error) {
@@ -104,7 +100,7 @@ const Index = () => {
       }, []);
     //SutDongu
     const SutDongu: any = {
-        series: [kuruda_olanlar, sagimda_olanlar, cikarilmasi_gerekenlerSut],
+        series: [aktif_cifci, pasif_cifci, beklemede_cifci],
         options: {
             chart: {
                 type: 'donut',
@@ -168,7 +164,7 @@ const Index = () => {
                     },
                 },
             },
-            labels: [t('Dry'), t('Milking'), t('Must be Checked')],
+            labels: [t('Active'), t('Passive'), t('Pending')],
             states: {
                 hover: {
                     filter: {
@@ -187,8 +183,8 @@ const Index = () => {
     };
 
      //YavruDongu
-     const YavruDongu: any = {
-        series: [gebe_olanlar, serviste_olanlar, cikarilmasi_gerekenlerYavru],
+     const TedarikciHesap: any = {
+        series: [aktif_tedarikci, pasif_tedarikci, beklemede_tedarikci],
         options: {
             chart: {
                 type: 'donut',
@@ -252,7 +248,7 @@ const Index = () => {
                     },
                 },
             },
-            labels: [t('Calving'), t('Service'), t('Must be Checked')],
+            labels: [t('Active'), t('Passive'), t('Pending')],
             states: {
                 hover: {
                     filter: {
@@ -270,9 +266,9 @@ const Index = () => {
         },
     };
 
-     //aklimaGelmedi
-     const aklimaGelmedi: any = {
-        series: [eriskin_olanlar, yavru_olanlar],
+     //firmaDagilim
+     const firmaDagilim: any = {
+        series: [farm, supplier],
         options: {
             chart: {
                 type: 'donut',
@@ -336,7 +332,7 @@ const Index = () => {
                     },
                 },
             },
-            labels: [t('Adult'), t('Calf')],
+            labels: [t('Company'), t('Farm')],
             states: {
                 hover: {
                     filter: {
@@ -365,7 +361,7 @@ const Index = () => {
                 <div className="grid xl:grid-cols-3 gap-6 mb-6">
                 <div className="panel h-full">
                         <div className="flex items-center mb-5">
-                            <h5 className="font-semibold text-lg dark:text-white-light">{t('Milk Cycle Analysis')}</h5>
+                            <h5 className="font-semibold text-lg dark:text-white-light">{t('Farm Account Status')}</h5>
                         </div>
                         <div>
                             <div className="bg-white dark:bg-black rounded-lg overflow-hidden">
@@ -381,7 +377,7 @@ const Index = () => {
                     </div>
                     <div className="panel h-full">
                         <div className="flex items-center mb-5">
-                            <h5 className="font-semibold text-lg dark:text-white-light">{t('Calf Cycle Analysis')}</h5>
+                            <h5 className="font-semibold text-lg dark:text-white-light">{t('Supplier Account Status')}</h5>
                         </div>
                         <div>
                             <div className="bg-white dark:bg-black rounded-lg overflow-hidden">
@@ -390,7 +386,7 @@ const Index = () => {
                                         <span className="animate-spin border-2 border-black dark:border-white !border-l-transparent  rounded-full w-5 h-5 inline-flex"></span>
                                     </div>
                                 ) : (
-                                    <ReactApexChart series={YavruDongu.series} options={YavruDongu.options} type="donut" height={460} />
+                                    <ReactApexChart series={TedarikciHesap.series} options={TedarikciHesap.options} type="donut" height={460} />
                                 )}
                             </div>
                         </div>
@@ -398,7 +394,7 @@ const Index = () => {
 
                     <div className="panel h-full">
                         <div className="flex items-center mb-5">
-                            <h5 className="font-semibold text-lg dark:text-white-light">{t('Analysis of the Number of Animals in the Cycle')}</h5>
+                            <h5 className="font-semibold text-lg dark:text-white-light">{t('Company Breakdown Ratio Analysis')}</h5>
                         </div>
                         <div>
                             <div className="bg-white dark:bg-black rounded-lg overflow-hidden">
@@ -407,7 +403,7 @@ const Index = () => {
                                         <span className="animate-spin border-2 border-black dark:border-white !border-l-transparent  rounded-full w-5 h-5 inline-flex"></span>
                                     </div>
                                 ) : (
-                                    <ReactApexChart series={aklimaGelmedi.series} options={aklimaGelmedi.options} type="donut" height={460} />
+                                    <ReactApexChart series={firmaDagilim.series} options={firmaDagilim.options} type="donut" height={460} />
                                 )}
                             </div>
                         </div>

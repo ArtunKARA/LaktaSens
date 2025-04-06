@@ -108,7 +108,7 @@ const AdminSidebar = () => {
                                 <AnimateHeight duration={300} height={currentMenu === t('Analysis') ? 'auto' : 0}>
                                     <ul className="sub-menu text-gray-500">
                                         <li>
-                                            <NavLink to="/">{t('Dashboard')}</NavLink>
+                                            <NavLink to="/admin/dashboard">{t('Dashboard')}</NavLink>
                                         </li>
                                         <li>
                                             <NavLink to="/">{t('Active Suppliers Report')}</NavLink>
@@ -131,7 +131,7 @@ const AdminSidebar = () => {
                             <li className="nav-item">
                                 <ul>
                                     <li className="nav-item">
-                                        <NavLink to="/" className="group">
+                                        <NavLink to="/admin/TedarikçiBasvuru" className="group">
                                             <div className="flex items-center">
                                                 <IconMenuDocumentation className="group-hover:!text-primary shrink-0" />
                                                 <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Application Suppliers')}</span>
@@ -139,7 +139,7 @@ const AdminSidebar = () => {
                                         </NavLink>
                                     </li>
                                     <li className="nav-item">
-                                        <NavLink to="/" className="group">
+                                        <NavLink to="/admin/CiflikBasvuru" className="group">
                                             <div className="flex items-center">
                                                 <IconMenuDocumentation className="group-hover:!text-primary shrink-0" />
                                                 <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Application Farms')}</span>

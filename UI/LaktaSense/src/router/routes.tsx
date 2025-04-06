@@ -26,6 +26,9 @@ const Cikarilanlar = lazy(() => import('../pages/Cifci/Cikarilacaklanlar'));
 const Profil = lazy(() => import('../pages/Cifci/Profil'));
 const BasvuruDurum = lazy(() => import('../pages/Authentication/BasvuruDurum'));
 const AdminDashboard = lazy(() => import('../pages/Admin/AdminDashboard'));
+const TedarikçiBasvuru = lazy(() => import('../pages/Admin/TedarikciBasvuru'));
+const CiflikBasvuru = lazy(() => import('../pages/Admin/CiflikBasvuru'));
+const AdminProfil = lazy(() => import('../pages/Admin/AdminProfil'));
 
 const routes = [
     //login page
@@ -174,6 +177,7 @@ const routes = [
         element: <AuthGuard allowedRoles={['c']}><Profil /></AuthGuard>,
         layout : 'cifci',
     },
+
     //Admin
     //Admin Dashboard
     {
@@ -181,6 +185,23 @@ const routes = [
         element:<AuthGuard allowedRoles={['a']}><AdminDashboard /></AuthGuard>,
         layout : 'admin',
     },
+    {
+        path: '/admin/TedarikçiBasvuru',
+        element:<AuthGuard allowedRoles={['a']}><TedarikçiBasvuru /></AuthGuard>,
+        layout : 'admin',
+    },
+    {
+        path: '/admin/CiflikBasvuru',
+        element:<AuthGuard allowedRoles={['a']}><CiflikBasvuru /></AuthGuard>,
+        layout : 'admin',
+    },
+    {
+        path: '/admin/profil',
+        element:<AuthGuard allowedRoles={['a']}><AdminProfil /></AuthGuard>,
+        layout : 'admin',
+    },
+
+
     //Tedarikçi
     //Tedarikçi Dashboard
     {

@@ -15,7 +15,6 @@ import { Dialog, Transition } from '@headlessui/react';
 import IconX from '../../components/Icon/IconX';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import Add from '../Apps/Invoice/Add';
 import { toNumber } from 'lodash';
 
 interface CowData {
