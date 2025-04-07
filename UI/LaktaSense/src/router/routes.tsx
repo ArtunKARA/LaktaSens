@@ -29,6 +29,15 @@ const AdminDashboard = lazy(() => import('../pages/Admin/AdminDashboard'));
 const TedarikçiBasvuru = lazy(() => import('../pages/Admin/TedarikciBasvuru'));
 const CiflikBasvuru = lazy(() => import('../pages/Admin/CiflikBasvuru'));
 const AdminProfil = lazy(() => import('../pages/Admin/AdminProfil'));
+const AktifCiflik = lazy(() => import('../pages/Admin/HesapYonetimi/Cifci/AktifCiflikler'));
+const PasifCiflik = lazy(() => import('../pages/Admin/HesapYonetimi/Cifci/PasifCiflikler'));
+const AktifTedarikci = lazy(() => import('../pages/Admin/HesapYonetimi/Tedarikci/AktifTedarikciler'));
+const PasifTedarikci = lazy(() => import('../pages/Admin/HesapYonetimi/Tedarikci/PasifTedarikciler'));
+const CiflikDetay = lazy(() => import('../pages/Admin/HesapYonetimi/Cifci/CiflikDetay'));
+const TedarikciDetay = lazy(() => import('../pages/Admin/HesapYonetimi/Tedarikci/TedarikciDetay'));
+
+
+
 
 const routes = [
     //login page
@@ -198,6 +207,36 @@ const routes = [
     {
         path: '/admin/profil',
         element:<AuthGuard allowedRoles={['a']}><AdminProfil /></AuthGuard>,
+        layout : 'admin',
+    },
+    {
+        path: '/admin/AktifCiflik',
+        element:<AuthGuard allowedRoles={['a']}><AktifCiflik /></AuthGuard>,
+        layout : 'admin',
+    },
+    {
+        path: '/admin/PasifCiflik',
+        element:<AuthGuard allowedRoles={['a']}><PasifCiflik /></AuthGuard>,
+        layout : 'admin',
+    },
+    {
+        path: '/admin/AktifTedarikci',
+        element:<AuthGuard allowedRoles={['a']}><AktifTedarikci /></AuthGuard>,
+        layout : 'admin',
+    },
+    {
+        path: '/admin/PasifTedarikci',
+        element:<AuthGuard allowedRoles={['a']}><PasifTedarikci /></AuthGuard>,
+        layout : 'admin',
+    },
+    {
+        path: '/admin/CiflikDetay',
+        element:<AuthGuard allowedRoles={['a']}><CiflikDetay /></AuthGuard>,
+        layout : 'admin',
+    },
+    {
+        path: '/admin/TedarikciDetay',
+        element:<AuthGuard allowedRoles={['a']}><TedarikciDetay /></AuthGuard>,
         layout : 'admin',
     },
 

@@ -169,10 +169,10 @@ const AdminSidebar = () => {
                                 <AnimateHeight duration={300} height={currentMenu === 'farmer' ? 'auto' : 0}>
                                     <ul className="sub-menu text-gray-500">
                                         <li>
-                                            <NavLink to="/">{t('Active Suppliers')}</NavLink>
+                                            <NavLink to="/admin/AktifCiflik">{t('Active Farms')}</NavLink>
                                         </li>
                                         <li>
-                                            <NavLink to="/">{t('Pasive Suppliers')}</NavLink>
+                                            <NavLink to="/admin/PasifCiflik">{t('Pasive Farms')}</NavLink>
                                         </li>
                                     </ul>
                                 </AnimateHeight>
@@ -191,12 +191,12 @@ const AdminSidebar = () => {
                                 </button>
 
                                 <AnimateHeight duration={300} height={currentMenu === 'element' ? 'auto' : 0}>
-                                    <ul className="sub-menu text-gray-500">
+                                <ul className="sub-menu text-gray-500">
                                         <li>
-                                            <NavLink to="/">{t('Active Farms')}</NavLink>
+                                            <NavLink to="/admin/AktifTedarikci">{t('Active Suppliers')}</NavLink>
                                         </li>
                                         <li>
-                                            <NavLink to="/">{t('Pasive Farms')}</NavLink>
+                                            <NavLink to="/admin/PasifTedarikci">{t('Pasive Suppliers')}</NavLink>
                                         </li>
                                     </ul>
                                 </AnimateHeight>

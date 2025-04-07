@@ -16,33 +16,42 @@ import IconX from '../../components/Icon/IconX';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { toNumber } from 'lodash';
+import IconPlus from '../../components/Icon/IconPlus';
+import Swal from 'sweetalert2';
 
-interface CowData {
-    İnekID: string;
-    Ad: string;
-    Irkı: string;
-    Sebep: string;
-    AksiyonAlınacakDöngü: string;
-    KalanGün: number;
-    DöllenmeSayısı: number;
+interface CompanyData {
+    CompanyID: string;
+    CompanyName: string;
+    CompanyPhone: string;
+    CompanyMail: string;
+    CompanyCity: string;
+    CompanyDistrict: string;
+    CompanyRejectedBefore: number;
+    CompanyRejectedReason: string;
+}
+
+interface CompanyRejectStatusData {
+  CompanyID: string;
+  CompanyName: string;
+  CompanyRejectedBefore: number;
+  CompanyRejectedReason: string;
 }
 
 const MultipleTables = () => {
     const storedUserInfo = localStorage.getItem('userInfo');
     const userInfo = storedUserInfo ? JSON.parse(storedUserInfo) : null;
-    const [rowData, setRowData] = useState<CowData[]>([]);
-    const [selectedDate, setSelectedDate] = useState("");
+    const [rowData, setRowData] = useState<CompanyData[]>([]);
+    const [selectedCompany, setSelectedCompany] = useState<CompanyRejectStatusData | null>(null);
     const [reson, setReson] = useState("");
     useEffect(() => {
         // API'yi çağırma
         const fetchData = async () => {
           try {
-            const response = await fetch('http://localhost:3030/api/cikarilacaklar/postCikarilacaklar', {
-              method: 'POST',
+            const response = await fetch('http://localhost:3030/api/basvurular/getTedarikciBasvurular', {
+              method: 'GET',
               headers: {
                 'Content-Type': 'application/json',
               },
-              body: JSON.stringify({ ID:userInfo.kullaniciID}), // Kullanıcı ID'sini gönderiyorsunuz
             });
             const data = await response.json();
             console.log('Gelen veri:', data);
@@ -64,7 +73,7 @@ const MultipleTables = () => {
     const [page, setPage] = useState(1);
     const PAGE_SIZES = [10, 20, 30, 50, 100];
     const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
-    const [initialRecords, setInitialRecords] = useState<CowData[]>([]);
+    const [initialRecords, setInitialRecords] = useState<CompanyData[]>([]);
     useEffect(() => {
         const sortedData = sortBy(rowData, 'inekID');
         setInitialRecords(sortedData);
@@ -72,6 +81,7 @@ const MultipleTables = () => {
     
     const [recordsData, setRecordsData] = useState(initialRecords);
     const [modal21, setModal21] = useState(false);
+    const [modalAcceptCheck, setModalAcceptCheck] = useState(false);
     const [modal22, setModal22] = useState(false);
     const [search, setSearch] = useState('');
     const [sortStatus, setSortStatus] = useState<DataTableSortStatus>({
@@ -92,12 +102,14 @@ const MultipleTables = () => {
         setInitialRecords(() => {
             return rowData.filter((item) => {
                 return (
-                    item.İnekID.toString().toLowerCase().includes(search.toLowerCase()) ||
-                    item.KalanGün.toString().toLowerCase().includes(search.toLowerCase()) ||
-                    item.Ad.toLowerCase().includes(search.toLowerCase()) ||
-                    item.Sebep.toLowerCase().includes(search.toLowerCase()) ||
-                    item.Irkı.toString().toLowerCase().includes(search.toLowerCase()) ||
-                    item.AksiyonAlınacakDöngü.toString().toLowerCase().includes(search.toLowerCase())
+                    item.CompanyID.toString().toLowerCase().includes(search.toLowerCase()) ||
+                    item.CompanyName.toString().toLowerCase().includes(search.toLowerCase()) ||
+                    item.CompanyPhone.toLowerCase().includes(search.toLowerCase()) ||
+                    item.CompanyMail.toLowerCase().includes(search.toLowerCase()) ||
+                    item.CompanyCity.toString().toLowerCase().includes(search.toLowerCase()) ||
+                    item.CompanyDistrict.toString().toLowerCase().includes(search.toLowerCase()) ||
+                    item.CompanyRejectedReason.toString().toLowerCase().includes(search.toLowerCase()) ||
+                    item.CompanyRejectedBefore.toString().toLowerCase().includes(search.toLowerCase()) 
                 );
             });
         });
@@ -111,20 +123,24 @@ const MultipleTables = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [sortStatus]);
 
-    const handleSave = async (ID:number) => {
-        if (!selectedDate) {
-          alert(t("Please select a date!"));
-          return;
-        }
-    
+    const acceptCompany = async (ID:number) => {
+        const toast = Swal.mixin({
+            toast: true,
+            position: 'top',
+            showConfirmButton: false,
+            timer: 3000,
+        });
         try {
-          const response = await axios.post("http://localhost:3030/api/sagim/postSagimAksiyon", {
-            ID: ID, 
-            Tarih: selectedDate,
+          const response = await axios.post("http://localhost:3030/api/basvurular/postBasvuruKabul", {
+            firmaID: ID, 
           });
     
           console.log(response.data);
-          alert(t("Saved successfully!"));
+          toast.fire({
+            icon: 'success',
+            title: 'Başvuru Başarı İle Alıdı',
+            padding: '10px 20px',
+        });
           setModal21(false); // Modalı kapat.
           window.location.reload();
         } catch (error) {
@@ -133,38 +149,49 @@ const MultipleTables = () => {
         }
       };
     const navigate = useNavigate();
-    const handleDetailClickService = (İnekID : any, ad:string, dollenmeSayisi:number) => {
-        navigate('/cifci/ServisTakipDetay', { state: { cowID: İnekID, ad: ad,dollenmeSayisi: dollenmeSayisi } });
+    const handleDetailClickService = (CompanyID : any, ad:string, dollenmeSayisi:number) => {
+        navigate('/cifci/ServisTakipDetay', { state: { cowID: CompanyID, ad: ad,dollenmeSayisi: dollenmeSayisi } });
     };
     const handleEditInekEkle = (id : any) => {
         navigate('/cifci/InekEkle', { state: { cowID: id } });
     };
     
-    const inCycle = (İnekID : string, BulunduğuDöngü : string, DöllenmeSayısı: number,Ad: string) => {
-        if(BulunduğuDöngü == "Sagim"){
+    const Accept = (CompanyID : string, CompanyRejectedBefore : number) => {
+        if(CompanyRejectedBefore > 0){
+          setModalAcceptCheck(true);
+        }else{
           setModal21(true);
-        }else if(BulunduğuDöngü == "Gebe"){
-          handleEditInekEkle(İnekID);
-        }else if(BulunduğuDöngü == "Servis"){
-          handleDetailClickService(İnekID,Ad,DöllenmeSayısı);
         }
     };
 
-    const handleOutCycle = async (İnekID : number) =>{
-      if (!selectedDate) {
-        alert(t("Please select a date!"));
+    const rejectCompany = async (CompanyID : number,reson: string) =>{
+        const toast = Swal.mixin({
+          toast: true,
+          position: 'top',
+          showConfirmButton: false,
+          timer: 3000,
+      });
+      if (reson.length == 0) {
+        toast.fire({
+          icon: 'warning',
+          title: t("Please fill a reject reson!"),
+          padding: '10px 20px',
+        });
         return;
       }
   
       try {
-        const response = await axios.post("http://localhost:3030/api/cikarilacaklar/postCikarilanInek", {
-          İnekID: İnekID, 
-          CikarilmaTarihi: selectedDate,
-          CikarilmaSebebi: reson
+        const response = await axios.post("http://localhost:3030/api/basvurular/postBasvuruRed", {
+          firmaID: CompanyID, 
+          redSebebi: reson
         });
   
         console.log(response.data);
-        alert(t("Saved successfully!"));
+        toast.fire({
+          icon: 'success',
+          title: t("Saved successfully!"),
+          padding: '10px 20px',
+      });
         setModal22(false); // Modalı kapat.
         window.location.reload();
       } catch (error) {
@@ -176,14 +203,12 @@ const MultipleTables = () => {
     const handleCikarilanlar = () => {
       navigate('/cifci/Cikarilanlar');
     };
-    const statusColor = (durum : String) => {
+    const statusColor = (durum : number) => {
       const color = ['primary', 'secondary', 'success', 'danger', 'warning', 'info'];
-      if(durum == "Sagim"){
+      if(durum == 0){
           return color[2]
-      }else if(durum == "Servis"){
+      }else if(durum > 0  || durum < 4){
           return color[4]
-      }else if(durum == "Gebe"){
-        return color[2]
       }else{
         return color[3]
       }
@@ -203,78 +228,145 @@ const MultipleTables = () => {
                         records={recordsData}
                         columns={[
                             {
-                                accessor: 'İnekID',
+                                accessor: 'CompanyID',
                                 title: t('ID'),
                                 sortable: true
                             },
                             {
-                                accessor: 'Ad',
-                                title: t('Name'),
+                                accessor: 'CompanyName',
+                                title: t('Suppliers Name'),
                                 sortable: true
                             },
                             {
-                                accessor: 'Irkı',
-                                title: t('Breed'),
+                                accessor: 'CompanyPhone',
+                                title: t('Telephone'),
                                 sortable: true,
                             },
                             { 
-                                accessor: 'Sebep',
-                                title: t('Reason'), 
+                                accessor: 'CompanyMail',
+                                title: t('Email'), 
                                 sortable: true
                             },
                             {
-                                accessor: 'KalanGün',
-                                title: t('Delayed Day'),
+                                accessor: 'CompanyCity',
+                                title: t('City'),
                                 sortable: true,
                             },
                             {
-                                accessor: 'AksiyonAlınacakDöngü',
-                                title: t('Action Cycle'),
+                                accessor: 'CompanyDistrict',
+                                title: t('District'),
                                 sortable: true,
-                                render: ({ AksiyonAlınacakDöngü }) => <span className={`badge bg-${statusColor(AksiyonAlınacakDöngü)}`}>{AksiyonAlınacakDöngü}</span>, 
                             },
                             {
-                                accessor: 'Döngüye Al',
-                                title: t('Loop'),
-                                sortable: true,
-                                render: ({İnekID, AksiyonAlınacakDöngü,DöllenmeSayısı,Ad}) => (
-                                    <div className="flex items-center w-max mx-auto gap-2">
-                                        <Tippy content="Edit">
+                              accessor: 'CompanyRejectedBefore',
+                              title: t('Num. of Reject'),
+                              sortable: true,
+                              render: ({ CompanyRejectedBefore }) => <span className={`badge bg-${statusColor(CompanyRejectedBefore)}`}>{CompanyRejectedBefore}</span>, 
+                            },
+                            {
+                                accessor: 'Accept',
+                                title: t('Accept'),
+                                render: ({CompanyID, CompanyRejectedBefore, CompanyRejectedReason,CompanyName}) => (
+                                    <div className="flex items-center w-max mx-auto gap-2 bg-green-100 rounded-full">
+                                        <Tippy content="Accept">
                                             <button type="button"
-                                            onClick={() => inCycle(İnekID,AksiyonAlınacakDöngü,DöllenmeSayısı,Ad)}>
-                                                <IconPencil />
+                                            onClick={() => {
+                                              Accept(CompanyID,CompanyRejectedBefore)
+                                                setSelectedCompany({
+                                                    CompanyID: CompanyID,
+                                                    CompanyName: CompanyName,
+                                                    CompanyRejectedBefore: CompanyRejectedBefore,
+                                                    CompanyRejectedReason: CompanyRejectedReason
+                                                });
+                                              }}>
+                                                <IconPlus />
                                             </button>
                                         </Tippy>
 
+                                        <Transition appear show={modalAcceptCheck} as={Fragment}>
+                                          <Dialog as="div" open={modalAcceptCheck} onClose={() => setModalAcceptCheck(false)}>
+                                            <div className="fixed inset-0 z-10 overflow-y-auto bg-[black]/10">
+                                              <div className="flex min-h-screen items-center justify-center px-4">
+                                                <Dialog.Panel className="panel my-8 w-full max-w-sm overflow-hidden rounded-lg py-1 px-4 text-black dark:text-white-dark">
+                                                  <div className="flex items-center justify-between p-5">
+                                                    <h5><strong>{selectedCompany?.CompanyName}</strong> {t('company\'s application')} </h5>
+                                                    <button
+                                                      type="button"
+                                                      onClick={() => setModalAcceptCheck(false)}
+                                                      className="text-white-dark hover:text-dark"
+                                                    >
+                                                      <IconX className="w-5 h-5" />
+                                                    </button>
+                                                  </div>
+                                                  <div className="p-5">
+                                                    <form className="space-y-2">
+                                                        <div className="relative mb-4">
+                                                          <p className="p-2">{t('Number of applications of the company:')}</p>
+                                                          <p className="p-2 text-red-400">{selectedCompany?.CompanyRejectedBefore}</p>
+                                                          <p className="p-2">{t('This company was previously rejected, most recently for the following reason:')}</p>
+                                                          <p className="p-2 text-red-400">{selectedCompany?.CompanyRejectedReason}</p>
+                                                        </div>
+                                                      <button
+                                                        type="button"
+                                                        onClick={() => acceptCompany(Number(CompanyID))}
+                                                        className="btn btn-success w-full gap-5"
+                                                      >
+                                                        {t("Accept")}
+                                                      </button>
+                                                      <button
+                                                        type="button"
+                                                        onClick={() => alert(Number(CompanyID))}
+                                                        className="btn btn-warning w-full"
+                                                      >
+                                                        {t("Go To Suppliers Data")}
+                                                      </button>
+                                                      <button
+                                                        type="button"
+                                                        onClick={() => setModalAcceptCheck(false)}
+                                                        className="btn btn-danger w-full"
+                                                      >
+                                                        {t("Cancel")}
+                                                      </button>
+                                                    </form>
+                                                  </div>
+                                                </Dialog.Panel>
+                                              </div>
+                                            </div>
+                                          </Dialog>
+                                        </Transition>
                                       <Transition appear show={modal21} as={Fragment}>
                                       <Dialog as="div" open={modal21} onClose={() => setModal21(false)}>
                                         <div className="fixed inset-0 z-10 overflow-y-auto bg-[black]/10">
                                           <div className="flex min-h-screen items-center justify-center px-4">
                                             <Dialog.Panel className="panel my-8 w-full max-w-sm overflow-hidden rounded-lg py-1 px-4 text-black dark:text-white-dark">
-                                              <div className="flex items-center justify-between p-5">
-                                                <h5> {t('Pass to other loop')} </h5>
-                                                <button
-                                                  type="button"
-                                                  onClick={() => setModal21(false)}
-                                                  className="text-white-dark hover:text-dark"
-                                                >
-                                                  <IconX className="w-5 h-5" />
-                                                </button>
-                                              </div>
-                                              <div className="p-5">
-                                                <form>
-                                                  <div className="relative mb-4">
-                                                    <input type="date" placeholder="Tarih" className="form-input" id="tarih" value={selectedDate} onChange={(e) => setSelectedDate(e.target.value)}/>
+                                            <div className="flex items-center justify-between p-5">
+                                                    <h5><strong>{selectedCompany?.CompanyName}</strong> {t('company\'s application')} </h5>
+                                                    <button
+                                                      type="button"
+                                                      onClick={() => setModal21(false)}
+                                                      className="text-white-dark hover:text-dark"
+                                                    >
+                                                      <IconX className="w-5 h-5" />
+                                                    </button>
                                                   </div>
-                                                  <button
-                                                    type="button"
-                                                    onClick={() => handleSave(Number(İnekID))} // Kaydetme fonksiyonu çağrısı
-                                                    className="btn btn-primary w-full"
-                                                  >
-                                                    {t("Save")}
-                                                  </button>
-                                                </form>
-                                              </div>
+                                                  <div className="p-5">
+                                                    <form className="space-y-2">
+                                                      <button
+                                                        type="button"
+                                                        onClick={() => acceptCompany(Number(CompanyID))}
+                                                        className="btn btn-success w-full gap-5"
+                                                      >
+                                                        {t("Accept")}
+                                                      </button>
+                                                      <button
+                                                        type="button"
+                                                        onClick={() => setModal21(false)}
+                                                        className="btn btn-danger w-full"
+                                                      >
+                                                        {t("Cancel")}
+                                                      </button>
+                                                    </form>
+                                                  </div>
                                             </Dialog.Panel>
                                           </div>
                                         </div>
@@ -285,15 +377,21 @@ const MultipleTables = () => {
                                 ),
                             },
                             {
-                                accessor: 'Sürüden Çıkar',
-                                title: t('Leave The Herd'),
-                                titleClassName: '!text-center',
-                                render: ({İnekID}) => (
-                                    <div className="flex items-center w-max mx-auto gap-2">
-                                        <Tippy content="Delete">
+                                accessor: 'Reject',
+                                title: t('Reject'),
+                                render: ({CompanyID,CompanyName,CompanyRejectedBefore,CompanyRejectedReason}) => (
+                                    <div className="flex items-center w-max mx-auto gap-2 bg-red-100 rounded-full">
+                                        <Tippy content="Reject">
                                             <button type="button"
-                                            onClick={() => setModal22(true)}>
-                                                <IconTrashLines />
+                                            onClick={() => {                                              
+                                              setModal22(true)
+                                              setSelectedCompany({
+                                                  CompanyID: CompanyID,
+                                                  CompanyName: CompanyName,
+                                                  CompanyRejectedBefore: CompanyRejectedBefore,
+                                                  CompanyRejectedReason: CompanyRejectedReason
+                                              });}}>
+                                                <IconXCircle />
                                             </button>
                                         </Tippy>
                                       <Transition appear show={modal22} as={Fragment}>
@@ -302,7 +400,7 @@ const MultipleTables = () => {
                                           <div className="flex min-h-screen items-center justify-center px-4">
                                             <Dialog.Panel className="panel my-8 w-full max-w-sm overflow-hidden rounded-lg py-1 px-4 text-black dark:text-white-dark">
                                               <div className="flex items-center justify-between p-5">
-                                                <h5> {t('Out to the loop')} </h5>
+                                                <h5><strong>{selectedCompany?.CompanyName}</strong> {t('company\'s application')} </h5>
                                                 <button
                                                   type="button"
                                                   onClick={() => setModal22(false)}
@@ -312,34 +410,31 @@ const MultipleTables = () => {
                                                 </button>
                                               </div>
                                               <div className="p-5">
-                                                <form>
+                                                <form className="space-y-2">
                                                   <div className="relative mb-4">
-                                                  <label htmlFor="tarih" className="text-sm text-gray-500">{t('Date of Removal from the Loop')}</label>
-                                                    <input 
-                                                        type="date" 
-                                                        placeholder="Tarih" 
-                                                        className="form-input border border-gray-300 rounded-lg p-2 text-gray-700" 
-                                                        id="tarih" 
-                                                        value={selectedDate} 
-                                                        onChange={(e) => setSelectedDate(e.target.value)} 
-                                                    />
-
-                                                    <label htmlFor="neden" className="text-sm text-gray-500">Döngüden Çıkarma Nedeni</label>
+                                                    <label htmlFor="redSebebi">{t('Reject Reson')}</label>
                                                     <input 
                                                         type="text" 
                                                         placeholder="Neden?" 
                                                         className="form-input border border-gray-300 rounded-lg p-2 text-gray-700" 
-                                                        id="neden" 
+                                                        id="redSebebi" 
                                                         value={reson} 
                                                         onChange={(e) => setReson(e.target.value)} 
                                                     />
                                                   </div>
                                                   <button
                                                     type="button"
-                                                    onClick={() => handleOutCycle(toNumber(İnekID))} // Kaydetme fonksiyonu çağrısı
-                                                    className="btn btn-primary w-full"
+                                                    onClick={() => rejectCompany(toNumber(CompanyID),reson)} // Kaydetme fonksiyonu çağrısı
+                                                    className="btn btn-warning w-full"
                                                   >
-                                                    {t("Save")}
+                                                    {t("Reject")}
+                                                  </button>
+                                                  <button
+                                                        type="button"
+                                                        onClick={() => setModal22(false)}
+                                                        className="btn btn-danger w-full"
+                                                      >
+                                                      {t("Cancel")}
                                                   </button>
                                                 </form>
                                               </div>

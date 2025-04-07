@@ -28,7 +28,7 @@ const BasvuruDurum = () => {
     });
     const isDark = useSelector((state: IRootState) => state.themeConfig.theme === 'dark' || state.themeConfig.isDarkMode);
     const [activeTab4, setActiveTab4] = useState<any>(1);
-
+    const [modal21, setModal21] = useState(false);
         const setLocale = (flag: string) => {
             setFlag(flag);
             if (flag.toLowerCase() === 'ae') {
@@ -179,6 +179,13 @@ const BasvuruDurum = () => {
                         <p className="mb-5">{activeTab4 === 3 && mesajAlt}</p>
                     </div>
                 </div>
+                    <button
+                        type="button"
+                        onClick={() => setModal21(false)}
+                        className="btn btn-gradient mx-auto !mt-7 w-max border-0 uppercase shadow-none"
+                        >
+                        {t("Reapply")}
+                    </button>
                     <Link to="/" className="btn btn-gradient mx-auto !mt-7 w-max border-0 uppercase shadow-none">
                         {t('Home')}
                     </Link>

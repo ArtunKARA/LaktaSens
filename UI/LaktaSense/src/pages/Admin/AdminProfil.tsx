@@ -622,14 +622,14 @@ const AccountSetting = () => {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                             <div className="panel space-y-5">
                                 <h5 className="font-semibold text-lg mb-4">{t('Manage Users')}</h5>
-                                <p>{t('Manage users connected to the company')}</p>
+                                <p>{t('Manage admin users.')}</p>
                                 <button
                                 onClick={() => {setisVisibleFirmaKullanici(!isVisibleFirmaKullanici); isVisibleCiftlikBilgi && setisVisibleCiftlikBilgi(!isVisibleCiftlikBilgi);}}
                                 className="btn btn-secondary">{t('Manage')}</button>
                             </div>
                             <div className="panel space-y-5">
-                                <h5 className="font-semibold text-lg mb-4">{t('Company Info')}</h5>
-                                <p>{t('Manage the company info.')}</p>
+                                <h5 className="font-semibold text-lg mb-4">{t('Bill Info')}</h5>
+                                <p>{t('Manage the bill info.')}</p>
                                 <button
                                 onClick={() => {setisVisibleCiftlikBilgi(!isVisibleCiftlikBilgi); isVisibleFirmaKullanici && setisVisibleFirmaKullanici(!isVisibleFirmaKullanici);}}
                                 className="btn btn-primary">{t('Manage')}</button>
@@ -649,8 +649,8 @@ const AccountSetting = () => {
                                 onSubmit={() => {}}
                             >{({ errors, submitCount, touched, values }) => (
                                 <Form className="border border-[#ebedf2] dark:border-[#191e3a] rounded-md p-4 mb-5 bg-white dark:bg-black panel mt-6">
-                                    <h6 className="text-lg font-bold mb-5">{t('Company Info')}</h6>
-                                        <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-5" style={{ paddingTop: '1%'}}>
+                                    <h6 className="text-lg font-bold mb-5">{t('Bill Info')}</h6>
+                                        <div className="flex-1 grid grid-cols-1 sm:grid-cols-1 gap-5" style={{ paddingTop: '1%'}}>
                                             <div>
                                                 <label htmlFor="firmaAdi">{t('Company Name')}</label>
                                                 <Field name="firmaAdi" id="firmaAdi" type="text" className="form-input" />
@@ -664,34 +664,6 @@ const AccountSetting = () => {
                                                     ''
                                                 )}
                                         </div>
-                                        <div className="flex-1 grid grid-cols-2 sm:grid-cols-2 gap-5">
-                                            <div>
-                                                <label htmlFor="firmaBollge">{t('Company Area')}</label>
-                                                {(() => {
-                                                    if (firmaInfo?.bolge === 'a') {
-                                                        return <span id="firmaBollge" className="badge bg-success text-lg block mx-auto text-center">İç Anadolu</span>;
-                                                    } else if (firmaInfo?.bolge === 'b')  {
-                                                        return <span id="firmaBollge"  className="badge bg-primary text-lg block mx-auto text-center">Marmara</span>;
-                                                    } else {
-                                                        return <span id="firmaBollge"  className="badge bg-dark text-lg block mx-auto text-center">NaN</span>;; // Return nothing if no condition matches
-                                                    }
-                                                })()}
-                                            </div>
-                                            <div>
-                                                <label htmlFor="hesapDurumu">{t('Account Status')}</label>
-                                                {(() => {
-                                                    if (firmaInfo?.hesapDurumu === 'a') {
-                                                        return <span id="hesapDurumu" className="badge bg-success text-lg block mx-auto text-center">{t('Active')}</span>;
-                                                    } else if (userInfo.hesapDurumu === 'p')  {
-                                                        return <span id="hesapDurumu"  className="badge bg-primary text-lg block mx-auto text-center">{t('Passive')}</span>;
-                                                    } else if (userInfo.hesapDurumu === 'b')  {
-                                                        return <span id="hesapDurumu"  className="badge bg-primary text-lg block mx-auto text-center">{t('On hold')}</span>;
-                                                    }else {
-                                                        return <span id="hesapDurumu"  className="badge bg-dark text-lg block mx-auto text-center">NaN</span>;; // Return nothing if no condition matches
-                                                    }
-                                                })()}
-                                            </div>
-                                            </div>
                                         </div>
                                         <div className="flex-1 grid grid-cols-1 sm:grid-cols-1 gap-5" style={{ paddingTop: '1%'}}>
                                             <div>
@@ -784,7 +756,7 @@ const AccountSetting = () => {
                         {isVisibleFirmaKullanici && <div>
                             <div className="panel mt-6">
                                 <div className="flex md:items-center md:flex-row flex-col mb-5 gap-5">
-                                    <h5 className="font-semibold text-lg dark:text-white-light">{t('Company Users')}</h5>
+                                    <h5 className="font-semibold text-lg dark:text-white-light">{t('Admin Users')}</h5>
                                     <button type="button" className="btn btn-warning ltr:ml-auto rtl:mr-auto" onClick={() => {setisVisibleFirmaKullaniciEkle(!isVisibleFirmaKullaniciEkle);}}>{t('Add User')}</button>
                                     <div className="ltr:ml-auto rtl:mr-auto">
                                         <input type="text" className="form-input w-auto" placeholder="Search..." value={search} onChange={(e) => setSearch(e.target.value)} />

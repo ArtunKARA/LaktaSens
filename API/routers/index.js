@@ -13,7 +13,8 @@ const yeniDogan = require("./çiftçi/yeni-dogan.js");
 const cifciAnaliz = require("./çiftçi/analiz-cifci.js");
 const firma = require("./firma.js");
 const adminAnaliz = require("./admin/analiz.js");
-
+const basvurular = require("./admin/basvurular.js");
+const adminFirmalar = require("./admin/adminFirmalar.js");
 
 const router = express.Router();
 
@@ -36,5 +37,7 @@ router.use("/api/yeniDogan",yeniDogan);
 router.use("/api/cifciAnaliz",cifciAnaliz);
 router.use("/api/firma",firma);
 router.use("/api/adminAnaliz",adminAnaliz);
+router.use("/api/basvurular",basvurular);
+router.use("/api/adminFirmalar",adminFirmalar)
 
 module.exports = router;

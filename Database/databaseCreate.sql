@@ -145,6 +145,17 @@ CREATE TABLE kullanicilar (
 );
 GO
 
+CREATE TABLE RedEdilenBaşvurularFirmalar (
+    redEdilenBaşvurularID INT PRIMARY KEY IDENTITY(1,1),
+    firmaID INT,
+    kullaniciID INT,
+    redNedeni NVARCHAR(300),
+    redTarihi DATE,
+    FOREIGN KEY (firmaID) REFERENCES firmalar(firmaID),
+    FOREIGN KEY (kullaniciID) REFERENCES kullanicilar(kullaniciID)
+);
+GO
+
 -- Trigger'ları yeniden oluştur
 
 -- After update trigger for sonDogurmaTarihi

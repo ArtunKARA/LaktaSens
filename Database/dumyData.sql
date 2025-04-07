@@ -2,7 +2,10 @@
 INSERT INTO firmalar (firmaAdi,firmaTur, telefonNo, firmaMail, firmaAdresi, sehirID, ilceID, bolge, hesapDurumu) VALUES
 (N'LaktaSens','a', '1234567890','info@laktasense.com', N'Adres 1, Şehir',1,1056, 'a', 'a'),
 (N'Çiftlik Baba','c','0987654321','info@ciftlik2.com', N'Adres 2, Şehir',1,1056, 'b', 'a'),
-(N'MaxTedarik','t','1234567890','info@MaxTedarik.com', N'Adres 3, Şehir',1,1056, 'a', 'a');
+(N'MaxTedarik','t','1234567890','info@MaxTedarik.com', N'Adres 3, Şehir',1,1056, 'a', 'a'),
+(N'Yılmaz Gıda A.Ş.','c','5852136547','iletisim@yilmazgida.com', N'Organize Sanayi Bölgesi, No:12, Afyonkarahisar',10,2365, 'a', 'b'),
+(N'Angarasta Yem A.Ş.','c','5206931245','astar@agarta.com', N'Merkezde bir yer',6,1114, 'a', 'b'),
+(N'Memoli Yem Tic. A.Ş','t','5506731835','info@memoliyem.com', N'Serbest Ticaret Bölgesi, No:12',7,1154, 'a', 'b'),
 GO
 
 -- İnek tablosuna veri ekleme
@@ -137,9 +140,21 @@ VALUES
 ('64964677470', 'ciftci1@example.com', 'password123', 'c', 'a', 'Ali', 'Kaya', '5312345678', 'a', 2),
 ('58828817850', 'ciftci2@example.com', 'password123', 'c', 'k', 'Ayşe', 'Demir', '5323456789', 'p', 2),
 ('18134486140', 'ciftci3@example.com', 'password123', 'c', 'k', 'Mehmet', 'Çelik', '5334567890', 'b', 2),
+('12345678901', 'ali.yilmaz@example.com', 'Gida2024!', 'c', 'a', 'Ali', 'Yılmaz', '05551234567', 'b', 4),
+('16684246344', 'artunankara@gmail.com', 'Asd123', 'c', 'a', 'Ablovom', 'Komposto', '5334567890', 'b', 5),
 
 -- Tedarikçi Kullanıcıları
 ('47264317352', 'tedarikci1@example.com', 'password123', 't', 'a', 'Zeynep', 'Şahin', '5345678901', 'a', 3),
 ('43323783496', 'tedarikci2@example.com', 'password123', 't', 'k', 'Fatma', 'Eren', '5356789012', 'p', 3),
+('18134486140', 'mehmet@memoliyem.com', 'Asd123', 't', 'a', 'Memhmet', 'Öneli', '5506731835', 'b', 6),   
 ('16684246344', 'tedarikci3@example.com', 'password123', 't','k', 'Hakan', 'Koç', '5367890123', 'b', 3);
+GO
+
+INSERT INTO RedEdilenBaşvurularFirmalar (firmaID, kullaniciID, redNedeni, redTarihi)
+VALUES 
+-- Çiftçi 
+(4, 1, 'Başvuru bilgileri eksik.', CAST(GETDATE() AS DATE)),
+
+-- Tedarikçi 
+(6, 1, 'Firma kriterlerimizi karşılamamaktadır.', CAST(GETDATE() AS DATE));
 GO
