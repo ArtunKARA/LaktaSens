@@ -35,6 +35,9 @@ const AktifTedarikci = lazy(() => import('../pages/Admin/HesapYonetimi/Tedarikci
 const PasifTedarikci = lazy(() => import('../pages/Admin/HesapYonetimi/Tedarikci/PasifTedarikciler'));
 const CiflikDetay = lazy(() => import('../pages/Admin/HesapYonetimi/Cifci/CiflikDetay'));
 const TedarikciDetay = lazy(() => import('../pages/Admin/HesapYonetimi/Tedarikci/TedarikciDetay'));
+const FatruaOnizleme = lazy(() => import('../pages/Admin/HesapYonetimi/FatruaOnizleme'));
+const FaturaDetay = lazy(() => import('../pages/Admin/HesapYonetimi/FaturaDetay'));
+
 
 
 
@@ -237,6 +240,16 @@ const routes = [
     {
         path: '/admin/TedarikciDetay',
         element:<AuthGuard allowedRoles={['a']}><TedarikciDetay /></AuthGuard>,
+        layout : 'admin',
+    },
+    {
+        path: '/admin/FatruaOnizleme',
+        element:<AuthGuard allowedRoles={['a']}><FatruaOnizleme /></AuthGuard>,
+        layout : 'admin',
+    },
+    {
+        path: '/admin/FaturaDetay',
+        element:<AuthGuard allowedRoles={['a']}><FaturaDetay /></AuthGuard>,
         layout : 'admin',
     },
 

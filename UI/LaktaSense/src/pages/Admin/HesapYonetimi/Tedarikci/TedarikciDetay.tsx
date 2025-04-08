@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, NavLink, useLocation } from 'react-router-dom';
 import { Dialog, DialogPanel, Transition, TransitionChild } from '@headlessui/react';
 import { useEffect, useState, Fragment } from 'react';
 import { setPageTitle } from '../../../../store/themeConfigSlice';
@@ -26,6 +26,9 @@ import IconTrendingUp from '../../../../components/Icon/IconTrendingUp';
 import IconMenu from '../../../../components/Icon/IconMenu';
 import IconUser from '../../../../components/Icon/IconUser';
 import IconPlus from '../../../../components/Icon/IconPlus';
+import IconEdit from '../../../../components/Icon/IconEdit';
+import IconEye from '../../../../components/Icon/IconEye';
+import IconBox from '../../../../components/Icon/IconBox';
 
 const AccountSetting = () => {
     interface OptionType {
@@ -63,6 +66,16 @@ const AccountSetting = () => {
         ReddedenKullanıcı: string;
     }
 
+    interface BillList {
+        id: string,
+        invoice: string,
+        name: string,
+        email: string,
+        date: string,
+        amount: string,
+        status: { tooltip: 'Paid', color: 'success' },
+    }
+
     const storedUserInfo = localStorage.getItem('userInfo');
     const userInfo = storedUserInfo ? JSON.parse(storedUserInfo) : null;
     const [firmaInfo, setFirmaInfo] = useState<firmaInfo | null>(null);
@@ -72,6 +85,7 @@ const AccountSetting = () => {
     const [hesapSil, setHesapSil] = useState(false);
     const [hesapDondur, setHesapDondur] = useState(false);
     const [hesapAktifleştir, setHesapAktifleştir] = useState(false);
+    const [hesapPasif, setHesapPasif] = useState(false);
     const [ciftlikSil, setCiftlikSil] = useState(false);
     const { t } = useTranslation();
     const dispatch = useDispatch();
@@ -510,7 +524,76 @@ const AccountSetting = () => {
         }else{
           return "NaN"
         }
-    }; 
+    };
+
+    const deleteRow = (id: any = null) => {
+        if (window.confirm(t('Are you sure want to delete selected row ?'))) {
+            if (id) {
+                setRecordsBillList(itemsBillList.filter((user) => user.id !== id));
+                setInitialRecordsBillList(itemsBillList.filter((user) => user.id !== id));
+                setItemsBillList(itemsBillList.filter((user) => user.id !== id));
+                setSearchBillList('');
+                setSelectedRecordsBillList([]);
+            } else {
+                let selectedRows = selectedRecordsBillList || [];
+                const ids = selectedRows.map((d: any) => {
+                    return d.id;
+                });
+                const result = itemsBillList.filter((d) => !ids.includes(d.id as never));
+                setRecordsBillList(result);
+                setInitialRecordsBillList(result);
+                setItemsBillList(result);
+                setSearchBillList('');
+                setSelectedRecordsBillList([]);
+                setPageBillList(1);
+            }
+        }
+    };
+
+    const [itemsBillList, setItemsBillList] = useState<BillList[]>([]);
+    const [pageBillList, setPageBillList] = useState(1);
+    const [pageSizeBillList, setPageSizeBillList] = useState(PAGE_SIZES[0]);
+    const [initialRecordsBillList, setInitialRecordsBillList] = useState(sortBy(itemsBillList, 'invoice'));
+    const [recordsBillList, setRecordsBillList] = useState(initialRecordsBillList);
+    const [selectedRecordsBillList, setSelectedRecordsBillList] = useState<BillList[]>([]);
+
+    const [searchBillList, setSearchBillList] = useState('');
+    const [sortStatusBillList, setSortStatusBillList] = useState<DataTableSortStatus>({
+        columnAccessor: 'firstName',
+        direction: 'asc',
+    });
+
+    useEffect(() => {
+        setPageBillList(1);
+        /* eslint-disable react-hooks/exhaustive-deps */
+    }, [pageSizeBillList]);
+
+    useEffect(() => {
+        const from = (pageBillList - 1) * pageSizeBillList;
+        const to = from + pageSizeBillList;
+        setRecordsBillList([...initialRecordsBillList.slice(from, to)]);
+    }, [pageBillList, pageSizeBillList, initialRecordsBillList]);
+
+    useEffect(() => {
+        setInitialRecordsBillList(() => {
+            return itemsBillList.filter((item) => {
+                return (
+                    item.invoice.toLowerCase().includes(searchBillList.toLowerCase()) ||
+                    item.name.toLowerCase().includes(searchBillList.toLowerCase()) ||
+                    item.email.toLowerCase().includes(searchBillList.toLowerCase()) ||
+                    item.date.toLowerCase().includes(searchBillList.toLowerCase()) ||
+                    item.amount.toLowerCase().includes(searchBillList.toLowerCase()) ||
+                    item.status.tooltip.toLowerCase().includes(searchBillList.toLowerCase())
+                );
+            });
+        });
+    }, [searchBillList]);
+
+    useEffect(() => {
+        const data2 = sortBy(initialRecordsBillList, sortStatusBillList.columnAccessor);
+        setRecordsBillList(sortStatusBillList.direction === 'desc' ? data2.reverse() : data2);
+        setPageBillList(1);
+    }, [sortStatusBillList]);
 
     return (
         <div>
@@ -553,6 +636,19 @@ const AccountSetting = () => {
                             >
                             <IconDollarSignCircle />
                             {t("Manage Payment")}
+                            </button>
+                        </li>
+                        )}
+                        {userInfo.hesapFirmaYetkisi === 'a' && (
+                        <li className="inline-block">
+                            <button
+                            onClick={() => toggleTabs('manage-product')}
+                            className={`flex gap-2 p-4 border-b border-transparent hover:border-primary hover:text-primary ${
+                                tabs === 'manage-product' ? '!border-primary text-primary' : ''
+                            }`}
+                            >
+                            <IconBox />
+                            {t("Manage Product")}
                             </button>
                         </li>
                         )}
@@ -1266,6 +1362,9 @@ const AccountSetting = () => {
                 ) : (
                     ''
                 )}
+                {tabs === 'manage-product' ? (
+                    <div></div>
+                ): (null)}
                 {tabs === 'manage-payment' ? (
                     <div className="switch">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -1379,22 +1478,110 @@ const AccountSetting = () => {
                         </div>
                     </div>}
                     {isVisibleOdemeler && 
-                    <div className="border border-[#ebedf2] dark:border-[#191e3a] rounded-md p-4 mb-5 bg-white dark:bg-black panel mt-6">
+                        <div className="border border-[#ebedf2] dark:border-[#191e3a] rounded-md p-4 mb-5 bg-white dark:bg-black panel mt-6">
                         <div className="invoice-table">
                             <div className="mb-4.5 px-5 flex md:items-center md:flex-row flex-col gap-5">
                                 <div className="flex items-center gap-2">
-                                    <button type="button" className="btn btn-danger gap-2" >
+                                    <button type="button" className="btn btn-danger gap-2" onClick={() => deleteRow()}>
                                         <IconTrashLines />
-                                        Delete
+                                        {t('Delete')}
                                     </button>
-                                    <Link to="/apps/invoice/add" className="btn btn-primary gap-2">
+                                    <Link to="/admin/FaturaDetay" className="btn btn-primary gap-2">
                                         <IconPlus />
-                                        Add New
+                                        {t('Add New')}
                                     </Link>
                                 </div>
                                 <div className="ltr:ml-auto rtl:mr-auto">
                                     <input type="text" className="form-input w-auto" placeholder="Search..." value={search} onChange={(e) => setSearch(e.target.value)} />
                                 </div>
+                            </div>
+            
+                            <div className="datatables pagination-padding">
+                                <DataTable
+                                    className="whitespace-nowrap table-hover invoice-table"
+                                    records={recordsBillList}
+                                    columns={[
+                                        {
+                                            accessor: 'invoice',
+                                            title: t('Invoice'),
+                                            sortable: true,
+                                            render: ({ invoice }) => (
+                                                <NavLink to="/apps/invoice/preview">
+                                                    <div className="text-primary underline hover:no-underline font-semibold">{`#${invoice}`}</div>
+                                                </NavLink>
+                                            ),
+                                        },
+                                        {
+                                            accessor: 'name',
+                                            sortable: true,
+                                            title: t('Name'),
+                                            render: ({ name, id }) => (
+                                                <div className="flex items-center font-semibold">
+                                                    <div className="p-0.5 bg-white-dark/30 rounded-full w-max ltr:mr-2 rtl:ml-2">
+                                                        <img className="h-8 w-8 rounded-full object-cover" src={`/assets/images/profile-${id}.jpeg`} alt="" />
+                                                    </div>
+                                                    <div>{name}</div>
+                                                </div>
+                                            ),
+                                        },
+                                        {
+                                            accessor: 'email',
+                                            title: t('Email'),
+                                            sortable: true,
+                                        },
+                                        {
+                                            accessor: 'date',
+                                            title: t('Date'),
+                                            sortable: true,
+                                        },
+                                        {
+                                            accessor: 'amount',
+                                            title: t('Amount'),
+                                            sortable: true,
+                                            titleClassName: 'text-right',
+                                            render: ({ amount, id }) => <div className="text-right font-semibold">{`$${amount}`}</div>,
+                                        },
+                                        {
+                                            accessor: 'status',
+                                            title: t('Status'),
+                                            sortable: true,
+                                            render: ({ status }) => <span className={`badge badge-outline-${status.color} `}>{status.tooltip}</span>,
+                                        },
+                                        {
+                                            accessor: 'action',
+                                            title: t('Actions'),
+                                            sortable: false,
+                                            textAlignment: 'center',
+                                            render: ({ id }) => (
+                                                <div className="flex gap-4 items-center w-max mx-auto">
+                                                    <NavLink to="/apps/invoice/edit" className="flex hover:text-info">
+                                                        <IconEdit className="w-4.5 h-4.5" />
+                                                    </NavLink>
+                                                    <NavLink to="/apps/invoice/preview" className="flex hover:text-primary">
+                                                        <IconEye />
+                                                    </NavLink>
+                                                    {/* <NavLink to="" className="flex"> */}
+                                                    <button type="button" className="flex hover:text-danger" onClick={(e) => deleteRow(id)}>
+                                                        <IconTrashLines />
+                                                    </button>
+                                                    {/* </NavLink> */}
+                                                </div>
+                                            ),
+                                        },
+                                    ]}
+                                    highlightOnHover
+                                    totalRecords={initialRecordsBillList.length}
+                                    recordsPerPage={pageSizeBillList}
+                                    page={pageBillList}
+                                    onPageChange={(p) => setPageBillList(p)}
+                                    recordsPerPageOptions={PAGE_SIZES}
+                                    onRecordsPerPageChange={setPageSizeBillList}
+                                    sortStatus={sortStatus}
+                                    onSortStatusChange={setSortStatus}
+                                    selectedRecords={selectedRecordsBillList}
+                                    onSelectedRecordsChange={setSelectedRecordsBillList}
+                                    paginationText={({ from, to, totalRecords }) => `Showing  ${from} to ${to} of ${totalRecords} entries`}
+                                />
                             </div>
                         </div>
                     </div>
@@ -1493,9 +1680,53 @@ const AccountSetting = () => {
                             </Transition>
                             </div>
                             <div className="panel space-y-5">
+                                <h5 className="font-semibold text-lg mb-4">{t('Pasive Account')}</h5>
+                                <p>{t('Account Set Passive')}</p>
+                                <button onClick={() => setHesapPasif(true)} className="btn btn-danger btn-delete-account">{t('Pasive Account')}</button>
+                                <Transition appear show={hesapPasif} as={Fragment}>
+                                <Dialog as="div" open={hesapPasif} onClose={() => setHesapPasif(false)}>
+                                    <TransitionChild
+                                        as={Fragment}
+                                        enter="ease-out duration-300"
+                                        enterFrom="opacity-0"
+                                        enterTo="opacity-100"
+                                        leave="ease-in duration-200"
+                                        leaveFrom="opacity-100"
+                                        leaveTo="opacity-0"
+                                    >
+                                        <div className="fixed inset-0" />
+                                    </TransitionChild>
+                                    <div id="slideIn_down_modal" className="fixed inset-0 bg-[black]/60 z-[999] overflow-y-auto">
+                                        <div className="flex items-start justify-center min-h-screen px-4">
+                                            <DialogPanel className="panel border-0 p-0 rounded-lg overflow-hidden w-full max-w-lg my-8 text-black dark:text-white-dark animate__animated animate__slideInDown">
+                                                <div className="flex bg-[#fbfbfb] dark:bg-[#121c2c] items-center justify-between px-5 py-3">
+                                                    <h5 className="font-bold text-lg">{t('Account Set Passive')}</h5>
+                                                </div>
+                                                <div className="p-5">
+                                                    <p>
+                                                        {t('This action will initiate account pasive. The same actions applied to groups will apply to this account.')}
+                                                    </p>
+                                                    <div className="flex justify-end items-center mt-8">
+                                                        <button onClick={() => setHesapPasif(false)} type="button" className="btn btn-outline-danger">
+                                                            {t('Cancel')}
+                                                        </button>
+                                                        <button onClick={() => setHesapPasif(false)} type="button" className="btn btn-primary ltr:ml-4 rtl:mr-4">
+                                                            {t('Accept')}
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </DialogPanel>
+                                        </div>
+                                    </div>
+                                </Dialog>
+                            </Transition>
+                            </div>
+                        </div>
+                        <div className="border border-[#ebedf2] dark:border-[#191e3a] rounded-md p-4 mb-5 bg-white dark:bg-black panel mt-6">
+                        <div className="panel space-y-5 gap-5 text-center">
                                 <h5 className="font-semibold text-lg mb-4">{t('Delete Account')}</h5>
                                 <p>{t('Once you delete the account, there is no going back. Please be certain.')}</p>
-                                <button onClick={() => setHesapSil(true)} className="btn btn-danger btn-delete-account">{t('Delete Account')}</button>
+                                <button onClick={() => setHesapSil(true)} className="btn btn-danger btn-delete-account justify-self-center">{t('Delete Account')}</button>
                                 <Transition appear show={hesapSil} as={Fragment}>
                                 <Dialog as="div" open={hesapSil} onClose={() => setHesapSil(false)}>
                                     <TransitionChild
@@ -1534,8 +1765,7 @@ const AccountSetting = () => {
                                 </Dialog>
                             </Transition>
                             </div>
-                            
-                        </div>
+                            </div>
                     </div>
                 ) : (
                     ''

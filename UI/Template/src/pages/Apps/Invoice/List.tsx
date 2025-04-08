@@ -141,71 +141,71 @@ const List = () => {
     const deleteRow = (id: any = null) => {
         if (window.confirm('Are you sure want to delete selected row ?')) {
             if (id) {
-                setRecords(items.filter((user) => user.id !== id));
-                setInitialRecords(items.filter((user) => user.id !== id));
+                setRecordsBillList(items.filter((user) => user.id !== id));
+                setInitialRecordsBillList(items.filter((user) => user.id !== id));
                 setItems(items.filter((user) => user.id !== id));
-                setSearch('');
-                setSelectedRecords([]);
+                setSearchBillList('');
+                setSelectedRecordsBillList([]);
             } else {
-                let selectedRows = selectedRecords || [];
+                let selectedRows = selectedRecordsBillList || [];
                 const ids = selectedRows.map((d: any) => {
                     return d.id;
                 });
                 const result = items.filter((d) => !ids.includes(d.id as never));
-                setRecords(result);
-                setInitialRecords(result);
+                setRecordsBillList(result);
+                setInitialRecordsBillList(result);
                 setItems(result);
-                setSearch('');
-                setSelectedRecords([]);
-                setPage(1);
+                setSearchBillList('');
+                setSelectedRecordsBillList([]);
+                setPageBillList(1);
             }
         }
     };
 
-    const [page, setPage] = useState(1);
+    const [pageBillList, setPageBillList] = useState(1);
     const PAGE_SIZES = [10, 20, 30, 50, 100];
-    const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
-    const [initialRecords, setInitialRecords] = useState(sortBy(items, 'invoice'));
-    const [records, setRecords] = useState(initialRecords);
-    const [selectedRecords, setSelectedRecords] = useState<any>([]);
+    const [pageSizeBillList, setPageSizeBillList] = useState(PAGE_SIZES[0]);
+    const [initialRecordsBillList, setInitialRecordsBillList] = useState(sortBy(items, 'invoice'));
+    const [recordsBillList, setRecordsBillList] = useState(initialRecordsBillList);
+    const [selectedRecordsBillList, setSelectedRecordsBillList] = useState<any>([]);
 
-    const [search, setSearch] = useState('');
-    const [sortStatus, setSortStatus] = useState<DataTableSortStatus>({
+    const [searchBillList, setSearchBillList] = useState('');
+    const [sortStatusBillList, setSortStatusBillList] = useState<DataTableSortStatus>({
         columnAccessor: 'firstName',
         direction: 'asc',
     });
 
     useEffect(() => {
-        setPage(1);
+        setPageBillList(1);
         /* eslint-disable react-hooks/exhaustive-deps */
-    }, [pageSize]);
+    }, [pageSizeBillList]);
 
     useEffect(() => {
-        const from = (page - 1) * pageSize;
-        const to = from + pageSize;
-        setRecords([...initialRecords.slice(from, to)]);
-    }, [page, pageSize, initialRecords]);
+        const from = (pageBillList - 1) * pageSizeBillList;
+        const to = from + pageSizeBillList;
+        setRecordsBillList([...initialRecordsBillList.slice(from, to)]);
+    }, [pageBillList, pageSizeBillList, initialRecordsBillList]);
 
     useEffect(() => {
-        setInitialRecords(() => {
+        setInitialRecordsBillList(() => {
             return items.filter((item) => {
                 return (
-                    item.invoice.toLowerCase().includes(search.toLowerCase()) ||
-                    item.name.toLowerCase().includes(search.toLowerCase()) ||
-                    item.email.toLowerCase().includes(search.toLowerCase()) ||
-                    item.date.toLowerCase().includes(search.toLowerCase()) ||
-                    item.amount.toLowerCase().includes(search.toLowerCase()) ||
-                    item.status.tooltip.toLowerCase().includes(search.toLowerCase())
+                    item.invoice.toLowerCase().includes(searchBillList.toLowerCase()) ||
+                    item.name.toLowerCase().includes(searchBillList.toLowerCase()) ||
+                    item.email.toLowerCase().includes(searchBillList.toLowerCase()) ||
+                    item.date.toLowerCase().includes(searchBillList.toLowerCase()) ||
+                    item.amount.toLowerCase().includes(searchBillList.toLowerCase()) ||
+                    item.status.tooltip.toLowerCase().includes(searchBillList.toLowerCase())
                 );
             });
         });
-    }, [search]);
+    }, [searchBillList]);
 
     useEffect(() => {
-        const data2 = sortBy(initialRecords, sortStatus.columnAccessor);
-        setRecords(sortStatus.direction === 'desc' ? data2.reverse() : data2);
-        setPage(1);
-    }, [sortStatus]);
+        const data2 = sortBy(initialRecordsBillList, sortStatusBillList.columnAccessor);
+        setRecordsBillList(sortStatusBillList.direction === 'desc' ? data2.reverse() : data2);
+        setPageBillList(1);
+    }, [sortStatusBillList]);
 
     return (
         <div className="panel px-0 border-white-light dark:border-[#1b2e4b]">
@@ -222,14 +222,14 @@ const List = () => {
                         </Link>
                     </div>
                     <div className="ltr:ml-auto rtl:mr-auto">
-                        <input type="text" className="form-input w-auto" placeholder="Search..." value={search} onChange={(e) => setSearch(e.target.value)} />
+                        <input type="text" className="form-input w-auto" placeholder="Search..." value={searchBillList} onChange={(e) => setSearchBillList(e.target.value)} />
                     </div>
                 </div>
 
                 <div className="datatables pagination-padding">
                     <DataTable
                         className="whitespace-nowrap table-hover invoice-table"
-                        records={records}
+                        records={recordsBillList}
                         columns={[
                             {
                                 accessor: 'invoice',
@@ -294,16 +294,16 @@ const List = () => {
                             },
                         ]}
                         highlightOnHover
-                        totalRecords={initialRecords.length}
-                        recordsPerPage={pageSize}
-                        page={page}
-                        onPageChange={(p) => setPage(p)}
+                        totalRecords={initialRecordsBillList.length}
+                        recordsPerPage={pageSizeBillList}
+                        page={pageBillList}
+                        onPageChange={(p) => setPageBillList(p)}
                         recordsPerPageOptions={PAGE_SIZES}
-                        onRecordsPerPageChange={setPageSize}
-                        sortStatus={sortStatus}
-                        onSortStatusChange={setSortStatus}
-                        selectedRecords={selectedRecords}
-                        onSelectedRecordsChange={setSelectedRecords}
+                        onRecordsPerPageChange={setPageSizeBillList}
+                        sortStatus={sortStatusBillList}
+                        onSortStatusChange={setSortStatusBillList}
+                        selectedRecords={selectedRecordsBillList}
+                        onSelectedRecordsChange={setSelectedRecordsBillList}
                         paginationText={({ from, to, totalRecords }) => `Showing  ${from} to ${to} of ${totalRecords} entries`}
                     />
                 </div>

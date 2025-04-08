@@ -212,6 +212,10 @@ const MultipleTables = () => {
       }else{
         return color[3]
       }
+    };
+
+    const Details = (CompanyID : string) => {
+      navigate('/admin/CiflikDetay', { state: { CompanyID: CompanyID } });
     }; 
     return (
         <div>
@@ -315,7 +319,7 @@ const MultipleTables = () => {
                                                       </button>
                                                       <button
                                                         type="button"
-                                                        onClick={() => alert(Number(CompanyID))}
+                                                        onClick={() => Details(CompanyID)}
                                                         className="btn btn-warning w-full"
                                                       >
                                                         {t("Go To Farm Data")}

@@ -91,7 +91,7 @@ const LoginBoxed = () => {
             }else if(data.firmaHesapDurumu == "b"){
                 navigate('/basvuruDurum' , {state: { BasvuruDurum: data.firmaHesapDurumu }});
             }else if(data.firmaHesapDurumu == "p"){
-                navigate('/basvuruDurum', {state: { BasvuruDurum: data.firmaHesapDurumu }});
+                navigate('/basvuruDurum', {state: { BasvuruDurum: data.firmaHesapDurumu, FirmaID: data.firmaID }});
             }else{
                 setErrorMessage(data.message || t('Your account has been suspended.'));
             }

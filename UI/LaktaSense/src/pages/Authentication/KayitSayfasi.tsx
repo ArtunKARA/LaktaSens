@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { IRootState } from '../../store';
 import { setPageTitle, toggleRTL } from '../../store/themeConfigSlice';
@@ -19,6 +19,23 @@ import Select, { SingleValue } from 'react-select';
 import axios from 'axios';
 import { s } from '@fullcalendar/core/internal-common';
 
+interface CompanyDataAplication {
+    Firstname: string,
+    Lastname: string,
+    TCNumber: string,
+    Email: string,
+    TelefonNo: string,
+
+    FirmaTipi: string,
+    CompanyName:  string,
+    FirmaTelefonNo: string,
+    firmaAdresi: string,
+    FirmaEmail: string,
+    sehirID:  string,
+    ilceID:  string,
+    CompanyID: string,
+
+}
 
 
 const KayitSayfasi = () => {
@@ -109,6 +126,44 @@ const KayitSayfasi = () => {
             });
         }
     };
+
+    const submitReaplyForm = async (values: any) => {
+        const toast = Swal.mixin({
+            toast: true,
+            position: 'top',
+            showConfirmButton: false,
+            timer: 3000,
+        });
+    
+        try {
+            const response = await axios.post("http://localhost:3030/api/login/postYenidenBasvuru", values); // Burayı kendi API endpoint'inle değiştir
+    
+            if (response.status === 200 || response.status === 201) {
+                toast.fire({
+                    icon: 'success',
+                    title: 'Başvuru Başarı İle Alıdı',
+                    padding: '10px 20px',
+                });
+    
+                navigate("/"); // başarıyla yönlendir
+            } else {
+                // İsteğin başarılı olmaması durumunda
+                toast.fire({
+                    icon: 'error',
+                    title: 'Something went wrong, please try again',
+                    padding: '10px 20px',
+                });
+            }
+        } catch (error: any) {
+            // Sunucu hatası veya bağlantı hatası durumunda
+            toast.fire({
+                icon: 'error',
+                title: error.response?.data?.message || 'Registration failed',
+                padding: '10px 20px',
+            });
+        }
+    };
+    
     const submitFormValidation = Yup.object().shape({
         firstname: Yup.string().required('Please fill the first name'),
         lastname: Yup.string().required('Please fill the last name'),
@@ -197,6 +252,25 @@ const KayitSayfasi = () => {
             />
         );
     };
+
+    const location = useLocation();
+    const firmaID = location.state?.FirmaID || null;
+    const [CompanyDataAplication,setCompanyDataAplication] = useState<CompanyDataAplication>();
+    useEffect(() => {
+        if(firmaID != null){
+            axios.post('http://localhost:3030/api/login/postBasvuruBilgileri', {
+                firmaID: firmaID
+            })
+            .then(response => {
+                setCompanyDataAplication(response.data);
+                console.log(CompanyDataAplication);
+            })
+            .catch(error => {
+                console.error('Error fetching reject options:', error);
+            });
+        }
+    }, [firmaID]    
+    );
     
     return (
         <div>
@@ -259,25 +333,27 @@ const KayitSayfasi = () => {
                             </div>
                                 <Formik
                                     initialValues={{
-                                        firstname: '',
-                                        lastname: '',
-                                        tcNumber: '',
-                                        email: '',
-                                        telefonNo: '',
+                                        firmaID: CompanyDataAplication?.CompanyID || '',
+                                        firstname: CompanyDataAplication?.Firstname || '',
+                                        lastname: CompanyDataAplication?.Lastname || '',
+                                        tcNumber: CompanyDataAplication?.TCNumber || '',
+                                        email: CompanyDataAplication?.Email || '',
+                                        telefonNo: CompanyDataAplication?.TelefonNo || '',
                                         password: '',
-                                        confirmPassword: '',
+                                        confirmPassword:'',
 
-                                        firmaTipi:  '',
-                                        firmaAdi:  '',
-                                        firmaTelefonNo:  '',
-                                        firmaAdresi:  '',
-                                        firmaEmail:  '',
-                                        city:  '',
-                                        district:  '',
+                                        firmaTipi: CompanyDataAplication?.FirmaTipi || '',
+                                        firmaAdi: CompanyDataAplication?.CompanyName || '',
+                                        firmaTelefonNo: CompanyDataAplication?.FirmaTelefonNo || '',
+                                        firmaAdresi: CompanyDataAplication?.firmaAdresi || '',
+                                        firmaEmail: CompanyDataAplication?.FirmaEmail || '',
+                                        city: CompanyDataAplication?.sehirID || '',
+                                        district: CompanyDataAplication?.ilceID || '',
                                         
                                         agree: false,
                                     }}
                                     validationSchema={submitFormValidation}
+                                    enableReinitialize
                                     onSubmit={() => {}}
                                 >
                                     {({ errors, submitCount, touched, values }) => (
@@ -494,19 +570,33 @@ const KayitSayfasi = () => {
                                                 </div>
                                                 {submitCount ? errors.agree ? <div className="text-danger mt-1">{errors.agree}</div> : '' : ''}
                                             </div>
-
-                                            <button
-                                                type="submit"
-                                                className="btn btn-primary !mt-6"
-                                                onClick={() => {
+                                            {!firmaID ? (
+                                                <button
+                                                    type="submit"
+                                                    className="btn btn-primary !mt-6"
+                                                    onClick={() => {
                                                     console.log(Object.keys(errors));
                                                     if (Object.keys(touched).length !== 0 && Object.keys(errors).length === 0) {
                                                         submitForm(values);
                                                     }
-                                                }}
-                                            >
-                                                {t('Submit Form')}
-                                            </button>
+                                                    }}
+                                                >
+                                                    {t('Submit Form')}
+                                                </button>
+                                            ):(
+                                                <button
+                                                    type="submit"
+                                                    className="btn btn-primary !mt-6"
+                                                    onClick={() => {
+                                                    console.log(Object.keys(errors));
+                                                    if (Object.keys(touched).length !== 0 && Object.keys(errors).length === 0) {
+                                                        submitReaplyForm(values);
+                                                    }
+                                                    }}
+                                                >
+                                                    {t('Reapply')}
+                                                </button>
+                                            )}
                                         </Form>
                                     )}
                                 </Formik>                           

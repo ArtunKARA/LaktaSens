@@ -1,6 +1,6 @@
-import { useEffect } from 'react';
+import { Fragment, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { setPageTitle, toggleRTL } from '../../store/themeConfigSlice';
 import { IRootState } from '../../store';
 import { useState } from 'react';
@@ -13,13 +13,25 @@ import IconMenuDashboard from '../../components/Icon/Menu/IconMenuDashboard';
 import IconBellBing from '../../components/Icon/IconBellBing';
 import IconMenuAuthentication from '../../components/Icon/Menu/IconMenuAuthentication';
 import IconAirplay from '../../components/Icon/IconAirplay';
+import { Dialog, Transition } from '@headlessui/react';
+import IconX from '../../components/Icon/IconX';
+import axios from 'axios';
 
+interface CompanyRejectStatusData {
+    CompanyID: string;
+    CompanyName: string;
+    CompanyRejectedBefore: number;
+    CompanyRejectedReason: string;
+    RejectDate: string;
+  }
 
 
 const BasvuruDurum = () => {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
+    
     useEffect(() => {
-        dispatch(setPageTitle('Maintenance'));
+        dispatch(setPageTitle(t('Application Status')));
         if(durum === "b"){
             setActiveTab4(2);
         }else if(durum === "p"){
@@ -29,6 +41,7 @@ const BasvuruDurum = () => {
     const isDark = useSelector((state: IRootState) => state.themeConfig.theme === 'dark' || state.themeConfig.isDarkMode);
     const [activeTab4, setActiveTab4] = useState<any>(1);
     const [modal21, setModal21] = useState(false);
+    const [redBilgileri,setRedBilgileri] = useState<CompanyRejectStatusData>();
         const setLocale = (flag: string) => {
             setFlag(flag);
             if (flag.toLowerCase() === 'ae') {
@@ -43,6 +56,7 @@ const BasvuruDurum = () => {
         const { t } = useTranslation();
         const location = useLocation();
         const durum = location.state?.BasvuruDurum || 'Bilinmiyor';
+        const firmaID = location.state!.FirmaID || null;
 
         let baslık = "Under Maintenance";
         let renk = "text-blue-500";
@@ -76,6 +90,24 @@ const BasvuruDurum = () => {
             mesajAlt = t('Apply Again and Contact Support');
         }
 
+        useEffect(() => {
+            if(firmaID != null){
+                axios.post('http://localhost:3030/api/login/postBasvuruBilgileri', {
+                    firmaID: firmaID
+                })
+                .then(response => {
+                    setRedBilgileri(response.data);
+                    console.log(redBilgileri);
+                })
+                .catch(error => {
+                    console.error('Error fetching reject options:', error);
+                });
+            }
+        }, [firmaID]    
+        );
+        const reaplay = ()=> {
+            navigate('/register', {state: {FirmaID: redBilgileri?.CompanyID }});
+        }
 
     return (
         <div className="relative flex min-h-screen items-center justify-center overflow-hidden">
@@ -179,13 +211,58 @@ const BasvuruDurum = () => {
                         <p className="mb-5">{activeTab4 === 3 && mesajAlt}</p>
                     </div>
                 </div>
-                    <button
-                        type="button"
-                        onClick={() => setModal21(false)}
-                        className="btn btn-gradient mx-auto !mt-7 w-max border-0 uppercase shadow-none"
+                {activeTab4 === 3 &&
+                    <><button
+                            type="button"
+                            onClick={() => setModal21(true)}
+                            className="btn btn-gradient mx-auto !mt-7 w-max border-0 uppercase shadow-none"
                         >
-                        {t("Reapply")}
-                    </button>
+                            {t("Reapply")}
+                        </button><Transition appear show={modal21} as="div">
+                        <Dialog as="div" open={modal21} onClose={() => setModal21(false)}>
+                                    <div className="fixed inset-0 z-10 overflow-y-auto bg-[black]/10">
+                                        <div className="flex min-h-screen items-center justify-center px-4">
+                                            <Dialog.Panel className="panel my-8 w-full max-w-sm overflow-hidden rounded-lg py-1 px-4 text-black dark:text-white-dark">
+                                                <div className="flex items-center justify-between p-5">
+                                                    <h5><strong>{redBilgileri?.CompanyName}</strong> {t('company\'s application')} </h5>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => setModal21(false)}
+                                                        className="text-white-dark hover:text-dark"
+                                                    >
+                                                        <IconX className="w-5 h-5" />
+                                                    </button>
+                                                </div>
+                                                <div className="p-5">
+                                                    <form className="space-y-2">
+                                                        <div className="relative mb-4">
+                                                          <p className="p-2">{t('Number of applications of the company:')}</p>
+                                                          <p className="p-2 text-red-400">{redBilgileri?.CompanyRejectedBefore}</p>
+                                                          <p className="p-2">{t('This company was previously rejected, most recently for the following reason:')}</p>
+                                                          <p className="p-2 text-red-400">{redBilgileri?.CompanyRejectedReason}</p>
+                                                        </div>
+                                                        <button
+                                                            type="button"
+                                                            className="btn btn-success w-full gap-5"
+                                                            onClick={() => reaplay()}
+                                                        >
+                                                            {t("Accept")}
+                                                        </button>
+                                                        <button
+                                                            type="button"
+                                                            className="btn btn-danger w-full"
+                                                            onClick={() => setModal21(false)}
+                                                        >
+                                                            {t("Cancel")}
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </Dialog.Panel>
+                                        </div>
+                                    </div>
+                                </Dialog>
+                            </Transition></>
+                    }
                     <Link to="/" className="btn btn-gradient mx-auto !mt-7 w-max border-0 uppercase shadow-none">
                         {t('Home')}
                     </Link>

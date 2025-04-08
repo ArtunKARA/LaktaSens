@@ -205,3 +205,14 @@ BEGIN
     END
 END;
 GO
+
+
+CREATE TABLE BesinIhtiyaciStandartlari (
+    standartID INT PRIMARY KEY IDENTITY(1,1),
+    laktasyonDonemi NVARCHAR(50),     -- örn: 'kuru', 'erken', 'zirve', 'geç'
+    gerekli_KM DECIMAL(5,2),          -- kg
+    gerekli_HP DECIMAL(5,2),          -- %KM
+    gerekli_NEg DECIMAL(5,2),         -- Mcal
+    gerekli_CA DECIMAL(5,2),          -- %KM
+    gerekli_P DECIMAL(5,2)            -- %KM
+);

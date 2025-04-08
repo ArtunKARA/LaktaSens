@@ -158,3 +158,12 @@ VALUES
 -- Tedarikçi 
 (6, 1, 'Firma kriterlerimizi karşılamamaktadır.', CAST(GETDATE() AS DATE));
 GO
+
+INSERT INTO BesinIhtiyaciStandartlari (laktasyonDonemi, gerekli_KM, gerekli_HP, gerekli_NEg, gerekli_CA, gerekli_P)
+VALUES 
+('kuru',       10.0, 12.0, 8.0, 0.55, 0.35),
+('erken',      18.0, 16.0, 11.5, 0.80, 0.45),
+('zirve',      20.0, 17.0, 12.5, 0.85, 0.48),
+('gec',        16.0, 14.0, 10.0, 0.60, 0.40),
+('gebelik',    12.0, 13.0, 9.0,  0.60, 0.38),
+('genç_inek',  14.0, 15.0, 10.5, 0.65, 0.42);
