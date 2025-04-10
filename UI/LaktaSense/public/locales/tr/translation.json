@@ -493,5 +493,17 @@
     "Manage Product":"Ürünleri Yönet",
     "Application Rejected or Account Inactive":"Başvuru Reddedildi veya Hesap Aktif Değil",
     "We are sorry. Your account is currently inactive or your application has not been approved.":"Üzgünüz. Hesabınız şu anda etkin değil veya başvurunuz onaylanmadı.",
-    "Application Status":"Başvuru Durum"
+    "Application Status":"Başvuru Durum",
+    "Parameter Management":"Parametre Yönetimi",
+    "Units":"Birimler",
+    "Measure":"Ölçü",
+    "Nutrition":"Besin",
+    "Feed Descriptions":"Yem Tanımlamaları",
+    "Standard Feeds":"Standart Yemler",
+    "Nutrient Needs":"Besin İhtiyaçları",
+    "Measure Name":"Ölçü Adı",
+    "Description":"Açıklama",
+    "Are you sure you want to delete this data?":"Bu veriyi silmek istediğinize eminmisiniz?",
+    "Please Fill In":"Lütfen Doldurunuz"
+    
 }

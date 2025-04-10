@@ -5,7 +5,7 @@ INSERT INTO firmalar (firmaAdi,firmaTur, telefonNo, firmaMail, firmaAdresi, sehi
 (N'MaxTedarik','t','1234567890','info@MaxTedarik.com', N'Adres 3, Şehir',1,1056, 'a', 'a'),
 (N'Yılmaz Gıda A.Ş.','c','5852136547','iletisim@yilmazgida.com', N'Organize Sanayi Bölgesi, No:12, Afyonkarahisar',10,2365, 'a', 'b'),
 (N'Angarasta Yem A.Ş.','c','5206931245','astar@agarta.com', N'Merkezde bir yer',6,1114, 'a', 'b'),
-(N'Memoli Yem Tic. A.Ş','t','5506731835','info@memoliyem.com', N'Serbest Ticaret Bölgesi, No:12',7,1154, 'a', 'b'),
+(N'Memoli Yem Tic. A.Ş','t','5506731835','info@memoliyem.com', N'Serbest Ticaret Bölgesi, No:12',7,1154, 'a', 'b');
 GO
 
 -- İnek tablosuna veri ekleme
@@ -159,11 +159,91 @@ VALUES
 (6, 1, 'Firma kriterlerimizi karşılamamaktadır.', CAST(GETDATE() AS DATE));
 GO
 
-INSERT INTO BesinIhtiyaciStandartlari (laktasyonDonemi, gerekli_KM, gerekli_HP, gerekli_NEg, gerekli_CA, gerekli_P)
+
+
+INSERT INTO Birimler (birimAdi, aciklama)
 VALUES 
-('kuru',       10.0, 12.0, 8.0, 0.55, 0.35),
-('erken',      18.0, 16.0, 11.5, 0.80, 0.45),
-('zirve',      20.0, 17.0, 12.5, 0.85, 0.48),
-('gec',        16.0, 14.0, 10.0, 0.60, 0.40),
-('gebelik',    12.0, 13.0, 9.0,  0.60, 0.38),
-('genç_inek',  14.0, 15.0, 10.5, 0.65, 0.42);
+('%km', 'Yüzde kuru madde'),
+('Mcal/kg', 'Enerji değeri (Mcal)'),
+('kg', 'Kilogram'),
+('g/kg', 'Gram/kilogram');
+
+INSERT INTO BesinTipleri (tipAdi, birimID) VALUES
+('Kuru Madde', 3),   -- kg
+('Ham Protein', 1),  -- %
+('Net Enerji', 2),   -- Mcal/kg
+('Kalsiyum', 1),     -- %
+('Fosfor', 1);       -- %
+
+INSERT INTO BesinIhtiyaciStandartlari (laktasyonDonemi) VALUES
+('Kuru'),
+('Gebelik'),
+('Sağmal'),
+('Yavru');
+
+-- BUNUN ALTINA BİLGİLER EKLENECEK
+INSERT INTO BesinIhtiyacDetay (standartID, tipID, miktar) VALUES
+(1, 1, 10.0),  -- Kuru Madde (kg)
+(1, 2, 12.0),  -- Ham Protein (%)
+(1, 3, 8.0),  -- Net Enerji (Mcal/kg)
+(1, 4, 0.55),  -- Kalsiyum (%)
+(1, 5, 0.35);  -- Fosfor (%)
+
+INSERT INTO BesinIhtiyacDetay (standartID, tipID, miktar) VALUES
+(2, 1, 12.0),  -- Kuru Madde (kg)
+(2, 2, 13.0),  -- Ham Protein (%)
+(2, 3, 9.0),  -- Net Enerji (Mcal/kg)
+(2, 4, 0.60),  -- Kalsiyum (%)
+(2, 5, 0.38);  -- Fosfor (%)
+
+INSERT INTO BesinIhtiyacDetay (standartID, tipID, miktar) VALUES
+(3, 1, 20.0),  -- Kuru Madde (kg)
+(3, 2, 16.0),  -- Ham Protein (%)
+(3, 3, 12.0),  -- Net Enerji (Mcal/kg)
+(3, 4, 0.80),  -- Kalsiyum (%)
+(3, 5, 0.45);  -- Fosfor (%)
+
+INSERT INTO BesinIhtiyacDetay (standartID, tipID, miktar) VALUES
+(4, 1, 6.0),   -- Kuru Madde (kg/gün)
+(4, 2, 18.0),  -- Ham Protein (%KM)
+(4, 3, 8.0),   -- Net Enerji (Mcal/kg KM)
+(4, 4, 0.65),  -- Kalsiyum (%)
+(4, 5, 0.45);  -- Fosfor (%)
+
+INSERT INTO YemMaddeleri (yemAdi, ozelYem, durum, yemFirmaID, aciklama)
+VALUES 
+('Mısır Silajı', 0, 'a', NULL, 'Standart veri kaynağından'),
+('Çayır Kuru Otu', 0, 'a', NULL, 'Standart veri kaynağından'),
+('Melas', 0, 'a', NULL, 'Standart veri kaynağından'),
+('Arpa', 0, 'a', NULL, 'Standart veri kaynağından'),
+('PTK', 0, 'a', NULL, 'Standart veri kaynağından'),
+('Kireç Taşı', 0, 'a', NULL, 'Standart veri kaynağından'),
+('DCP', 0, 'a', NULL, 'Standart veri kaynağından');
+
+-- Mısır Silajı
+INSERT INTO YemBesinDegerleri (yemID, tipID, miktar) VALUES
+(1, 1, 25), (1, 2, 8.30), (1, 3, 0.97), (1, 4, 0.31), (1, 5, 0.27);
+
+-- Çayır Kuru Otu
+INSERT INTO YemBesinDegerleri (yemID, tipID, miktar) VALUES
+(2, 1, 91), (2, 2, 8.20), (2, 3, 0.50), (2, 4, 0.50), (2, 5, 0.23);
+
+-- Melas
+INSERT INTO YemBesinDegerleri (yemID, tipID, miktar) VALUES
+(3, 1, 72), (3, 2, 0.00), (3, 3, 1.10), (3, 4, 0.05), (3, 5, 0.02);
+
+-- Arpa
+INSERT INTO YemBesinDegerleri (yemID, tipID, miktar) VALUES
+(4, 1, 88), (4, 2, 12.30), (4, 3, 1.40), (4, 4, 0.05), (4, 5, 0.35);
+
+-- PTK
+INSERT INTO YemBesinDegerleri (yemID, tipID, miktar) VALUES
+(5, 1, 92), (5, 2, 24.40), (5, 3, 1.55), (5, 4, 0.17), (5, 5, 0.17);
+
+-- Kireç Taşı
+INSERT INTO YemBesinDegerleri (yemID, tipID, miktar) VALUES
+(6, 1, 100), (6, 4, 22.00); -- Sadece Ca var
+
+-- DCP
+INSERT INTO YemBesinDegerleri (yemID, tipID, miktar) VALUES
+(7, 1, 100), (7, 4, 22.00), (7, 5, 19.30);

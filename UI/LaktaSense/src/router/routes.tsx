@@ -37,6 +37,7 @@ const CiflikDetay = lazy(() => import('../pages/Admin/HesapYonetimi/Cifci/Ciflik
 const TedarikciDetay = lazy(() => import('../pages/Admin/HesapYonetimi/Tedarikci/TedarikciDetay'));
 const FatruaOnizleme = lazy(() => import('../pages/Admin/HesapYonetimi/FatruaOnizleme'));
 const FaturaDetay = lazy(() => import('../pages/Admin/HesapYonetimi/FaturaDetay'));
+const AdminOlcuTanımları = lazy(() => import('../pages/Admin/Parametreler/Birimler/OlcuTanımları'));
 
 
 
@@ -250,6 +251,11 @@ const routes = [
     {
         path: '/admin/FaturaDetay',
         element:<AuthGuard allowedRoles={['a']}><FaturaDetay /></AuthGuard>,
+        layout : 'admin',
+    },
+    {
+        path: '/admin/parameter/olcu',
+        element:<AuthGuard allowedRoles={['a']}><AdminOlcuTanımları /></AuthGuard>,
         layout : 'admin',
     },
 
