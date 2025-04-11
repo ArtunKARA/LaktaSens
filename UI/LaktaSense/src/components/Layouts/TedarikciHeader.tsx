@@ -450,7 +450,7 @@ const TedarikciHeader = () => {
                                         </div>
                                     </li>
                                     <li>
-                                        <Link to="/admin/Profil" className="dark:hover:text-white">
+                                        <Link to="/tedarikci/Profil" className="dark:hover:text-white">
                                             <IconUser className="w-4.5 h-4.5 ltr:mr-2 rtl:ml-2 shrink-0" />
                                             {t('Profile')}
                                         </Link>

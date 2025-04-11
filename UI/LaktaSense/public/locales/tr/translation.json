@@ -504,6 +504,12 @@
     "Measure Name":"Ölçü Adı",
     "Description":"Açıklama",
     "Are you sure you want to delete this data?":"Bu veriyi silmek istediğinize eminmisiniz?",
-    "Please Fill In":"Lütfen Doldurunuz"
-    
+    "Please Fill In":"Lütfen Doldurunuz",
+    "Open Tenders":"Açık İhaleler",
+    "My Tenders":"Tekliflerim",
+    "Manage Company":"Firmayı Yönet",
+    "Delete Company":"Firmayı Sil",
+    "Once you delete the company, there is no going back. Please be certain.":"Firmayı sildikten sonra geri dönüş yoktur. Lütfen emin olun.",
+    "Delete My Company":"Firmayı Sil",
+    "This action will initiate the company deletion process. Based on the system owners' request, the company can be completely closed and deleted. Please review carefully before confirming the action.":"Bu işlem firma silme sürecini başlatacaktır. Sistem sahiplerinin talebi doğrultusunda firma tamamen kapatılıp silinebilir. Lütfen işlemi onaylamadan önce dikkatlice kontrol edin."
 }

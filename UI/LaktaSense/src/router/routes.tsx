@@ -38,6 +38,7 @@ const TedarikciDetay = lazy(() => import('../pages/Admin/HesapYonetimi/Tedarikci
 const FatruaOnizleme = lazy(() => import('../pages/Admin/HesapYonetimi/FatruaOnizleme'));
 const FaturaDetay = lazy(() => import('../pages/Admin/HesapYonetimi/FaturaDetay'));
 const AdminOlcuTanımları = lazy(() => import('../pages/Admin/Parametreler/Birimler/OlcuTanımları'));
+const TedarikciProfil = lazy(() => import('../pages/Tedarikci/Profil'));
 
 
 
@@ -265,6 +266,11 @@ const routes = [
     {
         path: '/tedarikci/dashboard',
         element:<AuthGuard allowedRoles={['t']}><AdminDashboard /></AuthGuard>,
+        layout : 'tedarikci',
+    },
+    {
+        path: '/tedarikci/profil',
+        element:<AuthGuard allowedRoles={['t']}><TedarikciProfil /></AuthGuard>,
         layout : 'tedarikci',
     },
 ];
