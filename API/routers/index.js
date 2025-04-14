@@ -17,6 +17,8 @@ const basvurular = require("./admin/basvurular.js");
 const adminFirmalar = require("./admin/adminFirmalar.js");
 const birimler = require("./admin/tanımlamalar/birimler.js");
 const yemTanimlari = require("./admin/tanımlamalar/yemTanimlari.js");
+const cifciDepo = require("./çiftçi/yem/depo.js");
+const yemYonetimTedarikci = require("./tedarikci/yemYonetim.js")
 
 
 const router = express.Router();
@@ -44,6 +46,9 @@ router.use("/api/basvurular",basvurular);
 router.use("/api/adminFirmalar",adminFirmalar);
 router.use("/api/tanimlamalar/birimler", birimler);
 router.use("/api/tanimlamalar/yemTanimlari", yemTanimlari);
+router.use("/api/cifci/depo", cifciDepo);
+
+router.use("/api/tedarikci/yemYonetim", yemYonetimTedarikci);
 
 
 

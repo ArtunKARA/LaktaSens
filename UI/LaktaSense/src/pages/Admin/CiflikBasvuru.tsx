@@ -319,7 +319,7 @@ const MultipleTables = () => {
                                                       </button>
                                                       <button
                                                         type="button"
-                                                        onClick={() => Details(CompanyID)}
+                                                        onClick={() => Details(selectedCompany!.CompanyID)}
                                                         className="btn btn-warning w-full"
                                                       >
                                                         {t("Go To Farm Data")}
