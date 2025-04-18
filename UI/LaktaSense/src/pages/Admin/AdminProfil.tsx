@@ -885,7 +885,8 @@ const AccountSetting = () => {
                                                                         <Select
                                                                             id="hesapDurumu"
                                                                             options={statusOptions}
-                                                                            isSearchable={false}                                                                            onChange={(selectedOption) => {
+                                                                            isSearchable={false}                                                                            
+                                                                            onChange={(selectedOption) => {
                                                                                 values.hesapDurumu = selectedOption!.value
                                                                             }}
                                                                         />

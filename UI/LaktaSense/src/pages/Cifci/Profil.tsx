@@ -406,7 +406,7 @@ const AccountSetting = () => {
     
     const statusNameDurum = (durum : String) => {
         if(durum == "a"){
-            return "Admin"
+            return "Aktif"
         }else if(durum == "p"){
             return "Pasif"
         }else if(durum == "b"){

@@ -511,5 +511,8 @@
     "Delete Company":"Firmayı Sil",
     "Once you delete the company, there is no going back. Please be certain.":"Firmayı sildikten sonra geri dönüş yoktur. Lütfen emin olun.",
     "Delete My Company":"Firmayı Sil",
-    "This action will initiate the company deletion process. Based on the system owners' request, the company can be completely closed and deleted. Please review carefully before confirming the action.":"Bu işlem firma silme sürecini başlatacaktır. Sistem sahiplerinin talebi doğrultusunda firma tamamen kapatılıp silinebilir. Lütfen işlemi onaylamadan önce dikkatlice kontrol edin."
+    "This action will initiate the company deletion process. Based on the system owners' request, the company can be completely closed and deleted. Please review carefully before confirming the action.":"Bu işlem firma silme sürecini başlatacaktır. Sistem sahiplerinin talebi doğrultusunda firma tamamen kapatılıp silinebilir. Lütfen işlemi onaylamadan önce dikkatlice kontrol edin.",
+    "Type Name":"Tip Adı",
+    "Please Select":"Lütfen Seçini",
+    "Unit Name":"Birim Adı"
 }
