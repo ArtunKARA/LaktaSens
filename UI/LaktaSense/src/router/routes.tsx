@@ -40,8 +40,10 @@ const FaturaDetay = lazy(() => import('../pages/Admin/HesapYonetimi/FaturaDetay'
 const AdminOlcuTanımları = lazy(() => import('../pages/Admin/Parametreler/Birimler/OlcuTanımları'));
 const TedarikciProfil = lazy(() => import('../pages/Tedarikci/Profil'));
 const AdminBesinTanımlamaları = lazy(() => import('../pages/Admin/Parametreler/Birimler/BesinTanımları'));
-
-
+const AdminStandartYemler = lazy(() => import('../pages/Admin/Parametreler/YemTanımlamaları/StandartYemler'));
+const AdminBesinDeğerleri = lazy(() => import('../pages/Admin/Parametreler/YemTanımlamaları/Besinİhtiyaçları'));
+const AdminStandartYemlerDetay = lazy(() => import('../pages/Admin/Parametreler/YemTanımlamaları/StandartYemlerDetaylar'));
+const AdminBesinDeğerleriDetay = lazy(() => import('../pages/Admin/Parametreler/YemTanımlamaları/BesinİhtiyaçlarıDetaylar'));
 
 
 
@@ -263,6 +265,26 @@ const routes = [
     {
         path: '/admin/parameter/besin',
         element:<AuthGuard allowedRoles={['a']}><AdminBesinTanımlamaları /></AuthGuard>,
+        layout : 'admin',
+    },
+    {
+        path: '/admin/parameter/standartYemler',
+        element:<AuthGuard allowedRoles={['a']}><AdminStandartYemler /></AuthGuard>,
+        layout : 'admin',
+    },
+    {
+        path: '/admin/parameter/standartYemlerDetay',
+        element:<AuthGuard allowedRoles={['a']}><AdminStandartYemlerDetay /></AuthGuard>,
+        layout : 'admin',
+    },
+    {
+        path: '/admin/parameter/gerekliBesinDeğerleri',
+        element:<AuthGuard allowedRoles={['a']}><AdminBesinDeğerleri /></AuthGuard>,
+        layout : 'admin',
+    },
+    {
+        path: '/admin/parameter/gerekliBesinDeğerleriDetay',
+        element:<AuthGuard allowedRoles={['a']}><AdminBesinDeğerleriDetay /></AuthGuard>,
         layout : 'admin',
     },
 

@@ -94,7 +94,7 @@ exports.postOlcuSil = async (req, res) => {
     try {
       const pool = await poolPromise;
       const result = await pool.request().query(`
-        SELECT t.tipID, t.tipAdi, t.birimID, b.birimAdi
+        SELECT t.tipID, t.tipAdi, t.birimID, b.birimAdi, b.aciklama
         FROM [laktasens].[dbo].[BesinTipleri] t
         INNER JOIN [laktasens].[dbo].[Birimler] b ON t.birimID = b.birimID
       `);

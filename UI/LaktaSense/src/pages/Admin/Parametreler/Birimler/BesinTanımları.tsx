@@ -100,7 +100,7 @@ const MultipleTables = () => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
     useEffect(() => {
-        dispatch(setPageTitle(t('Measure')));
+        dispatch(setPageTitle(t('Nutrition')));
     });
     const [page, setPage] = useState(1);
     const PAGE_SIZES = [10, 20, 30, 50, 100];
@@ -112,7 +112,7 @@ const MultipleTables = () => {
     }, [rowData]);
     
     const [recordsData, setRecordsData] = useState(initialRecords);
-    const [modalEdit, setModalEdit] = useState(false);
+    const [modalEdit, setModalAddEdit] = useState(false);
     const [modalDelete, setModalDelete] = useState(false);
     const [modalAdd, setModalAdd] = useState(false);
     const [delID,setDelID] = useState('');
@@ -200,7 +200,7 @@ const MultipleTables = () => {
             title: 'Veri Başarı İle Güncelendi',
             padding: '10px 20px',
         });
-          setModalEdit(false); // Modalı kapat.
+          setModalAddEdit(false); // Modalı kapat.
           window.location.reload();
         } catch (error) {
           console.error(error);
@@ -244,7 +244,7 @@ const MultipleTables = () => {
     return (
         <div>
         <Transition appear show={modalEdit} as={Fragment}>
-            <Dialog as="div" open={modalEdit} onClose={() => {setModalEdit(false); setSelectedData(null);}}>
+            <Dialog as="div" open={modalEdit} onClose={() => {setModalAddEdit(false); setSelectedData(null);}}>
                 <div className="fixed inset-0 z-10 overflow-y-auto bg-[black]/10">
                     <div className="flex min-h-screen items-center justify-center px-4">
                     <Dialog.Panel className="panel my-8 w-full max-w-sm overflow-hidden rounded-lg py-1 px-4 text-black dark:text-white-dark">
@@ -252,7 +252,7 @@ const MultipleTables = () => {
                         <h5>{!selectedData ? t('Add'): t('Edit')}</h5>
                         <button
                             type="button"
-                            onClick={() => {setModalEdit(false); setSelectedData(null);}}
+                            onClick={() => {setModalAddEdit(false); setSelectedData(null);}}
                             className="text-white-dark hover:text-dark"
                         >
                             <IconX className="w-5 h-5" />
@@ -323,7 +323,7 @@ const MultipleTables = () => {
                                                     type="button"
                                                     className="btn btn-danger !mt-6"
                                                     onClick={() => {
-                                                        setModalEdit(false);
+                                                        setModalAddEdit(false);
                                                         setSelectedData(null);
                                                     }}
                                                 >
@@ -343,9 +343,9 @@ const MultipleTables = () => {
             </Transition>
             <div className="panel mt-6">
                 <div className="mb-4.5 px-5 flex md:items-center md:flex-row flex-col gap-5">
-                    <h5 className="font-semibold text-lg dark:text-white-light">{t('Measure')}</h5>
+                    <h5 className="font-semibold text-lg dark:text-white-light">{t('Nutrition')}</h5>
                     <div className="flex items-center gap-2">
-                        <button type="button" className="btn btn-success gap-2" onClick={() => setModalEdit(true)}>
+                        <button type="button" className="btn btn-success gap-2" onClick={() => setModalAddEdit(true)}>
                             <IconPlus />
                             {t('Add New')}
                         </button>
@@ -382,7 +382,7 @@ const MultipleTables = () => {
                                         <Tippy content="Edit">
                                             <button type="button"
                                             onClick={() => {                                              
-                                              setModalEdit(true)
+                                              setModalAddEdit(true)
                                               setSelectedData({
                                                 tipID: tipID,
                                                 tipAdi: tipAdi,

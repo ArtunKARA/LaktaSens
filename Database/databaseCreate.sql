@@ -239,7 +239,7 @@ CREATE TABLE YemMaddeleri (
     yemID INT PRIMARY KEY IDENTITY(1,1),
     yemAdi NVARCHAR(100),
     ozelYem BIT,                 
-    durum CHAR(1),              
+    durum CHAR(1),  -- a aktif, p pasif, b beklemede             
     yemFirmaID INT,
     aciklama NVARCHAR(200),
     FOREIGN KEY (yemFirmaID) REFERENCES firmalar(firmaID)
