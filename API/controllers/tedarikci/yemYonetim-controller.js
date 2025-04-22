@@ -289,7 +289,7 @@ exports.postYemTanimlariOlustur = async (req, res) => {
   const {
     yemAdi,
     ozelYem = false,
-    durum = "a",
+    durum = "b",
     yemFirmaID = null,
     yemAciklama = null
   } = req.body ?? {};
@@ -416,91 +416,29 @@ exports.postYemTanimlariBesinDegerleriGuncelle = async (req, res) => {
   }
 };
 
-exports.getRasyonDonguler = async (req, res) => {
+exports.postYemYenidenBasvurma = async (req, res) => {
+  const yemID = Number(req.body.yemID);
+
+  // ---- Validasyon ---------------------------------------------------------
+  if (!yemID || Number.isNaN(yemID))
+    return res.status(400).json({ error: 'Geçerli yemID belirtin' });
+
   try {
     const pool = await poolPromise;
-
-    let query = `
-      SELECT  standartID
-          ,laktasyonDonemi
-      FROM BesinIhtiyaciStandartlari
-    `;
-    
     const result = await pool.request()
-    .query(query);
+      .input('yemID', sql.Int, yemID)
+      .query(`
+        UPDATE YemMaddeleri
+        SET durum = 'b'
+        WHERE yemID = @yemID
+      `);
 
-    if (result.recordset.length === 0) {
-      return res.status(404).json(null);
-    }
+    if (result.rowsAffected[0] === 0)
+      return res.status(404).json({ error: 'Yem bulunamadı' });
 
-    return res.json(result.recordset);
-  } catch (error) {
-    console.error('Genel bilgiler alınamadı:', error);
+    return res.json({ message: 'Yeniden başvuru durumu güncellendi' });
+  } catch (err) {
+    console.error('Yeniden başvuru güncellenirken hata:', err);
     return res.status(500).json({ error: 'Internal server error' });
   }
-};
-
-
-exports.postRasyonDongulerIhtiyac = async (req, res) => {
-  try {
-    const { standartID } = req.body;
-
-    if (!standartID) {
-      return res.status(400).json({ error: 'standartID gereklidir' });
-    }
-
-    const pool = await poolPromise;
-
-    // 1) META bilgisini al
-    const metaQuery = `
-      SELECT 
-        standartID,
-        laktasyonDonemi
-      FROM BesinIhtiyaciStandartlari
-      WHERE standartID = @standartID
-    `;
-    const metaResult = await pool.request()
-      .input('standartID', sql.Int, standartID)
-      .query(metaQuery);
-
-    if (metaResult.recordset.length === 0) {
-      return res.status(404).json({ error: 'Bu standartID için meta veri bulunamadı' });
-    }
-
-    const metaData = metaResult.recordset[0];
-
-    // 2) DETAY (besin ihtiyacı) verilerini al
-    const detailQuery = `
-      SELECT 
-        bid.detayID,
-        bid.standartID,
-        bt.tipID,
-        bt.tipAdi AS besinTipi,
-        bid.miktar,
-        bt.birimID,
-        b.birimAdi
-      FROM BesinIhtiyacDetay AS bid
-      LEFT JOIN BesinTipleri AS bt 
-        ON bid.tipID = bt.tipID
-      LEFT JOIN Birimler AS b 
-        ON bt.birimID = b.birimID
-      WHERE bid.standartID = @standartID
-    `;
-    const detailResult = await pool.request()
-      .input('standartID', sql.Int, standartID)
-      .query(detailQuery);
-
-    // Eğer detay yoksa boş dizi dönüyoruz
-    const details = detailResult.recordset;
-
-    // 3) Birleştirilmiş cevabı dön
-    return res.json({
-      ...metaData,    // { standartID, laktasyonDonemi }
-      details      // [ { detayID, standartID, tipID, besinTipi, miktar, birimID, birimAdi }, … ]
-    });
-
-  } catch (error) {
-    console.error('Besin ihtiyacı detayları alınamadı:', error);
-    return res.status(500).json({ error: 'Sunucu hatası' });
-  }
-};
+}

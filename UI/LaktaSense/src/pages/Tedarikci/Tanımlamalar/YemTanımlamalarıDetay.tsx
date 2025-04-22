@@ -11,7 +11,7 @@ import { Dialog, Transition } from '@headlessui/react';
 import IconX from '../../../components/Icon/IconX';
 import axios from 'axios';
 import {useNavigate } from 'react-router-dom';
-import { isEmpty, set, toNumber } from 'lodash';
+import { isEmpty, isSet, set, toNumber } from 'lodash';
 import IconPlus from '../../../components/Icon/IconPlus';
 import Swal from 'sweetalert2';
 import Select, { SingleValue, StylesConfig } from 'react-select';
@@ -150,7 +150,7 @@ const MultipleTables = () => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
     useEffect(() => {
-        dispatch(setPageTitle(t('Standard Feed Details')));
+        dispatch(setPageTitle(t('Feed Definition')));
     });
     const [page, setPage] = useState(1);
     const PAGE_SIZES = [10, 20, 30, 50, 100];
@@ -348,7 +348,7 @@ const MultipleTables = () => {
     const MetaAdd = async (
       yemAdi: string,
       yemAciklama: string,
-      durum: string
+      durum: string,
     ) => {
       const toast = Swal.mixin({
         toast: true,
@@ -360,7 +360,7 @@ const MultipleTables = () => {
       try {
         const { data } = await axios.post(
           'http://localhost:3030/api/tedarikci/yemYonetim/postYemTanimlariOlustur',
-          { yemAdi, yemAciklama, durum }
+          { yemAdi, yemAciklama, durum, yemFirmaID: userInfo.firmaID}
         );
   
         /** ⬇⬇⬇ API’den gelen yeni ID burada  ------------------- */
@@ -386,25 +386,104 @@ const MultipleTables = () => {
       }
     };
 
+    const Reapply = async (ID:string) => {
+      const toast = Swal.mixin({
+          toast: true,
+          position: 'top',
+          showConfirmButton: false,
+          timer: 3000,
+      });
+      try {
+        const response = await axios.post("http://localhost:3030/api/tedarikci/yemYonetim/postYemYenidenBasvurma", {
+          yemID: ID
+        });
+  
+        console.log(response.data);
+        toast.fire({
+          icon: 'success',
+          title: 'Veri Başarı İle Silindi',
+          padding: '10px 20px',
+      });
+        window.location.reload();
+      } catch (error) {
+        console.error(error);
+        alert(t("An error occurred while saving!")+ error);
+        alert(ID);
+      }
+    };
+
     const submitDataFormValidation = Yup.object().shape({
         tipID:  Yup.string(),
         miktar: Yup.string().required(t('Please Fill In')),
       });
     
     const [feedDeleteModal, setFeedDeleteModal] = useState(false);
+    const [applayModal, setApplayModal] = useState(false);
 
     return (
         <div>
             <div className="panel">
-            <div className="mb-4.5 px-5 flex md:items-center md:flex-row flex-col gap-5">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <h5 className="font-semibold text-lg dark:text-white-light">{t('Feed Details')}</h5>
+                <div className="flex justify-end w-max mx-auto gap-2 rounded-full">
+               {metaData?.durum == "p" && <Tippy content= {t('Reapply')}>
+                      <button type="button"
+                      onClick={() => {                                              
+                        setApplayModal(true)
+                      }}
+                      className="btn btn-success w-full ">
+                      {t('Reapply')}
+                      </button>
+                  </Tippy>}   
+                <Transition appear show={applayModal} as={Fragment}>
+                <Dialog as="div" open={applayModal} onClose={() => setApplayModal(false)}>
+                  <div className="fixed inset-0 z-10 overflow-y-auto bg-[black]/10">
+                    <div className="flex min-h-screen items-center justify-center px-4">
+                      <Dialog.Panel className="panel my-8 w-full max-w-sm overflow-hidden rounded-lg py-1 px-4 text-black dark:text-white-dark">
+                        <div className="flex items-center justify-between p-5">
+                          <h5>{t('Reapply')}</h5>
+                          <button
+                            type="button"
+                            onClick={() => setApplayModal(false)}
+                            className="text-white-dark hover:text-dark"
+                          >
+                            <IconX className="w-5 h-5" />
+                          </button>
+                        </div>
+                        <div className="p-5">
+                          <form className="space-y-2">
+                            <div className="relative mb-4">
+                              <p>{t('Are you sure you want to reapplay with this data?')}</p>
+                            </div>
+                            <button
+                              type="button"
+                              onClick={() => Reapply(metaData!.yemID)} // Kaydetme fonksiyonu çağrısı
+                              className="btn btn-success w-full"
+                            >
+                              {t("Reapply")}
+                            </button>
+                            <button
+                                  type="button"
+                                  onClick={() => setApplayModal(false)}
+                                  className="btn btn-warning w-full"
+                                >
+                                {t("Cancel")}
+                            </button>
+                          </form>
+                        </div>
+                      </Dialog.Panel>
+                    </div>
+                  </div>
+                </Dialog>
+              </Transition>
+          </div>
             </div>
             <div className="p-5">
               <Formik
               initialValues={{
                 yemID: metaData?.yemID || null,
                 yemAdi: metaData?.yemAdi || '',
-                durum: metaData?.durum || '',
+                durum: metaData?.durum || 'b',
                 yemAciklama: metaData?.yemAciklama || '',
               }}
               enableReinitialize
@@ -450,10 +529,10 @@ const MultipleTables = () => {
                     name="durum"
                     className={`form-input ${errors.durum && touched.durum ? 'border-danger' : ''}`}
                   >
-                    <option value="">{t('Please Select')}</option>
-                    <option value="a">{t('Active')}</option>
-                    <option value="p">{t('Passive')}</option>
-                    <option value="b">{t('Pending')}</option>
+                    <option value="" disabled={true}>{t('Please Select')}</option>
+                    <option value="a" disabled={metaData?.durum == "p" || metaData?.durum == "b" || metaData == null}>{t('Active')}</option>
+                    <option value="p" disabled={metaData?.durum == "p" || metaData?.durum == "b" || metaData == null}>{t('Passive')}</option>
+                    <option value="b" disabled={true}>{t('Pending')}</option>
                   </Field>
                   {submitCount ? (
                         errors.durum ? (
@@ -656,7 +735,7 @@ const MultipleTables = () => {
               </Transition>
             <div className="panel mt-6">
                 <div className="mb-4.5 px-5 flex md:items-center md:flex-row flex-col gap-5">
-                    <h5 className="font-semibold text-lg dark:text-white-light">{t('Standard Feed Content')}</h5>
+                    <h5 className="font-semibold text-lg dark:text-white-light">{t('Feed Content')}</h5>
                     <div className="flex items-center gap-2">
                         <button type="button" className="btn btn-success gap-2" onClick={() => setModalAddEdit(true)}>
                             <IconPlus />

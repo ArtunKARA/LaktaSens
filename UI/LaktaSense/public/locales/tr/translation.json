@@ -543,5 +543,8 @@
     "Goods Dispatch History":"Mal Sevk Geçmişi",
     "Stock":"Stok",
     "Company Special Feed Definitions":"Firma Özel Yem Tanımlamaları",
-    "Company Special Feed Definitions Description":"Firma Özel Yem Tanımlamaları Açıklaması"
+    "Company Special Feed Definitions Description":"Firma Özel Yem Tanımlamaları Açıklaması",
+    "Feed Definition":"Yem Tanımı",
+    "Feed Content":"Yem İçeriği",
+    "Are you sure you want to reapplay with this data?":"Bu verilerle tekrar başvurmak istediğinize eminmisiniz?"
 }

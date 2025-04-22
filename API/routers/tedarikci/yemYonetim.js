@@ -9,7 +9,8 @@ const {
     postYemTanimlariGuncele,
     postYemTanimlariBesinDegerleriEkle,
     postYemTanimlariBesinDegerleriSil,
-    postYemTanimlariBesinDegerleriGuncelle
+    postYemTanimlariBesinDegerleriGuncelle,
+    postYemYenidenBasvurma,
 } = require("../../controllers/tedarikci/yemYonetim-controller");
 
 router.get("/getYemTanimlari",getYemTanimlari);
@@ -20,5 +21,6 @@ router.post("/postYemTanimlariGuncele",postYemTanimlariGuncele);
 router.post("/postYemTanimlariBesinDegerleriEkle",postYemTanimlariBesinDegerleriEkle);
 router.post("/postYemTanimlariBesinDegerleriSil",postYemTanimlariBesinDegerleriSil);
 router.post("/postYemTanimlariBesinDegerleriGuncelle",postYemTanimlariBesinDegerleriGuncelle);
+router.post("/postYemYenidenBasvurma",postYemYenidenBasvurma);
 
 module.exports = router;    
