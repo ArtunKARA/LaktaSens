@@ -26,8 +26,8 @@ const Cikarilanlar = lazy(() => import('../pages/Cifci/Cikarilacaklanlar'));
 const Profil = lazy(() => import('../pages/Cifci/Profil'));
 const BasvuruDurum = lazy(() => import('../pages/Authentication/BasvuruDurum'));
 const AdminDashboard = lazy(() => import('../pages/Admin/AdminDashboard'));
-const TedarikçiBasvuru = lazy(() => import('../pages/Admin/TedarikciBasvuru'));
-const CiflikBasvuru = lazy(() => import('../pages/Admin/CiflikBasvuru'));
+const TedarikçiBasvuru = lazy(() => import('../pages/Admin/Basvurular/TedarikciBasvuru'));
+const CiflikBasvuru = lazy(() => import('../pages/Admin/Basvurular/CiflikBasvuru'));
 const AdminProfil = lazy(() => import('../pages/Admin/AdminProfil'));
 const AktifCiflik = lazy(() => import('../pages/Admin/HesapYonetimi/Cifci/AktifCiflikler'));
 const PasifCiflik = lazy(() => import('../pages/Admin/HesapYonetimi/Cifci/PasifCiflikler'));
@@ -46,6 +46,7 @@ const AdminStandartYemlerDetay = lazy(() => import('../pages/Admin/Parametreler/
 const AdminBesinDeğerleriDetay = lazy(() => import('../pages/Admin/Parametreler/YemTanımlamaları/BesinİhtiyaçlarıDetaylar'));
 const TedarikciYemTanımlamaları = lazy(() => import('../pages/Tedarikci/Tanımlamalar/YemTanımlamaları'));
 const TedarikciYemTanımlamalarıDetay = lazy(() => import('../pages/Tedarikci/Tanımlamalar/YemTanımlamalarıDetay'));
+const AdminYemBasvurulari = lazy(() => import('../pages/Admin/Basvurular/Yem/YemBasvurulari'));
 
 const routes = [
     //proje page
@@ -291,6 +292,11 @@ const routes = [
     {
         path: '/admin/parameter/gerekliBesinDeğerleriDetay',
         element:<AuthGuard allowedRoles={['a']}><AdminBesinDeğerleriDetay /></AuthGuard>,
+        layout : 'admin',
+    },
+    {
+        path: '/admin/YemBasvurulari',
+        element:<AuthGuard allowedRoles={['a']}><AdminYemBasvurulari /></AuthGuard>,
         layout : 'admin',
     },
 

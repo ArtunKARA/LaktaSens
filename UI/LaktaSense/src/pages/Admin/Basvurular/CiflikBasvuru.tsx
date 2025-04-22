@@ -4,19 +4,16 @@ import { useEffect, useState, Fragment } from 'react';
 import sortBy from 'lodash/sortBy';
 import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
-import { setPageTitle } from '../../store/themeConfigSlice';
+import { setPageTitle } from '../../../store/themeConfigSlice';
 import { useDispatch } from 'react-redux';
-import IconBell from '../../components/Icon/IconBell';
-import IconXCircle from '../../components/Icon/IconXCircle';
-import IconPencil from '../../components/Icon/IconPencil';
-import IconTrashLines from '../../components/Icon/IconTrashLines';
+import IconXCircle from '../../../components/Icon/IconXCircle';
 import 'tippy.js/dist/tippy.css';
 import { Dialog, Transition } from '@headlessui/react';
-import IconX from '../../components/Icon/IconX';
+import IconX from '../../../components/Icon/IconX';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { toNumber } from 'lodash';
-import IconPlus from '../../components/Icon/IconPlus';
+import IconPlus from '../../../components/Icon/IconPlus';
 import Swal from 'sweetalert2';
 
 interface CompanyData {

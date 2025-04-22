@@ -144,3 +144,42 @@ exports.postBasvuruRed = async (req, res) => {
         return res.status(500).json({ error: 'Internal server error' });
     }
 };
+
+exports.getYemBasvurular = async (req, res) => {
+    try {
+        const pool = await poolPromise;
+    
+        let query = `
+          SELECT 
+            ym.yemID,
+            ym.yemAdi,
+            ym.ozelYem,
+            CASE ym.durum
+              WHEN 'a' THEN 'Aktif'
+              WHEN 'p' THEN 'Pasif'
+              WHEN 'b' THEN 'Beklemede'
+              ELSE 'Bilinmiyor'
+            END AS durum,
+            ym.yemFirmaID,
+            f.firmaAdi,
+            ym.aciklama AS yemAciklama
+          FROM YemMaddeleri ym
+          LEFT JOIN firmalar f
+            ON ym.yemFirmaID = f.firmaID
+        WHERE ym.durum = 'b';
+        `;
+    
+        const request = pool.request();   // önce request’i oluştur
+    
+        const result = await request.query(query);
+    
+        if (result.recordset.length === 0) {
+          return res.status(404).json(null);
+        }
+    
+        return res.json(result.recordset);
+      } catch (error) {
+        console.error('Genel bilgiler alınamadı:', error);
+        return res.status(500).json({ error: 'Internal server error' });
+      }
+}
