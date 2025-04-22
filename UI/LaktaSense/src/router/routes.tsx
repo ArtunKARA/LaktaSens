@@ -44,13 +44,19 @@ const AdminStandartYemler = lazy(() => import('../pages/Admin/Parametreler/YemTa
 const AdminBesinDeğerleri = lazy(() => import('../pages/Admin/Parametreler/YemTanımlamaları/Besinİhtiyaçları'));
 const AdminStandartYemlerDetay = lazy(() => import('../pages/Admin/Parametreler/YemTanımlamaları/StandartYemlerDetaylar'));
 const AdminBesinDeğerleriDetay = lazy(() => import('../pages/Admin/Parametreler/YemTanımlamaları/BesinİhtiyaçlarıDetaylar'));
-
+const TedarikciYemTanımlamaları = lazy(() => import('../pages/Tedarikci/Tanımlamalar/YemTanımlamaları'));
 
 
 const routes = [
-    //login page
+    //proje page
     {
         path: '/',
+        element: <LoginBoxed />,
+        layout : 'blank',
+    },
+    //login page
+    {
+        path: '/login',
         element: <LoginBoxed />,
         layout : 'blank',
     },
@@ -299,6 +305,11 @@ const routes = [
     {
         path: '/tedarikci/profil',
         element:<AuthGuard allowedRoles={['t']}><TedarikciProfil /></AuthGuard>,
+        layout : 'tedarikci',
+    },
+    {
+        path: '/tedarikci/tanımlamalar/yem',
+        element:<AuthGuard allowedRoles={['t']}><TedarikciYemTanımlamaları /></AuthGuard>,
         layout : 'tedarikci',
     },
 ];

@@ -108,7 +108,7 @@ const KayitSayfasi = () => {
                     padding: '10px 20px',
                 });
     
-                navigate("/"); // başarıyla yönlendir
+                navigate("/login"); // başarıyla yönlendir
             } else {
                 // İsteğin başarılı olmaması durumunda
                 toast.fire({
@@ -145,7 +145,7 @@ const KayitSayfasi = () => {
                     padding: '10px 20px',
                 });
     
-                navigate("/"); // başarıyla yönlendir
+                navigate("/login"); // başarıyla yönlendir
             } else {
                 // İsteğin başarılı olmaması durumunda
                 toast.fire({
@@ -606,7 +606,7 @@ const KayitSayfasi = () => {
                             </div>
                             <div className="text-center dark:text-white">
                                 {t('Already have an account ?')}&nbsp;
-                                <Link to="/" className="uppercase text-primary underline transition hover:text-black dark:hover:text-white">
+                                <Link to="/login" className="uppercase text-primary underline transition hover:text-black dark:hover:text-white">
                                     {t('SIGN IN')}
                                 </Link>
                             </div>

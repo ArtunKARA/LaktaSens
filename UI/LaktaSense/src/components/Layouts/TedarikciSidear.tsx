@@ -10,26 +10,6 @@ import IconCaretsDown from '../Icon/IconCaretsDown';
 import IconCaretDown from '../Icon/IconCaretDown';
 import IconMenuDashboard from '../Icon/Menu/IconMenuDashboard';
 import IconMinus from '../Icon/IconMinus';
-import IconMenuChat from '../Icon/Menu/IconMenuChat';
-import IconMenuMailbox from '../Icon/Menu/IconMenuMailbox';
-import IconMenuTodo from '../Icon/Menu/IconMenuTodo';
-import IconMenuNotes from '../Icon/Menu/IconMenuNotes';
-import IconMenuScrumboard from '../Icon/Menu/IconMenuScrumboard';
-import IconMenuContacts from '../Icon/Menu/IconMenuContacts';
-import IconMenuInvoice from '../Icon/Menu/IconMenuInvoice';
-import IconMenuCalendar from '../Icon/Menu/IconMenuCalendar';
-import IconMenuComponents from '../Icon/Menu/IconMenuComponents';
-import IconMenuElements from '../Icon/Menu/IconMenuElements';
-import IconMenuCharts from '../Icon/Menu/IconMenuCharts';
-import IconMenuWidgets from '../Icon/Menu/IconMenuWidgets';
-import IconMenuFontIcons from '../Icon/Menu/IconMenuFontIcons';
-import IconMenuDragAndDrop from '../Icon/Menu/IconMenuDragAndDrop';
-import IconMenuTables from '../Icon/Menu/IconMenuTables';
-import IconMenuDatatables from '../Icon/Menu/IconMenuDatatables';
-import IconMenuForms from '../Icon/Menu/IconMenuForms';
-import IconMenuUsers from '../Icon/Menu/IconMenuUsers';
-import IconMenuPages from '../Icon/Menu/IconMenuPages';
-import IconMenuAuthentication from '../Icon/Menu/IconMenuAuthentication';
 import IconMenuDocumentation from '../Icon/Menu/IconMenuDocumentation';
 import IconOpenBook from '../Icon/IconOpenBook';
 import IconBookmark from '../Icon/IconBookmark';
@@ -38,6 +18,12 @@ import IconPlus from '../Icon/IconPlus';
 import IconLayout from '../Icon/IconLayout';
 import IconUserPlus from '../Icon/IconUserPlus';
 import IconUsersGroup from '../Icon/IconUsersGroup';
+import IconArrowForward from '../Icon/IconArrowForward';
+import IconXCircle from '../Icon/IconXCircle';
+import IconDownload from '../Icon/IconDownload';
+import IconRouter from '../Icon/IconRouter';
+import IconFolderPlus from '../Icon/IconFolderPlus';
+import IconFolderMinus from '../Icon/IconFolderMinus';
 
 const TedarikciSidear = () => {
     const [currentMenu, setCurrentMenu] = useState<string>('');
@@ -172,20 +158,82 @@ const TedarikciSidear = () => {
                                     <li className="nav-item">
                                         <NavLink to="/" className="group">
                                             <div className="flex items-center">
+                                                <IconArrowForward className="group-hover:!text-primary shrink-0" />
+                                                <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Shipped Orders')}</span>
+                                            </div>
+                                        </NavLink>
+                                    </li>
+                                    <li className="nav-item">
+                                        <NavLink to="/" className="group">
+                                            <div className="flex items-center">
                                                 <IconBox className="group-hover:!text-primary shrink-0" />
                                                 <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Finished Orders')}</span>
                                             </div>
                                         </NavLink>
                                     </li>
+                                    <li className="nav-item">
+                                        <NavLink to="/" className="group">
+                                            <div className="flex items-center">
+                                                <IconXCircle className="group-hover:!text-primary shrink-0" />
+                                                <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Cancelled Orders')}</span>
+                                            </div>
+                                        </NavLink>
+                                    </li>
                                 </ul>
                             </li>
+                            <h2 className="py-3 px-7 flex items-center uppercase font-extrabold bg-white-light/30 dark:bg-dark dark:bg-opacity-[0.08] -mx-4 mb-1">
+                                <IconMinus className="w-4 h-5 flex-none hidden" />
+                                <span>{t('Warehouse')}</span>
+                            </h2>
+                            <li className="nav-item">
+                                <NavLink to="/" className="group">
+                                    <div className="flex items-center">
+                                        <IconFolderMinus className="group-hover:!text-primary shrink-0" />
+                                        <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Goods Receipt')}</span>
+                                    </div>
+                                </NavLink>
+                            </li>
+                            <li className="nav-item">
+                                <NavLink to="/" className="group">
+                                    <div className="flex items-center">
+                                        <IconFolderPlus className="group-hover:!text-primary shrink-0" />
+                                        <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Dispatch')}</span>
+                                    </div>
+                                </NavLink>
+                            </li>
+                            <li className="menu nav-item">
+                                <button type="button" className={`${currentMenu === t('Warehouse Tracking') ? 'active' : ''} nav-link group w-full`} onClick={() => toggleMenu(t('Warehouse Tracking'))}>
+                                    <div className="flex items-center">
+                                        <IconMenuDashboard
+                                         className="group-hover:!text-primary shrink-0" />
+                                        <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Warehouse Tracking')}</span>
+                                    </div>
 
+                                    <div className={currentMenu !== t('Warehouse Tracking') ? 'rtl:rotate-90 -rotate-90' : ''}>
+                                        <IconCaretDown />
+                                    </div>
+                                </button>
+
+                                <AnimateHeight duration={300} height={currentMenu === t('Warehouse Tracking') ? 'auto' : 0}>
+                                    <ul className="sub-menu text-gray-500">
+                                        <li>
+                                            <NavLink to="/">{t('Stock')}</NavLink>
+                                        </li>
+                                        <li>
+                                            <NavLink to="/">{t('Goods Acceptance History')}</NavLink>
+                                        </li>
+                                        <li>
+                                            <NavLink to="/">{t('Goods Dispatch History')}</NavLink>
+                                        </li>
+                                    </ul>
+                                </AnimateHeight>
+                            </li>
                             <h2 className="py-3 px-7 flex items-center uppercase font-extrabold bg-white-light/30 dark:bg-dark dark:bg-opacity-[0.08] -mx-4 mb-1">
                                 <IconMinus className="w-4 h-5 flex-none hidden" />
                                 <span>{t('Defination')}</span>
                             </h2>
                             <li className="nav-item">
-                                <NavLink to="/" className="group">
+                                <NavLink to="/tedarikci/tanımlamalar/yem" className="group">
                                     <div className="flex items-center">
                                         <IconPlus className="group-hover:!text-primary shrink-0" />
                                         <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Feed')}</span>

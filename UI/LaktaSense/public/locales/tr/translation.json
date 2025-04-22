@@ -533,5 +533,13 @@
     "Are you sure you want to delete feed all data?":"Tüm yem verilerini silmek istediğinize eminmisiniz?",
     "Nutrition Type":"Besin Türü",
     "Unit":"Birim",
-    "Lactation Period Nutrient Needs Table":"Laktasyon Periyodu Besin İhtiyaçları Tablosu"
+    "Lactation Period Nutrient Needs Table":"Laktasyon Periyodu Besin İhtiyaçları Tablosu",
+    "Shipped Orders":"Sevk Edilen Siparişler",
+    "Cancelled Orders":"İptal Edilen Siparişler",
+    "Warehouse":"Ambar",
+    "Goods Receipt":"Mal Kabul",
+    "Dispatch":"Sevk",
+    "Goods Acceptance History":"Mal Kabul Geçmişi",
+    "Goods Dispatch History":"Mal Sevk Geçmişi",
+    "Stock":"Stok"
 }

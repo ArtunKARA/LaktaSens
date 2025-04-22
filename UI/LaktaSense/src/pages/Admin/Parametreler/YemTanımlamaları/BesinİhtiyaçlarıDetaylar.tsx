@@ -492,7 +492,7 @@ const MultipleTables = () => {
                         records={recordsData}
                         columns={[
                             {
-                                accessor: 'besinDegeriID',
+                                accessor: 'detayID',
                                 title: t('ID'),
                                 sortable: true
                             },
