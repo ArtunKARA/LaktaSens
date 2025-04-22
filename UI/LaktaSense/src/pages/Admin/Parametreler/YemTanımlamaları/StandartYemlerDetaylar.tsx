@@ -62,8 +62,8 @@ const MultipleTables = () => {
 
 
     const location = useLocation();
-    const state = location.state as { yemID: string | undefined };
-    const yemID = state?.yemID || null;
+    const initID = (location.state as { yemID?: string })?.yemID ?? null;
+    const [yemID, setYemID] = useState<string | null>(initID);
 
     //-----------Veriyi burdan çekiliyor-----------
     useEffect(() => {
@@ -213,8 +213,10 @@ const MultipleTables = () => {
             timer: 3000,
         });
         try {
-          const response = await axios.post("", {
-            yemAdi: data
+          const response = await axios.post("http://localhost:3030/api/tanimlamalar/yemTanimlari/postYemTanimlariBesinDegerleriEkle", {
+            yemID: yemID,
+            tipID: data.tipID,
+            miktar: data.miktar,
           });
     
           console.log(response.data);
@@ -239,8 +241,10 @@ const MultipleTables = () => {
           timer: 3000,
       });
       try {
-        const response = await axios.post("", {
-          yemAdi: data
+        const response = await axios.post("http://localhost:3030/api/tanimlamalar/yemTanimlari/postYemTanimlariBesinDegerleriGuncelle", {
+          besinDegeriID: data.besinDegeriID,
+          tipID: data.tipID,
+          miktar: data.miktar,
         });
   
         console.log(response.data);
@@ -265,7 +269,8 @@ const MultipleTables = () => {
             timer: 3000,
         });
         try {
-          const response = await axios.post("", {
+          const response = await axios.post("http://localhost:3030/api/tanimlamalar/yemTanimlari/postYemTanimlariBesinDegerleriSil", {
+            besinDegeriID: ID
           });
     
           console.log(response.data);
@@ -292,7 +297,8 @@ const MultipleTables = () => {
           timer: 3000,
       });
       try {
-        const response = await axios.post("", {
+        const response = await axios.post("http://localhost:3030/api/tanimlamalar/yemTanimlari/postYemTanimlariSil", {
+          yemID: ID
         });
   
         console.log(response.data);
@@ -302,6 +308,35 @@ const MultipleTables = () => {
           padding: '10px 20px',
       });
         setModalDelete(false); // Modalı kapat.
+        navigate('/admin/parameter/standartYemler');
+      } catch (error) {
+        console.error(error);
+        alert(t("An error occurred while saving!")+ error);
+        alert(ID);
+      }
+    };
+    //-----------Metadata verisi burdan güncele-----------
+    const MetaUpdate = async (ID:string,yemAdi:String,yemAciklama:String,durum:String) => {
+      const toast = Swal.mixin({
+          toast: true,
+          position: 'top',
+          showConfirmButton: false,
+          timer: 3000,
+      });
+      try {
+        const response = await axios.post("http://localhost:3030/api/tanimlamalar/yemTanimlari/postYemTanimlariGuncele", {
+          yemID: ID,
+          yemAdi: yemAdi,
+          yemAciklama: yemAciklama,
+          durum: durum
+        });
+  
+        console.log(response.data);
+        toast.fire({
+          icon: 'success',
+          title: 'Veri Başarı İle Silindi',
+          padding: '10px 20px',
+      });
         window.location.reload();
       } catch (error) {
         console.error(error);
@@ -309,24 +344,53 @@ const MultipleTables = () => {
         alert(ID);
       }
     };
+    //-----------Metadata verisi burdan ekele-----------
+    const MetaAdd = async (
+      yemAdi: string,
+      yemAciklama: string,
+      durum: string
+    ) => {
+      const toast = Swal.mixin({
+        toast: true,
+        position: 'top',
+        showConfirmButton: false,
+        timer: 3000
+      });
+  
+      try {
+        const { data } = await axios.post(
+          'http://localhost:3030/api/tanimlamalar/yemTanimlari/postYemTanimlariOlustur',
+          { yemAdi, yemAciklama, durum }
+        );
+  
+        /** ⬇⬇⬇ API’den gelen yeni ID burada  ------------------- */
+        const newID: string | undefined = data?.yemID;
+        if (newID) {
+          setYemID(newID);                       // 1) bileşen state’i güncelle
+          /* 2) aynı veya başka bir route’a geçerken
+                yeni ID’yi route‑state olarak ilet */
+          navigate('.', { replace: true, state: { yemID: newID } });
+        }
+  
+        toast.fire({
+          icon: 'success',
+          title: 'Kayıt başarıyla eklendi',
+          padding: '10px 20px'
+        });
+  
+        setModalDelete(false);
+        // window.location.reload();  // ihtiyaç kalmadıysa kaldırabilirsiniz
+      } catch (err) {
+        console.error(err);
+        alert('An error occurred while saving!\n' + err);
+      }
+    };
+
     const submitDataFormValidation = Yup.object().shape({
         tipID:  Yup.string(),
         miktar: Yup.string().required(t('Please Fill In')),
       });
     
-
-
-    
-    const statusColor = (durum : String) => {
-        const color = ['primary', 'secondary', 'success', 'danger', 'warning', 'info'];
-        if(durum == "Aktif"){
-            return color[2]
-        }else if(durum == "Pasif"){
-            return color[3]
-        }else if(durum == "Beklemede"){
-            return color[4]
-        }
-    };
     const [feedDeleteModal, setFeedDeleteModal] = useState(false);
 
     return (
@@ -351,7 +415,13 @@ const MultipleTables = () => {
               })}
               onSubmit={(values) => {
                 console.log('Form values:', values);
-                // Handle form submission logic here
+                if (isEmpty(metaData?.yemID)) {
+                  MetaAdd(values.yemAdi, values.yemAciklama, values.durum);
+                }
+                else {
+                  MetaUpdate(metaData!.yemID, values.yemAdi, values.yemAciklama, values.durum);
+                }
+                setModalAdd(false);
               }}
               >
               {({ errors, touched, submitCount }) => (
@@ -448,7 +518,7 @@ const MultipleTables = () => {
                                 </div>
                                 <button
                                   type="button"
-                                  onClick={() => MetaDelete(metaData!.yemID)} // Kaydetme fonksiyonu çağrısı
+                                  onClick={() => MetaDelete(metaData!.yemID)} // Silme fonksiyonu çağrısı
                                   className="btn btn-danger w-full"
                                 >
                                   {t("Delete")}

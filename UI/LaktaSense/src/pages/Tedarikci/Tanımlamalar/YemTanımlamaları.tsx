@@ -46,7 +46,7 @@ const MultipleTables = () => {
         // API'yi çağırma
         const fetchData = async () => {
           try {
-            const response = await fetch('http://localhost:3030/api/tanimlamalar/yemTanimlari/getYemTanimlari?ozelYem=0', {
+            const response = await fetch('http://localhost:3030/api/tedarikci/yemYonetim/getYemTanimlari?firmaID='+userInfo.firmaID, {
               method: 'GET',
               headers: {
                 'Content-Type': 'application/json',
@@ -103,7 +103,7 @@ const MultipleTables = () => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
     useEffect(() => {
-        dispatch(setPageTitle(t('Standard Feed')));
+        dispatch(setPageTitle(t('Company Special Feed Definitions')));
     });
     const [page, setPage] = useState(1);
     const PAGE_SIZES = [10, 20, 30, 50, 100];
@@ -190,7 +190,8 @@ const MultipleTables = () => {
             timer: 3000,
         });
         try {
-          const response = await axios.post("", {
+          const response = await axios.post("http://localhost:3030/api/tedarikci/yemYonetim/postYemTanimlariSil", {
+            yemID: ID
           });
     
           console.log(response.data);
@@ -217,9 +218,9 @@ const MultipleTables = () => {
     //-----------Detaylar Yada Ekele-----------
     const handleStandartYemlerDetay = (id?: string | number) => {
         if (id !== undefined) {
-          navigate('/admin/parameter/standartYemlerDetay', { state: { yemID: id } });
+          navigate('/tedarikci/tanımlamalar/yemDetay', { state: { yemID: id } });
         } else {
-          navigate('/admin/parameter/standartYemlerDetay');
+          navigate('/tedarikci/tanımlamalar/yemDetay');
         }
       };
 
@@ -240,7 +241,7 @@ const MultipleTables = () => {
         <div>
             <div className="panel mt-6">
                 <div className="mb-4.5 px-5 flex md:items-center md:flex-row flex-col gap-5">
-                    <h5 className="font-semibold text-lg dark:text-white-light">{t('Standard Feed')}</h5>
+                    <h5 className="font-semibold text-lg dark:text-white-light">{t('Company Special Feed Definitions')}</h5>
                     <div className="flex items-center gap-2">
                         <button type="button" className="btn btn-success gap-2" onClick={() => handleStandartYemlerDetay()}>
                             <IconPlus />
@@ -274,7 +275,7 @@ const MultipleTables = () => {
                             },
                             {
                                 accessor: 'yemAciklama',
-                                title: t('Standard Feed Description'),
+                                title: t('Company Special Feed Definitions Description'),
                                 sortable: true
                             },
                             {

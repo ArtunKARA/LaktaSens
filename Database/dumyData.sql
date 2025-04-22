@@ -218,7 +218,10 @@ VALUES
 ('Arpa', 0, 'a', NULL, 'Standart veri kaynağından'),
 ('PTK', 0, 'a', NULL, 'Standart veri kaynağından'),
 ('Kireç Taşı', 0, 'a', NULL, 'Standart veri kaynağından'),
-('DCP', 0, 'a', NULL, 'Standart veri kaynağından');
+('DCP', 0, 'a', NULL, 'Standart veri kaynağından'),
+('Buğday Silajı', 1, 'a', 3, 'Firma 3 – örnek veri'),
+('Yonca Silajı', 1, 'a', 3, 'Firma 3 – örnek veri'),
+('Soya Küspesi', 1, 'a', 3, 'Firma 3 – örnek veri');
 
 -- Mısır Silajı
 INSERT INTO YemBesinDegerleri (yemID, tipID, miktar) VALUES
@@ -247,3 +250,27 @@ INSERT INTO YemBesinDegerleri (yemID, tipID, miktar) VALUES
 -- DCP
 INSERT INTO YemBesinDegerleri (yemID, tipID, miktar) VALUES
 (7, 1, 100), (7, 4, 22.00), (7, 5, 19.30);
+
+/* Buğday Silajı  (yemID = 8) */
+INSERT INTO YemBesinDegerleri (yemID, tipID, miktar) VALUES
+(8, 1, 30.0),   -- % KM
+(8, 2, 8.50),   -- % HP
+(8, 3, 1.00),   -- Mcal/kg
+(8, 4, 0.30),   -- % Ca
+(8, 5, 0.25);   -- % P
+
+/* Yonca Silajı  (yemID = 9) */
+INSERT INTO YemBesinDegerleri (yemID, tipID, miktar) VALUES
+(9, 1, 35.0),
+(9, 2, 16.00),
+(9, 3, 1.02),
+(9, 4, 1.30),
+(9, 5, 0.22);
+
+/* Soya Küspesi  (yemID = 10) */
+INSERT INTO YemBesinDegerleri (yemID, tipID, miktar) VALUES
+(10, 1, 89.0),
+(10, 2, 48.00),
+(10, 3, 1.70),
+(10, 4, 0.29),
+(10, 5, 0.71);

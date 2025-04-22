@@ -190,7 +190,8 @@ const MultipleTables = () => {
             timer: 3000,
         });
         try {
-          const response = await axios.post("", {
+          const response = await axios.post("http://localhost:3030/api/tanimlamalar/yemTanimlari/postYemTanimlariSil", {
+            yemID: ID
           });
     
           console.log(response.data);
