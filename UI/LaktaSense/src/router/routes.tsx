@@ -47,6 +47,8 @@ const AdminBesinDeğerleriDetay = lazy(() => import('../pages/Admin/Parametreler
 const TedarikciYemTanımlamaları = lazy(() => import('../pages/Tedarikci/Tanımlamalar/YemTanımlamaları'));
 const TedarikciYemTanımlamalarıDetay = lazy(() => import('../pages/Tedarikci/Tanımlamalar/YemTanımlamalarıDetay'));
 const AdminYemBasvurulari = lazy(() => import('../pages/Admin/Basvurular/Yem/YemBasvurulari'));
+const AdminYemBasvurulariDetay = lazy(() => import('../pages/Admin/Basvurular/Yem/YemBasvuruDetay'));
+
 
 const routes = [
     //proje page
@@ -297,6 +299,11 @@ const routes = [
     {
         path: '/admin/YemBasvurulari',
         element:<AuthGuard allowedRoles={['a']}><AdminYemBasvurulari /></AuthGuard>,
+        layout : 'admin',
+    },
+    {
+        path: '/admin/YemBasvurulariDetay',
+        element:<AuthGuard allowedRoles={['a']}><AdminYemBasvurulariDetay /></AuthGuard>,
         layout : 'admin',
     },
 

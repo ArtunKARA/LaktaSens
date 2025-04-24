@@ -118,7 +118,7 @@ const MultipleTables = () => {
     const navigate = useNavigate();
     
     const Details = (yemID : string) => {
-      navigate('/admin/CiflikDetay', { state: { yemID: yemID } });
+      navigate('/admin/YemBasvurulariDetay', { state: { yemID: yemID } });
     };
 
     return (
