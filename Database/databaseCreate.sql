@@ -371,3 +371,14 @@ BEGIN
         RAISERROR(@ErrMsg, 16, 1);
     END CATCH
 END
+
+CREATE TABLE RedEdilenBaşvurularYem (
+    redEdilenBaşvurularID INT PRIMARY KEY IDENTITY(1,1),
+    yemID INT,
+    kullaniciID INT,
+    redNedeni NVARCHAR(300),
+    redTarihi DATE,
+    FOREIGN KEY (yemID) REFERENCES YemMaddeleri(yemID),
+    FOREIGN KEY (kullaniciID) REFERENCES kullanicilar(kullaniciID)
+);
+GO

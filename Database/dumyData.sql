@@ -274,3 +274,9 @@ INSERT INTO YemBesinDegerleri (yemID, tipID, miktar) VALUES
 (10, 3, 1.70),
 (10, 4, 0.29),
 (10, 5, 0.71);
+
+INSERT INTO RedEdilenBaşvurularYem (yemID, kullaniciID, redNedeni, redTarihi)
+VALUES 
+(10, 1, 'Başvuru bilgileri eksik.', CAST(GETDATE() AS DATE)),
+(10, 1, 'Yem kriterlerimizi karşılamamaktadır.', CAST(GETDATE() AS DATE));
+GO

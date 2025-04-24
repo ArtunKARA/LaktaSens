@@ -31,6 +31,7 @@ import IconDollarSignCircle from '../../../../components/Icon/IconDollarSignCirc
 import IconListCheck from '../../../../components/Icon/IconListCheck';
 import IconXCircle from '../../../../components/Icon/IconXCircle';
 import IconTxtFile from '../../../../components/Icon/IconTxtFile';
+import IconChecks from '../../../../components/Icon/IconChecks';
 
 
 interface DefData {
@@ -66,7 +67,7 @@ const MultipleTables = () => {
     const [unitOpitons, setUnitOptions] = useState<OptionType[]>([]);
     const [typeOpitons, setTypeOptions] = useState<OptionType[]>([]);
     const [metaData, setMetaData] = useState<MetaData | null>(null);
-    const [modalEdit, setModalAddEdit] = useState(false);
+    const [reson, setReson] = useState("");
 
 
     const location = useLocation();
@@ -219,7 +220,9 @@ const MultipleTables = () => {
         miktar: Yup.string().required(t('Please Fill In')),
       });
     
-    const [feedDeleteModal, setFeedDeleteModal] = useState(false);
+    const [feedPasiveModal, setFeedPasiveModal] = useState(false);
+    const [feedApproveModal, setFeedApproveModal] = useState(false);
+
     const [applayModal, setApplayModal] = useState(false);
     
     const [tabs, setTabs] = useState<string>('nutrition');
@@ -228,6 +231,63 @@ const MultipleTables = () => {
         setTabs(name);
     };
     
+    //-----------İçerik verisi burdan pasif-----------
+    const SetPassive = async (ID:string) => {
+        const toast = Swal.mixin({
+            toast: true,
+            position: 'top',
+            showConfirmButton: false,
+            timer: 3000,
+        });
+        try {
+          const response = await axios.post("", {
+            besinDegeriID: ID,
+            neden: reson,
+          });
+    
+          console.log(response.data);
+          toast.fire({
+            icon: 'success',
+            title: 'Besin başarıyla pasif hale getirildi.',
+            padding: '10px 20px',
+        });
+          setFeedPasiveModal(false); // Modalı kapat.
+          window.location.reload();
+        } catch (error) {
+          console.error(error);
+          alert(t("An error occurred while saving!")+ error);
+          alert(ID);
+        }
+      };
+
+      //-----------İçerik verisi burdan onayla-----------
+    const SetApprove = async (ID:string) => {
+        const toast = Swal.mixin({
+            toast: true,
+            position: 'top',
+            showConfirmButton: false,
+            timer: 3000,
+        });
+        try {
+          const response = await axios.post("", {
+            besinDegeriID: ID,
+          });
+    
+          console.log(response.data);
+          toast.fire({
+            icon: 'success',
+            title: 'Besin başarıyla onaylandı.',
+            padding: '10px 20px',
+        });
+          setFeedPasiveModal(false); // Modalı kapat.
+          window.location.reload();
+        } catch (error) {
+          console.error(error);
+          alert(t("An error occurred while saving!")+ error);
+          alert(ID);
+        }
+      };
+
     return (
         <div>
             <div className="panel">
@@ -316,28 +376,20 @@ const MultipleTables = () => {
                   </div>
                 </div>
                 <div className="mt-4 flex justify-end gap-2">
-                  <button type="submit" className="btn btn-primary gap-2">
-                  <IconSave />
-                  {t('Save')}
-                  </button>
-                  <button type="reset" className="btn btn-secondary gap-2">
-                    <IconRestore />
-                  {t('Reset')}
-                  </button>
-                  {metaData?.yemID && <button type="button" className="btn btn-danger gap-2" onClick={() =>{ isEmpty(metaData?.yemID) ? setFeedDeleteModal(false): setFeedDeleteModal(true) }}>
-                    <IconTrash />
-                  {t('Delete')}
+                  {(metaData?.yemID && (metaData?.durum == "b")) && <button type="button" className="btn btn-success gap-2" onClick={() =>{ setFeedApproveModal(true) }}>
+                    <IconChecks />
+                  {t('Approve')}
                   </button>}
-                  <Transition appear show={feedDeleteModal} as={Fragment}>
-                    <Dialog as="div" open={feedDeleteModal} onClose={() => setFeedDeleteModal(false)}>
+                  <Transition appear show={feedApproveModal} as={Fragment}>
+                    <Dialog as="div" open={feedApproveModal} onClose={() => setFeedApproveModal(false)}>
                       <div className="fixed inset-0 z-10 overflow-y-auto bg-[black]/10">
                         <div className="flex min-h-screen items-center justify-center px-4">
                           <Dialog.Panel className="panel my-8 w-full max-w-sm overflow-hidden rounded-lg py-1 px-4 text-black dark:text-white-dark">
                             <div className="flex items-center justify-between p-5">
-                              <h5>{t('Delete')}</h5>
+                              <h5>{t('Approve')}</h5>
                               <button
                                 type="button"
-                                onClick={() => setFeedDeleteModal(false)}
+                                onClick={() => setFeedApproveModal(false)}
                                 className="text-white-dark hover:text-dark"
                               >
                                 <IconX className="w-5 h-5" />
@@ -345,19 +397,69 @@ const MultipleTables = () => {
                             </div>
                             <div className="p-5">
                               <form className="space-y-2">
-                                <div className="relative mb-4">
-                                  <p>{t('Are you sure you want to delete feed all data?')}</p>
-                                </div>
                                 <button
                                   type="button"
-                                  onClick={() => MetaDelete(metaData!.yemID)} // Silme fonksiyonu çağrısı
-                                  className="btn btn-danger w-full"
+                                  onClick={() => SetApprove(metaData!.yemID)} // Silme fonksiyonu çağrısı
+                                  className="btn btn-success w-full"
                                 >
-                                  {t("Delete")}
+                                  {t("Approve")}
                                 </button>
                                 <button
                                       type="button"
-                                      onClick={() => setModalDelete(false)}
+                                      onClick={() => setFeedApproveModal(false)}
+                                      className="btn btn-warning w-full"
+                                    >
+                                    {t("Cancel")}
+                                </button>
+                              </form>
+                            </div>
+                          </Dialog.Panel>
+                        </div>
+                      </div>
+                    </Dialog>
+                  </Transition>
+                  {(metaData?.yemID && (metaData?.durum == "b" || metaData?.durum == "a" )) && <button type="button" className="btn btn-danger gap-2" onClick={() =>{ isEmpty(metaData?.yemID) ? setFeedPasiveModal(false): setFeedPasiveModal(true) }}>
+                    <IconXCircle />
+                  {t('Set Passive')}
+                  </button>}
+                  <Transition appear show={feedPasiveModal} as={Fragment}>
+                    <Dialog as="div" open={feedPasiveModal} onClose={() => setFeedPasiveModal(false)}>
+                      <div className="fixed inset-0 z-10 overflow-y-auto bg-[black]/10">
+                        <div className="flex min-h-screen items-center justify-center px-4">
+                          <Dialog.Panel className="panel my-8 w-full max-w-sm overflow-hidden rounded-lg py-1 px-4 text-black dark:text-white-dark">
+                            <div className="flex items-center justify-between p-5">
+                              <h5>{t('Set Passive')}</h5>
+                              <button
+                                type="button"
+                                onClick={() => setFeedPasiveModal(false)}
+                                className="text-white-dark hover:text-dark"
+                              >
+                                <IconX className="w-5 h-5" />
+                              </button>
+                            </div>
+                            <div className="p-5">
+                              <form className="space-y-2">
+                              <div className="relative mb-4">
+                                <label htmlFor="redSebebi">{t('Reject Reson')}</label>
+                                <input 
+                                    type="text" 
+                                    placeholder="Neden?" 
+                                    className="form-input border border-gray-300 rounded-lg p-2 text-gray-700" 
+                                    id="redSebebi" 
+                                    value={reson} 
+                                    onChange={(e) => setReson(e.target.value)} 
+                                />
+                                </div>
+                                <button
+                                  type="button"
+                                  onClick={() => SetPassive(metaData!.yemID)} // Silme fonksiyonu çağrısı
+                                  className="btn btn-danger w-full"
+                                >
+                                  {t("Set Passive")}
+                                </button>
+                                <button
+                                      type="button"
+                                      onClick={() => setFeedPasiveModal(false)}
                                       className="btn btn-warning w-full"
                                     >
                                     {t("Cancel")}

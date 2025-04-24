@@ -621,9 +621,9 @@ const AccountSetting = () => {
     
     const DetailsFeed = (id?: string | number) => {
         if (id !== undefined) {
-          navigate('', { state: { yemID: id } });
+          navigate('/admin/YemBasvurulariDetay', { state: { yemID: id } });
         } else {
-          navigate('');
+          navigate('http://localhost:5173/admin/YemBasvurulariDetay');
         }
       };
     
