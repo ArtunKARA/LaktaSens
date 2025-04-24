@@ -3,13 +3,13 @@ const { poolPromise } = require("../../service/connection.js");
 exports.postAllGebe = async (req, res) => {
     const {
         id
-      } = req.body;
+    } = req.body;
     try {
         const pool = await poolPromise;
         const result = await pool.request()
-        .input("id",id)
-        .query(
-            `USE laktasens;
+            .input("ID", id)
+            .query(
+                `USE laktasens;
                 SELECT 
                     inek.inekID,
                     inek.ad,
@@ -37,12 +37,12 @@ exports.postAllGebe = async (req, res) => {
 
 
 `
-        );
+            );
         if (result.recordset.length === 0) {
-          return res.status(404).json(null);
+            return res.status(404).json(null);
         }
         return res.json(result.recordset);
-      } catch (error) {
+    } catch (error) {
         console.error('Customer could not be retrieved:', error);
         return res.status(500).json({ error: 'Internal server error' });
     }
@@ -56,18 +56,18 @@ exports.postYavruEkle = async (req, res) => {
         kilo,
         dogumTarih,
         firmaID
-      } = req.body;
+    } = req.body;
     try {
         const pool = await poolPromise;
         const result = await pool.request()
-        .input("anneId",anneId)
-        .input("ad",ad)
-        .input("irk",irk)
-        .input("kilo",kilo)
-        .input("dogumTarih",dogumTarih)
-        .input("firmaID",firmaID)
-        .query(
-            `INSERT INTO [laktasens].[dbo].[inek]
+            .input("anneId", anneId)
+            .input("ad", ad)
+            .input("irk", irk)
+            .input("kilo", kilo)
+            .input("dogumTarih", dogumTarih)
+            .input("firmaID", firmaID)
+            .query(
+                `INSERT INTO [laktasens].[dbo].[inek]
                 ([inekQR], [ad], [irk], [kilo], [dogumTarihi], [sonDogurmaTarihi], [firmaID], [anneID], [sonDollenme], [dollenmeSayisi], [tuttuMu], [sonKuruTarihi], [sonSutOlcumTarihi])
             VALUES
                 (
@@ -95,12 +95,12 @@ exports.postYavruEkle = async (req, res) => {
                 dollenmeSayisi = 1   -- Yeni döllenme sayisi
             WHERE inekID = @anneId; 
 `
-        );
+            );
         if (result.rowsAffected[0] === 0) {
             return res.status(404).json({ message: "Kayıt eklenemedi." });
-          }
+        }
         return res.json({ message: "Kayıt başarıyla eklendi." });
-      } catch (error) {
+    } catch (error) {
         console.error('Customer could not be retrieved:', error);
         return res.status(500).json({ error: 'Internal server error' });
     }

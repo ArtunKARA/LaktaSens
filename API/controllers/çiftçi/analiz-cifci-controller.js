@@ -3,13 +3,13 @@ const { poolPromise } = require("../../service/connection.js");
 exports.postSutDongusuAnaliz = async (req, res) => {
     const {
         ID
-      } = req.body;
+    } = req.body;
     try {
         const pool = await poolPromise;
         const result = await pool.request()
-        .input("id",ID)
-        .query(
-            `SELECT
+            .input("ID", ID)
+            .query(
+                `SELECT
                 SUM(CASE 
                         -- Sağımda olanlar
                         WHEN 
@@ -56,12 +56,12 @@ exports.postSutDongusuAnaliz = async (req, res) => {
             WHERE 
                 kullanicilar.kullaniciID = @ID
                 AND inek.dollenmeSayisi > 0;`
-        );
+            );
         if (result.recordset.length === 0) {
-          return res.status(404).json(null);
+            return res.status(404).json(null);
         }
         return res.json(result.recordset[0]);
-      } catch (error) {
+    } catch (error) {
         console.error('Customer could not be retrieved:', error);
         return res.status(500).json({ error: 'Internal server error' });
     }
@@ -70,13 +70,13 @@ exports.postSutDongusuAnaliz = async (req, res) => {
 exports.postYavruDonguAnaliz = async (req, res) => {
     const {
         ID
-      } = req.body;
+    } = req.body;
     try {
         const pool = await poolPromise;
         const result = await pool.request()
-        .input("id",ID)
-        .query(
-            `USE laktasens;
+            .input("ID", ID)
+            .query(
+                `USE laktasens;
 
             SELECT
                 SUM(CASE 
@@ -155,12 +155,12 @@ exports.postYavruDonguAnaliz = async (req, res) => {
                         AND inek.dollenmeSayisi > 0
                 ) AS servisteInekler;
 `
-        );
+            );
         if (result.recordset.length === 0) {
-          return res.status(404).json(null);
+            return res.status(404).json(null);
         }
         return res.json(result.recordset[0]);
-      } catch (error) {
+    } catch (error) {
         console.error('Customer could not be retrieved:', error);
         return res.status(500).json({ error: 'Internal server error' });
     }
@@ -169,13 +169,13 @@ exports.postYavruDonguAnaliz = async (req, res) => {
 exports.postDongudekiIneklerAnaliz = async (req, res) => {
     const {
         ID
-      } = req.body;
+    } = req.body;
     try {
         const pool = await poolPromise;
         const result = await pool.request()
-        .input("id",ID)
-        .query(
-            `USE laktasens;
+            .input("ID", ID)
+            .query(
+                `USE laktasens;
 
             SELECT
                 SUM(CASE 
@@ -199,12 +199,12 @@ exports.postDongudekiIneklerAnaliz = async (req, res) => {
             WHERE 
                 kullanicilar.kullaniciID = @ID;
 `
-        );
+            );
         if (result.recordset.length === 0) {
-          return res.status(404).json(null);
+            return res.status(404).json(null);
         }
         return res.json(result.recordset[0]);
-      } catch (error) {
+    } catch (error) {
         console.error('Customer could not be retrieved:', error);
         return res.status(500).json({ error: 'Internal server error' });
     }

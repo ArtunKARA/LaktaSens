@@ -1,6 +1,7 @@
 import path from 'path';
 import { lazy } from 'react';
 import AuthGuard from './AuthGuard';
+const LandingPage = lazy(() => import('../pages/home/page'));
 const LoginBoxed = lazy(() => import('../pages/Authentication/LoginBoxed'));
 const CifciDashboard = lazy(() => import('../pages/Cifci/CifciDashboard'));
 const GenelTakip = lazy(() => import('../pages/Cifci/GenelTakip'));
@@ -49,10 +50,10 @@ const TedarikciYemTanımlamalarıDetay = lazy(() => import('../pages/Tedarikci/T
 const AdminYemBasvurulari = lazy(() => import('../pages/Admin/Basvurular/Yem/YemBasvurulari'));
 
 const routes = [
-    //proje page
+    //landing page
     {
         path: '/',
-        element: <LoginBoxed />,
+        element: <LandingPage />,
         layout : 'blank',
     },
     //login page
