@@ -183,3 +183,86 @@ exports.getYemBasvurular = async (req, res) => {
         return res.status(500).json({ error: 'Internal server error' });
       }
 }
+
+exports.postYemRedleri = async (req, res) => {
+    const {yemID} = req.body;
+
+    try {
+        const pool = await poolPromise;
+        const result = await pool.request()
+            .input("yemID", yemID)
+            .query(
+                `   SELECT 
+                        r.redEdilenBaşvurularID AS redID,
+                        r.redNedeni AS RededilmeNedeni,
+                        CONVERT(varchar(10), r.redTarihi, 120) AS RededilmeTarihi,
+                        CONCAT(k.isim, ' ', k.soyisim) AS ReddedenKullanıcı
+                    FROM 
+                        RedEdilenBaşvurularYem r
+                    INNER JOIN 
+                        kullanicilar k ON r.kullaniciID = k.kullaniciID
+                    WHERE 
+                        r.yemID = @yemID;`
+            );
+
+        if (result.recordset.length === 0) {
+            return res.status(404).json(null);
+        }
+
+        return res.json(result.recordset);
+    } catch (error) {
+        console.error('Genel bilgiler alınamadı:', error);
+        return res.status(500).json({ error: 'Internal server error' });
+    }
+}
+exports.postYemKabul = async (req, res) => {
+    const {yemID} = req.body;
+
+    try {
+        const pool = await poolPromise;
+        const result = await pool.request()
+            .input("yemID", yemID)
+            .query(
+                `   UPDATE YemMaddeleri
+                    SET durum = 'a'
+                    WHERE yemID = @yemID;`
+            );
+
+        // Güncelleme sonucunu kontrol et
+        if (result.rowsAffected[0] === 0) {
+            return res.status(404).json({ error: "Yem bulunamadı." });
+        }
+
+        return res.json({ message: "Güncelleme başarılı." });
+    } catch (error) {
+        console.error('Güncelleme sırasında hata oluştu:', error);
+        return res.status(500).json({ error: 'Internal server error' });
+    }
+};
+exports.postYemRed = async (req, res) => {
+    const {yemID,redSebebi} = req.body;
+
+    try {
+        const pool = await poolPromise;
+        const result = await pool.request()
+            .input("yemID", yemID)
+            .input("redSebebi", redSebebi)
+            .query(
+                `   UPDATE YemMaddeleri
+                    SET durum = 'p',
+                    redSebebi = @redSebebi
+                    WHERE yemID = @yemID;`
+            );
+
+        // Güncelleme sonucunu kontrol et
+        if (result.rowsAffected[0] === 0) {
+            return res.status(404).json({ error: "Yem bulunamadı." });
+        }
+
+        return res.json({ message: "Güncelleme başarılı." });
+    } catch (error) {
+        console.error('Güncelleme sırasında hata oluştu:', error);
+        return res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
