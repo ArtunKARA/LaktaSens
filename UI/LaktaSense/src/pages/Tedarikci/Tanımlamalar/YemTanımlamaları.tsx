@@ -264,7 +264,7 @@ const MultipleTables = () => {
                             },
                             {
                                 accessor: 'yemAdi',
-                                title: t('Standart Feed Name'),
+                                title: t('Feed Name'),
                                 sortable: true
                             },
                             {

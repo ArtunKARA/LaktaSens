@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { Link, NavLink, useLocation } from 'react-router-dom';
+import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { Dialog, DialogPanel, Transition, TransitionChild } from '@headlessui/react';
 import { useEffect, useState, Fragment } from 'react';
 import { setPageTitle } from '../../../../store/themeConfigSlice';
@@ -74,6 +74,16 @@ const AccountSetting = () => {
         date: string,
         amount: string,
         status: { tooltip: 'Paid', color: 'success' },
+    }
+
+    interface FeedData {
+        yemID: string;
+        yemAdi: string;
+        ozelYem: string;
+        durum: string;
+        yemFirmaID: string;
+        firmaAdi: string;
+        yemAciklama: string;
     }
 
     const storedUserInfo = localStorage.getItem('userInfo');
@@ -595,6 +605,100 @@ const AccountSetting = () => {
         setPageBillList(1);
     }, [sortStatusBillList]);
 
+    const statusColorFeed = (durum : String) => {
+        const color = ['primary', 'secondary', 'success', 'danger', 'warning', 'info'];
+        if(durum == "Aktif"){
+            return color[2]
+        }else if(durum == "Pasif"){
+            return color[3]
+        }else if(durum == "Beklemede"){
+            return color[4]
+        }
+    };
+
+
+    const navigate = useNavigate();
+    
+    const DetailsFeed = (id?: string | number) => {
+        if (id !== undefined) {
+          navigate('/admin/YemBasvurulariDetay', { state: { yemID: id } });
+        } else {
+          navigate('http://localhost:5173/admin/YemBasvurulariDetay');
+        }
+      };
+    
+        const [rowDataFeed, setRowDataFeed] = useState<FeedData[]>([]);
+        const [pageFeed, setPageFeed] = useState(1);
+        const PAGE_SIZES_Feed = [10, 20, 30, 50, 100];
+        const [pageSizeFeed, setPageSizeFeed] = useState(PAGE_SIZES_Feed[0]);
+        const [initialRecordsFeed, setInitialRecordsFeed] = useState<FeedData[]>([]);
+        const [recordsDataFeed, setRecordsDataFeed] = useState(initialRecordsFeed);
+        
+        useEffect(() => {
+            const sortedDataFeed = sortBy(rowDataFeed, 'yemID');
+            setInitialRecordsFeed(sortedDataFeed);
+        }, [rowDataFeed]);
+
+        const [searchFeed, setSearchFeed] = useState('');
+        const [sortStatusFeed, setSortStatusFeed] = useState<DataTableSortStatus>({
+            columnAccessor: 'yemID',
+            direction: 'asc',
+        });
+        useEffect(() => {
+            setPage(1);
+        }, [pageSizeFeed]);
+
+        useEffect(() => {
+            const from = (pageFeed - 1) * pageSizeFeed;
+            const to = from + pageSizeFeed;
+            setRecordsDataFeed([...initialRecordsFeed.slice(from, to)]);
+        }, [pageFeed, pageSizeFeed, initialRecordsFeed]);
+
+        useEffect(() => {
+            setInitialRecordsFeed(() => {
+                return rowDataFeed.filter((item) => {
+                    return (
+                        item.yemID.toString().toLowerCase().includes(searchFeed.toLowerCase()) ||
+                        item.yemAdi.toLowerCase().includes(searchFeed.toLowerCase()) ||
+                        item.firmaAdi.toLowerCase().includes(searchFeed.toLowerCase()) ||
+                        item.yemAciklama.toLowerCase().includes(searchFeed.toLowerCase()) ||
+                        item.ozelYem.toString().toLowerCase().includes(searchFeed.toLowerCase()) ||
+                        item.durum.toString().toLowerCase().includes(searchFeed.toLowerCase()) ||
+                        item.yemFirmaID.toString().toLowerCase().includes(searchFeed.toLowerCase())
+                        
+                    );
+                });
+            });
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+        }, [searchFeed]);
+
+        useEffect(() => {
+            const data = sortBy(initialRecordsFeed, sortStatusFeed.columnAccessor);
+            setInitialRecordsFeed(sortStatusFeed.direction === 'desc' ? data.reverse() : data);
+            setPage(1);
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+        }, [sortStatusFeed]);
+
+         useEffect(() => {
+                // API'yi çağırma
+                const fetchData = async () => {
+                  try {
+                    const response = await fetch('http://localhost:3030/api/tedarikci/yemYonetim/getYemTanimlari?firmaID='+CompanyID, {
+                      method: 'GET',
+                      headers: {
+                        'Content-Type': 'application/json',
+                      },
+                    });
+                    const data = await response.json();
+                    console.log('Gelen veri:', data);
+                    setRowDataFeed(data); // Sadece doğrudan kullanılabilecek bir dizi olduğunda kullanı
+                  } catch (error) {
+                    console.error('API çağrısı sırasında bir hata oluştu:', error);
+                  }
+                };
+            
+                fetchData();
+              }, []);
     return (
         <div>
             <div className="pt-5">
@@ -1363,7 +1467,76 @@ const AccountSetting = () => {
                     ''
                 )}
                 {tabs === 'manage-product' ? (
-                    <div></div>
+                <div>
+                    <div className="panel mt-6">
+                        <div className="flex md:items-center md:flex-row flex-col mb-5 gap-5">
+                            <h5 className="font-semibold text-lg dark:text-white-light">{t('Commpany\'s Feed\'s')}</h5>
+                            <div className="ltr:ml-auto rtl:mr-auto">
+                                <input type="text" className="form-input w-auto" placeholder="Search..." value={searchFeed} onChange={(e) => setSearchFeed(e.target.value)} />
+                            </div>
+                        </div>
+                        <div className="datatables">
+                            <DataTable
+                                className="whitespace-nowrap table-hover"
+                                records={recordsDataFeed}
+                                columns={[
+                                    {
+                                        accessor: 'yemID',
+                                        title: t('ID'),
+                                        sortable: true
+                                    },
+                                    {
+                                        accessor: 'yemAdi',
+                                        title: t('Feed Name'),
+                                        sortable: true
+                                    },
+                                    {
+                                        accessor: 'firmaAdi',
+                                        title: t('Company Name'),
+                                        sortable: true,
+                                    },
+                                    {
+                                        accessor: 'durum',
+                                        title: t('Status'),
+                                        sortable: true,
+                                        render: ({ durum }) => <span className={`badge bg-${statusColorFeed(durum)}`}>{durum}</span>,
+                                    },
+                                    {
+                                        accessor: 'yemAciklama',
+                                        title: t('Company Special Feed Definitions Description'),
+                                        sortable: true
+                                    },
+                                    {
+                                        accessor: 'Detail',
+                                        title: t('Detail'),
+                                        render: ({yemID}) => (
+                                            <div className="flex items-center w-max mx-auto gap-2 rounded-full">
+                                                <Tippy>
+                                                    <button type="button"
+                                                    onClick={() => {
+                                                    DetailsFeed(yemID)
+                                                    }}>
+                                                        <IconMenu />
+                                                    </button>
+                                                </Tippy>
+                                            </div>
+                                        ),
+                                    },
+                                ]}
+                                totalRecords={initialRecordsFeed.length}
+                                recordsPerPage={pageSizeFeed}
+                                page={pageFeed}
+                                onPageChange={(p) => setPageFeed(p)}
+                                recordsPerPageOptions={PAGE_SIZES_Feed}
+                                onRecordsPerPageChange={setPageSizeFeed}
+                                sortStatus={sortStatusFeed}
+                                onSortStatusChange={setSortStatusFeed}
+                                minHeight={200}
+                                paginationText={({ from, to, totalRecords }) => `Showing  ${from} to ${to} of ${totalRecords} entries`}
+                            />
+                        </div>
+                    </div>
+                </div>
                 ): (null)}
                 {tabs === 'manage-payment' ? (
                     <div className="switch">
