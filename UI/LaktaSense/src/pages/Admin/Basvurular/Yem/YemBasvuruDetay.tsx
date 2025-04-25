@@ -2,7 +2,6 @@ import { useTranslation } from 'react-i18next';
 import { DataTable, DataTableSortStatus } from 'mantine-datatable';
 import { useEffect, useState, Fragment } from 'react';
 import sortBy from 'lodash/sortBy';
-import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
 import { setPageTitle } from '../../../../store/themeConfigSlice';
 import { useDispatch } from 'react-redux';
@@ -12,23 +11,11 @@ import IconX from '../../../../components/Icon/IconX';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { isEmpty, isSet, set, toNumber } from 'lodash';
-import IconPlus from '../../../../components/Icon/IconPlus';
 import Swal from 'sweetalert2';
 import Select, { SingleValue, StylesConfig } from 'react-select';
-import IconEdit from '../../../../components/Icon/IconEdit';
-import IconTrash from '../../../../components/Icon/IconTrash';
 import { Field, Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { useLocation } from 'react-router-dom';
-import IconSave from '../../../../components/Icon/IconSave';
-import IconRestore from '../../../../components/Icon/IconRestore';
-import { be } from '@fullcalendar/core/internal-common';
-import IconHome from '../../../../components/Icon/IconHome';
-import IconUser from '../../../../components/Icon/IconUser';
-import IconTrendingUp from '../../../../components/Icon/IconTrendingUp';
-import IconBox from '../../../../components/Icon/IconBox';
-import IconDollarSignCircle from '../../../../components/Icon/IconDollarSignCircle';
-import IconListCheck from '../../../../components/Icon/IconListCheck';
 import IconXCircle from '../../../../components/Icon/IconXCircle';
 import IconTxtFile from '../../../../components/Icon/IconTxtFile';
 import IconChecks from '../../../../components/Icon/IconChecks';
@@ -341,7 +328,7 @@ const MultipleTables = () => {
             });
         });
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [search]);
+    }, [searchReject]);
 
     return (
         <div>

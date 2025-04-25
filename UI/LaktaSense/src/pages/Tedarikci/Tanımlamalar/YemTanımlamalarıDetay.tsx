@@ -10,7 +10,7 @@ import 'tippy.js/dist/tippy.css';
 import { Dialog, Transition } from '@headlessui/react';
 import IconX from '../../../components/Icon/IconX';
 import axios from 'axios';
-import {useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { isEmpty, isSet, set, toNumber } from 'lodash';
 import IconPlus from '../../../components/Icon/IconPlus';
 import Swal from 'sweetalert2';
@@ -23,32 +23,39 @@ import { useLocation } from 'react-router-dom';
 import IconSave from '../../../components/Icon/IconSave';
 import IconRestore from '../../../components/Icon/IconRestore';
 import { be } from '@fullcalendar/core/internal-common';
-
+import IconXCircle from '../../../components/Icon/IconXCircle';
+import IconTxtFile from '../../../components/Icon/IconTxtFile';
 
 interface DefData {
-  besinDegeriID: string;
-  tipID: string;
-  besinTipi: string;
-  miktar: string;
-  birimID: string;
-  birimAdi: string;
+    besinDegeriID: string;
+    tipID: string;
+    besinTipi: string;
+    miktar: string;
+    birimID: string;
+    birimAdi: string;
 }
 interface MetaData {
-  yemID: string;
-  yemAdi: string;
-  durum: string;
-  yemAciklama: string;
+    yemID: string;
+    yemAdi: string;
+    durum: string;
+    yemAciklama: string;
 }
 interface SelectedData {
-  besinDegeriID: string;
-  tipID: string;
-  birimAdi: string;
-  miktar: string;
+    besinDegeriID: string;
+    tipID: string;
+    birimAdi: string;
+    miktar: string;
 }
 interface OptionType {
     value: string;
     label: string;
     unit: string;
+}
+interface RejectData {
+    redID: string;
+    RededilmeNedeni: string;
+    RededilmeTarihi: string;
+    ReddedenKullanıcı: string;
 }
 const MultipleTables = () => {
     const storedUserInfo = localStorage.getItem('userInfo');
@@ -60,80 +67,72 @@ const MultipleTables = () => {
     const [metaData, setMetaData] = useState<MetaData | null>(null);
     const [modalEdit, setModalAddEdit] = useState(false);
 
-
     const location = useLocation();
     const initID = (location.state as { yemID?: string })?.yemID ?? null;
     const [yemID, setYemID] = useState<string | null>(initID);
 
     //-----------Veriyi burdan çekiliyor-----------
     useEffect(() => {
-      const fetchData = async () => {
-
-        if (!yemID) {
-          setMetaData(null);
-          setRowData([]);
-          return;
-        }
-      
-        try {
-          const response = await fetch(
-            'http://localhost:3030/api/tedarikci/yemYonetim/postYemTanimlariDetay',
-            {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ yemID }),
+        const fetchData = async () => {
+            if (!yemID) {
+                setMetaData(null);
+                setRowData([]);
+                return;
             }
-          );
-          const data = await response.json();
-    
-          // Üst bilgileri ayır
-          const { yemID: id, yemAdi, durum, yemAciklama, besinDegerleri } = data;
-    
-          // State’lere ata
-          setMetaData({
-            yemID: String(id),      // API’den number gelebilir, biz string istiyoruz
-            yemAdi,
-            durum,
-            yemAciklama,
-          });
-          setRowData(besinDegerleri);
-    
-        } catch (err) {
-          console.error('API çağrısı sırasında hata:', err);
-        }
-    
-        // Tip fetch ile alıyoruz
-        try {
-          const { data: birimler } = await axios.get(
-            'http://localhost:3030/api/tanimlamalar/birimler/getBesinTipleri'
-          );
-          const unitOptions = birimler.map((o: any) => ({
-            value: o.tipID,
-            label: o.tipAdi,
-            unit: `${o.birimAdi} – ${o.aciklama}`,
-          }));
-          setUnitOptions(unitOptions);
-        } catch (err) {
-          console.error('Birim seçenekleri alınırken hata:', err);
-        }
-      };
-    
-      fetchData();
+
+            try {
+                const response = await fetch('http://localhost:3030/api/tedarikci/yemYonetim/postYemTanimlariDetay', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ yemID }),
+                });
+                const data = await response.json();
+
+                // Üst bilgileri ayır
+                const { yemID: id, yemAdi, durum, yemAciklama, besinDegerleri } = data;
+
+                // State’lere ata
+                setMetaData({
+                    yemID: String(id), // API’den number gelebilir, biz string istiyoruz
+                    yemAdi,
+                    durum,
+                    yemAciklama,
+                });
+                setRowData(besinDegerleri);
+            } catch (err) {
+                console.error('API çağrısı sırasında hata:', err);
+            }
+
+            // Tip fetch ile alıyoruz
+            try {
+                const { data: birimler } = await axios.get('http://localhost:3030/api/tanimlamalar/birimler/getBesinTipleri');
+                const unitOptions = birimler.map((o: any) => ({
+                    value: o.tipID,
+                    label: o.tipAdi,
+                    unit: `${o.birimAdi} – ${o.aciklama}`,
+                }));
+                setUnitOptions(unitOptions);
+            } catch (err) {
+                console.error('Birim seçenekleri alınırken hata:', err);
+            }
+        };
+
+        fetchData();
     }, [yemID]);
-      const menuStyles: StylesConfig<OptionType, false> = {
+    const menuStyles: StylesConfig<OptionType, false> = {
         // this ensures the portal’ed menu sits above everything else
-        menuPortal: base => ({ ...base, zIndex: 9999 }),
-      };
-      const UnitSelect = ({ field, form, options }: { field: any; form: any; options: OptionType[] }) => {
+        menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+    };
+    const UnitSelect = ({ field, form, options }: { field: any; form: any; options: OptionType[] }) => {
         const handleChange = (selectedOption: SingleValue<OptionType> | null) => {
             form.setFieldValue(field.name, selectedOption ? selectedOption.value : '');
             form.setFieldValue('birimAdi', selectedOption ? selectedOption.unit : '');
         };
-    
+
         return (
             <Select
                 options={options}
-                value={options ? options.find(option => option.value === field.value) : null}
+                value={options ? options.find((option) => option.value === field.value) : null}
                 menuPortalTarget={typeof document !== 'undefined' ? document.body : null}
                 menuPosition="fixed"
                 styles={menuStyles}
@@ -144,9 +143,7 @@ const MultipleTables = () => {
             />
         );
     };
-    
 
-      
     const { t } = useTranslation();
     const dispatch = useDispatch();
     useEffect(() => {
@@ -160,11 +157,11 @@ const MultipleTables = () => {
         const sortedData = sortBy(rowData, 'birimID');
         setInitialRecords(sortedData);
     }, [rowData]);
-    
+
     const [recordsData, setRecordsData] = useState(initialRecords);
     const [modalDelete, setModalDelete] = useState(false);
     const [modalAdd, setModalAdd] = useState(false);
-    const [delID,setDelID] = useState('');
+    const [delID, setDelID] = useState('');
     const [search, setSearch] = useState('');
     const [sortStatus, setSortStatus] = useState<DataTableSortStatus>({
         columnAccessor: 'birimID',
@@ -189,7 +186,7 @@ const MultipleTables = () => {
                     item.miktar.toString().toLowerCase().includes(search.toLowerCase()) ||
                     item.birimID.toString().toLowerCase().includes(search.toLowerCase()) ||
                     item.birimAdi.toLowerCase().includes(search.toLowerCase()) ||
-                    item.tipID.toString().toLowerCase().includes(search.toLowerCase()) 
+                    item.tipID.toString().toLowerCase().includes(search.toLowerCase())
                 );
             });
         });
@@ -205,7 +202,7 @@ const MultipleTables = () => {
 
     const navigate = useNavigate();
     //-----------İçerik verisi burdan ekleniyor-----------
-    const Add = async (data:SelectedData) => {
+    const Add = async (data: SelectedData) => {
         const toast = Swal.mixin({
             toast: true,
             position: 'top',
@@ -213,55 +210,55 @@ const MultipleTables = () => {
             timer: 3000,
         });
         try {
-          const response = await axios.post("http://localhost:3030/api/tedarikci/yemYonetim/postYemTanimlariBesinDegerleriEkle", {
-            yemID: yemID,
-            tipID: data.tipID,
-            miktar: data.miktar,
-          });
-    
-          console.log(response.data);
-          toast.fire({
-            icon: 'success',
-            title: 'Veri Başarı İle Eklendi Dev',
-            padding: '10px 20px',
-        });
-          setModalAdd(false); // Modalı kapat.
-          window.location.reload();
+            const response = await axios.post('http://localhost:3030/api/tedarikci/yemYonetim/postYemTanimlariBesinDegerleriEkle', {
+                yemID: yemID,
+                tipID: data.tipID,
+                miktar: data.miktar,
+            });
+
+            console.log(response.data);
+            toast.fire({
+                icon: 'success',
+                title: 'Veri Başarı İle Eklendi Dev',
+                padding: '10px 20px',
+            });
+            setModalAdd(false); // Modalı kapat.
+            window.location.reload();
         } catch (error) {
-          console.error(error);
-          alert(t("An error occurred while saving!")+ error);
+            console.error(error);
+            alert(t('An error occurred while saving!') + error);
         }
-      };
-      //-----------İçerik verisi burdan Düzenleniyor-----------
-    const Edit = async (data:SelectedData) => {
-      const toast = Swal.mixin({
-          toast: true,
-          position: 'top',
-          showConfirmButton: false,
-          timer: 3000,
-      });
-      try {
-        const response = await axios.post("http://localhost:3030/api/tedarikci/yemYonetim/postYemTanimlariBesinDegerleriGuncelle", {
-          besinDegeriID: data.besinDegeriID,
-          tipID: data.tipID,
-          miktar: data.miktar,
+    };
+    //-----------İçerik verisi burdan Düzenleniyor-----------
+    const Edit = async (data: SelectedData) => {
+        const toast = Swal.mixin({
+            toast: true,
+            position: 'top',
+            showConfirmButton: false,
+            timer: 3000,
         });
-  
-        console.log(response.data);
-        toast.fire({
-          icon: 'success',
-          title: 'Veri Başarı İle Eklendi Dev',
-          padding: '10px 20px',
-      });
-        setModalAdd(false); // Modalı kapat.
-        window.location.reload();
-      } catch (error) {
-        console.error(error);
-        alert(t("An error occurred while saving!")+ error);
-      }
+        try {
+            const response = await axios.post('http://localhost:3030/api/tedarikci/yemYonetim/postYemTanimlariBesinDegerleriGuncelle', {
+                besinDegeriID: data.besinDegeriID,
+                tipID: data.tipID,
+                miktar: data.miktar,
+            });
+
+            console.log(response.data);
+            toast.fire({
+                icon: 'success',
+                title: 'Veri Başarı İle Eklendi Dev',
+                padding: '10px 20px',
+            });
+            setModalAdd(false); // Modalı kapat.
+            window.location.reload();
+        } catch (error) {
+            console.error(error);
+            alert(t('An error occurred while saving!') + error);
+        }
     };
     //-----------İçerik verisi burdan silme-----------
-    const Delete = async (ID:string) => {
+    const Delete = async (ID: string) => {
         const toast = Swal.mixin({
             toast: true,
             position: 'top',
@@ -269,605 +266,720 @@ const MultipleTables = () => {
             timer: 3000,
         });
         try {
-          const response = await axios.post("http://localhost:3030/api/tedarikci/yemYonetim/postYemTanimlariBesinDegerleriSil", {
-            besinDegeriID: ID
-          });
-    
-          console.log(response.data);
-          toast.fire({
-            icon: 'success',
-            title: 'Veri Başarı İle Silindi',
-            padding: '10px 20px',
-        });
-          setModalDelete(false); // Modalı kapat.
-          window.location.reload();
+            const response = await axios.post('http://localhost:3030/api/tedarikci/yemYonetim/postYemTanimlariBesinDegerleriSil', {
+                besinDegeriID: ID,
+            });
+
+            console.log(response.data);
+            toast.fire({
+                icon: 'success',
+                title: 'Veri Başarı İle Silindi',
+                padding: '10px 20px',
+            });
+            setModalDelete(false); // Modalı kapat.
+            window.location.reload();
         } catch (error) {
-          console.error(error);
-          alert(t("An error occurred while saving!")+ error);
-          alert(ID);
+            console.error(error);
+            alert(t('An error occurred while saving!') + error);
+            alert(ID);
         }
-      };
+    };
 
     //-----------Metadata verisi burdan silme-----------
-    const MetaDelete = async (ID:string) => {
-      const toast = Swal.mixin({
-          toast: true,
-          position: 'top',
-          showConfirmButton: false,
-          timer: 3000,
-      });
-      try {
-        const response = await axios.post("http://localhost:3030/api/tedarikci/yemYonetim/postYemTanimlariSil", {
-          yemID: ID
+    const MetaDelete = async (ID: string) => {
+        const toast = Swal.mixin({
+            toast: true,
+            position: 'top',
+            showConfirmButton: false,
+            timer: 3000,
         });
-  
-        console.log(response.data);
-        toast.fire({
-          icon: 'success',
-          title: 'Veri Başarı İle Silindi',
-          padding: '10px 20px',
-      });
-        setModalDelete(false); // Modalı kapat.
-        navigate('/tedarikci/tanımlamalar/yem');
-      } catch (error) {
-        console.error(error);
-        alert(t("An error occurred while saving!")+ error);
-        alert(ID);
-      }
+        try {
+            const response = await axios.post('http://localhost:3030/api/tedarikci/yemYonetim/postYemTanimlariSil', {
+                yemID: ID,
+            });
+
+            console.log(response.data);
+            toast.fire({
+                icon: 'success',
+                title: 'Veri Başarı İle Silindi',
+                padding: '10px 20px',
+            });
+            setModalDelete(false); // Modalı kapat.
+            navigate('/tedarikci/tanımlamalar/yem');
+        } catch (error) {
+            console.error(error);
+            alert(t('An error occurred while saving!') + error);
+            alert(ID);
+        }
     };
     //-----------Metadata verisi burdan güncele-----------
-    const MetaUpdate = async (ID:string,yemAdi:String,yemAciklama:String,durum:String) => {
-      const toast = Swal.mixin({
-          toast: true,
-          position: 'top',
-          showConfirmButton: false,
-          timer: 3000,
-      });
-      try {
-        const response = await axios.post("http://localhost:3030/api/tedarikci/yemYonetim/postYemTanimlariGuncele", {
-          yemID: ID,
-          yemAdi: yemAdi,
-          yemAciklama: yemAciklama,
-          durum: durum
+    const MetaUpdate = async (ID: string, yemAdi: String, yemAciklama: String, durum: String) => {
+        const toast = Swal.mixin({
+            toast: true,
+            position: 'top',
+            showConfirmButton: false,
+            timer: 3000,
         });
-  
-        console.log(response.data);
-        toast.fire({
-          icon: 'success',
-          title: 'Veri Başarı İle Silindi',
-          padding: '10px 20px',
-      });
-        window.location.reload();
-      } catch (error) {
-        console.error(error);
-        alert(t("An error occurred while saving!")+ error);
-        alert(ID);
-      }
+        try {
+            const response = await axios.post('http://localhost:3030/api/tedarikci/yemYonetim/postYemTanimlariGuncele', {
+                yemID: ID,
+                yemAdi: yemAdi,
+                yemAciklama: yemAciklama,
+                durum: durum,
+            });
+
+            console.log(response.data);
+            toast.fire({
+                icon: 'success',
+                title: 'Veri Başarı İle Silindi',
+                padding: '10px 20px',
+            });
+            window.location.reload();
+        } catch (error) {
+            console.error(error);
+            alert(t('An error occurred while saving!') + error);
+            alert(ID);
+        }
     };
     //-----------Metadata verisi burdan ekele-----------
-    const MetaAdd = async (
-      yemAdi: string,
-      yemAciklama: string,
-      durum: string,
-    ) => {
-      const toast = Swal.mixin({
-        toast: true,
-        position: 'top',
-        showConfirmButton: false,
-        timer: 3000
-      });
-  
-      try {
-        const { data } = await axios.post(
-          'http://localhost:3030/api/tedarikci/yemYonetim/postYemTanimlariOlustur',
-          { yemAdi, yemAciklama, durum, yemFirmaID: userInfo.firmaID}
-        );
-  
-        /** ⬇⬇⬇ API’den gelen yeni ID burada  ------------------- */
-        const newID: string | undefined = data?.yemID;
-        if (newID) {
-          setYemID(newID);                       // 1) bileşen state’i güncelle
-          /* 2) aynı veya başka bir route’a geçerken
-                yeni ID’yi route‑state olarak ilet */
-          navigate('.', { replace: true, state: { yemID: newID } });
-        }
-  
-        toast.fire({
-          icon: 'success',
-          title: 'Kayıt başarıyla eklendi',
-          padding: '10px 20px'
+    const MetaAdd = async (yemAdi: string, yemAciklama: string, durum: string) => {
+        const toast = Swal.mixin({
+            toast: true,
+            position: 'top',
+            showConfirmButton: false,
+            timer: 3000,
         });
-  
-        setModalDelete(false);
-        // window.location.reload();  // ihtiyaç kalmadıysa kaldırabilirsiniz
-      } catch (err) {
-        console.error(err);
-        alert('An error occurred while saving!\n' + err);
-      }
+
+        try {
+            const { data } = await axios.post('http://localhost:3030/api/tedarikci/yemYonetim/postYemTanimlariOlustur', { yemAdi, yemAciklama, durum, yemFirmaID: userInfo.firmaID });
+
+            /** ⬇⬇⬇ API’den gelen yeni ID burada  ------------------- */
+            const newID: string | undefined = data?.yemID;
+            if (newID) {
+                setYemID(newID); // 1) bileşen state’i güncelle
+                /* 2) aynı veya başka bir route’a geçerken
+                yeni ID’yi route‑state olarak ilet */
+                navigate('.', { replace: true, state: { yemID: newID } });
+            }
+
+            toast.fire({
+                icon: 'success',
+                title: 'Kayıt başarıyla eklendi',
+                padding: '10px 20px',
+            });
+
+            setModalDelete(false);
+            // window.location.reload();  // ihtiyaç kalmadıysa kaldırabilirsiniz
+        } catch (err) {
+            console.error(err);
+            alert('An error occurred while saving!\n' + err);
+        }
     };
 
-    const Reapply = async (ID:string) => {
-      const toast = Swal.mixin({
-          toast: true,
-          position: 'top',
-          showConfirmButton: false,
-          timer: 3000,
-      });
-      try {
-        const response = await axios.post("http://localhost:3030/api/tedarikci/yemYonetim/postYemYenidenBasvurma", {
-          yemID: ID
+    const Reapply = async (ID: string) => {
+        const toast = Swal.mixin({
+            toast: true,
+            position: 'top',
+            showConfirmButton: false,
+            timer: 3000,
         });
-  
-        console.log(response.data);
-        toast.fire({
-          icon: 'success',
-          title: 'Veri Başarı İle Silindi',
-          padding: '10px 20px',
-      });
-        window.location.reload();
-      } catch (error) {
-        console.error(error);
-        alert(t("An error occurred while saving!")+ error);
-        alert(ID);
-      }
+        try {
+            const response = await axios.post('http://localhost:3030/api/tedarikci/yemYonetim/postYemYenidenBasvurma', {
+                yemID: ID,
+            });
+
+            console.log(response.data);
+            toast.fire({
+                icon: 'success',
+                title: 'Veri Başarı İle Silindi',
+                padding: '10px 20px',
+            });
+            window.location.reload();
+        } catch (error) {
+            console.error(error);
+            alert(t('An error occurred while saving!') + error);
+            alert(ID);
+        }
     };
 
     const submitDataFormValidation = Yup.object().shape({
-        tipID:  Yup.string(),
+        tipID: Yup.string(),
         miktar: Yup.string().required(t('Please Fill In')),
-      });
-    
+    });
+
     const [feedDeleteModal, setFeedDeleteModal] = useState(false);
     const [applayModal, setApplayModal] = useState(false);
+
+    //-----------Tab yapısı-----------
+    const [tabs, setTabs] = useState<string>('nutrition');
+    const toggleTabs = (name: string) => {
+        setTabs(name);
+    };
+
+    //-----------Red Bigileri Tablosu Fonksiyonları-----------
+    const [initialRecordsReject, setInitialRecordsReject] = useState<RejectData[]>([]);
+    const [recordsDataReject, setRecordsDataReject] = useState(initialRecordsReject);
+    const [pageReject, setPageReject] = useState(1);
+    const PAGE_SIZESReject = [10, 20, 30, 50, 100];
+    const [pageSizeReject, setPageSizeReject] = useState(PAGE_SIZESReject[0]);
+    const [searchReject, setSearchReject] = useState('');
+
+    const [sortStatusReject, setSortStatusReject] = useState<DataTableSortStatus>({
+        columnAccessor: 'redID',
+        direction: 'asc',
+    });
+
+    useEffect(() => {
+        const from = (pageReject - 1) * pageSizeReject;
+        const to = from + pageSizeReject;
+        setRecordsDataReject([...initialRecordsReject.slice(from, to)]);
+    }, [pageReject, pageSizeReject, initialRecordsReject]);
+
+    useEffect(() => {
+        const fetchRejectData = async () => {
+            if (!yemID) {
+                setInitialRecordsReject([]);
+                return;
+            }
+
+            try {
+                const response = await fetch('http://localhost:3030/api/basvurular/yem/postYemRedleri', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ yemID }),
+                });
+                const data = await response.json();
+                setInitialRecordsReject(data);
+            } catch (err) {
+                console.error('API çağrısı sırasında hata:', err);
+            }
+        };
+
+        fetchRejectData();
+    }, [yemID]);
+
+    useEffect(() => {
+        const sortedData = sortBy(initialRecordsReject, 'redID');
+        setInitialRecordsReject(sortedData);
+    }, [initialRecordsReject]);
+
+    useEffect(() => {
+        setInitialRecordsReject(() => {
+            return initialRecordsReject.filter((item) => {
+                return (
+                    item.redID.toString().toLowerCase().includes(searchReject.toLowerCase()) ||
+                    item.RededilmeNedeni.toLowerCase().includes(searchReject.toLowerCase()) ||
+                    item.RededilmeTarihi.toString().toLowerCase().includes(searchReject.toLowerCase()) ||
+                    item.ReddedenKullanıcı.toString().toLowerCase().includes(searchReject.toLowerCase())
+                );
+            });
+        });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [searchReject]);
 
     return (
         <div>
             <div className="panel">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-              <h5 className="font-semibold text-lg dark:text-white-light">{t('Feed Details')}</h5>
-                <div className="flex justify-end w-max mx-auto gap-2 rounded-full">
-               {metaData?.durum == "p" && <Tippy content= {t('Reapply')}>
-                      <button type="button"
-                      onClick={() => {                                              
-                        setApplayModal(true)
-                      }}
-                      className="btn btn-success w-full ">
-                      {t('Reapply')}
-                      </button>
-                  </Tippy>}   
-                <Transition appear show={applayModal} as={Fragment}>
-                <Dialog as="div" open={applayModal} onClose={() => setApplayModal(false)}>
-                  <div className="fixed inset-0 z-10 overflow-y-auto bg-[black]/10">
-                    <div className="flex min-h-screen items-center justify-center px-4">
-                      <Dialog.Panel className="panel my-8 w-full max-w-sm overflow-hidden rounded-lg py-1 px-4 text-black dark:text-white-dark">
-                        <div className="flex items-center justify-between p-5">
-                          <h5>{t('Reapply')}</h5>
-                          <button
-                            type="button"
-                            onClick={() => setApplayModal(false)}
-                            className="text-white-dark hover:text-dark"
-                          >
-                            <IconX className="w-5 h-5" />
-                          </button>
-                        </div>
-                        <div className="p-5">
-                          <form className="space-y-2">
-                            <div className="relative mb-4">
-                              <p>{t('Are you sure you want to reapplay with this data?')}</p>
-                            </div>
-                            <button
-                              type="button"
-                              onClick={() => Reapply(metaData!.yemID)} // Kaydetme fonksiyonu çağrısı
-                              className="btn btn-success w-full"
-                            >
-                              {t("Reapply")}
-                            </button>
-                            <button
-                                  type="button"
-                                  onClick={() => setApplayModal(false)}
-                                  className="btn btn-warning w-full"
-                                >
-                                {t("Cancel")}
-                            </button>
-                          </form>
-                        </div>
-                      </Dialog.Panel>
-                    </div>
-                  </div>
-                </Dialog>
-              </Transition>
-          </div>
-            </div>
-            <div className="p-5">
-              <Formik
-              initialValues={{
-                yemID: metaData?.yemID || null,
-                yemAdi: metaData?.yemAdi || '',
-                durum: metaData?.durum || 'b',
-                yemAciklama: metaData?.yemAciklama || '',
-              }}
-              enableReinitialize
-              validationSchema={Yup.object().shape({
-                yemAdi: Yup.string().required(t('Please Fill In')),
-                durum: Yup.string().required(t('Please Fill In')),
-                yemAciklama: Yup.string(),
-              })}
-              onSubmit={(values) => {
-                console.log('Form values:', values);
-                if (isEmpty(metaData?.yemID)) {
-                  MetaAdd(values.yemAdi, values.yemAciklama, values.durum);
-                }
-                else {
-                  MetaUpdate(metaData!.yemID, values.yemAdi, values.yemAciklama, values.durum);
-                }
-                setModalAdd(false);
-              }}
-              >
-              {({ errors, touched, submitCount }) => (
-                <Form>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                  <label className="form-label">{t('Feed Name')}</label>
-                  <Field
-                    name="yemAdi"
-                    className={`form-input ${errors.yemAdi && touched.yemAdi ? 'border-danger' : ''}`}
-                  />
-                   {submitCount ? (
-                        errors.yemAdi ? (
-                            <div className="text-danger mt-1">{errors.yemAdi}</div>
-                        ) : (
-                            <div className="text-[#1abc9c] mt-1">{t('Looks Good!')}</div>
-                        )
-                    ) : (
-                        ''
-                    )}
-                  </div>
-                  <div>
-                  <label className="form-label">{t('Status')}</label>
-                  <Field
-                    as="select"
-                    name="durum"
-                    className={`form-input ${errors.durum && touched.durum ? 'border-danger' : ''}`}
-                  >
-                    <option value="" disabled={true}>{t('Please Select')}</option>
-                    <option value="a" disabled={metaData?.durum == "p" || metaData?.durum == "b" || metaData == null}>{t('Active')}</option>
-                    <option value="p" disabled={metaData?.durum == "p" || metaData?.durum == "b" || metaData == null}>{t('Passive')}</option>
-                    <option value="b" disabled={true}>{t('Pending')}</option>
-                  </Field>
-                  {submitCount ? (
-                        errors.durum ? (
-                            <div className="text-danger mt-1">{errors.durum}</div>
-                        ) : (
-                            <div className="text-[#1abc9c] mt-1">{t('Looks Good!')}</div>
-                        )
-                    ) : (
-                        ''
-                    )}
-                  </div>
-                  <div className="md:col-span-2">
-                  <label className="form-label">{t('Description')}</label>
-                  <Field
-                    as="textarea"
-                    name="yemAciklama"
-                    className={`form-input ${errors.yemAciklama && touched.yemAciklama ? 'border-danger' : ''}`}
-                  />
-                   {submitCount ? (
-                        errors.yemAciklama ? (
-                            <div className="text-danger mt-1">{errors.yemAciklama}</div>
-                        ) : (
-                            <div className="text-[#1abc9c] mt-1">{t('Looks Good!')}</div>
-                        )
-                    ) : (
-                        ''
-                    )}
-                  </div>
-                </div>
-                <div className="mt-4 flex justify-end gap-2">
-                  <button type="submit" className="btn btn-primary gap-2">
-                  <IconSave />
-                  {t('Save')}
-                  </button>
-                  <button type="reset" className="btn btn-secondary gap-2">
-                    <IconRestore />
-                  {t('Reset')}
-                  </button>
-                  {metaData?.yemID && <button type="button" className="btn btn-danger gap-2" onClick={() =>{ isEmpty(metaData?.yemID) ? setFeedDeleteModal(false): setFeedDeleteModal(true) }}>
-                    <IconTrash />
-                  {t('Delete')}
-                  </button>}
-                  <Transition appear show={feedDeleteModal} as={Fragment}>
-                    <Dialog as="div" open={feedDeleteModal} onClose={() => setFeedDeleteModal(false)}>
-                      <div className="fixed inset-0 z-10 overflow-y-auto bg-[black]/10">
-                        <div className="flex min-h-screen items-center justify-center px-4">
-                          <Dialog.Panel className="panel my-8 w-full max-w-sm overflow-hidden rounded-lg py-1 px-4 text-black dark:text-white-dark">
-                            <div className="flex items-center justify-between p-5">
-                              <h5>{t('Delete')}</h5>
-                              <button
-                                type="button"
-                                onClick={() => setFeedDeleteModal(false)}
-                                className="text-white-dark hover:text-dark"
-                              >
-                                <IconX className="w-5 h-5" />
-                              </button>
-                            </div>
-                            <div className="p-5">
-                              <form className="space-y-2">
-                                <div className="relative mb-4">
-                                  <p>{t('Are you sure you want to delete feed all data?')}</p>
-                                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <h5 className="font-semibold text-lg dark:text-white-light">{t('Feed Details')}</h5>
+                    <div className="flex justify-end w-max mx-auto gap-2 rounded-full">
+                        {metaData?.durum == 'p' && (
+                            <Tippy content={t('Reapply')}>
                                 <button
-                                  type="button"
-                                  onClick={() => MetaDelete(metaData!.yemID)} // Silme fonksiyonu çağrısı
-                                  className="btn btn-danger w-full"
+                                    type="button"
+                                    onClick={() => {
+                                        setApplayModal(true);
+                                    }}
+                                    className="btn btn-success w-full "
                                 >
-                                  {t("Delete")}
+                                    {t('Reapply')}
                                 </button>
-                                <button
-                                      type="button"
-                                      onClick={() => setModalDelete(false)}
-                                      className="btn btn-warning w-full"
-                                    >
-                                    {t("Cancel")}
-                                </button>
-                              </form>
-                            </div>
-                          </Dialog.Panel>
-                        </div>
-                      </div>
-                    </Dialog>
-                  </Transition>
-                </div>
-                </Form>
-              )}
-              </Formik>
-            </div>
-            </div>
-            <Transition appear show={modalEdit} as={Fragment}>
-              <Dialog as="div" open={modalEdit} onClose={() => {setModalAddEdit(false); setSelectedData(null);}}>
-                  <div className="fixed inset-0 z-10 overflow-y-auto bg-[black]/10">
-                      <div className="flex min-h-screen items-center justify-center px-4">
-                      <Dialog.Panel className="panel my-8 w-full max-w-sm overflow-hidden rounded-lg py-1 px-4 text-black dark:text-white-dark">
-                          <div className="flex items-center justify-between p-5">
-                          <h5>{!selectedData ? t('Add'): t('Edit')}</h5>
-                          <button
-                              type="button"
-                              onClick={() => {setModalAddEdit(false); setSelectedData(null);}}
-                              className="text-white-dark hover:text-dark"
-                          >
-                              <IconX className="w-5 h-5" />
-                          </button>
-                          </div>
-                          <div className="p-5">
-                          <div>
-                              <Formik
-                                  enableReinitialize={true} 
-                                  initialValues={{
-                                      besinDegeriID: selectedData?.besinDegeriID || '',
-                                      tipID: selectedData?.tipID || '',
-                                      birimAdi: selectedData?.birimAdi || '',
-                                      miktar: selectedData?.miktar || '',
-                                  }}
-                                  validationSchema={submitDataFormValidation}
-                                  onSubmit={() => {}}
-                              >{({ errors, submitCount, touched, values }) => (
-                                  <Form className="border border-[#ebedf2] dark:border-[#191e3a] rounded-md p-4 mb-5 bg-white dark:bg-black">
-                                      <div className="flex flex-col sm:flex-row">
-                                          <div className="flex-1 grid grid-cols-1 sm:grid-cols-1 gap-5">
-                                          <div>
-                                                  <label htmlFor="tipID">{t('Nutrition Type')}</label>
-                                                  <Field 
-                                                          name="tipID"
-                                                          component={UnitSelect}
-                                                          options={unitOpitons}
-                                                  />
-                                                  {submitCount ? (
-                                                      errors.tipID ? (
-                                                          <div className="text-danger mt-1">{errors.tipID}</div>
-                                                      ) : (
-                                                          <div className="text-[#1abc9c] mt-1">{t('Looks Good!')}</div>
-                                                      )
-                                                  ) : (
-                                                      ''
-                                                  )}
-                                              </div>
-                                              <div>
-                                                  <label htmlFor="miktar">{t('Quantity')}</label>
-                                                  <Field name="miktar" id="miktar" type="number" className="form-input" />
-                                                  {submitCount ? (
-                                                      errors.miktar ? (
-                                                          <div className="text-danger mt-1">{errors.miktar?.toString()}</div>
-                                                      ) : (
-                                                          <div className="text-[#1abc9c] mt-1">{t('Looks Good!')}</div>
-                                                      )
-                                                  ) : (
-                                                      ''
-                                                  )}
-                                              </div>
-                                              <div>
-                                                  <label htmlFor="birimAdi">{t('Unit')}</label>
-                                                  <Field name="birimAdi" id="birimAdi" type="text" className="form-input" readOnly/>
-                                                  {submitCount ? (
-                                                      errors.birimAdi ? (
-                                                          <div className="text-danger mt-1">{errors.birimAdi?.toString()}</div>
-                                                      ) : (
-                                                          <div className="text-[#1abc9c] mt-1">{t('Looks Good!')}</div>
-                                                      )
-                                                  ) : (
-                                                      ''
-                                                  )}
-                                              </div>
-                                              <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-5">
-                                              <button
-                                                      type="submit"
-                                                      className="btn btn-primary !mt-6"
-                                                      onClick={() => {
-                                                          console.log(Object.keys(errors));
-                                                          if ( !selectedData && Object.keys(touched).length !== 0 && Object.keys(errors).length === 0) {
-                                                              Add(values);
-                                                          }else if (Object.keys(touched).length !== 0 && Object.keys(errors).length === 0) {
-                                                              Edit(values);
-                                                          }
-                                                      }}
-                                                  >
-                                                      {t('Save')}
-                                                  </button>
-                                                  <button
-                                                      type="button"
-                                                      className="btn btn-danger !mt-6"
-                                                      onClick={() => {
-                                                          setModalAddEdit(false);
-                                                          setSelectedData(null);
-                                                      }}
-                                                  >
-                                                      {t('Cancel')}
-                                                  </button>
-                                              </div>
-                                          </div>
-                                      </div>
-                                  </Form>)}
-                              </Formik>
-                          </div>
-                          </div>
-                      </Dialog.Panel>
-                      </div>
-                  </div>
-                  </Dialog>
-              </Transition>
-            <div className="panel mt-6">
-                <div className="mb-4.5 px-5 flex md:items-center md:flex-row flex-col gap-5">
-                    <h5 className="font-semibold text-lg dark:text-white-light">{t('Feed Content')}</h5>
-                    <div className="flex items-center gap-2">
-                        <button type="button" className="btn btn-success gap-2" onClick={() => setModalAddEdit(true)}>
-                            <IconPlus />
-                            {t('Add')}
-                        </button>
-                    </div>
-                    <div className="ltr:ml-auto rtl:mr-auto">
-                        <input type="text" className="form-input w-auto" placeholder="Search..." value={search} onChange={(e) => setSearch(e.target.value)} />
-                    </div>
-                </div>
-                <div className="datatables">
-                    <DataTable
-                        className="whitespace-nowrap table-hover"
-                        records={recordsData}
-                        columns={[
-                            {
-                                accessor: 'besinDegeriID',
-                                title: t('ID'),
-                                sortable: true
-                            },
-                            {
-                                accessor: 'besinTipi',
-                                title: t('Nutrition Type'),
-                                sortable: true
-                            },
-                            {
-                              accessor: 'miktar',
-                              title: t('Cuantity'),
-                              sortable: true
-                            },
-                            {
-                              accessor: 'birimAdi',
-                              title: t('Unit'),
-                              sortable: true
-                            },
-                            {
-                                accessor: 'Edit',
-                                title: t('Edit'),
-                                render: ({besinDegeriID,tipID,birimAdi,miktar}) => (
-                                    <div className="flex items-center w-max mx-auto gap-2 rounded-full">
-                                        <Tippy content="Edit">
-                                            <button type="button"
-                                            onClick={() => {                                              
-                                              setSelectedData({
-                                                besinDegeriID: besinDegeriID,
-                                                tipID: tipID,
-                                                birimAdi: birimAdi,
-                                                miktar: miktar,
-                                              });
-                                              setModalAddEdit(true);
-                                              }}>
-                                                <IconEdit />
-                                            </button>
-                                        </Tippy>
-                                </div>
-                                ),
-                            },
-                            {
-                                accessor: 'Delete',
-                                title: t('Delete'),
-                                render: ({besinDegeriID}) => (
-                                    <div className="flex items-center w-max mx-auto gap-2 rounded-full">
-                                        <Tippy content="Delete">
-                                            <button type="button"
-                                            onClick={() => {                                              
-                                            setModalDelete(true)
-                                            setDelID(besinDegeriID);
-                                            }}>
-                                                <IconTrash />
-                                            </button>
-                                        </Tippy>
-                                      <Transition appear show={modalDelete} as={Fragment}>
-                                      <Dialog as="div" open={modalDelete} onClose={() => setModalDelete(false)}>
-                                        <div className="fixed inset-0 z-10 overflow-y-auto bg-[black]/10">
-                                          <div className="flex min-h-screen items-center justify-center px-4">
-                                            <Dialog.Panel className="panel my-8 w-full max-w-sm overflow-hidden rounded-lg py-1 px-4 text-black dark:text-white-dark">
-                                              <div className="flex items-center justify-between p-5">
-                                                <h5>{t('Delete')}</h5>
-                                                <button
-                                                  type="button"
-                                                  onClick={() => setModalDelete(false)}
-                                                  className="text-white-dark hover:text-dark"
-                                                >
-                                                  <IconX className="w-5 h-5" />
+                            </Tippy>
+                        )}
+                        <Transition appear show={applayModal} as={Fragment}>
+                            <Dialog as="div" open={applayModal} onClose={() => setApplayModal(false)}>
+                                <div className="fixed inset-0 z-10 overflow-y-auto bg-[black]/10">
+                                    <div className="flex min-h-screen items-center justify-center px-4">
+                                        <Dialog.Panel className="panel my-8 w-full max-w-sm overflow-hidden rounded-lg py-1 px-4 text-black dark:text-white-dark">
+                                            <div className="flex items-center justify-between p-5">
+                                                <h5>{t('Reapply')}</h5>
+                                                <button type="button" onClick={() => setApplayModal(false)} className="text-white-dark hover:text-dark">
+                                                    <IconX className="w-5 h-5" />
                                                 </button>
-                                              </div>
-                                              <div className="p-5">
+                                            </div>
+                                            <div className="p-5">
                                                 <form className="space-y-2">
-                                                  <div className="relative mb-4">
-                                                    <p>{t('Are you sure you want to delete this data?')}</p>
-                                                  </div>
-                                                  <button
-                                                    type="button"
-                                                    onClick={() => Delete(delID)} // Kaydetme fonksiyonu çağrısı
-                                                    className="btn btn-danger w-full"
-                                                  >
-                                                    {t("Delete")}
-                                                  </button>
-                                                  <button
+                                                    <div className="relative mb-4">
+                                                        <p>{t('Are you sure you want to reapplay with this data?')}</p>
+                                                    </div>
+                                                    <button
                                                         type="button"
-                                                        onClick={() => setModalDelete(false)}
-                                                        className="btn btn-warning w-full"
-                                                      >
-                                                      {t("Cancel")}
-                                                  </button>
+                                                        onClick={() => Reapply(metaData!.yemID)} // Kaydetme fonksiyonu çağrısı
+                                                        className="btn btn-success w-full"
+                                                    >
+                                                        {t('Reapply')}
+                                                    </button>
+                                                    <button type="button" onClick={() => setApplayModal(false)} className="btn btn-warning w-full">
+                                                        {t('Cancel')}
+                                                    </button>
                                                 </form>
-                                              </div>
-                                            </Dialog.Panel>
-                                          </div>
-                                        </div>
-                                      </Dialog>
+                                            </div>
+                                        </Dialog.Panel>
+                                    </div>
+                                </div>
+                            </Dialog>
+                        </Transition>
+                    </div>
+                </div>
+                <div className="p-5">
+                    <Formik
+                        initialValues={{
+                            yemID: metaData?.yemID || null,
+                            yemAdi: metaData?.yemAdi || '',
+                            durum: metaData?.durum || 'b',
+                            yemAciklama: metaData?.yemAciklama || '',
+                        }}
+                        enableReinitialize
+                        validationSchema={Yup.object().shape({
+                            yemAdi: Yup.string().required(t('Please Fill In')),
+                            durum: Yup.string().required(t('Please Fill In')),
+                            yemAciklama: Yup.string(),
+                        })}
+                        onSubmit={(values) => {
+                            console.log('Form values:', values);
+                            if (isEmpty(metaData?.yemID)) {
+                                MetaAdd(values.yemAdi, values.yemAciklama, values.durum);
+                            } else {
+                                MetaUpdate(metaData!.yemID, values.yemAdi, values.yemAciklama, values.durum);
+                            }
+                            setModalAdd(false);
+                        }}
+                    >
+                        {({ errors, touched, submitCount }) => (
+                            <Form>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="form-label">{t('Feed Name')}</label>
+                                        <Field name="yemAdi" className={`form-input ${errors.yemAdi && touched.yemAdi ? 'border-danger' : ''}`} />
+                                        {submitCount ? errors.yemAdi ? <div className="text-danger mt-1">{errors.yemAdi}</div> : <div className="text-[#1abc9c] mt-1">{t('Looks Good!')}</div> : ''}
+                                    </div>
+                                    <div>
+                                        <label className="form-label">{t('Status')}</label>
+                                        <Field as="select" name="durum" className={`form-input ${errors.durum && touched.durum ? 'border-danger' : ''}`}>
+                                            <option value="" disabled={true}>
+                                                {t('Please Select')}
+                                            </option>
+                                            <option value="a" disabled={metaData?.durum == 'p' || metaData?.durum == 'b' || metaData == null}>
+                                                {t('Active')}
+                                            </option>
+                                            <option value="p" disabled={metaData?.durum == 'p' || metaData?.durum == 'b' || metaData == null}>
+                                                {t('Passive')}
+                                            </option>
+                                            <option value="b" disabled={true}>
+                                                {t('Pending')}
+                                            </option>
+                                        </Field>
+                                        {submitCount ? errors.durum ? <div className="text-danger mt-1">{errors.durum}</div> : <div className="text-[#1abc9c] mt-1">{t('Looks Good!')}</div> : ''}
+                                    </div>
+                                    <div className="md:col-span-2">
+                                        <label className="form-label">{t('Description')}</label>
+                                        <Field as="textarea" name="yemAciklama" className={`form-input ${errors.yemAciklama && touched.yemAciklama ? 'border-danger' : ''}`} />
+                                        {submitCount ? (
+                                            errors.yemAciklama ? (
+                                                <div className="text-danger mt-1">{errors.yemAciklama}</div>
+                                            ) : (
+                                                <div className="text-[#1abc9c] mt-1">{t('Looks Good!')}</div>
+                                            )
+                                        ) : (
+                                            ''
+                                        )}
+                                    </div>
+                                </div>
+                                <div className="mt-4 flex justify-end gap-2">
+                                    <button type="submit" className="btn btn-primary gap-2">
+                                        <IconSave />
+                                        {t('Save')}
+                                    </button>
+                                    <button type="reset" className="btn btn-secondary gap-2">
+                                        <IconRestore />
+                                        {t('Reset')}
+                                    </button>
+                                    {metaData?.yemID && (
+                                        <button
+                                            type="button"
+                                            className="btn btn-danger gap-2"
+                                            onClick={() => {
+                                                isEmpty(metaData?.yemID) ? setFeedDeleteModal(false) : setFeedDeleteModal(true);
+                                            }}
+                                        >
+                                            <IconTrash />
+                                            {t('Delete')}
+                                        </button>
+                                    )}
+                                    <Transition appear show={feedDeleteModal} as={Fragment}>
+                                        <Dialog as="div" open={feedDeleteModal} onClose={() => setFeedDeleteModal(false)}>
+                                            <div className="fixed inset-0 z-10 overflow-y-auto bg-[black]/10">
+                                                <div className="flex min-h-screen items-center justify-center px-4">
+                                                    <Dialog.Panel className="panel my-8 w-full max-w-sm overflow-hidden rounded-lg py-1 px-4 text-black dark:text-white-dark">
+                                                        <div className="flex items-center justify-between p-5">
+                                                            <h5>{t('Delete')}</h5>
+                                                            <button type="button" onClick={() => setFeedDeleteModal(false)} className="text-white-dark hover:text-dark">
+                                                                <IconX className="w-5 h-5" />
+                                                            </button>
+                                                        </div>
+                                                        <div className="p-5">
+                                                            <form className="space-y-2">
+                                                                <div className="relative mb-4">
+                                                                    <p>{t('Are you sure you want to delete feed all data?')}</p>
+                                                                </div>
+                                                                <button
+                                                                    type="button"
+                                                                    onClick={() => MetaDelete(metaData!.yemID)} // Silme fonksiyonu çağrısı
+                                                                    className="btn btn-danger w-full"
+                                                                >
+                                                                    {t('Delete')}
+                                                                </button>
+                                                                <button type="button" onClick={() => setModalDelete(false)} className="btn btn-warning w-full">
+                                                                    {t('Cancel')}
+                                                                </button>
+                                                            </form>
+                                                        </div>
+                                                    </Dialog.Panel>
+                                                </div>
+                                            </div>
+                                        </Dialog>
                                     </Transition>
                                 </div>
-                                ),
-                            },
-                        ]}
-                        totalRecords={initialRecords.length}
-                        recordsPerPage={pageSize}
-                        page={page}
-                        onPageChange={(p) => setPage(p)}
-                        recordsPerPageOptions={PAGE_SIZES}
-                        onRecordsPerPageChange={setPageSize}
-                        sortStatus={sortStatus}
-                        onSortStatusChange={setSortStatus}
-                        minHeight={200}
-                        paginationText={({ from, to, totalRecords }) => `Showing  ${from} to ${to} of ${totalRecords} entries`}
-                    />
+                            </Form>
+                        )}
+                    </Formik>
                 </div>
             </div>
+            <Transition appear show={modalEdit} as={Fragment}>
+                <Dialog
+                    as="div"
+                    open={modalEdit}
+                    onClose={() => {
+                        setModalAddEdit(false);
+                        setSelectedData(null);
+                    }}
+                >
+                    <div className="fixed inset-0 z-10 overflow-y-auto bg-[black]/10">
+                        <div className="flex min-h-screen items-center justify-center px-4">
+                            <Dialog.Panel className="panel my-8 w-full max-w-sm overflow-hidden rounded-lg py-1 px-4 text-black dark:text-white-dark">
+                                <div className="flex items-center justify-between p-5">
+                                    <h5>{!selectedData ? t('Add') : t('Edit')}</h5>
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            setModalAddEdit(false);
+                                            setSelectedData(null);
+                                        }}
+                                        className="text-white-dark hover:text-dark"
+                                    >
+                                        <IconX className="w-5 h-5" />
+                                    </button>
+                                </div>
+                                <div className="p-5">
+                                    <div>
+                                        <Formik
+                                            enableReinitialize={true}
+                                            initialValues={{
+                                                besinDegeriID: selectedData?.besinDegeriID || '',
+                                                tipID: selectedData?.tipID || '',
+                                                birimAdi: selectedData?.birimAdi || '',
+                                                miktar: selectedData?.miktar || '',
+                                            }}
+                                            validationSchema={submitDataFormValidation}
+                                            onSubmit={() => {}}
+                                        >
+                                            {({ errors, submitCount, touched, values }) => (
+                                                <Form className="border border-[#ebedf2] dark:border-[#191e3a] rounded-md p-4 mb-5 bg-white dark:bg-black">
+                                                    <div className="flex flex-col sm:flex-row">
+                                                        <div className="flex-1 grid grid-cols-1 sm:grid-cols-1 gap-5">
+                                                            <div>
+                                                                <label htmlFor="tipID">{t('Nutrition Type')}</label>
+                                                                <Field name="tipID" component={UnitSelect} options={unitOpitons} />
+                                                                {submitCount ? (
+                                                                    errors.tipID ? (
+                                                                        <div className="text-danger mt-1">{errors.tipID}</div>
+                                                                    ) : (
+                                                                        <div className="text-[#1abc9c] mt-1">{t('Looks Good!')}</div>
+                                                                    )
+                                                                ) : (
+                                                                    ''
+                                                                )}
+                                                            </div>
+                                                            <div>
+                                                                <label htmlFor="miktar">{t('Quantity')}</label>
+                                                                <Field name="miktar" id="miktar" type="number" className="form-input" />
+                                                                {submitCount ? (
+                                                                    errors.miktar ? (
+                                                                        <div className="text-danger mt-1">{errors.miktar?.toString()}</div>
+                                                                    ) : (
+                                                                        <div className="text-[#1abc9c] mt-1">{t('Looks Good!')}</div>
+                                                                    )
+                                                                ) : (
+                                                                    ''
+                                                                )}
+                                                            </div>
+                                                            <div>
+                                                                <label htmlFor="birimAdi">{t('Unit')}</label>
+                                                                <Field name="birimAdi" id="birimAdi" type="text" className="form-input" readOnly />
+                                                                {submitCount ? (
+                                                                    errors.birimAdi ? (
+                                                                        <div className="text-danger mt-1">{errors.birimAdi?.toString()}</div>
+                                                                    ) : (
+                                                                        <div className="text-[#1abc9c] mt-1">{t('Looks Good!')}</div>
+                                                                    )
+                                                                ) : (
+                                                                    ''
+                                                                )}
+                                                            </div>
+                                                            <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-5">
+                                                                <button
+                                                                    type="submit"
+                                                                    className="btn btn-primary !mt-6"
+                                                                    onClick={() => {
+                                                                        console.log(Object.keys(errors));
+                                                                        if (!selectedData && Object.keys(touched).length !== 0 && Object.keys(errors).length === 0) {
+                                                                            Add(values);
+                                                                        } else if (Object.keys(touched).length !== 0 && Object.keys(errors).length === 0) {
+                                                                            Edit(values);
+                                                                        }
+                                                                    }}
+                                                                >
+                                                                    {t('Save')}
+                                                                </button>
+                                                                <button
+                                                                    type="button"
+                                                                    className="btn btn-danger !mt-6"
+                                                                    onClick={() => {
+                                                                        setModalAddEdit(false);
+                                                                        setSelectedData(null);
+                                                                    }}
+                                                                >
+                                                                    {t('Cancel')}
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </Form>
+                                            )}
+                                        </Formik>
+                                    </div>
+                                </div>
+                            </Dialog.Panel>
+                        </div>
+                    </div>
+                </Dialog>
+            </Transition>
+            <div className="pt-5">
+                <ul className="sm:flex font-semibold border-b border-[#ebedf2] dark:border-[#191e3a] mb-5 whitespace-nowrap overflow-y-auto">
+                    <li className="inline-block">
+                        <button
+                            onClick={() => toggleTabs('nutrition')}
+                            className={`flex gap-2 p-4 border-b border-transparent hover:border-primary hover:text-primary ${tabs === 'nutrition' ? '!border-primary text-primary' : ''}`}
+                        >
+                            <IconTxtFile />
+                            {t('Feed Nutrition')}
+                        </button>
+                    </li>
+                    <li className="inline-block">
+                        <button
+                            onClick={() => toggleTabs('feed-reject')}
+                            className={`flex gap-2 p-4 border-b border-transparent hover:border-primary hover:text-primary ${tabs === 'feed-reject' ? '!border-primary text-primary' : ''}`}
+                        >
+                            <IconXCircle />
+                            {t('Feed Reject Reasons')}
+                        </button>
+                    </li>
+                </ul>
+            </div>
+            {tabs === 'nutrition' ? (
+                <div className="panel mt-6">
+                    <div className="mb-4.5 px-5 flex md:items-center md:flex-row flex-col gap-5">
+                        <h5 className="font-semibold text-lg dark:text-white-light">{t('Feed Content')}</h5>
+                        <div className="flex items-center gap-2">
+                            <button type="button" className="btn btn-success gap-2" onClick={() => setModalAddEdit(true)}>
+                                <IconPlus />
+                                {t('Add')}
+                            </button>
+                        </div>
+                        <div className="ltr:ml-auto rtl:mr-auto">
+                            <input type="text" className="form-input w-auto" placeholder="Search..." value={search} onChange={(e) => setSearch(e.target.value)} />
+                        </div>
+                    </div>
+                    <div className="datatables">
+                        <DataTable
+                            className="whitespace-nowrap table-hover"
+                            records={recordsData}
+                            columns={[
+                                {
+                                    accessor: 'besinDegeriID',
+                                    title: t('ID'),
+                                    sortable: true,
+                                },
+                                {
+                                    accessor: 'besinTipi',
+                                    title: t('Nutrition Type'),
+                                    sortable: true,
+                                },
+                                {
+                                    accessor: 'miktar',
+                                    title: t('Cuantity'),
+                                    sortable: true,
+                                },
+                                {
+                                    accessor: 'birimAdi',
+                                    title: t('Unit'),
+                                    sortable: true,
+                                },
+                                {
+                                    accessor: 'Edit',
+                                    title: t('Edit'),
+                                    render: ({ besinDegeriID, tipID, birimAdi, miktar }) => (
+                                        <div className="flex items-center w-max mx-auto gap-2 rounded-full">
+                                            <Tippy content="Edit">
+                                                <button
+                                                    type="button"
+                                                    onClick={() => {
+                                                        setSelectedData({
+                                                            besinDegeriID: besinDegeriID,
+                                                            tipID: tipID,
+                                                            birimAdi: birimAdi,
+                                                            miktar: miktar,
+                                                        });
+                                                        setModalAddEdit(true);
+                                                    }}
+                                                >
+                                                    <IconEdit />
+                                                </button>
+                                            </Tippy>
+                                        </div>
+                                    ),
+                                },
+                                {
+                                    accessor: 'Delete',
+                                    title: t('Delete'),
+                                    render: ({ besinDegeriID }) => (
+                                        <div className="flex items-center w-max mx-auto gap-2 rounded-full">
+                                            <Tippy content="Delete">
+                                                <button
+                                                    type="button"
+                                                    onClick={() => {
+                                                        setModalDelete(true);
+                                                        setDelID(besinDegeriID);
+                                                    }}
+                                                >
+                                                    <IconTrash />
+                                                </button>
+                                            </Tippy>
+                                            <Transition appear show={modalDelete} as={Fragment}>
+                                                <Dialog as="div" open={modalDelete} onClose={() => setModalDelete(false)}>
+                                                    <div className="fixed inset-0 z-10 overflow-y-auto bg-[black]/10">
+                                                        <div className="flex min-h-screen items-center justify-center px-4">
+                                                            <Dialog.Panel className="panel my-8 w-full max-w-sm overflow-hidden rounded-lg py-1 px-4 text-black dark:text-white-dark">
+                                                                <div className="flex items-center justify-between p-5">
+                                                                    <h5>{t('Delete')}</h5>
+                                                                    <button type="button" onClick={() => setModalDelete(false)} className="text-white-dark hover:text-dark">
+                                                                        <IconX className="w-5 h-5" />
+                                                                    </button>
+                                                                </div>
+                                                                <div className="p-5">
+                                                                    <form className="space-y-2">
+                                                                        <div className="relative mb-4">
+                                                                            <p>{t('Are you sure you want to delete this data?')}</p>
+                                                                        </div>
+                                                                        <button
+                                                                            type="button"
+                                                                            onClick={() => Delete(delID)} // Kaydetme fonksiyonu çağrısı
+                                                                            className="btn btn-danger w-full"
+                                                                        >
+                                                                            {t('Delete')}
+                                                                        </button>
+                                                                        <button type="button" onClick={() => setModalDelete(false)} className="btn btn-warning w-full">
+                                                                            {t('Cancel')}
+                                                                        </button>
+                                                                    </form>
+                                                                </div>
+                                                            </Dialog.Panel>
+                                                        </div>
+                                                    </div>
+                                                </Dialog>
+                                            </Transition>
+                                        </div>
+                                    ),
+                                },
+                            ]}
+                            totalRecords={initialRecords.length}
+                            recordsPerPage={pageSize}
+                            page={page}
+                            onPageChange={(p) => setPage(p)}
+                            recordsPerPageOptions={PAGE_SIZES}
+                            onRecordsPerPageChange={setPageSize}
+                            sortStatus={sortStatus}
+                            onSortStatusChange={setSortStatus}
+                            minHeight={200}
+                            paginationText={({ from, to, totalRecords }) => `Showing  ${from} to ${to} of ${totalRecords} entries`}
+                        />
+                    </div>
+                </div>
+            ) : (
+                ''
+            )}
+            {tabs === 'feed-reject' ? (
+                <div className="panel mt-6">
+                    <div className="mb-4.5 px-5 flex md:items-center md:flex-row flex-col gap-5">
+                        <h5 className="font-semibold text-lg dark:text-white-light">{t('Feed Content')}</h5>
+                        <div className="ltr:ml-auto rtl:mr-auto">
+                            <input type="text" className="form-input w-auto" placeholder="Search..." value={search} onChange={(e) => setSearchReject(e.target.value)} />
+                        </div>
+                    </div>
+                    <div className="datatables">
+                        <DataTable
+                            className="whitespace-nowrap table-hover"
+                            records={recordsDataReject}
+                            columns={[
+                                {
+                                    accessor: 'redID',
+                                    title: t('ID'),
+                                    sortable: true,
+                                },
+                                {
+                                    accessor: 'RededilmeNedeni',
+                                    title: t('Reject Reason'),
+                                    sortable: true,
+                                },
+                                {
+                                    accessor: 'RededilmeTarihi',
+                                    title: t('Reject Date'),
+                                    sortable: true,
+                                },
+                                {
+                                    accessor: 'ReddedenKullanıcı',
+                                    title: t('Rejected By'),
+                                    sortable: true,
+                                },
+                            ]}
+                            totalRecords={initialRecordsReject.length}
+                            recordsPerPage={pageSizeReject}
+                            page={pageReject}
+                            onPageChange={(p) => setPageReject(p)}
+                            recordsPerPageOptions={PAGE_SIZESReject}
+                            onRecordsPerPageChange={setPageSizeReject}
+                            sortStatus={sortStatusReject}
+                            onSortStatusChange={setSortStatusReject}
+                            minHeight={200}
+                            paginationText={({ from, to, totalRecords }) => `Showing  ${from} to ${to} of ${totalRecords} entries`}
+                        />
+                    </div>
+                </div>
+            ) : (
+                ''
+            )}
         </div>
     );
 };
 
 export default MultipleTables;
-
