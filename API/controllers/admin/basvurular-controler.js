@@ -240,18 +240,23 @@ exports.postYemKabul = async (req, res) => {
     }
 };
 exports.postYemRed = async (req, res) => {
-    const {yemID,redSebebi} = req.body;
+    const {yemID,redNedeni,kullaniciID} = req.body;
 
     try {
         const pool = await poolPromise;
         const result = await pool.request()
             .input("yemID", yemID)
-            .input("redSebebi", redSebebi)
+            .input("redNedeni", redNedeni)
+            .input("kullaniciID", kullaniciID)
             .query(
-                `   UPDATE YemMaddeleri
-                    SET durum = 'p',
-                    redSebebi = @redSebebi
-                    WHERE yemID = @yemID;`
+                `   BEGIN
+                        UPDATE YemMaddeleri
+                        SET durum = 'p'
+                        WHERE yemID = @yemID;
+
+                        INSERT INTO RedEdilenBaşvurularYem (yemID, kullaniciID, redNedeni, redTarihi)
+                        VALUES (@yemID, @kullaniciID, @redNedeni, CAST(GETDATE() AS DATE));
+                    END;`
             );
 
         // Güncelleme sonucunu kontrol et
