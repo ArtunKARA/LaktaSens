@@ -87,7 +87,7 @@ exports.postYavruDonguAnaliz = async (req, res) => {
                                     (NOT(servisteInekler.sonDogurmaTarihi IS NULL AND servisteInekler.sonDollenme IS NULL AND servisteInekler.sonKuruTarihi IS NULL) 
                                     AND servisteInekler.sonDollenme > servisteInekler.sonDogurmaTarihi 
                                     AND servisteInekler.tuttuMu = 'E'
-                                    AND 280 - DATEDIFF(DAY, servisteInekler.sonDollenme, GETDATE()) > 0 )
+                                    AND 280 - DATEDIFF(DAY, servisteInekler.sonDollenme, GETDATE()) >= -127 )
                         THEN 1 
                         ELSE 0 
                     END) AS gebe_olanlar,

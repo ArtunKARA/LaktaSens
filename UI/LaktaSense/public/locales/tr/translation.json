@@ -555,5 +555,22 @@
     "Approve": "Onayla",
     "Login": "Giriş yap",
     "Reject Reason": "Red Sebebi",
-    "Rejected By": "Rededen"
+    "Rejected By": "Rededen",
+    "Cycle Tracking Module": "Döngü Takip Modülü",
+    "Sensor Tracking Module": "Sensör Takip Modülü",
+    "Add Leash Sensor": "Tasma Sensörü Ekle",
+    "Warehouse Tracking Module": "Ambar Takip Modülü",
+    "Milking Tracking": "Süt Takip",
+    "Add Warehouse Sensor": "Ambar Sensörü Ekle",
+    "Add Barn Sensor": "Ahır Sensörü Ekle",
+    "Add Milking Sensor": "Süt Sensörü Ekle",
+    "Consumption Record": "Tüketim Kaydı",
+    "Consumption History": "Tüketim Geçmişi",
+    "Start a Tender": "İhale Başlat",
+    "Supply Module": "Tedarik Modülü",
+    "Tender Tracking": "İhale Takibi",
+    "Needs Analysis": "İhtiyaç Analizi",
+    "Supply Analysis": "Tedarik Analizi",
+    "Consumption Analysis": "Tüketim Analizi",
+    "Feed Analysis": "Yem Analizi"
 }
