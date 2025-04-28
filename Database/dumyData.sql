@@ -280,3 +280,103 @@ VALUES
 (10, 1, 'Başvuru bilgileri eksik.', CAST(GETDATE() AS DATE)),
 (10, 1, 'Yem kriterlerimizi karşılamamaktadır.', CAST(GETDATE() AS DATE));
 GO
+
+INSERT INTO IslemNedenleri (islemTipi, nedenAdi) VALUES
+('g', 'Satın Alma'),
+('g', 'İade Alımı'),
+('g', 'Üretimden Giriş'),
+('g', 'Bağış / Hibe Alımı'),
+('g', 'Stok Fazlası'),
+('c', 'Satış'),
+('c', 'İade'),
+('c', 'Üretime Veriş'),
+('c', 'Fire'),
+('c', 'Zayi'),
+('c', 'Bağış / Hibe'),
+('c', 'Stok Açığı');
+
+-- Çiftlik Baba için Yem İşlemleri
+-- 1-20: GİRİŞ İşlemleri
+EXEC sp_YemIslemiEkle @firmaID = 2, @yemID = 1, @miktarKg = 500.00, @kullaniciID = 2, @aciklama = 'Satın alınan yem', @islemNedeniID = 1;
+EXEC sp_YemIslemiEkle @firmaID = 2, @yemID = 2, @miktarKg = 300.00, @kullaniciID = 2, @aciklama = 'Hibe ile alınan yem', @islemNedeniID = 4;
+EXEC sp_YemIslemiEkle @firmaID = 2, @yemID = 3, @miktarKg = 450.00, @kullaniciID = 2, @aciklama = 'Stok fazlası girişi', @islemNedeniID = 5;
+EXEC sp_YemIslemiEkle @firmaID = 2, @yemID = 4, @miktarKg = 600.00, @kullaniciID = 2, @aciklama = 'Satın alınan yem', @islemNedeniID = 1;
+EXEC sp_YemIslemiEkle @firmaID = 2, @yemID = 5, @miktarKg = 200.00, @kullaniciID = 2, @aciklama = 'Hibe ile alınan yem', @islemNedeniID = 4;
+EXEC sp_YemIslemiEkle @firmaID = 2, @yemID = 6, @miktarKg = 350.00, @kullaniciID = 2, @aciklama = 'Stok fazlası girişi', @islemNedeniID = 5;
+EXEC sp_YemIslemiEkle @firmaID = 2, @yemID = 7, @miktarKg = 400.00, @kullaniciID = 2, @aciklama = 'Satın alınan yem', @islemNedeniID = 1;
+EXEC sp_YemIslemiEkle @firmaID = 2, @yemID = 8, @miktarKg = 150.00, @kullaniciID = 2, @aciklama = 'Hibe ile alınan yem', @islemNedeniID = 4;
+EXEC sp_YemIslemiEkle @firmaID = 2, @yemID = 9, @miktarKg = 500.00, @kullaniciID = 2, @aciklama = 'Stok fazlası girişi', @islemNedeniID = 5;
+EXEC sp_YemIslemiEkle @firmaID = 2, @yemID = 10, @miktarKg = 320.00, @kullaniciID = 2, @aciklama = 'Satın alınan yem', @islemNedeniID = 1;
+EXEC sp_YemIslemiEkle @firmaID = 2, @yemID = 1, @miktarKg = 600.00, @kullaniciID = 2, @aciklama = 'Satın alma', @islemNedeniID = 1;
+EXEC sp_YemIslemiEkle @firmaID = 2, @yemID = 2, @miktarKg = 275.00, @kullaniciID = 2, @aciklama = 'Bağış alımı', @islemNedeniID = 4;
+EXEC sp_YemIslemiEkle @firmaID = 2, @yemID = 3, @miktarKg = 310.00, @kullaniciID = 2, @aciklama = 'Stok fazlası', @islemNedeniID = 5;
+EXEC sp_YemIslemiEkle @firmaID = 2, @yemID = 4, @miktarKg = 400.00, @kullaniciID = 2, @aciklama = 'Satın alma', @islemNedeniID = 1;
+EXEC sp_YemIslemiEkle @firmaID = 2, @yemID = 5, @miktarKg = 150.00, @kullaniciID = 2, @aciklama = 'Bağış alımı', @islemNedeniID = 4;
+EXEC sp_YemIslemiEkle @firmaID = 2, @yemID = 6, @miktarKg = 550.00, @kullaniciID = 2, @aciklama = 'Stok fazlası', @islemNedeniID = 5;
+EXEC sp_YemIslemiEkle @firmaID = 2, @yemID = 7, @miktarKg = 700.00, @kullaniciID = 2, @aciklama = 'Satın alma', @islemNedeniID = 1;
+EXEC sp_YemIslemiEkle @firmaID = 2, @yemID = 8, @miktarKg = 270.00, @kullaniciID = 2, @aciklama = 'Bağış alımı', @islemNedeniID = 4;
+EXEC sp_YemIslemiEkle @firmaID = 2, @yemID = 9, @miktarKg = 330.00, @kullaniciID = 2, @aciklama = 'Stok fazlası', @islemNedeniID = 5;
+EXEC sp_YemIslemiEkle @firmaID = 2, @yemID = 10, @miktarKg = 450.00, @kullaniciID = 2, @aciklama = 'Satın alma', @islemNedeniID = 1;
+EXEC sp_YemIslemiEkle @firmaID = 2, @yemID = 1, @miktarKg = 550.00, @kullaniciID = 2, @aciklama = 'Satın alma', @islemNedeniID = 1;
+EXEC sp_YemIslemiEkle @firmaID = 2, @yemID = 2, @miktarKg = 300.00, @kullaniciID = 2, @aciklama = 'Bağış alımı', @islemNedeniID = 4;
+EXEC sp_YemIslemiEkle @firmaID = 2, @yemID = 3, @miktarKg = 400.00, @kullaniciID = 2, @aciklama = 'Stok fazlası', @islemNedeniID = 5;
+EXEC sp_YemIslemiEkle @firmaID = 2, @yemID = 4, @miktarKg = 500.00, @kullaniciID = 2, @aciklama = 'Satın alma', @islemNedeniID = 1;
+EXEC sp_YemIslemiEkle @firmaID = 2, @yemID = 5, @miktarKg = 250.00, @kullaniciID = 2, @aciklama = 'Bağış alımı', @islemNedeniID = 4;
+
+
+-- 21-40: ÇIKIŞ İşlemleri
+EXEC sp_YemIslemiEkle @firmaID = 2, @yemID = 1, @miktarKg = 60.00, @kullaniciID = 2, @aciklama = 'Üretimde kullanıldı', @islemNedeniID = 8;
+EXEC sp_YemIslemiEkle @firmaID = 2, @yemID = 2, @miktarKg = 40.00, @kullaniciID = 2, @aciklama = 'Üretimde kullanıldı', @islemNedeniID = 8;
+EXEC sp_YemIslemiEkle @firmaID = 2, @yemID = 3, @miktarKg = 35.00, @kullaniciID = 2, @aciklama = 'Fire kaybı', @islemNedeniID = 9;
+EXEC sp_YemIslemiEkle @firmaID = 2, @yemID = 4, @miktarKg = 80.00, @kullaniciID = 2, @aciklama = 'Üretimde kullanıldı', @islemNedeniID = 8;
+EXEC sp_YemIslemiEkle @firmaID = 2, @yemID = 5, @miktarKg = 25.00, @kullaniciID = 2, @aciklama = 'Üretimde kullanıldı', @islemNedeniID = 8;
+EXEC sp_YemIslemiEkle @firmaID = 2, @yemID = 6, @miktarKg = 90.00, @kullaniciID = 2, @aciklama = 'Üretimde kullanıldı', @islemNedeniID = 8;
+EXEC sp_YemIslemiEkle @firmaID = 2, @yemID = 7, @miktarKg = 55.00, @kullaniciID = 2, @aciklama = 'Üretimde kullanıldı', @islemNedeniID = 8;
+EXEC sp_YemIslemiEkle @firmaID = 2, @yemID = 8, @miktarKg = 45.00, @kullaniciID = 2, @aciklama = 'Üretimde kullanıldı', @islemNedeniID = 8;
+EXEC sp_YemIslemiEkle @firmaID = 2, @yemID = 9, @miktarKg = 38.00, @kullaniciID = 2, @aciklama = 'Fire kaybı', @islemNedeniID = 9;
+EXEC sp_YemIslemiEkle @firmaID = 2, @yemID = 10, @miktarKg = 75.00, @kullaniciID = 2, @aciklama = 'Zayi kaydı', @islemNedeniID = 10;
+EXEC sp_YemIslemiEkle @firmaID = 2, @yemID = 1, @miktarKg = 65.00, @kullaniciID = 2, @aciklama = 'Üretimde kullanıldı', @islemNedeniID = 8;
+EXEC sp_YemIslemiEkle @firmaID = 2, @yemID = 2, @miktarKg = 50.00, @kullaniciID = 2, @aciklama = 'Fire kaybı', @islemNedeniID = 9;
+EXEC sp_YemIslemiEkle @firmaID = 2, @yemID = 3, @miktarKg = 30.00, @kullaniciID = 2, @aciklama = 'Zayi kaydı', @islemNedeniID = 10;
+EXEC sp_YemIslemiEkle @firmaID = 2, @yemID = 4, @miktarKg = 85.00, @kullaniciID = 2, @aciklama = 'Üretimde kullanıldı', @islemNedeniID = 8;
+EXEC sp_YemIslemiEkle @firmaID = 2, @yemID = 5, @miktarKg = 20.00, @kullaniciID = 2, @aciklama = 'Fire kaybı', @islemNedeniID = 9;
+EXEC sp_YemIslemiEkle @firmaID = 2, @yemID = 6, @miktarKg = 95.00, @kullaniciID = 2, @aciklama = 'Zayi kaydı', @islemNedeniID = 10;
+EXEC sp_YemIslemiEkle @firmaID = 2, @yemID = 7, @miktarKg = 60.00, @kullaniciID = 2, @aciklama = 'Üretimde kullanıldı', @islemNedeniID = 8;
+
+
+--Tedarikçi için Yem İşlemleri
+-- 1-20: GİRİŞ İşlemleri
+EXEC sp_YemIslemiEkle @firmaID = 2, @yemID = 1, @miktarKg = 500.00, @kullaniciID = 2, @aciklama = 'Satın alınan yem', @islemNedeniID = 1;
+EXEC sp_YemIslemiEkle @firmaID = 2, @yemID = 2, @miktarKg = 300.00, @kullaniciID = 2, @aciklama = 'Hibe ile alınan yem', @islemNedeniID = 4;
+EXEC sp_YemIslemiEkle @firmaID = 2, @yemID = 3, @miktarKg = 450.00, @kullaniciID = 2, @aciklama = 'Stok fazlası girişi', @islemNedeniID = 5;
+EXEC sp_YemIslemiEkle @firmaID = 2, @yemID = 4, @miktarKg = 600.00, @kullaniciID = 2, @aciklama = 'Satın alınan yem', @islemNedeniID = 1;
+EXEC sp_YemIslemiEkle @firmaID = 2, @yemID = 5, @miktarKg = 200.00, @kullaniciID = 2, @aciklama = 'Hibe ile alınan yem', @islemNedeniID = 4;
+EXEC sp_YemIslemiEkle @firmaID = 2, @yemID = 6, @miktarKg = 350.00, @kullaniciID = 2, @aciklama = 'Stok fazlası girişi', @islemNedeniID = 5;
+EXEC sp_YemIslemiEkle @firmaID = 2, @yemID = 7, @miktarKg = 400.00, @kullaniciID = 2, @aciklama = 'Satın alınan yem', @islemNedeniID = 1;
+EXEC sp_YemIslemiEkle @firmaID = 2, @yemID = 8, @miktarKg = 150.00, @kullaniciID = 2, @aciklama = 'Hibe ile alınan yem', @islemNedeniID = 4;
+EXEC sp_YemIslemiEkle @firmaID = 2, @yemID = 9, @miktarKg = 500.00, @kullaniciID = 2, @aciklama = 'Stok fazlası girişi', @islemNedeniID = 5;
+EXEC sp_YemIslemiEkle @firmaID = 2, @yemID = 10, @miktarKg = 320.00, @kullaniciID = 2, @aciklama = 'Satın alınan yem', @islemNedeniID = 1;
+EXEC sp_YemIslemiEkle @firmaID = 2, @yemID = 1, @miktarKg = 600.00, @kullaniciID = 2, @aciklama = 'Satın alma', @islemNedeniID = 1;
+EXEC sp_YemIslemiEkle @firmaID = 2, @yemID = 2, @miktarKg = 275.00, @kullaniciID = 2, @aciklama = 'Bağış alımı', @islemNedeniID = 4;
+EXEC sp_YemIslemiEkle @firmaID = 2, @yemID = 3, @miktarKg = 310.00, @kullaniciID = 2, @aciklama = 'Stok fazlası', @islemNedeniID = 5;
+EXEC sp_YemIslemiEkle @firmaID = 2, @yemID = 4, @miktarKg = 400.00, @kullaniciID = 2, @aciklama = 'Satın alma', @islemNedeniID = 1;
+EXEC sp_YemIslemiEkle @firmaID = 2, @yemID = 5, @miktarKg = 150.00, @kullaniciID = 2, @aciklama = 'Bağış alımı', @islemNedeniID = 4;
+EXEC sp_YemIslemiEkle @firmaID = 2, @yemID = 6, @miktarKg = 550.00, @kullaniciID = 2, @aciklama = 'Stok fazlası', @islemNedeniID = 5;
+EXEC sp_YemIslemiEkle @firmaID = 2, @yemID = 7, @miktarKg = 700.00, @kullaniciID = 2, @aciklama = 'Satın alma', @islemNedeniID = 1;
+EXEC sp_YemIslemiEkle @firmaID = 2, @yemID = 8, @miktarKg = 270.00, @kullaniciID = 2, @aciklama = 'Bağış alımı', @islemNedeniID = 4;
+EXEC sp_YemIslemiEkle @firmaID = 2, @yemID = 9, @miktarKg = 330.00, @kullaniciID = 2, @aciklama = 'Stok fazlası', @islemNedeniID = 5;
+EXEC sp_YemIslemiEkle @firmaID = 2, @yemID = 10, @miktarKg = 450.00, @kullaniciID = 2, @aciklama = 'Satın alma', @islemNedeniID = 1;
+
+-- 21-40: ÇIKIŞ İşlemleri
+EXEC sp_YemIslemiEkle @firmaID = 2, @yemID = 1, @miktarKg = 60.00, @kullaniciID = 2, @aciklama = 'Üretimde kullanıldı', @islemNedeniID = 8;
+EXEC sp_YemIslemiEkle @firmaID = 2, @yemID = 2, @miktarKg = 40.00, @kullaniciID = 2, @aciklama = 'Üretimde kullanıldı', @islemNedeniID = 8;
+EXEC sp_YemIslemiEkle @firmaID = 2, @yemID = 3, @miktarKg = 35.00, @kullaniciID = 2, @aciklama = 'Fire kaybı', @islemNedeniID = 9;
+EXEC sp_YemIslemiEkle @firmaID = 2, @yemID = 4, @miktarKg = 80.00, @kullaniciID = 2, @aciklama = 'Fire kaybı', @islemNedeniID = 9;
+EXEC sp_YemIslemiEkle @firmaID = 2, @yemID = 5, @miktarKg = 25.00, @kullaniciID = 2, @aciklama = 'Zayi kaydı', @islemNedeniID = 10;
+EXEC sp_YemIslemiEkle @firmaID = 2, @yemID = 6, @miktarKg = 90.00, @kullaniciID = 2, @aciklama = 'Zayi kaydı', @islemNedeniID = 10;
+EXEC sp_YemIslemiEkle @firmaID = 2, @yemID = 7, @miktarKg = 55.00, @kullaniciID = 2, @aciklama = 'Üretimde kullanıldı', @islemNedeniID = 8;
+EXEC sp_YemIslemiEkle @firmaID = 2, @yemID = 8, @miktarKg = 45.00, @kullaniciID = 2, @aciklama = 'Üretimde kullanıldı', @islemNedeniID = 8;
+EXEC sp_YemIslemiEkle @firmaID = 2, @yemID = 9, @miktarKg = 38.00, @kullaniciID = 2, @aciklama = 'Fire kaybı', @islemNedeniID = 9;
+EXEC sp_YemIslemiEkle @firmaID = 2, @yemID = 10, @miktarKg = 75.00, @kullaniciID = 2, @aciklama = 'Zayi kaydı', @islemNedeniID = 10;
+EXEC sp_YemIslemiEkle @firmaID = 2, @yemID = 1, @miktarKg = 65.00, @kullaniciID = 2, @aciklama = 'Üretimde kullanıldı', @islemNedeniID = 8;
+EXEC sp_YemIslemiEkle @firmaID = 2, @yemID = 2, @miktarKg = 50.00, @kullaniciID = 2, @aciklama = 'Fire kaybı', @islemNedeniID = 9;

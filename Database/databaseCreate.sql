@@ -264,6 +264,25 @@ CREATE TABLE YemOnayLog (
     FOREIGN KEY (onaylayanKullaniciID) REFERENCES kullanicilar(kullaniciID)
 );
 
+
+CREATE TABLE RedEdilenBaşvurularYem (
+    redEdilenBaşvurularID INT PRIMARY KEY IDENTITY(1,1),
+    yemID INT,
+    kullaniciID INT,
+    redNedeni NVARCHAR(300),
+    redTarihi DATE,
+    FOREIGN KEY (yemID) REFERENCES YemMaddeleri(yemID),
+    FOREIGN KEY (kullaniciID) REFERENCES kullanicilar(kullaniciID)
+);
+GO
+
+CREATE TABLE IslemNedenleri (
+    islemNedeniID INT PRIMARY KEY IDENTITY(1,1),
+    islemTipi CHAR(1) NOT NULL,           -- 'g' (giriş) veya 'c' (çıkış)
+    nedenAdi NVARCHAR(100) NOT NULL
+);
+GO
+
 CREATE TABLE FirmaDepo (
     depoID INT PRIMARY KEY IDENTITY(1,1),
     firmaID INT,
@@ -273,6 +292,7 @@ CREATE TABLE FirmaDepo (
     FOREIGN KEY (firmaID) REFERENCES firmalar(firmaID),
     FOREIGN KEY (yemID) REFERENCES YemMaddeleri(yemID)
 );
+GO
 
 CREATE TABLE FirmaDepoLog (
     logID INT PRIMARY KEY IDENTITY(1,1),
@@ -282,31 +302,46 @@ CREATE TABLE FirmaDepoLog (
     miktarKg DECIMAL(10,2) NOT NULL,     -- işlem miktarı
     islemTarihi DATETIME DEFAULT GETDATE(),
     kullaniciID INT,                     -- işlemi yapan kullanıcı
-    aciklama NVARCHAR(255),              -- örneğin: “Rasyon tüketimi”, “Tedarik giriş”
+    aciklama NVARCHAR(255),              -- açıklama
+    islemNedeniID INT NOT NULL,           -- giriş/çıkış nedeni
 
     FOREIGN KEY (firmaID) REFERENCES firmalar(firmaID),
     FOREIGN KEY (yemID) REFERENCES YemMaddeleri(yemID),
-    FOREIGN KEY (kullaniciID) REFERENCES kullanicilar(kullaniciID)
+    FOREIGN KEY (kullaniciID) REFERENCES kullanicilar(kullaniciID),
+    FOREIGN KEY (islemNedeniID) REFERENCES IslemNedenleri(islemNedeniID)
 );
+GO
 
-GO 
 CREATE PROCEDURE sp_YemIslemiEkle
     @firmaID INT,
     @yemID INT,
-    @islemTipi CHAR(1),        -- 'g' veya 'c'
     @miktarKg DECIMAL(10,2),
     @kullaniciID INT,
-    @aciklama NVARCHAR(255)
+    @aciklama NVARCHAR(255),
+    @islemNedeniID INT  -- Sadece neden ID veriyoruz
 AS
 BEGIN
     SET NOCOUNT ON;
 
     DECLARE @mevcutStok DECIMAL(10,2);
+    DECLARE @islemTipi CHAR(1);
 
     BEGIN TRY
         BEGIN TRANSACTION;
 
-        -- 1. Stok kontrolü (sadece çıkış için)
+        -- Neden tablosundan işlem tipi (giriş/çıkış) çekiliyor
+        SELECT @islemTipi = islemTipi
+        FROM IslemNedenleri
+        WHERE islemNedeniID = @islemNedeniID;
+
+        IF @islemTipi IS NULL
+        BEGIN
+            RAISERROR('Geçersiz işlem nedeni ID!', 16, 1);
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        -- Çıkış işlemi ise stok kontrolü yapılır
         IF @islemTipi = 'c'
         BEGIN
             SELECT @mevcutStok = miktarKg
@@ -315,7 +350,7 @@ BEGIN
 
             IF @mevcutStok IS NULL
             BEGIN
-                RAISERROR('Bu yeme ait stok bulunamadı.', 16, 1);
+                RAISERROR('Bu ürüne ait stok bulunamadı.', 16, 1);
                 ROLLBACK TRANSACTION;
                 RETURN;
             END
@@ -328,14 +363,12 @@ BEGIN
             END
         END
 
-        -- 2. Log kaydı
-        INSERT INTO FirmaDepoLog (firmaID, yemID, islemTipi, miktarKg, kullaniciID, aciklama)
-        VALUES (@firmaID, @yemID, @islemTipi, @miktarKg, @kullaniciID, @aciklama);
+        -- Log kaydı yapılır
+        INSERT INTO FirmaDepoLog (firmaID, yemID, islemTipi, miktarKg, kullaniciID, aciklama, islemNedeniID)
+        VALUES (@firmaID, @yemID, @islemTipi, @miktarKg, @kullaniciID, @aciklama, @islemNedeniID);
 
-        -- 3. Depo güncelleme
-        IF EXISTS (
-            SELECT 1 FROM FirmaDepo WHERE firmaID = @firmaID AND yemID = @yemID
-        )
+        -- Depo güncellemesi
+        IF EXISTS (SELECT 1 FROM FirmaDepo WHERE firmaID = @firmaID AND yemID = @yemID)
         BEGIN
             UPDATE FirmaDepo
             SET 
@@ -348,15 +381,14 @@ BEGIN
         END
         ELSE
         BEGIN
-            -- Yalnızca girişse yeni satır oluştur
             IF @islemTipi = 'g'
             BEGIN
-                INSERT INTO FirmaDepo (firmaID, yemID, miktarKg)
-                VALUES (@firmaID, @yemID, @miktarKg);
+                INSERT INTO FirmaDepo (firmaID, yemID, miktarKg, sonGuncellemeTarihi)
+                VALUES (@firmaID, @yemID, @miktarKg, GETDATE());
             END
             ELSE
             BEGIN
-                RAISERROR('Bu yeme ait stok bulunamadı, çıkış yapılamaz.', 16, 1);
+                RAISERROR('Stok bulunamadı. Çıkış işlemi yapılamaz.', 16, 1);
                 ROLLBACK TRANSACTION;
                 RETURN;
             END
@@ -372,13 +404,4 @@ BEGIN
     END CATCH
 END
 
-CREATE TABLE RedEdilenBaşvurularYem (
-    redEdilenBaşvurularID INT PRIMARY KEY IDENTITY(1,1),
-    yemID INT,
-    kullaniciID INT,
-    redNedeni NVARCHAR(300),
-    redTarihi DATE,
-    FOREIGN KEY (yemID) REFERENCES YemMaddeleri(yemID),
-    FOREIGN KEY (kullaniciID) REFERENCES kullanicilar(kullaniciID)
-);
-GO
+
