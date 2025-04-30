@@ -219,13 +219,13 @@ const TedarikciSidear = () => {
                                 <AnimateHeight duration={300} height={currentMenu === t('Warehouse Tracking') ? 'auto' : 0}>
                                     <ul className="sub-menu text-gray-500">
                                         <li>
-                                            <NavLink to="/">{t('Stock')}</NavLink>
+                                            <NavLink to="/tedarikci/DepoTakip/Stok">{t('Stock')}</NavLink>
                                         </li>
                                         <li>
-                                            <NavLink to="/">{t('Goods Acceptance History')}</NavLink>
+                                            <NavLink to="/tedarikci/DepoTakip/MalKabul">{t('Goods Acceptance History')}</NavLink>
                                         </li>
                                         <li>
-                                            <NavLink to="/">{t('Goods Dispatch History')}</NavLink>
+                                            <NavLink to="/tedarikci/DepoTakip/Sevk">{t('Goods Dispatch History')}</NavLink>
                                         </li>
                                     </ul>
                                 </AnimateHeight>

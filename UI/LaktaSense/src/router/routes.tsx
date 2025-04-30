@@ -53,6 +53,9 @@ const CifciDepoTakipStok = lazy(() => import('../pages/Cifci/DepoModul/DepoTakip
 const CifciDepoTakipTüketim = lazy(() => import('../pages/Cifci/DepoModul/DepoTakip/TüketimGecmisi'));
 const CifciDepoTakipMalKabul = lazy(() => import('../pages/Cifci/DepoModul/DepoTakip/MalKabulGecmisi'));
 const CifciDepoTakipSevk = lazy(() => import('../pages/Cifci/DepoModul/DepoTakip/SevkGecmisi'));
+const TedarikciDepoTakipStok = lazy(() => import('../pages/Tedarikci/DepoModul/DepoTakip/Stok'));
+const TedarikciDepoTakipMalKabul = lazy(() => import('../pages/Tedarikci/DepoModul/DepoTakip/MalKabulGecmisi'));
+const TedarikciDepoTakipSevk = lazy(() => import('../pages/Tedarikci/DepoModul/DepoTakip/SevkGecmisi'));
 
 const routes = [
     //landing page
@@ -542,6 +545,33 @@ const routes = [
         element: (
             <AuthGuard allowedRoles={['t']}>
                 <TedarikciYemTanımlamalarıDetay />
+            </AuthGuard>
+        ),
+        layout: 'tedarikci',
+    },
+    {
+        path: '/tedarikci/DepoTakip/Sevk',
+        element: (
+            <AuthGuard allowedRoles={['t']}>
+                <TedarikciDepoTakipSevk />
+            </AuthGuard>
+        ),
+        layout: 'tedarikci',
+    },
+    {
+        path: '/tedarikci/DepoTakip/Stok',
+        element: (
+            <AuthGuard allowedRoles={['t']}>
+                <TedarikciDepoTakipStok />
+            </AuthGuard>
+        ),
+        layout: 'tedarikci',
+    },
+    {
+        path: '/tedarikci/DepoTakip/MalKabul',
+        element: (
+            <AuthGuard allowedRoles={['t']}>
+                <TedarikciDepoTakipMalKabul />
             </AuthGuard>
         ),
         layout: 'tedarikci',
