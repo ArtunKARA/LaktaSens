@@ -32,7 +32,7 @@ const Index = () => {
     const userInfo = storedUserInfo ? JSON.parse(storedUserInfo) : null;
     const isDark = useSelector((state: IRootState) => state.themeConfig.theme === 'dark' || state.themeConfig.isDarkMode);
     const isRtl = useSelector((state: IRootState) => state.themeConfig.rtlClass) === 'rtl' ? true : false;
-    
+
     const [loading] = useState(false);
 
     const [kuruda_olanlar, kuruda_olanlarSet] = useState<number>();
@@ -41,27 +41,26 @@ const Index = () => {
     useEffect(() => {
         // API'yi çağırma
         const fetchData = async () => {
-          try {
-            const response = await fetch('http://localhost:3030/api/cifciAnaliz/postSutDongusuAnaliz', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({ ID:userInfo.kullaniciID}), // Kullanıcı ID'sini gönderiyorsunuz
-            });
-            const data = await response.json();
-            kuruda_olanlarSet(data["kuruda_olanlar"])
-            sagimda_olanlarSet(data["sagimda_olanlar"])
-            cikarilmasi_gerekenlerSutSet(data["cikarilmasi_gerekenler"])
-            console.log('Gelen veri:', data);
-            ; // Sadece doğrudan kullanılabilecek bir dizi olduğunda kullanı
-          } catch (error) {
-            console.error('API çağrısı sırasında bir hata oluştu:', error);
-          }
+            try {
+                const response = await fetch('http://localhost:3030/api/cifciAnaliz/postSutDongusuAnaliz', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ ID: userInfo.kullaniciID }), // Kullanıcı ID'sini gönderiyorsunuz
+                });
+                const data = await response.json();
+                kuruda_olanlarSet(data['kuruda_olanlar']);
+                sagimda_olanlarSet(data['sagimda_olanlar']);
+                cikarilmasi_gerekenlerSutSet(data['cikarilmasi_gerekenler']);
+                console.log('Gelen veri:', data); // Sadece doğrudan kullanılabilecek bir dizi olduğunda kullanı
+            } catch (error) {
+                console.error('API çağrısı sırasında bir hata oluştu:', error);
+            }
         };
-    
+
         fetchData();
-      }, []);
+    }, []);
 
     const [gebe_olanlar, gebe_olanlarSet] = useState<number>();
     const [serviste_olanlar, serviste_olanlarSet] = useState<number>();
@@ -69,53 +68,51 @@ const Index = () => {
     useEffect(() => {
         // API'yi çağırma
         const fetchData = async () => {
-          try {
-            const response = await fetch('http://localhost:3030/api/cifciAnaliz/postYavruDonguAnaliz', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({ ID:userInfo.kullaniciID}), // Kullanıcı ID'sini gönderiyorsunuz
-            });
-            const data = await response.json();
-            gebe_olanlarSet(data["gebe_olanlar"])
-            serviste_olanlarSet(data["serviste_olanlar"])
-            cikarilmasi_gerekenlerYavruSet(data["cikarilmasi_gerekenler"])
-            console.log('Gelen veri:', data);
-            ; // Sadece doğrudan kullanılabilecek bir dizi olduğunda kullanı
-          } catch (error) {
-            console.error('API çağrısı sırasında bir hata oluştu:', error);
-          }
+            try {
+                const response = await fetch('http://localhost:3030/api/cifciAnaliz/postYavruDonguAnaliz', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ ID: userInfo.kullaniciID }), // Kullanıcı ID'sini gönderiyorsunuz
+                });
+                const data = await response.json();
+                gebe_olanlarSet(data['gebe_olanlar']);
+                serviste_olanlarSet(data['serviste_olanlar']);
+                cikarilmasi_gerekenlerYavruSet(data['cikarilmasi_gerekenler']);
+                console.log('Gelen veri:', data); // Sadece doğrudan kullanılabilecek bir dizi olduğunda kullanı
+            } catch (error) {
+                console.error('API çağrısı sırasında bir hata oluştu:', error);
+            }
         };
-    
+
         fetchData();
-      }, []);
+    }, []);
 
     const [eriskin_olanlar, eriskin_olanlarSet] = useState<number>();
     const [yavru_olanlar, yavru_olanlarSet] = useState<number>();
     useEffect(() => {
         // API'yi çağırma
         const fetchData = async () => {
-          try {
-            const response = await fetch('http://localhost:3030/api/cifciAnaliz/postDongudekiIneklerAnaliz', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({ ID:userInfo.kullaniciID}), // Kullanıcı ID'sini gönderiyorsunuz
-            });
-            const data = await response.json();
-            eriskin_olanlarSet(data["eriskin_olanlar"])
-            yavru_olanlarSet(data["yavru_olanlar"])
-            console.log('Gelen veri:', data);
-            ; // Sadece doğrudan kullanılabilecek bir dizi olduğunda kullanı
-          } catch (error) {
-            console.error('API çağrısı sırasında bir hata oluştu:', error);
-          }
+            try {
+                const response = await fetch('http://localhost:3030/api/cifciAnaliz/postDongudekiIneklerAnaliz', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ ID: userInfo.kullaniciID }), // Kullanıcı ID'sini gönderiyorsunuz
+                });
+                const data = await response.json();
+                eriskin_olanlarSet(data['eriskin_olanlar']);
+                yavru_olanlarSet(data['yavru_olanlar']);
+                console.log('Gelen veri:', data); // Sadece doğrudan kullanılabilecek bir dizi olduğunda kullanı
+            } catch (error) {
+                console.error('API çağrısı sırasında bir hata oluştu:', error);
+            }
         };
-    
+
         fetchData();
-      }, []);
+    }, []);
     //SutDongu
     const SutDongu: any = {
         series: [kuruda_olanlar, sagimda_olanlar, cikarilmasi_gerekenlerSut],
@@ -148,7 +145,7 @@ const Index = () => {
             },
             plotOptions: {
                 pie: {
-                    donut: {                 
+                    donut: {
                         size: '65%',
                         background: 'transparent',
                         labels: {
@@ -200,8 +197,8 @@ const Index = () => {
         },
     };
 
-     //YavruDongu
-     const YavruDongu: any = {
+    //YavruDongu
+    const YavruDongu: any = {
         series: [gebe_olanlar, serviste_olanlar, cikarilmasi_gerekenlerYavru],
         options: {
             chart: {
@@ -284,8 +281,8 @@ const Index = () => {
         },
     };
 
-     //aklimaGelmedi
-     const aklimaGelmedi: any = {
+    //aklimaGelmedi
+    const aklimaGelmedi: any = {
         series: [eriskin_olanlar, yavru_olanlar],
         options: {
             chart: {
@@ -368,16 +365,11 @@ const Index = () => {
         },
     };
 
-
-    
-
-    
-
     return (
         <div>
             <div className="pt-5">
                 <div className="grid xl:grid-cols-3 gap-6 mb-6">
-                <div className="panel h-full">
+                    <div className="panel h-full">
                         <div className="flex items-center mb-5">
                             <h5 className="font-semibold text-lg dark:text-white-light">{t('Milk Cycle Analysis')}</h5>
                         </div>
@@ -427,11 +419,9 @@ const Index = () => {
                         </div>
                     </div>
                 </div>
-                </div>
             </div>
-       
+        </div>
     );
 };
 
 export default Index;
-    

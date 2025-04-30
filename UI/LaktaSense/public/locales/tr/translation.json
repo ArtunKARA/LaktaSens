@@ -572,5 +572,20 @@
     "Needs Analysis": "İhtiyaç Analizi",
     "Supply Analysis": "Tedarik Analizi",
     "Consumption Analysis": "Tüketim Analizi",
-    "Feed Analysis": "Yem Analizi"
+    "Feed Analysis": "Yem Analizi",
+    "Amount (Kg)": "Miktar (Kg)",
+    "Last Update Date": "Son Güncelleme Tarihi",
+    "Stock Analysis": "Stok Analizi",
+    "Distribution Ratio":"Dağıtım Oranı",
+    "Feed Stock": "Yem Stoku",
+    "Consumption Logs": "Tüketim Kayıtları",
+    "Consumption Graph": "Tüketim Grafiği",
+    "Weekly": "Haftalık",
+    "Monthly": "Aylık",
+    "Yearly": "Yıllık",
+    "Explaination": "Açıklama",
+    "Reson": "Sebep",
+    "Consumption Distribution Ratio": "Tüketim Dağılım Oranı",
+    "Goods Acceptance Logs": "Mal Kabul Kayıtları",
+    "Accept Type": "Kabul Türü"
 }

@@ -49,6 +49,9 @@ const TedarikciYemTanımlamaları = lazy(() => import('../pages/Tedarikci/Tanım
 const TedarikciYemTanımlamalarıDetay = lazy(() => import('../pages/Tedarikci/Tanımlamalar/YemTanımlamalarıDetay'));
 const AdminYemBasvurulari = lazy(() => import('../pages/Admin/Basvurular/Yem/YemBasvurulari'));
 const AdminYemBasvurulariDetay = lazy(() => import('../pages/Admin/Basvurular/Yem/YemBasvuruDetay'));
+const CifciDepoTakipStok = lazy(() => import('../pages/Cifci/DepoModul/DepoTakip/Stok'));
+const CifciDepoTakipTüketim = lazy(() => import('../pages/Cifci/DepoModul/DepoTakip/TüketimGecmisi'));
+const CifciDepoTakipMalKabul = lazy(() => import('../pages/Cifci/DepoModul/DepoTakip/MalKabulGecmisi'));
 
 const routes = [
     //landing page
@@ -279,6 +282,34 @@ const routes = [
         element: (
             <AuthGuard allowedRoles={['c']}>
                 <Profil />
+            </AuthGuard>
+        ),
+        layout: 'cifci',
+    },
+    //Cifci depo takip stok sayfası
+    {
+        path: '/cifci/DepoTakip/Stok',
+        element: (
+            <AuthGuard allowedRoles={['c']}>
+                <CifciDepoTakipStok />
+            </AuthGuard>
+        ),
+        layout: 'cifci',
+    },
+    {
+        path: '/cifci/DepoTakip/Tüketim',
+        element: (
+            <AuthGuard allowedRoles={['c']}>
+                <CifciDepoTakipTüketim />
+            </AuthGuard>
+        ),
+        layout: 'cifci',
+    },
+    {
+        path: '/cifci/DepoTakip/MalKabul',
+        element: (
+            <AuthGuard allowedRoles={['c']}>
+                <CifciDepoTakipMalKabul />
             </AuthGuard>
         ),
         layout: 'cifci',
