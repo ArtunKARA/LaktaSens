@@ -104,6 +104,12 @@ const MultipleTables = () => {
                     body: JSON.stringify({ firmaID: userInfo.firmaID, zamanTipi: zamanTipi }), // Kullanıcı ID'sini gönderiyorsunuz
                 });
                 const data = await response.json();
+                if (response.status === 404) {
+                    setTimeDataAPI([]);
+                    setTimeData([]);
+                    console.log('API 404: Veri bulunamadı.');
+                    return;
+                }
                 setTimeDataAPI(data);
                 setTimeData(data);
                 console.log('Gelen veri:', data);
@@ -314,6 +320,12 @@ const MultipleTables = () => {
                     body: JSON.stringify({ firmaID: userInfo.firmaID, zamanTipi: zamanTipiDagilim }), // Kullanıcı ID'sini gönderiyorsunuz
                 });
                 const data = await response.json();
+                if (response.status === 404) {
+                    setDagilimDataAPI([]);
+                    setDagilimData([]);
+                    console.log('API 404: Veri bulunamadı.');
+                    return;
+                }
                 setDagilimDataAPI(data);
                 setDagilimData(data);
                 console.log('Gelen veri:', data);
@@ -406,6 +418,12 @@ const MultipleTables = () => {
                     },
                     body: JSON.stringify({ firmaID: userInfo.firmaID, zamanTipi: zamanTipi, nedenIDList: filterAccepted }), // Kullanıcı ID'sini gönderiyorsunuz
                 });
+                if (response.status === 404) {
+                    setTimeDataAPI([]);
+                    setTimeData([]);
+                    console.log('API 404: Veri bulunamadı.');
+                    return;
+                }
                 const data = await response.json();
                 setTimeDataAPI(data);
                 setTimeData(data);
@@ -429,6 +447,12 @@ const MultipleTables = () => {
                     body: JSON.stringify({ firmaID: userInfo.firmaID, zamanTipi: zamanTipi, nedenIDList: filterAcceptedDistributionRatio }), // Kullanıcı ID'sini gönderiyorsunuz
                 });
                 const data = await response.json();
+                if (response.status === 404) {
+                    setDagilimDataAPI([]);
+                    setDagilimData([]);
+                    console.log('API 404: Veri bulunamadı.');
+                    return;
+                }
                 setDagilimDataAPI(data);
                 setDagilimData(data);
                 console.log('Gelen veri:', data);
