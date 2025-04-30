@@ -26,6 +26,7 @@ import IconServer from '../../../../components/Icon/IconServer';
 import IconFile from '../../../../components/Icon/IconFile';
 import IconCaretDown from '../../../../components/Icon/IconCaretDown';
 import IconSettings from '../../../../components/Icon/IconSettings';
+import { set, toNumber } from 'lodash';
 
 interface FeedData {
     logID: string;
@@ -37,6 +38,7 @@ interface FeedData {
     islemTarihi: string;
     aciklama: string;
     nedenAdi: string;
+    islemNedeniID: number;
     kullaniciAdi: string;
 }
 
@@ -44,15 +46,17 @@ interface ZamanData {
     yemAdi: string;
     zamanGrubu: string;
     toplamTuketimKg: string;
+    islemNedeniID: number;
 }
 
 interface ToplamKabulData {
     yemAdi: string;
     toplamTuketimKg: string;
+    islemNedeniID: number;
 }
 
 interface IslemNedeniData {
-    islemNedeniID: string;
+    islemNedeniID: number;
     nedenAdi: string;
     islemTipi: string;
 }
@@ -67,7 +71,7 @@ const MultipleTables = () => {
         // API'yi çağırma
         const fetchData = async () => {
             try {
-                const response = await fetch('http://localhost:3030/api/depo/postTuketimListesi', {
+                const response = await fetch('http://localhost:3030/api/depo/postMalKabulListesi', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -85,13 +89,14 @@ const MultipleTables = () => {
         fetchData();
     }, []); // Boş bağımlılık dizisi, component mount olduğunda sadece bir kez çalıştırılır
 
-    const [timeData, setTimeData] = useState<ZamanData[]>([]);
+    const [timeDataAPI, setTimeDataAPI] = useState<ZamanData[]>([]);
+    const [timeData, setTimeData] = useState<ZamanData[]>(timeDataAPI);
     const [zamanTipi, setzamanTipi] = useState('aylik');
     useEffect(() => {
         // API'yi çağırma
         const fetchData = async () => {
             try {
-                const response = await fetch('http://localhost:3030/api/depo/postTuketimZamanliGrafik', {
+                const response = await fetch('http://localhost:3030/api/depo/postMalKabulZamanliGrafik', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -99,6 +104,7 @@ const MultipleTables = () => {
                     body: JSON.stringify({ firmaID: userInfo.firmaID, zamanTipi: zamanTipi }), // Kullanıcı ID'sini gönderiyorsunuz
                 });
                 const data = await response.json();
+                setTimeDataAPI(data);
                 setTimeData(data);
                 console.log('Gelen veri:', data);
             } catch (error) {
@@ -123,8 +129,11 @@ const MultipleTables = () => {
                     body: JSON.stringify({ islemTipi: 'g' }),
                 });
                 const data = await response.json();
-                console.log('Gelen veri:', data);
-                setIslemTipleri(data); // Sadece doğrudan kullanılabilecek bir dizi olduğunda kullanı
+                setIslemTipleri(data); // Gelen veriyi state'e atıyoruz
+                const initialFilterAcceptedLog = data.map((item: IslemNedeniData) => item.islemNedeniID);
+                setFilterAcceptedLog(initialFilterAcceptedLog); // Başlangıçta tüm filtreleri seçili yapıyoruz
+                setFilterAccepted(initialFilterAcceptedLog); // Başlangıçta tüm filtreleri seçili yapıyoruz
+                setFilterAcceptedDistributionRatio(initialFilterAcceptedLog); // Başlangıçta tüm filtreleri seçili yapıyoruz
             } catch (error) {
                 console.error('API çağrısı sırasında bir hata oluştu:', error);
             }
@@ -179,26 +188,6 @@ const MultipleTables = () => {
         const to = from + pageSize;
         setRecordsData([...initialRecords.slice(from, to)]);
     }, [page, pageSize, initialRecords]);
-
-    useEffect(() => {
-        setInitialRecords(() => {
-            return rowData.filter((item) => {
-                return (
-                    item.logID.toString().toLowerCase().includes(search.toLowerCase()) ||
-                    item.firmaID.toString().toLowerCase().includes(search.toLowerCase()) ||
-                    item.firmaAdi.toString().toLowerCase().includes(search.toLowerCase()) ||
-                    item.yemID.toString().toLowerCase().includes(search.toLowerCase()) ||
-                    item.yemAdi.toString().toLowerCase().includes(search.toLowerCase()) ||
-                    item.miktarKg.toString().toLowerCase().includes(search.toLowerCase()) ||
-                    item.islemTarihi.toString().toLowerCase().includes(search.toLowerCase()) ||
-                    item.aciklama.toString().toLowerCase().includes(search.toLowerCase()) ||
-                    item.nedenAdi.toString().toLowerCase().includes(search.toLowerCase()) ||
-                    item.kullaniciAdi.toString().toLowerCase().includes(search.toLowerCase())
-                );
-            });
-        });
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [search]);
 
     useEffect(() => {
         const data = sortBy(initialRecords, sortStatus.columnAccessor);
@@ -310,13 +299,14 @@ const MultipleTables = () => {
         },
     };
 
-    const [dagilimData, setDagilimData] = useState<ToplamKabulData[]>([]);
+    const [dagilimDataAPI, setDagilimDataAPI] = useState<ToplamKabulData[]>([]);
+    const [dagilimData, setDagilimData] = useState<ToplamKabulData[]>(dagilimDataAPI);
     const [zamanTipiDagilim, setzamanTipiDagilim] = useState('aylik');
     useEffect(() => {
         // API'yi çağırma
         const fetchData = async () => {
             try {
-                const response = await fetch('http://localhost:3030/api/depo/postTuketimToplamGrafik', {
+                const response = await fetch('http://localhost:3030/api/depo/postMalKabulToplamGrafik', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -324,6 +314,7 @@ const MultipleTables = () => {
                     body: JSON.stringify({ firmaID: userInfo.firmaID, zamanTipi: zamanTipiDagilim }), // Kullanıcı ID'sini gönderiyorsunuz
                 });
                 const data = await response.json();
+                setDagilimDataAPI(data);
                 setDagilimData(data);
                 console.log('Gelen veri:', data);
             } catch (error) {
@@ -372,19 +363,93 @@ const MultipleTables = () => {
             },
         },
     };
+    const [filterAccepted, setFilterAccepted] = useState<number[]>(islemTipleri.map((item) => item.islemNedeniID));
+    const [filterAcceptedDistributionRatio, setFilterAcceptedDistributionRatio] = useState<any[]>(islemTipleri.map((item) => item.islemNedeniID));
+    const [filterAcceptedLog, setFilterAcceptedLog] = useState<any[]>([]);
+
+    useEffect(() => {
+        setInitialRecords(() => {
+            return rowData.filter((item) => {
+                return (
+                    item.logID.toString().toLowerCase().includes(search.toLowerCase()) ||
+                    item.firmaID.toString().toLowerCase().includes(search.toLowerCase()) ||
+                    item.firmaAdi.toString().toLowerCase().includes(search.toLowerCase()) ||
+                    item.yemID.toString().toLowerCase().includes(search.toLowerCase()) ||
+                    item.yemAdi.toString().toLowerCase().includes(search.toLowerCase()) ||
+                    item.miktarKg.toString().toLowerCase().includes(search.toLowerCase()) ||
+                    item.islemTarihi.toString().toLowerCase().includes(search.toLowerCase()) ||
+                    item.aciklama.toString().toLowerCase().includes(search.toLowerCase()) ||
+                    item.nedenAdi.toString().toLowerCase().includes(search.toLowerCase()) ||
+                    item.kullaniciAdi.toString().toLowerCase().includes(search.toLowerCase())
+                );
+            });
+        });
+    }, [search]);
+
+    useEffect(() => {
+        setInitialRecords(() => {
+            return rowData.filter((item) => {
+                if (filterAcceptedLog.includes(item.islemNedeniID)) {
+                    return item; // Filtreye uyan verileri göster
+                }
+            });
+        });
+    }, [filterAcceptedLog]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await fetch('http://localhost:3030/api/depo/postMalKabulZamanliGrafik', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ firmaID: userInfo.firmaID, zamanTipi: zamanTipi, nedenIDList: filterAccepted }), // Kullanıcı ID'sini gönderiyorsunuz
+                });
+                const data = await response.json();
+                setTimeDataAPI(data);
+                setTimeData(data);
+                console.log('Gelen veri:', data);
+            } catch (error) {
+                console.error('API çağrısı sırasında bir hata oluştu:', error);
+            }
+        };
+
+        fetchData();
+    }, [filterAccepted]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await fetch('http://localhost:3030/api/depo/postMalKabulToplamGrafik', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ firmaID: userInfo.firmaID, zamanTipi: zamanTipi, nedenIDList: filterAcceptedDistributionRatio }), // Kullanıcı ID'sini gönderiyorsunuz
+                });
+                const data = await response.json();
+                setDagilimDataAPI(data);
+                setDagilimData(data);
+                console.log('Gelen veri:', data);
+            } catch (error) {
+                console.error('API çağrısı sırasında bir hata oluştu:', error);
+            }
+        };
+
+        fetchData();
+    }, [filterAcceptedDistributionRatio]);
 
     return (
         <div>
             <div className="grid lg:grid-cols-3 gap-6 mb-6">
                 <div className="panel h-full p-0 lg:col-span-2">
                     <div className="flex items-start justify-between dark:text-white-light mb-5 p-5 border-b  border-white-light dark:border-[#1b2e4b]">
-                        <h5 className="font-semibold text-lg ">{t('Consumption Graph')}</h5>
+                        <h5 className="font-semibold text-lg ">{t('Goods Acceptance Graph')}</h5>
                         <div className="flex md:items-center md:flex-row flex-col gap-5 ltr:ml-auto rtl:mr-auto pr-2">
                             <div className="dropdown">
                                 <Dropdown offset={[0, 5]} btnClassName="hover:text-primary" button={<IconSettings className="text-black/70 dark:text-white/70 hover:!text-primary" />}>
                                     <ul className="!min-w-[200px]">
-                                        {' '}
-                                        {/* Dropdown width increased */}
                                         {islemTipleri.map((col, i) => {
                                             return (
                                                 <li
@@ -396,7 +461,18 @@ const MultipleTables = () => {
                                                 >
                                                     <div className="flex items-center px-4 py-1">
                                                         <label className="cursor-pointer mb-0">
-                                                            <input type="checkbox" className="form-checkbox" defaultValue={col.islemNedeniID} onChange={(event: any) => {}} />
+                                                            <input
+                                                                type="checkbox"
+                                                                className="form-checkbox"
+                                                                value={col.islemNedeniID}
+                                                                checked={filterAccepted.includes(col.islemNedeniID)}
+                                                                onChange={(event: any) => {
+                                                                    const isChecked = event.target.checked;
+                                                                    setFilterAccepted((prev: any) =>
+                                                                        isChecked ? [...prev, col.islemNedeniID] : prev.filter((id: number) => id !== col.islemNedeniID)
+                                                                    );
+                                                                }}
+                                                            />
                                                             <span className="ltr:ml-2 rtl:mr-2">{col.nedenAdi}</span>
                                                         </label>
                                                     </div>
@@ -435,7 +511,7 @@ const MultipleTables = () => {
 
                 <div className="panel h-full">
                     <div className="flex items-start justify-between dark:text-white-light mb-5 -mx-5 p-5 pt-0 border-b  border-white-light dark:border-[#1b2e4b]">
-                        <h5 className="font-semibold text-lg ">{t('Consumption Distribution Ratio')}</h5>
+                        <h5 className="font-semibold text-lg ">{t('Goods Acceptance Distribution Ratio')}</h5>
                         <div className="flex md:items-center md:flex-row flex-col gap-5 ltr:ml-auto rtl:mr-auto pr-2">
                             <div className="dropdown">
                                 <Dropdown offset={[0, 5]} btnClassName="hover:text-primary" button={<IconSettings className="text-black/70 dark:text-white/70 hover:!text-primary" />}>
@@ -453,7 +529,18 @@ const MultipleTables = () => {
                                                 >
                                                     <div className="flex items-center px-4 py-1">
                                                         <label className="cursor-pointer mb-0">
-                                                            <input type="checkbox" className="form-checkbox" defaultValue={col.islemNedeniID} onChange={(event: any) => {}} />
+                                                            <input
+                                                                type="checkbox"
+                                                                className="form-checkbox"
+                                                                defaultValue={col.islemNedeniID}
+                                                                checked={filterAcceptedDistributionRatio.includes(col.islemNedeniID)}
+                                                                onChange={(event: any) => {
+                                                                    const isChecked = event.target.checked;
+                                                                    setFilterAcceptedDistributionRatio((prev: any) =>
+                                                                        isChecked ? [...prev, col.islemNedeniID] : prev.filter((id: number) => id !== col.islemNedeniID)
+                                                                    );
+                                                                }}
+                                                            />
                                                             <span className="ltr:ml-2 rtl:mr-2">{col.nedenAdi}</span>
                                                         </label>
                                                     </div>
@@ -535,7 +622,18 @@ const MultipleTables = () => {
                                                 >
                                                     <div className="flex items-center px-4 py-1">
                                                         <label className="cursor-pointer mb-0">
-                                                            <input type="checkbox" className="form-checkbox" defaultValue={col.islemNedeniID} onChange={(event: any) => {}} />
+                                                            <input
+                                                                type="checkbox"
+                                                                className="form-checkbox"
+                                                                defaultValue={col.islemNedeniID}
+                                                                checked={filterAcceptedLog.includes(col.islemNedeniID)}
+                                                                onChange={(event: any) => {
+                                                                    const isChecked = event.target.checked;
+                                                                    setFilterAcceptedLog((prev: any) =>
+                                                                        isChecked ? [...prev, col.islemNedeniID] : prev.filter((id: number) => id !== col.islemNedeniID)
+                                                                    );
+                                                                }}
+                                                            />
                                                             <span className="ltr:ml-2 rtl:mr-2">{col.nedenAdi}</span>
                                                         </label>
                                                     </div>
