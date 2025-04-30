@@ -52,6 +52,7 @@ const AdminYemBasvurulariDetay = lazy(() => import('../pages/Admin/Basvurular/Ye
 const CifciDepoTakipStok = lazy(() => import('../pages/Cifci/DepoModul/DepoTakip/Stok'));
 const CifciDepoTakipTüketim = lazy(() => import('../pages/Cifci/DepoModul/DepoTakip/TüketimGecmisi'));
 const CifciDepoTakipMalKabul = lazy(() => import('../pages/Cifci/DepoModul/DepoTakip/MalKabulGecmisi'));
+const CifciDepoTakipSevk = lazy(() => import('../pages/Cifci/DepoModul/DepoTakip/SevkGecmisi'));
 
 const routes = [
     //landing page
@@ -310,6 +311,15 @@ const routes = [
         element: (
             <AuthGuard allowedRoles={['c']}>
                 <CifciDepoTakipMalKabul />
+            </AuthGuard>
+        ),
+        layout: 'cifci',
+    },
+    {
+        path: '/cifci/DepoTakip/Sevk',
+        element: (
+            <AuthGuard allowedRoles={['c']}>
+                <CifciDepoTakipSevk />
             </AuthGuard>
         ),
         layout: 'cifci',

@@ -709,6 +709,11 @@ const MultipleTables = () => {
                                 sortable: true,
                             },
                             {
+                                accessor: 'kullaniciAdi',
+                                title: t('User'),
+                                sortable: true,
+                            },
+                            {
                                 accessor: 'Detail',
                                 title: t('Detail'),
                                 titleClassName: '!text-center',

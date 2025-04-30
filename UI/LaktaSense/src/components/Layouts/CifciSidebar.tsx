@@ -257,7 +257,7 @@ const Sidebar = () => {
                                                 <NavLink to="/cifci/DepoTakip/MalKabul">{t('Goods Acceptance History')}</NavLink>
                                             </li>
                                             <li>
-                                                <NavLink to="/">{t('Goods Dispatch History')}</NavLink>
+                                                <NavLink to="/cifci/DepoTakip/Sevk">{t('Goods Dispatch History')}</NavLink>
                                             </li>
                                         </ul>
                                     </AnimateHeight>

@@ -589,5 +589,8 @@
     "Goods Acceptance Logs": "Mal Kabul Kayıtları",
     "Accept Type": "Kabul Türü",
     "Goods Acceptance Graph":" Mal Kabul Grafiği",
-    "Goods Acceptance Distribution Ratio": "Mal Kabul Dağılım Oranı"
+    "Goods Acceptance Distribution Ratio": "Mal Kabul Dağılım Oranı",
+    "Goods Dispatch Graph": "Mal Sevk Grafiği",
+    "Goods Dispatch Distribution Ratio": "Mal Sevk Dağılım Oranı",
+    "Goods Dispatch Logs": "Mal Sevk Kayıtları"
 }
