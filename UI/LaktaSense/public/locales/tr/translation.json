@@ -603,5 +603,19 @@
     "Please select a feed!": "Lütfen bir yem seçiniz!",
     "Please enter a feed amount!": "Lütfen bir yem miktarı giriniz!",
     "Please enter a positive number!": "Lütfen pozitif bir sayı giriniz!",
-    "Description cannot exceed 255 characters!": "Açıklama 255 karakteri geçemez!"
+    "Description cannot exceed 255 characters!": "Açıklama 255 karakteri geçemez!",
+    "Consumption record added successfully!": "Tüketim kaydı başarıyla eklendi!",
+    "Stock Chart of the Selected Product" : "Seçili Ürünün Stok Grafiği",
+    "Related Goods Acceptance": "İlişkili Mal Kabul",
+    "Order": "Sipariş",
+    "Manuel Accept Selected Product": "Seçili Ürün Manuel Kabul",
+    "Resson Selection": "Sebep Seçimi",
+    "Amount (kg)": "Miktar (kg)",
+    "Manuel Entry": "Manuel Giriş",
+    "Please select a reason!": "Lütfen bir sebep seçiniz!",
+    "Acceptance record added successfully!": "Kabul kaydı başarıyla eklendi!",
+    "Order (Delivery)": "Sipariş (Teslimat)",
+    "Related Goods Dispatch": "İlişkili Mal Sevk",
+    "Manuel Dispatch Selected Product": "Seçili Ürünü Manuel Sevk Et",
+    "Order (Return)": "Sipariş (İade)"
 }

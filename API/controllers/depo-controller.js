@@ -808,6 +808,88 @@ exports.postCiflikYemTuketimAnaliz = async (req, res) => {
     }
 };
 
+exports.postCiflikYemDepoGecmisiAnaliz = async (req, res) => {
+    const { firmaID, yemID, zamanTipi } = req.body;
+  
+    if (!['haftalik','aylik','yillik'].includes(zamanTipi))
+      return res.status(400).json({ error: 'zamanTipi "haftalik" | "aylik" | "yillik" olmalı' });
+    if (!Number.isInteger(firmaID) || !Number.isInteger(yemID))
+      return res.status(400).json({ error: 'firmaID & yemID tam sayı olmalı' });
+  
+    // ───────────────────────────────────────────────
+    // 1) Yalnızca geçmiş için kaç dönem geriye gideceğiz
+    const beforeCount = zamanTipi === 'haftalik' ? 12   // 12 hafta
+                      : zamanTipi === 'aylik'   ? 6    //  6 ay
+                                                 : 3;  //  3 yıl
+    // ───────────────────────────────────────────────
+    // 2) SQL DATEADD birimi, baseDate ve grup kolonu
+    let unit, baseDateSql, zamanGrubuSQL;
+    if (zamanTipi === 'haftalik') {
+      unit         = 'WEEK';
+      baseDateSql  = 'DATEADD(WEEK, DATEDIFF(WEEK, 0, GETDATE()), 0)';   // içindeki haftanın ilk günü
+      zamanGrubuSQL = `
+        CONVERT(NVARCHAR(4), YEAR(h.periyotDate))
+        + '-' +
+        RIGHT('0' + CAST(DATEPART(ISO_WEEK, h.periyotDate) AS NVARCHAR(2)), 2)
+      `;
+    } else if (zamanTipi === 'aylik') {
+      unit         = 'MONTH';
+      baseDateSql  = "CONVERT(date, DATEADD(MONTH, DATEDIFF(MONTH, 0, GETDATE()), 0))";
+      zamanGrubuSQL = `FORMAT(h.periyotDate, 'yyyy-MM')`;
+    } else { // yillik
+      unit         = 'YEAR';
+      baseDateSql  = "CONVERT(date, DATEFROMPARTS(YEAR(GETDATE()),1,1))";
+      zamanGrubuSQL = `FORMAT(h.periyotDate, 'yyyy')`;
+    }
+  
+    // ───────────────────────────────────────────────
+    // 3) Dinamik SQL – sadece geçmiş veri
+    const query = `
+      USE laktasens;
+      DECLARE
+        @firmaID  INT   = ${firmaID},
+        @yemID    INT   = ${yemID},
+        @before   INT   = ${beforeCount},
+        @baseDate DATE  = ${baseDateSql};
+  
+        ;WITH Historical AS (
+        SELECT
+            DATEADD(${unit},
+                    DATEDIFF(${unit}, 0, l.islemTarihi), 0)      AS periyotDate,
+            SUM(CASE WHEN l.islemTipi='g' THEN  l.miktarKg
+                    WHEN l.islemTipi='c' THEN -l.miktarKg END)  AS deltaStock
+        FROM FirmaDepoLog l
+        WHERE l.firmaID  = @firmaID
+            AND l.yemID    = @yemID
+            AND l.islemTarihi >= DATEADD(${unit}, -@before, @baseDate)   -- geçmiş limit
+            AND l.islemTarihi <  DATEADD(${unit}, 1, @baseDate)          -- BUGÜN dâhil
+        GROUP BY DATEADD(${unit},
+                        DATEDIFF(${unit}, 0, l.islemTarihi), 0)
+        )
+      SELECT
+        y.yemAdi,
+        ${zamanGrubuSQL}                                          AS zamanGrubu,
+        SUM(h.deltaStock) OVER (
+            ORDER BY h.periyotDate
+            ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+        )                                                         AS depoStok
+      FROM Historical h
+      CROSS JOIN YemMaddeleri y
+      WHERE y.yemID = @yemID
+      ORDER BY h.periyotDate;
+    `;
+  
+    try {
+      const pool    = await poolPromise;
+      const request = pool.request();
+      const { recordset } = await request.query(query);
+      return res.json(recordset);   // ← sadece geçmiş stok çıktısı
+    } catch (err) {
+      console.error('postCiflikYemTuketimAnaliz error:', err);
+      return res.status(500).json({ error: 'Internal server error' });
+    }
+  };  
+
 exports.postSevkKayidiEkle = async (req, res) => {
     const {
       firmaID,
@@ -851,5 +933,5 @@ exports.postSevkKayidiEkle = async (req, res) => {
       console.error('SQL Hatası:', err);
       res.status(500).json({ error: 'Sunucu hatası', details: err.message });
     }
-  };
+};
   

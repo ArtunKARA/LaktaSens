@@ -52,27 +52,6 @@ const TuketimKayit = () => {
     const isDark = useSelector((state: IRootState) => state.themeConfig.theme === 'dark' || state.themeConfig.isDarkMode);
     const [selectedFeed, setSelectedFeed] = useState<string | null>('');
 
-    const bilinmeyenSave = async () => {
-        try {
-            const response = await axios.post('http://localhost:3030/api/inekEkle/postBilinmeyenTarih', {
-                ad: name,
-                irk: 'breed',
-                kilo: 'weight',
-                dogumTarih: 'birthDate',
-                sutDongusu: 'milkCycle',
-                yavrulamaDongusu: 'calvingCycle',
-                firmaID: userInfo.firmaID,
-            });
-
-            console.log(response.data);
-            alert(t('Saved successfully!'));
-            navigate('/cifci/dashboard');
-        } catch (error) {
-            console.error(error);
-            alert(t('An error occurred while saving!') + error);
-        }
-    };
-
     useEffect(() => {
         // API'yi çağırma
         const fetchData = async () => {
@@ -305,7 +284,7 @@ const TuketimKayit = () => {
             console.log(response.data);
             toast.fire({
                 icon: 'success',
-                title: 'Başvuru Başarı İle Alıdı',
+                title: t('Consumption record added successfully!'),
                 padding: '10px 20px',
             });
             window.location.reload();

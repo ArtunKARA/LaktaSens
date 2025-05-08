@@ -38,6 +38,7 @@ import IconArchive from '../Icon/IconArchive';
 import IconMinusCircle from '../Icon/IconMinusCircle';
 import IconHelpCircle from '../Icon/IconHelpCircle';
 import IconDollarSignCircle from '../Icon/IconDollarSignCircle';
+import IconShoppingCart from '../Icon/IconShoppingCart';
 
 const Sidebar = () => {
     const [currentMenu, setCurrentMenu] = useState<string>('');
@@ -207,7 +208,7 @@ const Sidebar = () => {
                                     </AnimateHeight>
                                 </li>
                                 <li className="nav-item">
-                                    <NavLink to="/" className="group">
+                                    <NavLink to="/cifci/MalKabul" className="group">
                                         <div className="flex items-center">
                                             <IconFolderMinus className="group-hover:!text-primary shrink-0" />
                                             <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Goods Receipt')}</span>
@@ -223,7 +224,7 @@ const Sidebar = () => {
                                     </NavLink>
                                 </li>
                                 <li className="nav-item">
-                                    <NavLink to="/" className="group">
+                                    <NavLink to="/cifci/Sevk" className="group">
                                         <div className="flex items-center">
                                             <IconFolderPlus className="group-hover:!text-primary shrink-0" />
                                             <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Dispatch')}</span>
@@ -286,7 +287,7 @@ const Sidebar = () => {
                                 <li className="nav-item">
                                     <NavLink to="/" className="group">
                                         <div className="flex items-center">
-                                            <IconDollarSignCircle className="group-hover:!text-primary shrink-0" />
+                                            <IconShoppingCart className="group-hover:!text-primary shrink-0" />
                                             <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Start a Order')}</span>
                                         </div>
                                     </NavLink>
