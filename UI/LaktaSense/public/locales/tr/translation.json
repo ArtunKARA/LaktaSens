@@ -592,5 +592,16 @@
     "Goods Acceptance Distribution Ratio": "Mal Kabul Dağılım Oranı",
     "Goods Dispatch Graph": "Mal Sevk Grafiği",
     "Goods Dispatch Distribution Ratio": "Mal Sevk Dağılım Oranı",
-    "Goods Dispatch Logs": "Mal Sevk Kayıtları"
+    "Goods Dispatch Logs": "Mal Sevk Kayıtları",
+    "Start a Order": "Sipariş Başlat",
+    "Order Tracking": "Sipariş Takibi",
+    "Consumption Chart of the Selected Product and Forecast Based on Average Consumption":"Seçili Ürünün Tüketim Grafiği ve Ortalama Tüketime Dayalı Tahmin",
+    "Feed Selection": "Yem Seçimi",
+    "Warehouse Stock":" Ambar Stoku",
+    "Consumption": "Tüketim",
+    "Consumption (kg)": "Tüketim (kg)",
+    "Please select a feed!": "Lütfen bir yem seçiniz!",
+    "Please enter a feed amount!": "Lütfen bir yem miktarı giriniz!",
+    "Please enter a positive number!": "Lütfen pozitif bir sayı giriniz!",
+    "Description cannot exceed 255 characters!": "Açıklama 255 karakteri geçemez!"
 }

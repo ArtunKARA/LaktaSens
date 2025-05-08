@@ -37,6 +37,7 @@ import IconFolderPlus from '../Icon/IconFolderPlus';
 import IconArchive from '../Icon/IconArchive';
 import IconMinusCircle from '../Icon/IconMinusCircle';
 import IconHelpCircle from '../Icon/IconHelpCircle';
+import IconDollarSignCircle from '../Icon/IconDollarSignCircle';
 
 const Sidebar = () => {
     const [currentMenu, setCurrentMenu] = useState<string>('');
@@ -214,7 +215,7 @@ const Sidebar = () => {
                                     </NavLink>
                                 </li>
                                 <li className="nav-item">
-                                    <NavLink to="/" className="group">
+                                    <NavLink to="/cifci/TuketimKaydi" className="group">
                                         <div className="flex items-center">
                                             <IconMinusCircle className="group-hover:!text-primary shrink-0" />
                                             <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Consumption Record')}</span>
@@ -274,34 +275,29 @@ const Sidebar = () => {
                                         </div>
                                     </NavLink>
                                 </li>
-                                <li className="menu nav-item">
-                                    <button type="button" className={`${currentMenu === t('Tender Tracking') ? 'active' : ''} nav-link group w-full`} onClick={() => toggleMenu(t('Tender Tracking'))}>
+                                <li className="nav-item">
+                                    <NavLink to="/" className="group">
                                         <div className="flex items-center">
                                             <IconMenuDashboard className="group-hover:!text-primary shrink-0" />
                                             <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Tender Tracking')}</span>
                                         </div>
-
-                                        <div className={currentMenu !== t('Tender Tracking') ? 'rtl:rotate-90 -rotate-90' : ''}>
-                                            <IconCaretDown />
+                                    </NavLink>
+                                </li>
+                                <li className="nav-item">
+                                    <NavLink to="/" className="group">
+                                        <div className="flex items-center">
+                                            <IconDollarSignCircle className="group-hover:!text-primary shrink-0" />
+                                            <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Start a Order')}</span>
                                         </div>
-                                    </button>
-
-                                    <AnimateHeight duration={300} height={currentMenu === t('Tender Tracking') ? 'auto' : 0}>
-                                        <ul className="sub-menu text-gray-500">
-                                            <li>
-                                                <NavLink to="/">{t('Stock')}</NavLink>
-                                            </li>
-                                            <li>
-                                                <NavLink to="/">{t('Consumption History')}</NavLink>
-                                            </li>
-                                            <li>
-                                                <NavLink to="/">{t('Goods Acceptance History')}</NavLink>
-                                            </li>
-                                            <li>
-                                                <NavLink to="/">{t('Goods Dispatch History')}</NavLink>
-                                            </li>
-                                        </ul>
-                                    </AnimateHeight>
+                                    </NavLink>
+                                </li>
+                                <li className="nav-item">
+                                    <NavLink to="/" className="group">
+                                        <div className="flex items-center">
+                                            <IconMenuForms className="group-hover:!text-primary shrink-0" />
+                                            <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Order Tracking')}</span>
+                                        </div>
+                                    </NavLink>
                                 </li>
                                 <h2 className="py-3 px-7 flex items-center uppercase font-extrabold bg-white-light/30 dark:bg-dark dark:bg-opacity-[0.08] -mx-4 mb-1">
                                     <IconMinus className="w-4 h-5 flex-none hidden" />

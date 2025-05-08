@@ -84,9 +84,9 @@ exports.postStokListesi = async (req, res) => {
         console.error('Stok listesi alınamadı:', error);
         return res.status(500).json({ error: 'Internal server error' });
     }
-  };
+};
   
-  exports.postTuketimListesi = async (req, res) => {
+exports.postTuketimListesi = async (req, res) => {
     const { firmaID } = req.body; // Body'den firma ve islem nedeni ID alıyoruz
 
     try {
@@ -474,7 +474,6 @@ exports.postMalKabulToplamGrafik = async (req, res) => {
     }
 };
 
-
 exports.postSevkListesi = async (req, res) => {
     const { firmaID } = req.body; // Body'den firma ve islem nedeni ID alıyoruz
 
@@ -673,3 +672,184 @@ exports.postSevkToplamGrafik = async (req, res) => {
         return res.status(500).json({ error: 'Internal server error' });
     }
 };
+
+exports.postCiflikYemTuketimAnaliz = async (req, res) => {
+    const { firmaID, yemID, zamanTipi } = req.body;
+  
+    if (!['haftalik','aylik','yillik'].includes(zamanTipi))
+      return res.status(400).json({ error: 'zamanTipi "haftalik" | "aylik" | "yillik" olmalı' });
+    if (!Number.isInteger(firmaID) || !Number.isInteger(yemID))
+      return res.status(400).json({ error: 'firmaID & yemID tam sayı olmalı' });
+  
+    // 1) Geri / ileri aralık
+    const beforeCount = zamanTipi === 'haftalik' ? 12
+                      : zamanTipi === 'aylik'   ? 6
+                                                 : 3;
+    const afterCount = beforeCount;
+  
+    // 2) SQL DATEADD birimi ve baseDate ifadesi
+    let unit, baseDateSql, formatString;
+    if (zamanTipi === 'haftalik') {
+        unit = 'WEEK';
+        baseDateSql = 'DATEADD(WEEK, DATEDIFF(WEEK, 0, GETDATE()), 0)';
+      
+        // <<< tek satırda: FORMAT() yerine kendi SQL parçanızı oluşturun >>>
+        zamanGrubuSQL = `
+          CONVERT(NVARCHAR(4), YEAR(c.periyotDate))
+          + '-' +
+          RIGHT(
+            '0' + CAST(DATEPART(ISO_WEEK, c.periyotDate) AS NVARCHAR(2)),
+            2
+          )
+        `;
+    }else if (zamanTipi === 'aylik') {
+        unit         = 'MONTH';
+        baseDateSql  = "CONVERT(date, DATEADD(MONTH, DATEDIFF(MONTH, 0, GETDATE()), 0))";
+        zamanGrubuSQL = `FORMAT(c.periyotDate, 'yyyy-MM')`;
+    }
+    else { // yillik
+        unit         = 'YEAR';
+        baseDateSql  = "CONVERT(date, DATEFROMPARTS(YEAR(GETDATE()),1,1))";
+        zamanGrubuSQL = `FORMAT(c.periyotDate, 'yyyy')`;
+    }
+  
+    // 3) Dinamik SQL
+    const query = `
+      USE laktasens;
+      DECLARE
+        @firmaID  INT   = ${firmaID},
+        @yemID    INT   = ${yemID},
+        @before   INT   = ${beforeCount},
+        @after    INT   = ${afterCount},
+        @baseDate DATE  = ${baseDateSql};
+  
+      ;WITH
+      Seq AS (
+        SELECT TOP (@before + @after + 1)
+          ROW_NUMBER() OVER (ORDER BY (SELECT NULL)) - (@before + 1) AS idx
+        FROM sys.all_objects
+      ),
+      Takvim AS (
+        SELECT
+          idx,
+          DATEADD(${unit}, idx, @baseDate) AS periyotDate,
+          CASE WHEN idx > 0 THEN 1 ELSE 0 END    AS isFuture
+        FROM Seq
+      ),
+      Historical AS (
+        SELECT
+          DATEADD(${unit},
+                  DATEDIFF(${unit}, 0, l.islemTarihi),
+                  0)                              AS periyotDate,
+          SUM(CASE WHEN l.islemTipi='c' AND l.islemNedeniID=8
+                   THEN l.miktarKg END)         AS tuketimKg,
+          SUM(CASE WHEN l.islemTipi='g' THEN l.miktarKg
+                   WHEN l.islemTipi='c' THEN -l.miktarKg END)
+                                            AS deltaStock
+        FROM FirmaDepoLog l
+        WHERE l.firmaID     = @firmaID
+          AND l.yemID       = @yemID
+          AND l.islemTarihi >= DATEADD(${unit}, -@before, @baseDate)
+          AND l.islemTarihi <  DATEADD(${unit},  1, @baseDate)
+        GROUP BY DATEADD(${unit},
+                         DATEDIFF(${unit}, 0, l.islemTarihi),
+                         0)
+      ),
+      AvgCons AS (
+        SELECT AVG(tuketimKg * 1.0) AS avgTuketim
+        FROM Historical
+      ),
+      Forecast AS (
+        SELECT
+          t.periyotDate,
+          ac.avgTuketim   AS tuketimKg,
+          -ac.avgTuketim  AS deltaStock
+        FROM Takvim t
+        CROSS JOIN AvgCons ac
+        WHERE t.isFuture = 1
+      ),
+      Combined AS (
+        SELECT
+          t.idx,
+          t.periyotDate,
+          COALESCE(h.tuketimKg, f.tuketimKg, 0)    AS tuketimKg,
+          COALESCE(h.deltaStock, f.deltaStock, 0)  AS deltaStock
+        FROM Takvim t
+        LEFT JOIN Historical h
+          ON h.periyotDate = t.periyotDate
+         AND t.isFuture    = 0
+        LEFT JOIN Forecast f
+          ON f.periyotDate = t.periyotDate
+         AND t.isFuture    = 1
+      )
+  
+      SELECT
+        y.yemAdi,
+        ${zamanGrubuSQL} AS zamanGrubu,
+        c.tuketimKg,
+        SUM(c.deltaStock) OVER (
+          ORDER BY c.idx
+          ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+        ) AS depoStok
+      FROM Combined c
+      CROSS JOIN YemMaddeleri y
+      WHERE y.yemID = @yemID
+      ORDER BY c.idx;
+    `;
+  
+    try {
+      const pool    = await poolPromise;
+      const request = pool.request();
+      const { recordset } = await request.query(query);
+      return res.json(recordset);
+    } catch (err) {
+      console.error('postCiflikYemTuketimAnaliz error:', err);
+      return res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
+exports.postSevkKayidiEkle = async (req, res) => {
+    const {
+      firmaID,
+      yemID,
+      miktarKg,
+      kullaniciID,
+      aciklama,
+      islemNedeniID
+    } = req.body;
+
+    // Gerekli parametre kontrolü
+    if (
+      firmaID == null ||
+      yemID == null ||
+      miktarKg == null ||
+      kullaniciID == null ||
+      islemNedeniID == null
+    ) {
+      return res.status(400).json({ error: 'Eksik parametre' });
+    }
+  
+    try {
+      const pool = await poolPromise;
+      const request = pool.request();
+  
+      request.input('firmaID', sql.Int, firmaID);
+      request.input('yemID', sql.Int, yemID);
+      request.input('miktarKg', sql.Decimal(18, 2), miktarKg);
+      request.input('kullaniciID', sql.Int, kullaniciID);
+      request.input('aciklama', sql.NVarChar(250), aciklama || '');
+      request.input('islemNedeniID', sql.Int, islemNedeniID);
+  
+      const result = await request.execute('sp_YemIslemiEkle');
+  
+      res.json({
+        success: true,
+        recordset: result.recordset,
+        returnValue: result.returnValue
+      });
+    } catch (err) {
+      console.error('SQL Hatası:', err);
+      res.status(500).json({ error: 'Sunucu hatası', details: err.message });
+    }
+  };
+  

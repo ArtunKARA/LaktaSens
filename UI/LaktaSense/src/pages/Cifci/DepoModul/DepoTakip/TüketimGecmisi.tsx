@@ -24,6 +24,7 @@ import IconMail from '../../../../components/Icon/IconMail';
 import IconChecks from '../../../../components/Icon/IconChecks';
 import IconServer from '../../../../components/Icon/IconServer';
 import IconFile from '../../../../components/Icon/IconFile';
+import { colors } from 'react-select/dist/declarations/src/theme';
 
 interface FeedData {
     logID: string;
@@ -292,7 +293,7 @@ const MultipleTables = () => {
                 });
                 const data = await response.json();
                 setDagilimData(data);
-                console.log('Gelen veri:', data);
+                console.log('Gelen verid:', data);
             } catch (error) {
                 console.error('API çağrısı sırasında bir hata oluştu:', error);
             }
@@ -302,7 +303,7 @@ const MultipleTables = () => {
     }, [zamanTipiDagilim]);
 
     const pieChartDagilim: any = {
-        series: dagilimData.map((item) => item.toplamTuketimKg),
+        series: dagilimData.length > 0 ? dagilimData?.map((item) => item.toplamTuketimKg) : [1],
         options: {
             chart: {
                 height: 300,
@@ -314,13 +315,16 @@ const MultipleTables = () => {
                     show: false,
                 },
             },
-            labels: dagilimData.map((item) => item.yemAdi),
-            colors: dagilimData.map(
-                () =>
-                    `#${Math.floor(Math.random() * 16777215)
-                        .toString(16)
-                        .padStart(6, '0')}`
-            ),
+            labels: dagilimData.length > 0 ? dagilimData.map((item) => item.yemAdi) : ['No Data'],
+            colors:
+                dagilimData.length > 0
+                    ? dagilimData.map(
+                          () =>
+                              `#${Math.floor(Math.random() * 16777215)
+                                  .toString(16)
+                                  .padStart(6, '0')}`
+                      )
+                    : ['#e0e6ed'],
             responsive: [
                 {
                     breakpoint: 480,
