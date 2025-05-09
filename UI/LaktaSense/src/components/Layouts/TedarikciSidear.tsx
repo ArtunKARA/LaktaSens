@@ -185,7 +185,7 @@ const TedarikciSidear = () => {
                                 <span>{t('Warehouse')}</span>
                             </h2>
                             <li className="nav-item">
-                                <NavLink to="/" className="group">
+                                <NavLink to="/tedarikci/MalKabul" className="group">
                                     <div className="flex items-center">
                                         <IconFolderMinus className="group-hover:!text-primary shrink-0" />
                                         <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Goods Receipt')}</span>
@@ -193,7 +193,7 @@ const TedarikciSidear = () => {
                                 </NavLink>
                             </li>
                             <li className="nav-item">
-                                <NavLink to="/" className="group">
+                                <NavLink to="/tedarikci/Sevk" className="group">
                                     <div className="flex items-center">
                                         <IconFolderPlus className="group-hover:!text-primary shrink-0" />
                                         <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Dispatch')}</span>

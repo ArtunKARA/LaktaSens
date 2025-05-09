@@ -147,10 +147,12 @@ const TuketimKayit = () => {
         // this ensures the portal’ed menu sits above everything else
         menuPortal: (base) => ({ ...base, zIndex: 9999 }),
     };
-    const UnitSelect = ({ field, form, options }: { field: any; form: any; options: OptionType[] }) => {
+    const UnitSelect = ({ field, form, options, cmbName }: { field: any; form: any; options: OptionType[]; cmbName: String }) => {
         const handleChange = (selectedOption: SingleValue<OptionType> | null) => {
             form.setFieldValue(field.name, selectedOption ? selectedOption.value : '');
-            setSelectedFeed(selectedOption ? selectedOption.value : '');
+            if (cmbName && cmbName == 'yem') {
+                setSelectedFeed(selectedOption ? selectedOption.value : '');
+            }
         };
 
         return (
@@ -380,7 +382,7 @@ const TuketimKayit = () => {
                                         <div className="flex items-center">
                                             <div className="flex-1">
                                                 <label htmlFor="yemID">{t('Feed Selection')}</label>
-                                                <Field name="yemID" component={UnitSelect} options={unitOpitons} />
+                                                <Field name="yemID" component={UnitSelect} options={unitOpitons} cmbName="yem" />
                                                 {submitCount ? (
                                                     errors.yemID ? (
                                                         <div className="text-danger mt-1">{errors.yemID}</div>
