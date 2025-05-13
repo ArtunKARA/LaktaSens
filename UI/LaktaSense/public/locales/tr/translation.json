@@ -618,5 +618,15 @@
     "Related Goods Dispatch": "İlişkili Mal Sevk",
     "Manuel Dispatch Selected Product": "Seçili Ürünü Manuel Sevk Et",
     "Order (Return)": "Sipariş (İade)",
-    "Order (Return Acceptance)": "Sipariş (İade Kabul)"
+    "Order (Return Acceptance)": "Sipariş (İade Kabul)",
+    "Warehouse Stock Chart": "Ambar Stok Grafiği",
+    "Product Defination": "Ürün Tanımı",
+    "General Feed Definition": "Genel Yem Tanımı",
+    "Give Order": "Sipariş Ver",
+    "Feed Stock Analysis": "Yem Stok Analizi",
+    "Feed Consumption And Need Analysis": "Yem Tüketim ve İhtiyaç Analizi",
+    "Movement Type": "Hareket Türü",
+    "Movement Logs": "Hareket Kayıtları",
+    "Operation Date": "İşlem Tarihi",
+    "Stock Movements": "Stok Hareketleri"
 }

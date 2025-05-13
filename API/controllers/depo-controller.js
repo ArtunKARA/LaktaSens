@@ -888,7 +888,7 @@ exports.postCiflikYemDepoGecmisiAnaliz = async (req, res) => {
       console.error('postCiflikYemTuketimAnaliz error:', err);
       return res.status(500).json({ error: 'Internal server error' });
     }
-  };  
+};  
 
 exports.postSevkKayidiEkle = async (req, res) => {
     const {
@@ -934,4 +934,211 @@ exports.postSevkKayidiEkle = async (req, res) => {
       res.status(500).json({ error: 'Sunucu hatası', details: err.message });
     }
 };
+
+exports.postCiflikYemDepoGecmisi = async (req, res) => {
+    const { firmaID, islemNedeniID, yemID } = req.body;
+
+    try {
+        const pool = await poolPromise;
+        const request = pool.request();
+
+        let query = `
+            SELECT 
+                l.logID,
+                l.firmaID,
+                f.firmaAdi,
+                l.yemID,
+                y.yemAdi,
+                l.miktarKg,
+                l.islemTarihi,
+                l.aciklama,
+                n.nedenAdi,
+                l.islemNedeniID,
+                k.isim + ' ' + k.soyisim AS kullaniciAdi
+            FROM FirmaDepoLog l
+            INNER JOIN IslemNedenleri n ON l.islemNedeniID = n.islemNedeniID
+            INNER JOIN firmalar f ON l.firmaID = f.firmaID
+            INNER JOIN YemMaddeleri y ON l.yemID = y.yemID
+            INNER JOIN kullanicilar k ON l.kullaniciID = k.kullaniciID
+        `;
+
+        if (firmaID) {
+            query += ` WHERE l.firmaID = @firmaID`;
+            request.input('firmaID', firmaID);
+        }
+        
+        if (Array.isArray(islemNedeniID) && islemNedeniID.length > 0) {
+            // Dinamik IN listesi
+            const ids = islemNedeniID.map((_, idx) => `@id${idx}`).join(', ');
+            query += ` AND l.islemNedeniID IN (${ids})`;
+            islemNedeniID.forEach((id, idx) => {
+                request.input(`id${idx}`, id);
+            });
+        } else if (Number.isInteger(islemNedeniID)) {
+            query += ` AND l.islemNedeniID = @islemNedeniID`;
+            request.input('islemNedeniID', islemNedeniID);
+        }
+
+        if (yemID) {
+            query += ` AND l.yemID = @yemID`;
+            request.input('yemID', yemID);
+        }
+
+        query += ` ORDER BY l.islemTarihi DESC`;
+
+        const result = await request.query(query);
+
+        if (result.recordset.length === 0) {
+            return res.status(404).json({ message: 'Tüketim kaydı bulunamadı.' });
+        }
+
+        const formattedResult = result.recordset.map(item => ({
+            ...item,
+            islemTarihi: item.islemTarihi
+                ? new Date(item.islemTarihi).toLocaleString('tr-TR', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                })
+                : null
+        }));
+
+        return res.json(formattedResult);
+    } catch (error) {
+        console.error('Tüketim listesi alınamadı:', error);
+        return res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
+exports.postCiflikYemDepoAnaliz = async (req, res) => {
+    const { firmaID, yemID, zamanTipi } = req.body;
   
+    if (!['haftalik', 'aylik', 'yillik'].includes(zamanTipi))
+      return res.status(400).json({ error: 'zamanTipi "haftalik" | "aylik" | "yillik" olmalı' });
+    if (!Number.isInteger(firmaID) || !Number.isInteger(yemID))
+      return res.status(400).json({ error: 'firmaID & yemID tam sayı olmalı' });
+  
+    /* 1) Sadece geçmişe bakıyoruz ─ ileri aralık = 0  */
+    const beforeCount = zamanTipi === 'haftalik' ? 12
+                      : zamanTipi === 'aylik'   ?  6
+                                                 :  3;
+    const afterCount  = 0;        // <─ tahmin kaldırıldı!
+  
+    /* 2) Zaman parametreleri (aynen) */
+    let unit, baseDateSql, zamanGrubuSQL;
+    if (zamanTipi === 'haftalik') {
+      unit        = 'WEEK';
+      baseDateSql = 'DATEADD(WEEK, DATEDIFF(WEEK, 0, GETDATE()), 0)';
+      zamanGrubuSQL = `
+        CONVERT(NVARCHAR(4), YEAR(c.periyotDate))
+        + '-' +
+        RIGHT('0' + CAST(DATEPART(ISO_WEEK, c.periyotDate) AS NVARCHAR(2)), 2)
+      `;
+    } else if (zamanTipi === 'aylik') {
+      unit        = 'MONTH';
+      baseDateSql = "CONVERT(date, DATEADD(MONTH, DATEDIFF(MONTH, 0, GETDATE()), 0))";
+      zamanGrubuSQL = `FORMAT(c.periyotDate, 'yyyy-MM')`;
+    } else {           /* yillik */
+      unit        = 'YEAR';
+      baseDateSql = "CONVERT(date, DATEFROMPARTS(YEAR(GETDATE()),1,1))";
+      zamanGrubuSQL = `FORMAT(c.periyotDate, 'yyyy')`;
+    }
+  
+    /* 3) Dinamik SQL */
+    const query = `
+      USE laktasens;
+      DECLARE
+        @firmaID  INT  = ${firmaID},
+        @yemID    INT  = ${yemID},
+        @before   INT  = ${beforeCount},
+        @baseDate DATE = ${baseDateSql};
+  
+      ;WITH
+      /* --- Takvim: yalnızca geçmiş dönemleri üretir --- */
+      Seq AS (
+        SELECT TOP (@before + 1)
+          ROW_NUMBER() OVER (ORDER BY (SELECT NULL)) - (@before) AS idx
+        FROM sys.all_objects
+      ),
+      Takvim AS (
+        SELECT
+          idx,
+          DATEADD(${unit}, idx, @baseDate) AS periyotDate
+        FROM Seq
+      ),
+      /* --- Geçmiş hareketler: tüketim + tüm çıkış & giriş --- */
+      Historical AS (
+        SELECT
+          DATEADD(${unit},
+                  DATEDIFF(${unit}, 0, l.islemTarihi),
+                  0)                              AS periyotDate,
+  
+          /* Sadece Nedeni=8 olan çıkışlar => tüketim */
+          SUM(CASE WHEN l.islemTipi = 'c' AND l.islemNedeniID = 8
+                   THEN l.miktarKg END)          AS tuketimKg,
+  
+          /* Tüm çıkışlar */
+          SUM(CASE WHEN l.islemTipi = 'c'
+                   THEN l.miktarKg END)          AS cikisKg,
+  
+          /* Tüm girişler */
+          SUM(CASE WHEN l.islemTipi = 'g'
+                   THEN l.miktarKg END)          AS girisKg,
+  
+          /* Stok değişimi */
+          SUM(CASE WHEN l.islemTipi = 'g' THEN  l.miktarKg
+                   WHEN l.islemTipi = 'c' THEN -l.miktarKg END) AS deltaStock
+        FROM FirmaDepoLog l
+        WHERE l.firmaID     = @firmaID
+          AND l.yemID       = @yemID
+          AND l.islemTarihi >= DATEADD(${unit}, -@before, @baseDate)
+          AND l.islemTarihi <  DATEADD(${unit},  1, @baseDate)
+        GROUP BY DATEADD(${unit},
+                         DATEDIFF(${unit}, 0, l.islemTarihi),
+                         0)
+      ),
+      /* --- Takvim + gerçekleşen veriyi birleştir --- */
+      Combined AS (
+        SELECT
+          t.idx,
+          t.periyotDate,
+          COALESCE(h.tuketimKg, 0) AS tuketimKg,
+          COALESCE(h.cikisKg  , 0) AS cikisKg,
+          COALESCE(h.girisKg  , 0) AS girisKg,
+          COALESCE(h.deltaStock,0) AS deltaStock
+        FROM Takvim t
+        LEFT JOIN Historical h
+          ON h.periyotDate = t.periyotDate
+      )
+  
+      /* --- Sonuç --- */
+      SELECT
+        y.yemAdi,
+        ${zamanGrubuSQL}                       AS zamanGrubu,
+        c.tuketimKg,
+        c.cikisKg,
+        c.girisKg,
+        /* kümülatif depo stok seviyesi */
+        SUM(c.deltaStock) OVER (
+          ORDER BY c.idx
+          ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+        ) AS depoStok
+      FROM Combined c
+      CROSS JOIN YemMaddeleri y
+      WHERE y.yemID = @yemID
+      ORDER BY c.idx;
+    `;
+  
+    try {
+      const pool    = await poolPromise;
+      const request = pool.request();
+      const { recordset } = await request.query(query);
+      return res.json(recordset);
+    } catch (err) {
+      console.error('postCiflikYemTuketimAnaliz error:', err);
+      return res.status(500).json({ error: 'Internal server error' });
+    }
+};

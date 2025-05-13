@@ -19,6 +19,9 @@ const {
     postCiflikYemTuketimAnaliz,
     postCiflikYemDepoGecmisiAnaliz,
     postSevkKayidiEkle,
+    
+    postCiflikYemDepoGecmisi,
+    postCiflikYemDepoAnaliz,
 } = require("../controllers/depo-controller.js");
 
 router.post("/postIslemNedenleri", postIslemNedenleri);
@@ -38,4 +41,7 @@ router.post("/postSevkToplamGrafik", postSevkToplamGrafik);
 router.post("/postCiflikYemTuketimAnaliz", postCiflikYemTuketimAnaliz);
 router.post("/postCiflikYemDepoGecmisiAnaliz", postCiflikYemDepoGecmisiAnaliz);
 router.post("/postSevkKayidiEkle", postSevkKayidiEkle);
+
+router.post("/postCiflikYemDepoGecmisi", postCiflikYemDepoGecmisi);
+router.post("/postCiflikYemDepoAnaliz",postCiflikYemDepoAnaliz)
 module.exports = router;    

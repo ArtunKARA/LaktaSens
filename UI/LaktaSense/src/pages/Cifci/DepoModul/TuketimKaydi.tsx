@@ -50,7 +50,7 @@ const TuketimKayit = () => {
     const [consumData, setConsumData] = useState<AnaData[]>([]);
     const [selectedData, setSelectedData] = useState<DefData | null>(null);
     const isDark = useSelector((state: IRootState) => state.themeConfig.theme === 'dark' || state.themeConfig.isDarkMode);
-    const [selectedFeed, setSelectedFeed] = useState<string | null>('');
+    const [selectedFeed, setSelectedFeed] = useState<string | null>(location.state?.yemID || '');
 
     useEffect(() => {
         // API'yi çağırma
@@ -113,7 +113,7 @@ const TuketimKayit = () => {
         return (
             <Select
                 options={options}
-                value={options ? options.find((option) => option.value === field.value) : null}
+                value={selectedFeed ? options.find((option) => option.value === selectedFeed) : options.find((option) => option.value === field.value) || null}
                 menuPortalTarget={typeof document !== 'undefined' ? document.body : null}
                 menuPosition="fixed"
                 styles={menuStyles}

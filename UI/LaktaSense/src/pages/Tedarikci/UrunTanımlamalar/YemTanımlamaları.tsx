@@ -10,7 +10,7 @@ import 'tippy.js/dist/tippy.css';
 import { Dialog, Transition } from '@headlessui/react';
 import IconX from '../../../components/Icon/IconX';
 import axios from 'axios';
-import {useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { isEmpty, toNumber } from 'lodash';
 import IconPlus from '../../../components/Icon/IconPlus';
 import Swal from 'sweetalert2';
@@ -19,7 +19,6 @@ import IconEdit from '../../../components/Icon/IconEdit';
 import IconTrash from '../../../components/Icon/IconTrash';
 import { Field, Form, Formik } from 'formik';
 import * as Yup from 'yup';
-
 
 interface DefData {
     yemID: string;
@@ -34,7 +33,7 @@ interface OptionType {
     value: string;
     label: string;
 }
-const MultipleTables = () => {
+const YemTanımlamaları = () => {
     const storedUserInfo = localStorage.getItem('userInfo');
     const userInfo = storedUserInfo ? JSON.parse(storedUserInfo) : null;
     const [rowData, setRowData] = useState<DefData[]>([]);
@@ -45,49 +44,50 @@ const MultipleTables = () => {
     useEffect(() => {
         // API'yi çağırma
         const fetchData = async () => {
-          try {
-            const response = await fetch('http://localhost:3030/api/tedarikci/yemYonetim/getYemTanimlari?firmaID='+userInfo.firmaID, {
-              method: 'GET',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-            });
-            const data = await response.json();
-            console.log('Gelen veri:', data);
-            setRowData(data); // Sadece doğrudan kullanılabilecek bir dizi olduğunda kullanı
-          } catch (error) {
-            console.error('API çağrısı sırasında bir hata oluştu:', error);
-          }
+            try {
+                const response = await fetch('http://localhost:3030/api/tedarikci/yemYonetim/getYemTanimlari?firmaID=' + userInfo.firmaID, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+                const data = await response.json();
+                console.log('Gelen veri:', data);
+                setRowData(data); // Sadece doğrudan kullanılabilecek bir dizi olduğunda kullanı
+            } catch (error) {
+                console.error('API çağrısı sırasında bir hata oluştu:', error);
+            }
 
-          axios.get('http://localhost:3030/api/tanimlamalar/birimler/getOlcu')
-          .then(response => {
-              const unitOpitons = response.data.map((option: any) => ({
-                  value: option.birimID,
-                  label: option.birimAdi + "-" + option.aciklama 
-              }));
-              setUnitOptions(unitOpitons);
-              console.log(unitOpitons);
-          })
-          .catch(error => {
-              console.error('Error fetching unit options:', error);
-          });
+            axios
+                .get('http://localhost:3030/api/tanimlamalar/birimler/getOlcu')
+                .then((response) => {
+                    const unitOpitons = response.data.map((option: any) => ({
+                        value: option.birimID,
+                        label: option.birimAdi + '-' + option.aciklama,
+                    }));
+                    setUnitOptions(unitOpitons);
+                    console.log(unitOpitons);
+                })
+                .catch((error) => {
+                    console.error('Error fetching unit options:', error);
+                });
         };
-    
+
         fetchData();
-      }, []); // Boş bağımlılık dizisi, component mount olduğunda sadece bir kez çalıştırılır
-      const menuStyles: StylesConfig<OptionType, false> = {
+    }, []); // Boş bağımlılık dizisi, component mount olduğunda sadece bir kez çalıştırılır
+    const menuStyles: StylesConfig<OptionType, false> = {
         // this ensures the portal’ed menu sits above everything else
-        menuPortal: base => ({ ...base, zIndex: 9999 }),
-      };
-      const UnitSelect = ({ field, form, options }: { field: any; form: any; options: OptionType[] }) => {
+        menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+    };
+    const UnitSelect = ({ field, form, options }: { field: any; form: any; options: OptionType[] }) => {
         const handleChange = (selectedOption: SingleValue<OptionType> | null) => {
             form.setFieldValue(field.name, selectedOption ? selectedOption.value : '');
         };
-    
+
         return (
             <Select
                 options={options}
-                value={options ? options.find(option => option.value === field.value) : null}
+                value={options ? options.find((option) => option.value === field.value) : null}
                 menuPortalTarget={typeof document !== 'undefined' ? document.body : null}
                 menuPosition="fixed"
                 styles={menuStyles}
@@ -99,7 +99,6 @@ const MultipleTables = () => {
         );
     };
 
-      
     const { t } = useTranslation();
     const dispatch = useDispatch();
     useEffect(() => {
@@ -113,11 +112,11 @@ const MultipleTables = () => {
         const sortedData = sortBy(rowData, 'birimID');
         setInitialRecords(sortedData);
     }, [rowData]);
-    
+
     const [recordsData, setRecordsData] = useState(initialRecords);
     const [modalDelete, setModalDelete] = useState(false);
     const [modalAdd, setModalAdd] = useState(false);
-    const [delID,setDelID] = useState('');
+    const [delID, setDelID] = useState('');
     const [search, setSearch] = useState('');
     const [sortStatus, setSortStatus] = useState<DataTableSortStatus>({
         columnAccessor: 'birimID',
@@ -156,7 +155,7 @@ const MultipleTables = () => {
 
     const navigate = useNavigate();
     //-----------Veriyi burdan ekleniyor-----------
-    const Add = async (data:DefData) => {
+    const Add = async (data: DefData) => {
         const toast = Swal.mixin({
             toast: true,
             position: 'top',
@@ -164,25 +163,25 @@ const MultipleTables = () => {
             timer: 3000,
         });
         try {
-          const response = await axios.post("", {
-            yemAdi: data.yemAdi
-          });
-    
-          console.log(response.data);
-          toast.fire({
-            icon: 'success',
-            title: 'Veri Başarı İle Eklendi',
-            padding: '10px 20px',
-        });
-          setModalAdd(false); // Modalı kapat.
-          window.location.reload();
+            const response = await axios.post('', {
+                yemAdi: data.yemAdi,
+            });
+
+            console.log(response.data);
+            toast.fire({
+                icon: 'success',
+                title: 'Veri Başarı İle Eklendi',
+                padding: '10px 20px',
+            });
+            setModalAdd(false); // Modalı kapat.
+            window.location.reload();
         } catch (error) {
-          console.error(error);
-          alert(t("An error occurred while saving!")+ error);
+            console.error(error);
+            alert(t('An error occurred while saving!') + error);
         }
-      };
+    };
     //-----------Veriyi burdan silme-----------
-    const Delete = async (ID:string) => {
+    const Delete = async (ID: string) => {
         const toast = Swal.mixin({
             toast: true,
             position: 'top',
@@ -190,52 +189,50 @@ const MultipleTables = () => {
             timer: 3000,
         });
         try {
-          const response = await axios.post("http://localhost:3030/api/tedarikci/yemYonetim/postYemTanimlariSil", {
-            yemID: ID
-          });
-    
-          console.log(response.data);
-          toast.fire({
-            icon: 'success',
-            title: 'Veri Başarı İle Silindi',
-            padding: '10px 20px',
-        });
-          setModalDelete(false); // Modalı kapat.
-          window.location.reload();
+            const response = await axios.post('http://localhost:3030/api/tedarikci/yemYonetim/postYemTanimlariSil', {
+                yemID: ID,
+            });
+
+            console.log(response.data);
+            toast.fire({
+                icon: 'success',
+                title: 'Veri Başarı İle Silindi',
+                padding: '10px 20px',
+            });
+            setModalDelete(false); // Modalı kapat.
+            window.location.reload();
         } catch (error) {
-          console.error(error);
-          alert(t("An error occurred while saving!")+ error);
-          alert(ID);
+            console.error(error);
+            alert(t('An error occurred while saving!') + error);
+            alert(ID);
         }
-      };
+    };
 
     const submitDataFormValidation = Yup.object().shape({
-        tipID:  Yup.string(),
+        tipID: Yup.string(),
         tipAdi: Yup.string().required(t('Please Fill In')),
         birimID: Yup.string().required(t('Please Fill In')),
     });
-    
+
     //-----------Detaylar Yada Ekele-----------
     const handleStandartYemlerDetay = (id?: string | number) => {
         if (id !== undefined) {
-          navigate('/tedarikci/tanımlamalar/yemDetay', { state: { yemID: id } });
+            navigate('/tedarikci/tanımlamalar/yemDetay', { state: { yemID: id } });
         } else {
-          navigate('/tedarikci/tanımlamalar/yemDetay');
-        }
-      };
-
-    
-    const statusColor = (durum : String) => {
-        const color = ['primary', 'secondary', 'success', 'danger', 'warning', 'info'];
-        if(durum == "Aktif"){
-            return color[2]
-        }else if(durum == "Pasif"){
-            return color[3]
-        }else if(durum == "Beklemede"){
-            return color[4]
+            navigate('/tedarikci/tanımlamalar/yemDetay');
         }
     };
-    
+
+    const statusColor = (durum: String) => {
+        const color = ['primary', 'secondary', 'success', 'danger', 'warning', 'info'];
+        if (durum == 'Aktif') {
+            return color[2];
+        } else if (durum == 'Pasif') {
+            return color[3];
+        } else if (durum == 'Beklemede') {
+            return color[4];
+        }
+    };
 
     return (
         <div>
@@ -260,12 +257,12 @@ const MultipleTables = () => {
                             {
                                 accessor: 'yemID',
                                 title: t('ID'),
-                                sortable: true
+                                sortable: true,
                             },
                             {
                                 accessor: 'yemAdi',
                                 title: t('Feed Name'),
-                                sortable: true
+                                sortable: true,
                             },
                             {
                                 accessor: 'durum',
@@ -276,83 +273,79 @@ const MultipleTables = () => {
                             {
                                 accessor: 'yemAciklama',
                                 title: t('Company Special Feed Definitions Description'),
-                                sortable: true
+                                sortable: true,
                             },
                             {
                                 accessor: 'Edit',
                                 title: t('Edit'),
-                                render: ({yemID}) => (
+                                render: ({ yemID }) => (
                                     <div className="flex items-center w-max mx-auto gap-2 rounded-full">
                                         <Tippy content="Edit">
-                                            <button type="button"
-                                            onClick={() => {                                              
-                                              setSelectedData({
-                                                yemID: yemID
-                                              });
-                                              handleStandartYemlerDetay(yemID);
-                                              }}>
+                                            <button
+                                                type="button"
+                                                onClick={() => {
+                                                    setSelectedData({
+                                                        yemID: yemID,
+                                                    });
+                                                    handleStandartYemlerDetay(yemID);
+                                                }}
+                                            >
                                                 <IconEdit />
                                             </button>
                                         </Tippy>
-                                </div>
+                                    </div>
                                 ),
                             },
                             {
                                 accessor: 'Delete',
                                 title: t('Delete'),
-                                render: ({yemID}) => (
+                                render: ({ yemID }) => (
                                     <div className="flex items-center w-max mx-auto gap-2 rounded-full">
                                         <Tippy content="Delete">
-                                            <button type="button"
-                                            onClick={() => {                                              
-                                            setModalDelete(true)
-                                            setDelID(yemID);
-                                            }}>
+                                            <button
+                                                type="button"
+                                                onClick={() => {
+                                                    setModalDelete(true);
+                                                    setDelID(yemID);
+                                                }}
+                                            >
                                                 <IconTrash />
                                             </button>
                                         </Tippy>
-                                      <Transition appear show={modalDelete} as={Fragment}>
-                                      <Dialog as="div" open={modalDelete} onClose={() => setModalDelete(false)}>
-                                        <div className="fixed inset-0 z-10 overflow-y-auto bg-[black]/10">
-                                          <div className="flex min-h-screen items-center justify-center px-4">
-                                            <Dialog.Panel className="panel my-8 w-full max-w-sm overflow-hidden rounded-lg py-1 px-4 text-black dark:text-white-dark">
-                                              <div className="flex items-center justify-between p-5">
-                                                <h5>{t('Delete')}</h5>
-                                                <button
-                                                  type="button"
-                                                  onClick={() => setModalDelete(false)}
-                                                  className="text-white-dark hover:text-dark"
-                                                >
-                                                  <IconX className="w-5 h-5" />
-                                                </button>
-                                              </div>
-                                              <div className="p-5">
-                                                <form className="space-y-2">
-                                                  <div className="relative mb-4">
-                                                    <p>{t('Are you sure you want to delete this data?')}</p>
-                                                  </div>
-                                                  <button
-                                                    type="button"
-                                                    onClick={() => Delete(delID)} // Kaydetme fonksiyonu çağrısı
-                                                    className="btn btn-danger w-full"
-                                                  >
-                                                    {t("Delete")}
-                                                  </button>
-                                                  <button
-                                                        type="button"
-                                                        onClick={() => setModalDelete(false)}
-                                                        className="btn btn-warning w-full"
-                                                      >
-                                                      {t("Cancel")}
-                                                  </button>
-                                                </form>
-                                              </div>
-                                            </Dialog.Panel>
-                                          </div>
-                                        </div>
-                                      </Dialog>
-                                    </Transition>
-                                </div>
+                                        <Transition appear show={modalDelete} as={Fragment}>
+                                            <Dialog as="div" open={modalDelete} onClose={() => setModalDelete(false)}>
+                                                <div className="fixed inset-0 z-10 overflow-y-auto bg-[black]/10">
+                                                    <div className="flex min-h-screen items-center justify-center px-4">
+                                                        <Dialog.Panel className="panel my-8 w-full max-w-sm overflow-hidden rounded-lg py-1 px-4 text-black dark:text-white-dark">
+                                                            <div className="flex items-center justify-between p-5">
+                                                                <h5>{t('Delete')}</h5>
+                                                                <button type="button" onClick={() => setModalDelete(false)} className="text-white-dark hover:text-dark">
+                                                                    <IconX className="w-5 h-5" />
+                                                                </button>
+                                                            </div>
+                                                            <div className="p-5">
+                                                                <form className="space-y-2">
+                                                                    <div className="relative mb-4">
+                                                                        <p>{t('Are you sure you want to delete this data?')}</p>
+                                                                    </div>
+                                                                    <button
+                                                                        type="button"
+                                                                        onClick={() => Delete(delID)} // Kaydetme fonksiyonu çağrısı
+                                                                        className="btn btn-danger w-full"
+                                                                    >
+                                                                        {t('Delete')}
+                                                                    </button>
+                                                                    <button type="button" onClick={() => setModalDelete(false)} className="btn btn-warning w-full">
+                                                                        {t('Cancel')}
+                                                                    </button>
+                                                                </form>
+                                                            </div>
+                                                        </Dialog.Panel>
+                                                    </div>
+                                                </div>
+                                            </Dialog>
+                                        </Transition>
+                                    </div>
                                 ),
                             },
                         ]}
@@ -373,5 +366,4 @@ const MultipleTables = () => {
     );
 };
 
-export default MultipleTables;
-
+export default YemTanımlamaları;

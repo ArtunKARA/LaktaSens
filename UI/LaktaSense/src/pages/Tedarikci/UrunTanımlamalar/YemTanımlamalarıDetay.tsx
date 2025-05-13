@@ -432,9 +432,10 @@ const MultipleTables = () => {
     useEffect(() => {
         const from = (pageReject - 1) * pageSizeReject;
         const to = from + pageSizeReject;
-        setRecordsDataReject([...initialRecordsReject.slice(from, to)]);
+        const safeArray = initialRecordsReject ?? []; // null ise []
+        const pageSlice = safeArray.slice(from, to); // asla null slice olmaz
+        setRecordsDataReject(pageSlice);
     }, [pageReject, pageSizeReject, initialRecordsReject]);
-
     useEffect(() => {
         const fetchRejectData = async () => {
             if (!yemID) {

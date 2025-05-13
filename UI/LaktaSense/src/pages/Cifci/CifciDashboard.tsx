@@ -8,20 +8,15 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 import Dropdown from '../../components/Dropdown';
 import { setPageTitle } from '../../store/themeConfigSlice';
 import IconHorizontalDots from '../../components/Icon/IconHorizontalDots';
-import IconDollarSign from '../../components/Icon/IconDollarSign';
-import IconInbox from '../../components/Icon/IconInbox';
-import IconTag from '../../components/Icon/IconTag';
-import IconCreditCard from '../../components/Icon/IconCreditCard';
-import IconShoppingCart from '../../components/Icon/IconShoppingCart';
-import IconArrowLeft from '../../components/Icon/IconArrowLeft';
-import IconCashBanknotes from '../../components/Icon/IconCashBanknotes';
-import IconUser from '../../components/Icon/IconUser';
-import IconNetflix from '../../components/Icon/IconNetflix';
-import IconBolt from '../../components/Icon/IconBolt';
-import IconCaretDown from '../../components/Icon/IconCaretDown';
-import IconPlus from '../../components/Icon/IconPlus';
-import IconMultipleForwardRight from '../../components/Icon/IconMultipleForwardRight';
 
+interface YemDepoTumUrunlerGecmisiAnaliz {
+    yemID: number;
+    yemAdi: string;
+    durum: {
+        zamanGrubu: string;
+        depoStok: number;
+    }[];
+}
 const Index = () => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
@@ -113,6 +108,7 @@ const Index = () => {
 
         fetchData();
     }, []);
+
     //SutDongu
     const SutDongu: any = {
         series: [kuruda_olanlar, sagimda_olanlar, cikarilmasi_gerekenlerSut],
@@ -364,6 +360,65 @@ const Index = () => {
             },
         },
     };
+    const [zamanTipiDepo, setzamanTipiDepo] = useState('aylik');
+    const [yemDepoTumUrunlerGecmisiAnaliz, setYemDepoTumUrunlerGecmisiAnaliz] = useState<YemDepoTumUrunlerGecmisiAnaliz[]>([]);
+    useEffect(() => {
+        // API'yi çağırma
+        const fetchData = async () => {
+            try {
+                const response = await fetch('http://localhost:3030/api/cifciAnaliz/postCiflikYemDepoTumUrunlerGecmisiAnaliz', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ firmaID: userInfo.firmaID, zamanTipi: zamanTipiDepo }), // Kullanıcı ID'sini gönderiyorsunuz
+                });
+                const data = await response.json();
+                setYemDepoTumUrunlerGecmisiAnaliz(data);
+
+                console.log('Gelen veri:', data);
+            } catch (error) {
+                console.error('API çağrısı sırasında bir hata oluştu:', error);
+            }
+        };
+
+        fetchData();
+    }, [zamanTipiDepo]);
+
+    const zamanGruplari = Array.from(new Set(yemDepoTumUrunlerGecmisiAnaliz.flatMap((i) => i.durum.map((d) => d.zamanGrubu)))).sort(); // ['2025-04', '2025-05', ...]
+
+    const labels = zamanGruplari;
+
+    const mixedChart: any = {
+        series: yemDepoTumUrunlerGecmisiAnaliz.map(({ yemAdi, durum }) => ({
+            name: yemAdi,
+            type: 'line',
+            data: zamanGruplari.map((zg) => {
+                const rec = durum.find((d) => d.zamanGrubu === zg);
+                return rec ? rec.depoStok : null;
+            }),
+        })),
+        options: {
+            chart: { height: 300, zoom: { enabled: false }, toolbar: { show: false } },
+            dataLabels: { enabled: false },
+            stroke: { width: 2, curve: 'smooth' },
+            markers: { size: 0 },
+            xaxis: {
+                type: 'string',
+                categories: labels,
+                axisBorder: { color: isDark ? '#191e3a' : '#e0e6ed' },
+            },
+            yaxis: {
+                title: { text: t('Amount (kg)') },
+                min: 0,
+                opposite: isRtl,
+                labels: { offsetX: isRtl ? -10 : 0 },
+            },
+            grid: { borderColor: isDark ? '#191e3a' : '#e0e6ed' },
+            tooltip: { shared: true, intersect: false, theme: isDark ? 'dark' : 'light' },
+            legend: { itemMargin: { horizontal: 4, vertical: 8 } },
+        },
+    };
 
     return (
         <div>
@@ -414,6 +469,47 @@ const Index = () => {
                                     </div>
                                 ) : (
                                     <ReactApexChart series={aklimaGelmedi.series} options={aklimaGelmedi.options} type="donut" height={460} />
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className="pt-5">
+                <div className="grid xl:grid-cols-1 gap-6 mb-6">
+                    <div className="panel h-full">
+                        <div className="flex items-center mb-5">
+                            <h5 className="font-semibold text-lg dark:text-white-light">{t('Warehouse Stock Chart')}</h5>
+                            <div className="dropdown align-items-center ml-auto">
+                                <Dropdown offset={[0, 5]} btnClassName="hover:text-primary" button={<IconHorizontalDots className="text-black/70 dark:text-white/70 hover:!text-primary" />}>
+                                    <ul>
+                                        <li>
+                                            <button type="button" onClick={() => setzamanTipiDepo('haftalik')}>
+                                                {t('Weekly')}
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button type="button" onClick={() => setzamanTipiDepo('aylik')}>
+                                                {t('Monthly')}
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button type="button" onClick={() => setzamanTipiDepo('yillik')}>
+                                                {t('Yearly')}
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </Dropdown>
+                            </div>
+                        </div>
+                        <div>
+                            <div className="bg-white dark:bg-black rounded-lg overflow-hidden">
+                                {loading ? (
+                                    <div className="min-h-[325px] grid place-content-center bg-white-light/30 dark:bg-dark dark:bg-opacity-[0.08] ">
+                                        <span className="animate-spin border-2 border-black dark:border-white !border-l-transparent  rounded-full w-5 h-5 inline-flex"></span>
+                                    </div>
+                                ) : (
+                                    <ReactApexChart series={mixedChart.series} options={mixedChart.options} className="rounded-lg bg-white dark:bg-black overflow-hidden" type="line" height={300} />
                                 )}
                             </div>
                         </div>

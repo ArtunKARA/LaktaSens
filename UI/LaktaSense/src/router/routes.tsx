@@ -45,8 +45,8 @@ const AdminStandartYemler = lazy(() => import('../pages/Admin/Parametreler/YemTa
 const AdminBesinDeğerleri = lazy(() => import('../pages/Admin/Parametreler/YemTanımlamaları/Besinİhtiyaçları'));
 const AdminStandartYemlerDetay = lazy(() => import('../pages/Admin/Parametreler/YemTanımlamaları/StandartYemlerDetaylar'));
 const AdminBesinDeğerleriDetay = lazy(() => import('../pages/Admin/Parametreler/YemTanımlamaları/BesinİhtiyaçlarıDetaylar'));
-const TedarikciYemTanımlamaları = lazy(() => import('../pages/Tedarikci/Tanımlamalar/YemTanımlamaları'));
-const TedarikciYemTanımlamalarıDetay = lazy(() => import('../pages/Tedarikci/Tanımlamalar/YemTanımlamalarıDetay'));
+const TedarikciYemTanımlamaları = lazy(() => import('../pages/Tedarikci/UrunTanımlamalar/YemTanımlamaları'));
+const TedarikciYemTanımlamalarıDetay = lazy(() => import('../pages/Tedarikci/UrunTanımlamalar/YemTanımlamalarıDetay'));
 const AdminYemBasvurulari = lazy(() => import('../pages/Admin/Basvurular/Yem/YemBasvurulari'));
 const AdminYemBasvurulariDetay = lazy(() => import('../pages/Admin/Basvurular/Yem/YemBasvuruDetay'));
 const CifciDepoTakipStok = lazy(() => import('../pages/Cifci/DepoModul/DepoTakip/Stok'));
@@ -61,6 +61,7 @@ const CifciMalKabul = lazy(() => import('../pages/Cifci/DepoModul/CifciMalKabul'
 const CifciSevk = lazy(() => import('../pages/Cifci/DepoModul/CifciMalSevk'));
 const TedarikciMalKabul = lazy(() => import('../pages/Tedarikci/DepoModul/TedarikciMalKabul'));
 const TedarikciSevk = lazy(() => import('../pages/Tedarikci/DepoModul/TedarikciSevk'));
+const CifciYemDetay = lazy(() => import('../pages/Cifci/CifciYemDetay'));
 
 const routes = [
     //landing page
@@ -355,6 +356,15 @@ const routes = [
         element: (
             <AuthGuard allowedRoles={['c']}>
                 <CifciSevk />
+            </AuthGuard>
+        ),
+        layout: 'cifci',
+    },
+    {
+        path: '/cifci/yemDetay',
+        element: (
+            <AuthGuard allowedRoles={['c']}>
+                <CifciYemDetay />
             </AuthGuard>
         ),
         layout: 'cifci',
