@@ -7,7 +7,7 @@ import Dropdown from '../Dropdown';
 import IconHorizontalDots from '../Icon/IconHorizontalDots';
 
 interface TuketimAnalizProps {
-    yemID: string;
+    yemID: any;
     firmaID: number;
 }
 
@@ -77,7 +77,7 @@ const TuketimAnaliz: React.FC<TuketimAnalizProps> = ({ yemID, firmaID }) => {
         };
 
         fetchData();
-    }, [zamanTipi]);
+    }, [zamanTipi, yemID, firmaID]);
 
     useEffect(() => {
         const dataArr = Array.isArray(consumData) ? consumData : [];

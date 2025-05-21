@@ -62,6 +62,9 @@ const CifciSevk = lazy(() => import('../pages/Cifci/DepoModul/CifciMalSevk'));
 const TedarikciMalKabul = lazy(() => import('../pages/Tedarikci/DepoModul/TedarikciMalKabul'));
 const TedarikciSevk = lazy(() => import('../pages/Tedarikci/DepoModul/TedarikciSevk'));
 const CifciYemDetay = lazy(() => import('../pages/Cifci/CifciYemDetay'));
+const CifciTuketimAnalizi = lazy(() => import('../pages/Cifci/DepoModul/YemAnalizi/TuketimAnalizi'));
+const CifciTedarikAnalizi = lazy(() => import('../pages/Cifci/DepoModul/YemAnalizi/TedarikAnalizi'));
+const CifciIhtiyacAnalizi = lazy(() => import('../pages/Cifci/DepoModul/YemAnalizi/IhtiyacAnalizi'));
 
 const routes = [
     //landing page
@@ -365,6 +368,33 @@ const routes = [
         element: (
             <AuthGuard allowedRoles={['c']}>
                 <CifciYemDetay />
+            </AuthGuard>
+        ),
+        layout: 'cifci',
+    },
+    {
+        path: '/cifci/yemAnaliz/IhtiyacAnalizi',
+        element: (
+            <AuthGuard allowedRoles={['c']}>
+                <CifciIhtiyacAnalizi />
+            </AuthGuard>
+        ),
+        layout: 'cifci',
+    },
+    {
+        path: '/cifci/yemAnaliz/TedarikAnalizi',
+        element: (
+            <AuthGuard allowedRoles={['c']}>
+                <CifciTedarikAnalizi />
+            </AuthGuard>
+        ),
+        layout: 'cifci',
+    },
+    {
+        path: '/cifci/yemAnaliz/TuketimAnalizi',
+        element: (
+            <AuthGuard allowedRoles={['c']}>
+                <CifciTuketimAnalizi />
             </AuthGuard>
         ),
         layout: 'cifci',

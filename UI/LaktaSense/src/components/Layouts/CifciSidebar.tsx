@@ -196,13 +196,13 @@ const Sidebar = () => {
                                     <AnimateHeight duration={300} height={currentMenu === 'Feed Analysis' ? 'auto' : 0}>
                                         <ul className="sub-menu text-gray-500">
                                             <li>
-                                                <NavLink to="/apps/invoice/edit">{t('Needs Analysis')}</NavLink>
+                                                <NavLink to="/cifci/yemAnaliz/IhtiyacAnalizi">{t('Needs Analysis')}</NavLink>
                                             </li>
                                             <li>
-                                                <NavLink to="/apps/invoice/preview">{t('Supply Analysis')}</NavLink>
+                                                <NavLink to="/cifci/yemAnaliz/TedarikAnalizi">{t('Supply Analysis')}</NavLink>
                                             </li>
                                             <li>
-                                                <NavLink to="/apps/invoice/add">{t('Consumption Analysis')}</NavLink>
+                                                <NavLink to="/cifci/yemAnaliz/TuketimAnalizi">{t('Consumption Analysis')}</NavLink>
                                             </li>
                                         </ul>
                                     </AnimateHeight>

@@ -628,5 +628,21 @@
     "Movement Type": "Hareket Türü",
     "Movement Logs": "Hareket Kayıtları",
     "Operation Date": "İşlem Tarihi",
-    "Stock Movements": "Stok Hareketleri"
+    "Stock Movements": "Stok Hareketleri",
+    "Status of Animals": "Hayvanların Durumu",
+    "Distribution of Animals":"Hayvanların Dağılımı",
+    "Milking Animal":"Sağmal Hayvan",
+    "Pregnant Animal":"Gebe Hayvan",
+    "Calving Animal":"Yavrulayan Hayvan",
+    "Dry Animal":"Kuruda Hayvan",
+    "In Service Animal":"Serviste Hayvan",
+    "Newborn Animal":"Yenidoğan Hayvan",
+    "Total Distribution of Animals": "Hayvanların Toplam Dağılımı",
+    "Animals Status": "Hayvanların Durumu",
+    "Analysis Based On Avarage Consumption": "Ortalama Tüketim Üzerine Analiz",
+    "Consumption Analysis by Circular Animals": "Döngüsel Hayvanlar Tarafından Tüketim Analizi",
+    "Daily Requirement":"Günlük İhtiyaç",
+    "Total (All)": "Toplam (Tümü)",
+    "Head": "Baş"
+    
 }
