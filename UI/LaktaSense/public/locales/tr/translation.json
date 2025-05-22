@@ -643,6 +643,32 @@
     "Consumption Analysis by Circular Animals": "Döngüsel Hayvanlar Tarafından Tüketim Analizi",
     "Daily Requirement":"Günlük İhtiyaç",
     "Total (All)": "Toplam (Tümü)",
-    "Head": "Baş"
+    "Head": "Baş",
+    "Daily": "Günlük",
+    "Total Stock Trend": "Toplam Stok Eğilimi",
+    "Start Date": "Başlangıç Tarihi",
+    "End Date": "Bitiş Tarihi",
+    "Select start date": "Başlangıç Tarihini Seçiniz",
+    "Select end date": "Bitiş Tarihini Seçiniz",
+    "Daily Needs Analysis": "Günlük İhtiyaç Analizi",
+    "Daily Needs": "Günlük İhtiyaçlar",
+    "Cycle Needs Analysis": "Döngü İhtiyaç Analizi",
+    "Current Stock Distribution": "Mevcut Stok Dağılımı",
+    "Consumption Reason Breakdown": "Tüketim Sebebi Dağılımı",
+    "Rate of Meeting Nutritional Needs": "Besin İhtiyaçlarını Karşılama Oranı",
+    "Required": "Gerekli",
+    "More": "Fazla",
+    "Goal": "Hedef",
+    "Actual": "Gerçekleşen",
+    "Meeting": "Karşılanan",
+    "kg / Cow / Day":"kg / İnek / Gün",
+    "Days": "Gün",
+    "Standard Selection": "Standart Seçimi",
+    "Number of Days": "Gün Sayısı",
+    "Feed KPI": "Yem KPI",
+    "kg / Day": "kg / Gün",
+    "Cow Count": "İnek Sayısı",
+    "Net Consumption by Feed Type":"Yem Türüne Göre Net Tüketim"
+
     
 }

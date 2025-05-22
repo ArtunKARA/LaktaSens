@@ -230,11 +230,11 @@ export default function NutritionCards() {
                 <div className="grid lg:grid-cols-1 gap-6 mb-6">
                     <div className="panel h-full p-0 lg:col-span-1">
                         <div className="flex items-start justify-between dark:text-white-light mb-5 p-5 border-b border-white-light dark:border-[#1b2e4b]">
-                            <h5 className="font-semibold text-lg">{t('Distribution of Animals')}</h5>
+                            <h5 className="font-semibold text-lg">{t('Daily Needs Analysis')}</h5>
                         </div>
                         <div className="m-6">
                             <div className="flex items-start justify-between dark:text-white-light mb-5 border-b border-white-light dark:border-[#1b2e4b]">
-                                <h6 className="font-medium mb-3 px-1 text-gray-500">{t('Total Distribution of Animals')}</h6>
+                                <h6 className="font-medium mb-3 px-1 text-gray-500">{t('Daily Needs')}</h6>
                             </div>
                             {/* Üst sıra: Toplam + Serviste + Yavru */}
                             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 mb-6">
@@ -243,7 +243,7 @@ export default function NutritionCards() {
                                 {yavruCard}
                             </div>
                             <div className="flex items-start justify-between dark:text-white-light mb-5 border-b border-white-light dark:border-[#1b2e4b]">
-                                <h6 className="font-medium mb-3 px-1 text-gray-500">{t('Total Distribution of Animals')}</h6>
+                                <h6 className="font-medium mb-3 px-1 text-gray-500">{t('Cycle Needs Analysis')}</h6>
                             </div>
                             {/* Alt sıra: Kuru / Sağmal / Gebelik */}
                             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">{detailCards}</div>

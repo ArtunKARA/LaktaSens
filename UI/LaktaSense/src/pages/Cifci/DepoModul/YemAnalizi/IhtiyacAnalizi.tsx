@@ -9,8 +9,8 @@ import Dropdown from '../../../../components/Dropdown';
 import IconHome from '../../../../components/Icon/IconHome';
 import { setPageTitle } from '../../../../store/themeConfigSlice';
 import IconHorizontalDots from '../../../../components/Icon/IconHorizontalDots';
-import GenelHayvanDurumu from '../../../../components/IhtıyacAnalizi/GenelHayvanDurumu'; // Adjust the path if needed
-import DongulereGoreIhtıyacAnalizi from '../../../../components/IhtıyacAnalizi/DongulereGoreIhtıyacAnalizi'; // Adjust the path if needed
+import GenelHayvanDurumu from '../../../../components/YemAnalizi/GenelHayvanDurumu'; // Adjust the path if needed
+import DongulereGoreIhtıyacAnalizi from '../../../../components/YemAnalizi/DongulereGoreIhtıyacAnalizi'; // Adjust the path if needed
 import { divide } from 'lodash';
 import IconChartSquare from '../../../../components/Icon/IconChartSquare';
 import IconChatDot from '../../../../components/Icon/IconChatDot';

@@ -243,13 +243,13 @@ exports.postHayvanYemIhtiyac = async (req, res) => {
 };
 
 
+/** ---------- Tüketim Analiz ----------*/
+
 function appendDateFilter(query, { startDate, endDate }) {
   if (startDate) query += ' AND l.islemTarihi >= @startDate';
   if (endDate)   query += ' AND l.islemTarihi <  DATEADD(day,1,@endDate)'; // <= endDate 23:59:59
   return query;
 }
-
-/** ---------- Tüketim Analiz ----------*/
 /** 1) Stok Eğilimi (kümülatif net kg) */
 exports.postStokEgilimi = async (req, res) => {
   const { firmaID, startDate, endDate, granularity = 'aylik' } = req.body;
@@ -309,8 +309,7 @@ exports.postNetTuketim = async (req, res) => {
              SUM(l.miktarKg) AS cikisKg
       FROM   FirmaDepoLog l
       JOIN   YemMaddeleri y ON y.yemID = l.yemID
-      WHERE  l.firmaID = @firmaID AND l.islemTipi = 'c'`;
-
+      WHERE  l.firmaID = @firmaID AND l.islemTipi = 'c'AND l.islemNedeniID=8`;
     query = appendDateFilter(query, { startDate, endDate });
 
     query += `
@@ -436,7 +435,7 @@ exports.postKpiKgInekGun = async (req, res) => {
               (SELECT COUNT(*) FROM inek WHERE firmaID=@firmaID) AS inekCount
       INTO    #tmp
       FROM    FirmaDepoLog l
-      WHERE   l.firmaID = @firmaID AND l.islemTipi='c' AND l.islemTarihi >= @dateFrom;
+      WHERE   l.firmaID = @firmaID AND l.islemTipi='c'AND l.islemNedeniID=8 AND l.islemTarihi >= @dateFrom;
 
       SELECT  kgPerDay/NULLIF(inekCount,0) AS kgPerInekGun, kgPerDay, inekCount
       FROM    #tmp;`;
@@ -449,6 +448,7 @@ exports.postKpiKgInekGun = async (req, res) => {
   }
 };
 
+/** 7) Besin İhtiyacı Karşılama Oranı */
 exports.postBesinOran = async (req, res) => {
   const { firmaID, standartID, days = 30 } = req.body;
   if (!firmaID || !standartID)
@@ -469,7 +469,7 @@ exports.postBesinOran = async (req, res) => {
       ;WITH feedExit AS (
         SELECT yemID, SUM(miktarKg) AS kg
         FROM   FirmaDepoLog
-        WHERE  firmaID=@firmaID AND islemTipi='c' AND islemTarihi>=@dateFrom
+        WHERE  firmaID=@firmaID AND islemTipi='c' AND islemTipi='c' AND islemNedeniID=8 AND islemTarihi>=@dateFrom
         GROUP BY yemID
       ),
       deliver AS (
