@@ -31,6 +31,14 @@ import IconMenuUsers from '../Icon/Menu/IconMenuUsers';
 import IconMenuPages from '../Icon/Menu/IconMenuPages';
 import IconMenuAuthentication from '../Icon/Menu/IconMenuAuthentication';
 import IconMenuDocumentation from '../Icon/Menu/IconMenuDocumentation';
+import IconGithub from '../Icon/IconGithub';
+import IconFolderMinus from '../Icon/IconFolderMinus';
+import IconFolderPlus from '../Icon/IconFolderPlus';
+import IconArchive from '../Icon/IconArchive';
+import IconMinusCircle from '../Icon/IconMinusCircle';
+import IconHelpCircle from '../Icon/IconHelpCircle';
+import IconDollarSignCircle from '../Icon/IconDollarSignCircle';
+import IconShoppingCart from '../Icon/IconShoppingCart';
 
 const Sidebar = () => {
     const [currentMenu, setCurrentMenu] = useState<string>('');
@@ -92,164 +100,263 @@ const Sidebar = () => {
                     </div>
                     <PerfectScrollbar className="h-[calc(100vh-80px)] relative">
                         <ul className="relative font-semibold space-y-0.5 p-4 py-0">
-
                             <li className="nav-item">
-                                    <li className="nav-item">
-                                        <NavLink to="/cifci/dashboard" className="group">
-                                            <div className="flex items-center">
-                                                <IconMenuDashboard className="group-hover:!text-primary shrink-0" />
-                                                <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Main Menu')}</span>
-                                            </div>
-                                        </NavLink>
-                                    </li>
+                                <li className="nav-item">
+                                    <NavLink to="/cifci/dashboard" className="group">
+                                        <div className="flex items-center">
+                                            <IconMenuDashboard className="group-hover:!text-primary shrink-0" />
+                                            <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Main Menu')}</span>
+                                        </div>
+                                    </NavLink>
+                                </li>
+                                <li className="menu nav-item">
+                                    <button type="button" className={`${currentMenu === 'Analysis' ? 'active' : ''} nav-link group w-full`} onClick={() => toggleMenu('Analysis')}>
+                                        <div className="flex items-center">
+                                            <IconGithub className="group-hover:!text-primary shrink-0" />
+                                            <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Analysis')}</span>
+                                        </div>
 
-                                    <li className="menu nav-item">
-                                        <button type="button" className={`${currentMenu === 'Cycle Tracking' ? 'active' : ''} nav-link group w-full`} onClick={() => toggleMenu('Cycle Tracking')}>
-                                            <div className="flex items-center">
-                                                <IconMenuInvoice className="group-hover:!text-primary shrink-0" />
-                                                <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Cycle Tracking')}</span>
-                                            </div>
+                                        <div className={currentMenu !== 'Analysis' ? 'rtl:rotate-90 -rotate-90' : ''}>
+                                            <IconCaretDown />
+                                        </div>
+                                    </button>
 
-                                            <div className={currentMenu !== 'Cycle Tracking' ? 'rtl:rotate-90 -rotate-90' : ''}>
-                                                <IconCaretDown />
-                                            </div>
-                                        </button>
+                                    <AnimateHeight duration={300} height={currentMenu === 'Analysis' ? 'auto' : 0}>
+                                        <ul className="sub-menu text-gray-500">
+                                            <li>
+                                                <NavLink to="/">{t('Need Dev')}</NavLink>
+                                            </li>
+                                            <li>
+                                                <NavLink to="/">{t('Need Dev')}</NavLink>
+                                            </li>
+                                        </ul>
+                                    </AnimateHeight>
+                                </li>
+                                <h2 className="py-3 px-7 flex items-center uppercase font-extrabold bg-white-light/30 dark:bg-dark dark:bg-opacity-[0.08] -mx-4 mb-1">
+                                    <IconMinus className="w-4 h-5 flex-none hidden" />
+                                    <span>{t('Cycle Tracking Module')}</span>
+                                </h2>
+                                <li className="menu nav-item">
+                                    <button type="button" className={`${currentMenu === 'Cycle Tracking' ? 'active' : ''} nav-link group w-full`} onClick={() => toggleMenu('Cycle Tracking')}>
+                                        <div className="flex items-center">
+                                            <IconMenuInvoice className="group-hover:!text-primary shrink-0" />
+                                            <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Cycle Tracking')}</span>
+                                        </div>
 
-                                        <AnimateHeight duration={300} height={currentMenu === 'Cycle Tracking' ? 'auto' : 0}>
-                                            <ul className="sub-menu text-gray-500">
-                                                <li>
-                                                    <NavLink to="/cifci/GenelTakip">{t('General Follow Up')}</NavLink>
-                                                </li>
-                                                <li>
-                                                    <NavLink to="/cifci/SagmalTakip">{t('Milking')}</NavLink>
-                                                </li>
-                                                <li>
-                                                    <NavLink to="/cifci/KuruTakip">{t('Dry')}</NavLink>
-                                                </li>
-                                                <li>
-                                                    <NavLink to="/cifci/GebeTakip">{t('Pregnant')}</NavLink>
-                                                </li>
-                                                <li>
-                                                    <NavLink to="/cifci/ServisTakip">{t('Service')}</NavLink>
-                                                </li>
-                                                <li>
-                                                    <NavLink to="/cifci/YenidoganTakip">{t('Newborn')}</NavLink>
-                                                </li>   
-                                                <li>
-                                                    <NavLink to="/cifci/CikarilacaklarTakip">{t('Will Be Removed')}</NavLink>
-                                                </li>
-                                                <li>
-                                                    <NavLink to="/cifci/InekEkle">{t('Add Cow')}</NavLink>
-                                                </li>
-                                            </ul>
-                                        </AnimateHeight>
-                                    </li>
-                                    <li className="menu nav-item">
-                                        <button type="button" className={`${currentMenu === 'Feed Tracking' ? 'active' : ''} nav-link group w-full`} onClick={() => toggleMenu('Feed Tracking')}>
-                                            <div className="flex items-center">
-                                                <IconMenuInvoice className="group-hover:!text-primary shrink-0" />
-                                                <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Feed Tracking')}</span>
-                                            </div>
+                                        <div className={currentMenu !== 'Cycle Tracking' ? 'rtl:rotate-90 -rotate-90' : ''}>
+                                            <IconCaretDown />
+                                        </div>
+                                    </button>
 
-                                            <div className={currentMenu !== 'Feed Tracking' ? 'rtl:rotate-90 -rotate-90' : ''}>
-                                                <IconCaretDown />
-                                            </div>
-                                        </button>
+                                    <AnimateHeight duration={300} height={currentMenu === 'Cycle Tracking' ? 'auto' : 0}>
+                                        <ul className="sub-menu text-gray-500">
+                                            <li>
+                                                <NavLink to="/cifci/GenelTakip">{t('General Follow Up')}</NavLink>
+                                            </li>
+                                            <li>
+                                                <NavLink to="/cifci/SagmalTakip">{t('Milking')}</NavLink>
+                                            </li>
+                                            <li>
+                                                <NavLink to="/cifci/KuruTakip">{t('Dry')}</NavLink>
+                                            </li>
+                                            <li>
+                                                <NavLink to="/cifci/GebeTakip">{t('Pregnant')}</NavLink>
+                                            </li>
+                                            <li>
+                                                <NavLink to="/cifci/ServisTakip">{t('Service')}</NavLink>
+                                            </li>
+                                            <li>
+                                                <NavLink to="/cifci/YenidoganTakip">{t('Newborn')}</NavLink>
+                                            </li>
+                                            <li>
+                                                <NavLink to="/cifci/CikarilacaklarTakip">{t('Will Be Removed')}</NavLink>
+                                            </li>
+                                            <li>
+                                                <NavLink to="/cifci/InekEkle">{t('Add Cow')}</NavLink>
+                                            </li>
+                                        </ul>
+                                    </AnimateHeight>
+                                </li>
+                                <h2 className="py-3 px-7 flex items-center uppercase font-extrabold bg-white-light/30 dark:bg-dark dark:bg-opacity-[0.08] -mx-4 mb-1">
+                                    <IconMinus className="w-4 h-5 flex-none hidden" />
+                                    <span>{t('Warehouse Tracking Module')}</span>
+                                </h2>
+                                <li className="menu nav-item">
+                                    <button type="button" className={`${currentMenu === 'Feed Analysis' ? 'active' : ''} nav-link group w-full`} onClick={() => toggleMenu('Feed Analysis')}>
+                                        <div className="flex items-center">
+                                            <IconMenuInvoice className="group-hover:!text-primary shrink-0" />
+                                            <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Feed Analysis')}</span>
+                                        </div>
 
-                                        <AnimateHeight duration={300} height={currentMenu === 'Feed Tracking' ? 'auto' : 0}>
-                                            <ul className="sub-menu text-gray-500">
-                                                <li>
-                                                    <NavLink to="/apps/invoice/list">{t('Warehouse Tracking')}</NavLink>
-                                                </li>
-                                                <li>
-                                                    <NavLink to="/apps/invoice/preview">{t('Auction Tracking')}</NavLink>
-                                                </li>
-                                                <li>
-                                                    <NavLink to="/apps/invoice/add">{t('Supply Tracking')}</NavLink>
-                                                </li>
-                                                <li>
-                                                    <NavLink to="/apps/invoice/edit">{t('Past Orders')}</NavLink>
-                                                </li>
-                                            </ul>
-                                        </AnimateHeight>
-                                    </li>
-                                    <li className="nav-item">
-                                        <NavLink to="/apps/calendar" className="group">
-                                            <div className="flex items-center">
-                                                <IconMenuCalendar className="group-hover:!text-primary shrink-0" />
-                                                <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Analysis')}</span>
-                                            </div>
-                                        </NavLink>
-                                    </li>
-                                    <li className="nav-item">
-                                        <NavLink to="/apps/calendar" className="group">
-                                            <div className="flex items-center">
-                                                <IconMenuCalendar className="group-hover:!text-primary shrink-0" />
-                                                <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Add Machine')}</span>
-                                            </div>
-                                        </NavLink>
-                                    </li>
-                                    <li className="menu nav-item">
-                                        <button type="button" className={`${currentMenu === 'Sensor Tracking' ? 'active' : ''} nav-link group w-full`} onClick={() => toggleMenu('Sensor Tracking')}>
-                                            <div className="flex items-center">
-                                                <IconMenuInvoice className="group-hover:!text-primary shrink-0" />
-                                                <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Sensor Tracking')}</span>
-                                            </div>
+                                        <div className={currentMenu !== 'Feed Analysis' ? 'rtl:rotate-90 -rotate-90' : ''}>
+                                            <IconCaretDown />
+                                        </div>
+                                    </button>
 
-                                            <div className={currentMenu !== 'Sensor Tracking' ? 'rtl:rotate-90 -rotate-90' : ''}>
-                                                <IconCaretDown />
-                                            </div>
-                                        </button>
+                                    <AnimateHeight duration={300} height={currentMenu === 'Feed Analysis' ? 'auto' : 0}>
+                                        <ul className="sub-menu text-gray-500">
+                                            <li>
+                                                <NavLink to="/cifci/yemAnaliz/IhtiyacAnalizi">{t('Needs Analysis')}</NavLink>
+                                            </li>
+                                            <li>
+                                                <NavLink to="/cifci/yemAnaliz/TedarikAnalizi">{t('Supply Analysis')}</NavLink>
+                                            </li>
+                                            <li>
+                                                <NavLink to="/cifci/yemAnaliz/TuketimAnalizi">{t('Consumption Analysis')}</NavLink>
+                                            </li>
+                                        </ul>
+                                    </AnimateHeight>
+                                </li>
+                                <li className="nav-item">
+                                    <NavLink to="/cifci/MalKabul" className="group">
+                                        <div className="flex items-center">
+                                            <IconFolderMinus className="group-hover:!text-primary shrink-0" />
+                                            <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Goods Receipt')}</span>
+                                        </div>
+                                    </NavLink>
+                                </li>
+                                <li className="nav-item">
+                                    <NavLink to="/cifci/TuketimKaydi" className="group">
+                                        <div className="flex items-center">
+                                            <IconMinusCircle className="group-hover:!text-primary shrink-0" />
+                                            <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Consumption Record')}</span>
+                                        </div>
+                                    </NavLink>
+                                </li>
+                                <li className="nav-item">
+                                    <NavLink to="/cifci/Sevk" className="group">
+                                        <div className="flex items-center">
+                                            <IconFolderPlus className="group-hover:!text-primary shrink-0" />
+                                            <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Dispatch')}</span>
+                                        </div>
+                                    </NavLink>
+                                </li>
+                                <li className="menu nav-item">
+                                    <button
+                                        type="button"
+                                        className={`${currentMenu === t('Warehouse Tracking') ? 'active' : ''} nav-link group w-full`}
+                                        onClick={() => toggleMenu(t('Warehouse Tracking'))}
+                                    >
+                                        <div className="flex items-center">
+                                            <IconMenuDashboard className="group-hover:!text-primary shrink-0" />
+                                            <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Warehouse Tracking')}</span>
+                                        </div>
 
-                                        <AnimateHeight duration={300} height={currentMenu === 'Sensor Tracking' ? 'auto' : 0}>
-                                        {/*<li className="menu nav-item">
-                                                <button
-                                                        type="button"
-                                                        className={`${
-                                                            errorSubMenu ? 'open' : ''
-                                                        } w-full before:bg-gray-300 before:w-[5px] before:h-[5px] before:rounded ltr:before:mr-2 rtl:before:ml-2 dark:text-[#888ea8] hover:bg-gray-100 dark:hover:bg-gray-900`}
-                                                        onClick={() => setErrorSubMenu(!errorSubMenu)}
-                                                    >
-                                                        {t('Definitions')}
-                                                        <div className={`${errorSubMenu ? 'rtl:rotate-90 -rotate-90' : ''} ltr:ml-auto rtl:mr-auto`}>
-                                                            <IconCaretsDown fill={true} className="w-4 h-4" />
-                                                        </div>
-                                                    </button>
-                                                    <AnimateHeight duration={300} height={errorSubMenu ? 'auto' : 0}>
-                                                    <ul className="sub-menu text-gray-500">
-                                                        <li>
-                                                            <a href="/pages/error404" target="_blank">
-                                                                {t('Barns')}
-                                                            </a>
-                                                        </li>
-                                                        <li>
-                                                            <a href="/pages/error500" target="_blank">
-                                                                {t('Ambars')}
-                                                            </a>
-                                                        </li>
-                                                        <li>
-                                                            <a href="/pages/error503" target="_blank">
-                                                                {t('Sensors')}
-                                                            </a>
-                                                        </li>
-                                                    </ul>
-                                                </AnimateHeight>
-                                            </li> */}
-                                            <ul className="sub-menu text-gray-500">
-                                                <li>
-                                                    <NavLink to="/cifci/AhirSensorTakip">{t('Barn Tracking')}</NavLink>
-                                                </li>
-                                                <li>
-                                                    <NavLink to="/cifci/DepoSensorTakip">{t('Feed Warehouse Tracking')}</NavLink>
-                                                </li>         
-                                                <li>
-                                                    <NavLink to="/cifci/SensorEkle">{t('Add Sensor')}</NavLink>
-                                                </li>         
-                                                                       
-                                                
-                                            </ul>
-                                        </AnimateHeight>
-                                    </li>
+                                        <div className={currentMenu !== t('Warehouse Tracking') ? 'rtl:rotate-90 -rotate-90' : ''}>
+                                            <IconCaretDown />
+                                        </div>
+                                    </button>
+
+                                    <AnimateHeight duration={300} height={currentMenu === t('Warehouse Tracking') ? 'auto' : 0}>
+                                        <ul className="sub-menu text-gray-500">
+                                            <li>
+                                                <NavLink to="/cifci/DepoTakip/Stok">{t('Stock')}</NavLink>
+                                            </li>
+                                            <li>
+                                                <NavLink to="/cifci/DepoTakip/Tüketim">{t('Consumption History')}</NavLink>
+                                            </li>
+                                            <li>
+                                                <NavLink to="/cifci/DepoTakip/MalKabul">{t('Goods Acceptance History')}</NavLink>
+                                            </li>
+                                            <li>
+                                                <NavLink to="/cifci/DepoTakip/Sevk">{t('Goods Dispatch History')}</NavLink>
+                                            </li>
+                                        </ul>
+                                    </AnimateHeight>
+                                </li>
+                                <h2 className="py-3 px-7 flex items-center uppercase font-extrabold bg-white-light/30 dark:bg-dark dark:bg-opacity-[0.08] -mx-4 mb-1">
+                                    <IconMinus className="w-4 h-5 flex-none hidden" />
+                                    <span>{t('Supply Module')}</span>
+                                </h2>
+                                <li className="nav-item">
+                                    <NavLink to="/" className="group">
+                                        <div className="flex items-center">
+                                            <IconMenuFontIcons className="group-hover:!text-primary shrink-0" />
+                                            <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Start a Tender')}</span>
+                                        </div>
+                                    </NavLink>
+                                </li>
+                                <li className="nav-item">
+                                    <NavLink to="/" className="group">
+                                        <div className="flex items-center">
+                                            <IconMenuDashboard className="group-hover:!text-primary shrink-0" />
+                                            <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Tender Tracking')}</span>
+                                        </div>
+                                    </NavLink>
+                                </li>
+                                <li className="nav-item">
+                                    <NavLink to="/" className="group">
+                                        <div className="flex items-center">
+                                            <IconShoppingCart className="group-hover:!text-primary shrink-0" />
+                                            <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Start a Order')}</span>
+                                        </div>
+                                    </NavLink>
+                                </li>
+                                <li className="nav-item">
+                                    <NavLink to="/" className="group">
+                                        <div className="flex items-center">
+                                            <IconMenuForms className="group-hover:!text-primary shrink-0" />
+                                            <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Order Tracking')}</span>
+                                        </div>
+                                    </NavLink>
+                                </li>
+                                <h2 className="py-3 px-7 flex items-center uppercase font-extrabold bg-white-light/30 dark:bg-dark dark:bg-opacity-[0.08] -mx-4 mb-1">
+                                    <IconMinus className="w-4 h-5 flex-none hidden" />
+                                    <span>{t('Sensor Tracking Module')}</span>
+                                </h2>
+                                <li className="menu nav-item">
+                                    <button type="button" className={`${currentMenu === 'Add Sensor' ? 'active' : ''} nav-link group w-full`} onClick={() => toggleMenu('Add Sensor')}>
+                                        <div className="flex items-center">
+                                            <IconMenuInvoice className="group-hover:!text-primary shrink-0" />
+                                            <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Add Sensor')}</span>
+                                        </div>
+
+                                        <div className={currentMenu !== 'Add Sensor' ? 'rtl:rotate-90 -rotate-90' : ''}>
+                                            <IconCaretDown />
+                                        </div>
+                                    </button>
+
+                                    <AnimateHeight duration={300} height={currentMenu === 'Add Sensor' ? 'auto' : 0}>
+                                        <ul className="sub-menu text-gray-500">
+                                            <li>
+                                                <NavLink to="/cifci/SensorEkle">{t('Add Leash Sensor')}</NavLink>
+                                            </li>
+                                            <li>
+                                                <NavLink to="/cifci/SensorEkle">{t('Add Warehouse Sensor')}</NavLink>
+                                            </li>
+                                            <li>
+                                                <NavLink to="/cifci/SensorEkle">{t('Add Milking Sensor')}</NavLink>
+                                            </li>
+                                            <li>
+                                                <NavLink to="/cifci/SensorEkle">{t('Add Barn Sensor')}</NavLink>
+                                            </li>
+                                        </ul>
+                                    </AnimateHeight>
+                                </li>
+                                <li className="nav-item">
+                                    <NavLink to="/cifci/DepoSensorTakip" className="group">
+                                        <div className="flex items-center">
+                                            <IconMenuCalendar className="group-hover:!text-primary shrink-0" />
+                                            <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Feed Warehouse Tracking')}</span>
+                                        </div>
+                                    </NavLink>
+                                </li>
+                                <li className="nav-item">
+                                    <NavLink to="/cifci/AhirSensorTakip" className="group">
+                                        <div className="flex items-center">
+                                            <IconMenuCalendar className="group-hover:!text-primary shrink-0" />
+                                            <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Barn Tracking')}</span>
+                                        </div>
+                                    </NavLink>
+                                </li>
+                                <li className="nav-item">
+                                    <NavLink to="/" className="group">
+                                        <div className="flex items-center">
+                                            <IconMenuCalendar className="group-hover:!text-primary shrink-0" />
+                                            <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Milking Tracking')}</span>
+                                        </div>
+                                    </NavLink>
+                                </li>
                             </li>
                         </ul>
                     </PerfectScrollbar>

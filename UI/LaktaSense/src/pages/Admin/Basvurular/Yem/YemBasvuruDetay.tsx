@@ -2,7 +2,6 @@ import { useTranslation } from 'react-i18next';
 import { DataTable, DataTableSortStatus } from 'mantine-datatable';
 import { useEffect, useState, Fragment } from 'react';
 import sortBy from 'lodash/sortBy';
-import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
 import { setPageTitle } from '../../../../store/themeConfigSlice';
 import { useDispatch } from 'react-redux';
@@ -10,54 +9,47 @@ import 'tippy.js/dist/tippy.css';
 import { Dialog, Transition } from '@headlessui/react';
 import IconX from '../../../../components/Icon/IconX';
 import axios from 'axios';
-import {useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { isEmpty, isSet, set, toNumber } from 'lodash';
-import IconPlus from '../../../../components/Icon/IconPlus';
 import Swal from 'sweetalert2';
 import Select, { SingleValue, StylesConfig } from 'react-select';
-import IconEdit from '../../../../components/Icon/IconEdit';
-import IconTrash from '../../../../components/Icon/IconTrash';
 import { Field, Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { useLocation } from 'react-router-dom';
-import IconSave from '../../../../components/Icon/IconSave';
-import IconRestore from '../../../../components/Icon/IconRestore';
-import { be } from '@fullcalendar/core/internal-common';
-import IconHome from '../../../../components/Icon/IconHome';
-import IconUser from '../../../../components/Icon/IconUser';
-import IconTrendingUp from '../../../../components/Icon/IconTrendingUp';
-import IconBox from '../../../../components/Icon/IconBox';
-import IconDollarSignCircle from '../../../../components/Icon/IconDollarSignCircle';
-import IconListCheck from '../../../../components/Icon/IconListCheck';
 import IconXCircle from '../../../../components/Icon/IconXCircle';
 import IconTxtFile from '../../../../components/Icon/IconTxtFile';
 import IconChecks from '../../../../components/Icon/IconChecks';
 
-
 interface DefData {
-  besinDegeriID: string;
-  tipID: string;
-  besinTipi: string;
-  miktar: string;
-  birimID: string;
-  birimAdi: string;
+    besinDegeriID: string;
+    tipID: string;
+    besinTipi: string;
+    miktar: string;
+    birimID: string;
+    birimAdi: string;
 }
 interface MetaData {
-  yemID: string;
-  yemAdi: string;
-  durum: string;
-  yemAciklama: string;
+    yemID: string;
+    yemAdi: string;
+    durum: string;
+    yemAciklama: string;
 }
 interface SelectedData {
-  besinDegeriID: string;
-  tipID: string;
-  birimAdi: string;
-  miktar: string;
+    besinDegeriID: string;
+    tipID: string;
+    birimAdi: string;
+    miktar: string;
 }
 interface OptionType {
     value: string;
     label: string;
     unit: string;
+}
+interface RejectData {
+    redID: string;
+    RededilmeNedeni: string;
+    RededilmeTarihi: string;
+    ReddedenKullanıcı: string;
 }
 const MultipleTables = () => {
     const storedUserInfo = localStorage.getItem('userInfo');
@@ -67,8 +59,7 @@ const MultipleTables = () => {
     const [unitOpitons, setUnitOptions] = useState<OptionType[]>([]);
     const [typeOpitons, setTypeOptions] = useState<OptionType[]>([]);
     const [metaData, setMetaData] = useState<MetaData | null>(null);
-    const [reson, setReson] = useState("");
-
+    const [reson, setReson] = useState('');
 
     const location = useLocation();
     const initID = (location.state as { yemID?: string })?.yemID ?? null;
@@ -76,73 +67,66 @@ const MultipleTables = () => {
 
     //-----------Veriyi burdan çekiliyor-----------
     useEffect(() => {
-      const fetchData = async () => {
-
-        if (!yemID) {
-          setMetaData(null);
-          setRowData([]);
-          return;
-        }
-      
-        try {
-          const response = await fetch(
-            'http://localhost:3030/api/tedarikci/yemYonetim/postYemTanimlariDetay',
-            {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ yemID }),
+        const fetchData = async () => {
+            if (!yemID) {
+                setMetaData(null);
+                setRowData([]);
+                return;
             }
-          );
-          const data = await response.json();
-    
-          // Üst bilgileri ayır
-          const { yemID: id, yemAdi, durum, yemAciklama, besinDegerleri } = data;
-    
-          // State’lere ata
-          setMetaData({
-            yemID: String(id),      // API’den number gelebilir, biz string istiyoruz
-            yemAdi,
-            durum,
-            yemAciklama,
-          });
-          setRowData(besinDegerleri);
-    
-        } catch (err) {
-          console.error('API çağrısı sırasında hata:', err);
-        }
-    
-        // Tip fetch ile alıyoruz
-        try {
-          const { data: birimler } = await axios.get(
-            'http://localhost:3030/api/tanimlamalar/birimler/getBesinTipleri'
-          );
-          const unitOptions = birimler.map((o: any) => ({
-            value: o.tipID,
-            label: o.tipAdi,
-            unit: `${o.birimAdi} – ${o.aciklama}`,
-          }));
-          setUnitOptions(unitOptions);
-        } catch (err) {
-          console.error('Birim seçenekleri alınırken hata:', err);
-        }
-      };
-    
-      fetchData();
+
+            try {
+                const response = await fetch('http://localhost:3030/api/tedarikci/yemYonetim/postYemTanimlariDetay', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ yemID }),
+                });
+                const data = await response.json();
+
+                // Üst bilgileri ayır
+                const { yemID: id, yemAdi, durum, yemAciklama, besinDegerleri } = data;
+
+                // State’lere ata
+                setMetaData({
+                    yemID: String(id), // API’den number gelebilir, biz string istiyoruz
+                    yemAdi,
+                    durum,
+                    yemAciklama,
+                });
+                setRowData(besinDegerleri);
+            } catch (err) {
+                console.error('API çağrısı sırasında hata:', err);
+            }
+
+            // Tip fetch ile alıyoruz
+            try {
+                const { data: birimler } = await axios.get('http://localhost:3030/api/tanimlamalar/birimler/getBesinTipleri');
+                const unitOptions = birimler.map((o: any) => ({
+                    value: o.tipID,
+                    label: o.tipAdi,
+                    unit: `${o.birimAdi} – ${o.aciklama}`,
+                }));
+                setUnitOptions(unitOptions);
+            } catch (err) {
+                console.error('Birim seçenekleri alınırken hata:', err);
+            }
+        };
+
+        fetchData();
     }, [yemID]);
-      const menuStyles: StylesConfig<OptionType, false> = {
+    const menuStyles: StylesConfig<OptionType, false> = {
         // this ensures the portal’ed menu sits above everything else
-        menuPortal: base => ({ ...base, zIndex: 9999 }),
-      };
-      const UnitSelect = ({ field, form, options }: { field: any; form: any; options: OptionType[] }) => {
+        menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+    };
+    const UnitSelect = ({ field, form, options }: { field: any; form: any; options: OptionType[] }) => {
         const handleChange = (selectedOption: SingleValue<OptionType> | null) => {
             form.setFieldValue(field.name, selectedOption ? selectedOption.value : '');
             form.setFieldValue('birimAdi', selectedOption ? selectedOption.unit : '');
         };
-    
+
         return (
             <Select
                 options={options}
-                value={options ? options.find(option => option.value === field.value) : null}
+                value={options ? options.find((option) => option.value === field.value) : null}
                 menuPortalTarget={typeof document !== 'undefined' ? document.body : null}
                 menuPosition="fixed"
                 styles={menuStyles}
@@ -153,9 +137,7 @@ const MultipleTables = () => {
             />
         );
     };
-    
 
-      
     const { t } = useTranslation();
     const dispatch = useDispatch();
     useEffect(() => {
@@ -169,11 +151,10 @@ const MultipleTables = () => {
         const sortedData = sortBy(rowData, 'birimID');
         setInitialRecords(sortedData);
     }, [rowData]);
-    
+
     const [recordsData, setRecordsData] = useState(initialRecords);
-    const [modalDelete, setModalDelete] = useState(false);
     const [modalAdd, setModalAdd] = useState(false);
-    const [delID,setDelID] = useState('');
+    const [delID, setDelID] = useState('');
     const [search, setSearch] = useState('');
     const [sortStatus, setSortStatus] = useState<DataTableSortStatus>({
         columnAccessor: 'birimID',
@@ -198,7 +179,7 @@ const MultipleTables = () => {
                     item.miktar.toString().toLowerCase().includes(search.toLowerCase()) ||
                     item.birimID.toString().toLowerCase().includes(search.toLowerCase()) ||
                     item.birimAdi.toLowerCase().includes(search.toLowerCase()) ||
-                    item.tipID.toString().toLowerCase().includes(search.toLowerCase()) 
+                    item.tipID.toString().toLowerCase().includes(search.toLowerCase())
                 );
             });
         });
@@ -213,55 +194,25 @@ const MultipleTables = () => {
     }, [sortStatus]);
 
     const navigate = useNavigate();
-    
 
     const submitDataFormValidation = Yup.object().shape({
-        tipID:  Yup.string(),
+        tipID: Yup.string(),
         miktar: Yup.string().required(t('Please Fill In')),
-      });
-    
+    });
+
     const [feedPasiveModal, setFeedPasiveModal] = useState(false);
     const [feedApproveModal, setFeedApproveModal] = useState(false);
 
     const [applayModal, setApplayModal] = useState(false);
-    
-    const [tabs, setTabs] = useState<string>('nutrition');
 
+    //-----------Tab yapısı-----------
+    const [tabs, setTabs] = useState<string>('nutrition');
     const toggleTabs = (name: string) => {
         setTabs(name);
     };
-    
-    //-----------İçerik verisi burdan pasif-----------
-    const SetPassive = async (ID:string) => {
-        const toast = Swal.mixin({
-            toast: true,
-            position: 'top',
-            showConfirmButton: false,
-            timer: 3000,
-        });
-        try {
-          const response = await axios.post("", {
-            besinDegeriID: ID,
-            neden: reson,
-          });
-    
-          console.log(response.data);
-          toast.fire({
-            icon: 'success',
-            title: 'Besin başarıyla pasif hale getirildi.',
-            padding: '10px 20px',
-        });
-          setFeedPasiveModal(false); // Modalı kapat.
-          window.location.reload();
-        } catch (error) {
-          console.error(error);
-          alert(t("An error occurred while saving!")+ error);
-          alert(ID);
-        }
-      };
 
-      //-----------İçerik verisi burdan onayla-----------
-    const SetApprove = async (ID:string) => {
+    //-----------İçerik verisi burdan pasif-----------
+    const SetPassive = async (ID: string) => {
         const toast = Swal.mixin({
             toast: true,
             position: 'top',
@@ -269,215 +220,284 @@ const MultipleTables = () => {
             timer: 3000,
         });
         try {
-          const response = await axios.post("", {
-            besinDegeriID: ID,
-          });
-    
-          console.log(response.data);
-          toast.fire({
-            icon: 'success',
-            title: 'Besin başarıyla onaylandı.',
-            padding: '10px 20px',
-        });
-          setFeedPasiveModal(false); // Modalı kapat.
-          window.location.reload();
+            const response = await axios.post('http://localhost:3030/api/basvurular/yem/postYemRed', {
+                yemID: ID,
+                redNedeni: reson,
+                kullaniciID: userInfo.kullaniciID,
+            });
+
+            console.log(response.data);
+            toast.fire({
+                icon: 'success',
+                title: 'Besin başarıyla pasif hale getirildi.',
+                padding: '10px 20px',
+            });
+            setFeedPasiveModal(false); // Modalı kapat.
+            window.location.reload();
         } catch (error) {
-          console.error(error);
-          alert(t("An error occurred while saving!")+ error);
-          alert(ID);
+            console.error(error);
+            alert(t('An error occurred while saving!') + error);
+            alert(ID);
         }
-      };
+    };
+
+    //-----------İçerik verisi burdan onayla-----------
+    const SetApprove = async (ID: string) => {
+        const toast = Swal.mixin({
+            toast: true,
+            position: 'top',
+            showConfirmButton: false,
+            timer: 3000,
+        });
+        try {
+            const response = await axios.post('http://localhost:3030/api/basvurular/yem/postYemKabul', {
+                yemID: ID,
+            });
+
+            console.log(response.data);
+            toast.fire({
+                icon: 'success',
+                title: 'Besin başarıyla onaylandı.',
+                padding: '10px 20px',
+            });
+            setFeedPasiveModal(false); // Modalı kapat.
+            window.location.reload();
+        } catch (error) {
+            console.error(error);
+            alert(t('An error occurred while saving!') + error);
+            alert(ID);
+        }
+    };
+
+    //-----------Red Bigileri Tablosu Fonksiyonları-----------
+    const [initialRecordsReject, setInitialRecordsReject] = useState<RejectData[]>([]);
+    const [recordsDataReject, setRecordsDataReject] = useState(initialRecordsReject);
+    const [pageReject, setPageReject] = useState(1);
+    const PAGE_SIZESReject = [10, 20, 30, 50, 100];
+    const [pageSizeReject, setPageSizeReject] = useState(PAGE_SIZESReject[0]);
+    const [searchReject, setSearchReject] = useState('');
+
+    const [sortStatusReject, setSortStatusReject] = useState<DataTableSortStatus>({
+        columnAccessor: 'redID',
+        direction: 'asc',
+    });
+
+    useEffect(() => {
+        const from = (pageReject - 1) * pageSizeReject;
+        const to = from + pageSizeReject;
+        setRecordsDataReject([...initialRecordsReject.slice(from, to)]);
+    }, [pageReject, pageSizeReject, initialRecordsReject]);
+
+    useEffect(() => {
+        const fetchRejectData = async () => {
+            if (!yemID) {
+                setInitialRecordsReject([]);
+                return;
+            }
+
+            try {
+                const response = await fetch('http://localhost:3030/api/basvurular/yem/postYemRedleri', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ yemID }),
+                });
+                const data = await response.json();
+                setInitialRecordsReject(data);
+            } catch (err) {
+                console.error('API çağrısı sırasında hata:', err);
+            }
+        };
+
+        fetchRejectData();
+    }, [yemID]);
+
+    useEffect(() => {
+        const sortedData = sortBy(initialRecordsReject, 'redID');
+        setInitialRecordsReject(sortedData);
+    }, [initialRecordsReject]);
+
+    useEffect(() => {
+        setInitialRecordsReject(() => {
+            return initialRecordsReject.filter((item) => {
+                return (
+                    item.redID.toString().toLowerCase().includes(searchReject.toLowerCase()) ||
+                    item.RededilmeNedeni.toLowerCase().includes(searchReject.toLowerCase()) ||
+                    item.RededilmeTarihi.toString().toLowerCase().includes(searchReject.toLowerCase()) ||
+                    item.ReddedenKullanıcı.toString().toLowerCase().includes(searchReject.toLowerCase())
+                );
+            });
+        });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [searchReject]);
 
     return (
         <div>
             <div className="panel">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-              <h5 className="font-semibold text-lg dark:text-white-light">{t('Feed Details')}</h5>
-            </div>
-            <div className="p-5">
-              <Formik
-              initialValues={{
-                yemID: metaData?.yemID || null,
-                yemAdi: metaData?.yemAdi || '',
-                durum: metaData?.durum || 'b',
-                yemAciklama: metaData?.yemAciklama || '',
-              }}
-              enableReinitialize
-              validationSchema={Yup.object().shape({
-                yemAdi: Yup.string().required(t('Please Fill In')),
-                durum: Yup.string().required(t('Please Fill In')),
-                yemAciklama: Yup.string(),
-              })}
-              onSubmit={(values) => {
-                console.log('Form values:', values);
-                setModalAdd(false);
-              }}
-              >
-              {({ errors, touched, submitCount }) => (
-                <Form>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                  <label className="form-label">{t('Feed Name')}</label>
-                  <Field
-                    name="yemAdi"
-                    className={`form-input ${errors.yemAdi && touched.yemAdi ? 'border-danger' : ''}`}
-                    readOnly={true} 
-                  />
-                   {submitCount ? (
-                        errors.yemAdi ? (
-                            <div className="text-danger mt-1">{errors.yemAdi}</div>
-                        ) : (
-                            <div className="text-[#1abc9c] mt-1">{t('Looks Good!')}</div>
-                        )
-                    ) : (
-                        ''
-                    )}
-                  </div>
-                  <div>
-                  <label className="form-label">{t('Status')}</label>
-                  <Field
-                    as="select"
-                    name="durum"
-                    className={`form-input ${errors.durum && touched.durum ? 'border-danger' : ''}`}
-                    readOnly={true} 
-                  >
-                    <option value="" disabled={true}>{t('Please Select')}</option>
-                    <option value="a" disabled={metaData?.durum == "p" || metaData?.durum == "b" || metaData == null}>{t('Active')}</option>
-                    <option value="p" disabled={metaData?.durum == "p" || metaData?.durum == "b" || metaData == null}>{t('Passive')}</option>
-                    <option value="b" disabled={true}>{t('Pending')}</option>
-                  </Field>
-                  {submitCount ? (
-                        errors.durum ? (
-                            <div className="text-danger mt-1">{errors.durum}</div>
-                        ) : (
-                            <div className="text-[#1abc9c] mt-1">{t('Looks Good!')}</div>
-                        )
-                    ) : (
-                        ''
-                    )}
-                  </div>
-                  <div className="md:col-span-2">
-                  <label className="form-label">{t('Description')}</label>
-                  <Field
-                    as="textarea"
-                    name="yemAciklama"
-                    className={`form-input ${errors.yemAciklama && touched.yemAciklama ? 'border-danger' : ''}`}
-                    readOnly={true}
-                  />
-                   {submitCount ? (
-                        errors.yemAciklama ? (
-                            <div className="text-danger mt-1">{errors.yemAciklama}</div>
-                        ) : (
-                            <div className="text-[#1abc9c] mt-1">{t('Looks Good!')}</div>
-                        )
-                    ) : (
-                        ''
-                    )}
-                  </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <h5 className="font-semibold text-lg dark:text-white-light">{t('Feed Details')}</h5>
                 </div>
-                <div className="mt-4 flex justify-end gap-2">
-                  {(metaData?.yemID && (metaData?.durum == "b")) && <button type="button" className="btn btn-success gap-2" onClick={() =>{ setFeedApproveModal(true) }}>
-                    <IconChecks />
-                  {t('Approve')}
-                  </button>}
-                  <Transition appear show={feedApproveModal} as={Fragment}>
-                    <Dialog as="div" open={feedApproveModal} onClose={() => setFeedApproveModal(false)}>
-                      <div className="fixed inset-0 z-10 overflow-y-auto bg-[black]/10">
-                        <div className="flex min-h-screen items-center justify-center px-4">
-                          <Dialog.Panel className="panel my-8 w-full max-w-sm overflow-hidden rounded-lg py-1 px-4 text-black dark:text-white-dark">
-                            <div className="flex items-center justify-between p-5">
-                              <h5>{t('Approve')}</h5>
-                              <button
-                                type="button"
-                                onClick={() => setFeedApproveModal(false)}
-                                className="text-white-dark hover:text-dark"
-                              >
-                                <IconX className="w-5 h-5" />
-                              </button>
-                            </div>
-                            <div className="p-5">
-                              <form className="space-y-2">
-                                <button
-                                  type="button"
-                                  onClick={() => SetApprove(metaData!.yemID)} // Silme fonksiyonu çağrısı
-                                  className="btn btn-success w-full"
-                                >
-                                  {t("Approve")}
-                                </button>
-                                <button
-                                      type="button"
-                                      onClick={() => setFeedApproveModal(false)}
-                                      className="btn btn-warning w-full"
-                                    >
-                                    {t("Cancel")}
-                                </button>
-                              </form>
-                            </div>
-                          </Dialog.Panel>
-                        </div>
-                      </div>
-                    </Dialog>
-                  </Transition>
-                  {(metaData?.yemID && (metaData?.durum == "b" || metaData?.durum == "a" )) && <button type="button" className="btn btn-danger gap-2" onClick={() =>{ isEmpty(metaData?.yemID) ? setFeedPasiveModal(false): setFeedPasiveModal(true) }}>
-                    <IconXCircle />
-                  {t('Set Passive')}
-                  </button>}
-                  <Transition appear show={feedPasiveModal} as={Fragment}>
-                    <Dialog as="div" open={feedPasiveModal} onClose={() => setFeedPasiveModal(false)}>
-                      <div className="fixed inset-0 z-10 overflow-y-auto bg-[black]/10">
-                        <div className="flex min-h-screen items-center justify-center px-4">
-                          <Dialog.Panel className="panel my-8 w-full max-w-sm overflow-hidden rounded-lg py-1 px-4 text-black dark:text-white-dark">
-                            <div className="flex items-center justify-between p-5">
-                              <h5>{t('Set Passive')}</h5>
-                              <button
-                                type="button"
-                                onClick={() => setFeedPasiveModal(false)}
-                                className="text-white-dark hover:text-dark"
-                              >
-                                <IconX className="w-5 h-5" />
-                              </button>
-                            </div>
-                            <div className="p-5">
-                              <form className="space-y-2">
-                              <div className="relative mb-4">
-                                <label htmlFor="redSebebi">{t('Reject Reson')}</label>
-                                <input 
-                                    type="text" 
-                                    placeholder="Neden?" 
-                                    className="form-input border border-gray-300 rounded-lg p-2 text-gray-700" 
-                                    id="redSebebi" 
-                                    value={reson} 
-                                    onChange={(e) => setReson(e.target.value)} 
-                                />
+                <div className="p-5">
+                    <Formik
+                        initialValues={{
+                            yemID: metaData?.yemID || null,
+                            yemAdi: metaData?.yemAdi || '',
+                            durum: metaData?.durum || 'b',
+                            yemAciklama: metaData?.yemAciklama || '',
+                        }}
+                        enableReinitialize
+                        validationSchema={Yup.object().shape({
+                            yemAdi: Yup.string().required(t('Please Fill In')),
+                            durum: Yup.string().required(t('Please Fill In')),
+                            yemAciklama: Yup.string(),
+                        })}
+                        onSubmit={(values) => {
+                            console.log('Form values:', values);
+                            setModalAdd(false);
+                        }}
+                    >
+                        {({ errors, touched, submitCount }) => (
+                            <Form>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="form-label">{t('Feed Name')}</label>
+                                        <Field name="yemAdi" className={`form-input ${errors.yemAdi && touched.yemAdi ? 'border-danger' : ''}`} readOnly={true} />
+                                        {submitCount ? errors.yemAdi ? <div className="text-danger mt-1">{errors.yemAdi}</div> : <div className="text-[#1abc9c] mt-1">{t('Looks Good!')}</div> : ''}
+                                    </div>
+                                    <div>
+                                        <label className="form-label">{t('Status')}</label>
+                                        <Field as="select" name="durum" className={`form-input ${errors.durum && touched.durum ? 'border-danger' : ''}`} readOnly={true}>
+                                            <option value="" disabled={true}>
+                                                {t('Please Select')}
+                                            </option>
+                                            <option value="a" disabled={metaData?.durum == 'p' || metaData?.durum == 'b' || metaData == null}>
+                                                {t('Active')}
+                                            </option>
+                                            <option value="p" disabled={metaData?.durum == 'p' || metaData?.durum == 'b' || metaData == null}>
+                                                {t('Passive')}
+                                            </option>
+                                            <option value="b" disabled={true}>
+                                                {t('Pending')}
+                                            </option>
+                                        </Field>
+                                        {submitCount ? errors.durum ? <div className="text-danger mt-1">{errors.durum}</div> : <div className="text-[#1abc9c] mt-1">{t('Looks Good!')}</div> : ''}
+                                    </div>
+                                    <div className="md:col-span-2">
+                                        <label className="form-label">{t('Description')}</label>
+                                        <Field as="textarea" name="yemAciklama" className={`form-input ${errors.yemAciklama && touched.yemAciklama ? 'border-danger' : ''}`} readOnly={true} />
+                                        {submitCount ? (
+                                            errors.yemAciklama ? (
+                                                <div className="text-danger mt-1">{errors.yemAciklama}</div>
+                                            ) : (
+                                                <div className="text-[#1abc9c] mt-1">{t('Looks Good!')}</div>
+                                            )
+                                        ) : (
+                                            ''
+                                        )}
+                                    </div>
                                 </div>
-                                <button
-                                  type="button"
-                                  onClick={() => SetPassive(metaData!.yemID)} // Silme fonksiyonu çağrısı
-                                  className="btn btn-danger w-full"
-                                >
-                                  {t("Set Passive")}
-                                </button>
-                                <button
-                                      type="button"
-                                      onClick={() => setFeedPasiveModal(false)}
-                                      className="btn btn-warning w-full"
-                                    >
-                                    {t("Cancel")}
-                                </button>
-                              </form>
-                            </div>
-                          </Dialog.Panel>
-                        </div>
-                      </div>
-                    </Dialog>
-                  </Transition>
+                                <div className="mt-4 flex justify-end gap-2">
+                                    {metaData?.yemID && metaData?.durum == 'b' && (
+                                        <button
+                                            type="button"
+                                            className="btn btn-success gap-2"
+                                            onClick={() => {
+                                                setFeedApproveModal(true);
+                                            }}
+                                        >
+                                            <IconChecks />
+                                            {t('Approve')}
+                                        </button>
+                                    )}
+                                    <Transition appear show={feedApproveModal} as={Fragment}>
+                                        <Dialog as="div" open={feedApproveModal} onClose={() => setFeedApproveModal(false)}>
+                                            <div className="fixed inset-0 z-10 overflow-y-auto bg-[black]/10">
+                                                <div className="flex min-h-screen items-center justify-center px-4">
+                                                    <Dialog.Panel className="panel my-8 w-full max-w-sm overflow-hidden rounded-lg py-1 px-4 text-black dark:text-white-dark">
+                                                        <div className="flex items-center justify-between p-5">
+                                                            <h5>{t('Approve')}</h5>
+                                                            <button type="button" onClick={() => setFeedApproveModal(false)} className="text-white-dark hover:text-dark">
+                                                                <IconX className="w-5 h-5" />
+                                                            </button>
+                                                        </div>
+                                                        <div className="p-5">
+                                                            <form className="space-y-2">
+                                                                <button
+                                                                    type="button"
+                                                                    onClick={() => SetApprove(metaData!.yemID)} // Silme fonksiyonu çağrısı
+                                                                    className="btn btn-success w-full"
+                                                                >
+                                                                    {t('Approve')}
+                                                                </button>
+                                                                <button type="button" onClick={() => setFeedApproveModal(false)} className="btn btn-warning w-full">
+                                                                    {t('Cancel')}
+                                                                </button>
+                                                            </form>
+                                                        </div>
+                                                    </Dialog.Panel>
+                                                </div>
+                                            </div>
+                                        </Dialog>
+                                    </Transition>
+                                    {metaData?.yemID && (metaData?.durum == 'b' || metaData?.durum == 'a') && (
+                                        <button
+                                            type="button"
+                                            className="btn btn-danger gap-2"
+                                            onClick={() => {
+                                                isEmpty(metaData?.yemID) ? setFeedPasiveModal(false) : setFeedPasiveModal(true);
+                                            }}
+                                        >
+                                            <IconXCircle />
+                                            {t('Set Passive')}
+                                        </button>
+                                    )}
+                                    <Transition appear show={feedPasiveModal} as={Fragment}>
+                                        <Dialog as="div" open={feedPasiveModal} onClose={() => setFeedPasiveModal(false)}>
+                                            <div className="fixed inset-0 z-10 overflow-y-auto bg-[black]/10">
+                                                <div className="flex min-h-screen items-center justify-center px-4">
+                                                    <Dialog.Panel className="panel my-8 w-full max-w-sm overflow-hidden rounded-lg py-1 px-4 text-black dark:text-white-dark">
+                                                        <div className="flex items-center justify-between p-5">
+                                                            <h5>{t('Set Passive')}</h5>
+                                                            <button type="button" onClick={() => setFeedPasiveModal(false)} className="text-white-dark hover:text-dark">
+                                                                <IconX className="w-5 h-5" />
+                                                            </button>
+                                                        </div>
+                                                        <div className="p-5">
+                                                            <form className="space-y-2">
+                                                                <div className="relative mb-4">
+                                                                    <label htmlFor="redSebebi">{t('Reject Reson')}</label>
+                                                                    <input
+                                                                        type="text"
+                                                                        placeholder="Neden?"
+                                                                        className="form-input border border-gray-300 rounded-lg p-2 text-gray-700"
+                                                                        id="redSebebi"
+                                                                        value={reson}
+                                                                        onChange={(e) => setReson(e.target.value)}
+                                                                    />
+                                                                </div>
+                                                                <button
+                                                                    type="button"
+                                                                    onClick={() => SetPassive(metaData!.yemID)} // Silme fonksiyonu çağrısı
+                                                                    className="btn btn-danger w-full"
+                                                                >
+                                                                    {t('Set Passive')}
+                                                                </button>
+                                                                <button type="button" onClick={() => setFeedPasiveModal(false)} className="btn btn-warning w-full">
+                                                                    {t('Cancel')}
+                                                                </button>
+                                                            </form>
+                                                        </div>
+                                                    </Dialog.Panel>
+                                                </div>
+                                            </div>
+                                        </Dialog>
+                                    </Transition>
+                                </div>
+                            </Form>
+                        )}
+                    </Formik>
                 </div>
-                </Form>
-              )}
-              </Formik>
             </div>
-            </div>
-            <div className='pt-5'>
+            <div className="pt-5">
                 <ul className="sm:flex font-semibold border-b border-[#ebedf2] dark:border-[#191e3a] mb-5 whitespace-nowrap overflow-y-auto">
                     <li className="inline-block">
                         <button
@@ -490,64 +510,112 @@ const MultipleTables = () => {
                     </li>
                     <li className="inline-block">
                         <button
-                        onClick={() => toggleTabs('feed-reject')}
-                        className={`flex gap-2 p-4 border-b border-transparent hover:border-primary hover:text-primary ${
-                            tabs === 'feed-reject' ? '!border-primary text-primary' : ''
-                        }`}
+                            onClick={() => toggleTabs('feed-reject')}
+                            className={`flex gap-2 p-4 border-b border-transparent hover:border-primary hover:text-primary ${tabs === 'feed-reject' ? '!border-primary text-primary' : ''}`}
                         >
-                        <IconXCircle />
-                        {t("Feed Reject Reasons")}
+                            <IconXCircle />
+                            {t('Feed Reject Reasons')}
                         </button>
                     </li>
                 </ul>
             </div>
             {tabs === 'nutrition' ? (
-            <div className="panel mt-6">
-                <div className="mb-4.5 px-5 flex md:items-center md:flex-row flex-col gap-5">
-                    <h5 className="font-semibold text-lg dark:text-white-light">{t('Feed Content')}</h5>
-                    <div className="ltr:ml-auto rtl:mr-auto">
-                        <input type="text" className="form-input w-auto" placeholder="Search..." value={search} onChange={(e) => setSearch(e.target.value)} />
+                <div className="panel mt-6">
+                    <div className="mb-4.5 px-5 flex md:items-center md:flex-row flex-col gap-5">
+                        <h5 className="font-semibold text-lg dark:text-white-light">{t('Feed Content')}</h5>
+                        <div className="ltr:ml-auto rtl:mr-auto">
+                            <input type="text" className="form-input w-auto" placeholder="Search..." value={search} onChange={(e) => setSearch(e.target.value)} />
+                        </div>
+                    </div>
+                    <div className="datatables">
+                        <DataTable
+                            className="whitespace-nowrap table-hover"
+                            records={recordsData}
+                            columns={[
+                                {
+                                    accessor: 'besinDegeriID',
+                                    title: t('ID'),
+                                    sortable: true,
+                                },
+                                {
+                                    accessor: 'besinTipi',
+                                    title: t('Nutrition Type'),
+                                    sortable: true,
+                                },
+                                {
+                                    accessor: 'miktar',
+                                    title: t('Cuantity'),
+                                    sortable: true,
+                                },
+                                {
+                                    accessor: 'birimAdi',
+                                    title: t('Unit'),
+                                    sortable: true,
+                                },
+                            ]}
+                            totalRecords={initialRecords.length}
+                            recordsPerPage={pageSize}
+                            page={page}
+                            onPageChange={(p) => setPage(p)}
+                            recordsPerPageOptions={PAGE_SIZES}
+                            onRecordsPerPageChange={setPageSize}
+                            sortStatus={sortStatus}
+                            onSortStatusChange={setSortStatus}
+                            minHeight={200}
+                            paginationText={({ from, to, totalRecords }) => `Showing  ${from} to ${to} of ${totalRecords} entries`}
+                        />
                     </div>
                 </div>
-                <div className="datatables">
-                    <DataTable
-                        className="whitespace-nowrap table-hover"
-                        records={recordsData}
-                        columns={[
-                            {
-                                accessor: 'besinDegeriID',
-                                title: t('ID'),
-                                sortable: true
-                            },
-                            {
-                                accessor: 'besinTipi',
-                                title: t('Nutrition Type'),
-                                sortable: true
-                            },
-                            {
-                              accessor: 'miktar',
-                              title: t('Cuantity'),
-                              sortable: true
-                            },
-                            {
-                              accessor: 'birimAdi',
-                              title: t('Unit'),
-                              sortable: true
-                            },
-                        ]}
-                        totalRecords={initialRecords.length}
-                        recordsPerPage={pageSize}
-                        page={page}
-                        onPageChange={(p) => setPage(p)}
-                        recordsPerPageOptions={PAGE_SIZES}
-                        onRecordsPerPageChange={setPageSize}
-                        sortStatus={sortStatus}
-                        onSortStatusChange={setSortStatus}
-                        minHeight={200}
-                        paginationText={({ from, to, totalRecords }) => `Showing  ${from} to ${to} of ${totalRecords} entries`}
-                    />
+            ) : (
+                ''
+            )}
+            {tabs === 'feed-reject' ? (
+                <div className="panel mt-6">
+                    <div className="mb-4.5 px-5 flex md:items-center md:flex-row flex-col gap-5">
+                        <h5 className="font-semibold text-lg dark:text-white-light">{t('Feed Content')}</h5>
+                        <div className="ltr:ml-auto rtl:mr-auto">
+                            <input type="text" className="form-input w-auto" placeholder="Search..." value={search} onChange={(e) => setSearchReject(e.target.value)} />
+                        </div>
+                    </div>
+                    <div className="datatables">
+                        <DataTable
+                            className="whitespace-nowrap table-hover"
+                            records={recordsDataReject}
+                            columns={[
+                                {
+                                    accessor: 'redID',
+                                    title: t('ID'),
+                                    sortable: true,
+                                },
+                                {
+                                    accessor: 'RededilmeNedeni',
+                                    title: t('Reject Reason'),
+                                    sortable: true,
+                                },
+                                {
+                                    accessor: 'RededilmeTarihi',
+                                    title: t('Reject Date'),
+                                    sortable: true,
+                                },
+                                {
+                                    accessor: 'ReddedenKullanıcı',
+                                    title: t('Rejected By'),
+                                    sortable: true,
+                                },
+                            ]}
+                            totalRecords={initialRecordsReject.length}
+                            recordsPerPage={pageSizeReject}
+                            page={pageReject}
+                            onPageChange={(p) => setPageReject(p)}
+                            recordsPerPageOptions={PAGE_SIZESReject}
+                            onRecordsPerPageChange={setPageSizeReject}
+                            sortStatus={sortStatusReject}
+                            onSortStatusChange={setSortStatusReject}
+                            minHeight={200}
+                            paginationText={({ from, to, totalRecords }) => `Showing  ${from} to ${to} of ${totalRecords} entries`}
+                        />
+                    </div>
                 </div>
-            </div>
             ) : (
                 ''
             )}
@@ -556,4 +624,3 @@ const MultipleTables = () => {
 };
 
 export default MultipleTables;
-

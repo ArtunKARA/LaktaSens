@@ -22,6 +22,7 @@ import { strict } from 'assert';
 import { padEnd } from 'lodash';
 import IconPencilPaper from '../../components/Icon/IconPencilPaper';
 import IconBox from '../../components/Icon/IconBox';
+import YemTanımlamaları from './UrunTanımlamalar/YemTanımlamaları';
 
 const AccountSetting = () => {
     interface OptionType {
@@ -75,7 +76,7 @@ const AccountSetting = () => {
     const [recordsData, setRecordsData] = useState(initialRecords);
     const [modal22, setModal22] = useState(false);
     const [selectedUser, setSelectedUser] = useState<UserData | null>(null);
-    
+
     const [sortStatus, setSortStatus] = useState<DataTableSortStatus>({
         columnAccessor: 'kullaniciID',
         direction: 'asc',
@@ -91,10 +92,9 @@ const AccountSetting = () => {
         { value: 'a', label: t('Active') },
         { value: 'p', label: t('Passive') },
         { value: 'b', label: t('On hold') },
-        { value: 'n', label: 'NaN' }
+        { value: 'n', label: 'NaN' },
     ];
 
-    
     useEffect(() => {
         setPage(1);
     }, [pageSize]);
@@ -137,20 +137,19 @@ const AccountSetting = () => {
                     },
                     body: JSON.stringify({ firmaID: userInfo.firmaID }),
                 });
-    
+
                 if (!response.ok) {
-                    throw new Error("Network response was not ok");
+                    throw new Error('Network response was not ok');
                 }
-    
+
                 const data: UserData[] = await response.json();
                 console.log('Gelen veri:', data);
                 setRowData(data);
-    
             } catch (error) {
                 console.error('API çağrısı sırasında bir hata oluştu:', error);
             }
         };
-    
+
         fetchData();
     }, []); // Boş bağımlılık dizisi, component mount olduğunda sadece bir kez çalıştırılır
 
@@ -174,20 +173,20 @@ const AccountSetting = () => {
         firstname: Yup.string().required('Please fill the first name'),
         lastname: Yup.string().required('Please fill the last name'),
         tcNumber: Yup.string()
-        .required('Please provide a valid TC Number')
-        .matches(/^[1-9][0-9]{10}$/, 'TC Number must be 11 digits and cannot start with 0')
-        .test('is-valid-tc', 'Invalid TC Number', value => {
-            if (!value) return false;
-            const digits = value.split('').map(Number);
-            const oddSum = digits[0] + digits[2] + digits[4] + digits[6] + digits[8];
-            const evenSum = digits[1] + digits[3] + digits[5] + digits[7];
-            const totalSum = oddSum + evenSum + digits[9];
-            
-            const rule10 = (oddSum * 7 - evenSum) % 10 === digits[9];
-            const rule11 = totalSum % 10 === digits[10];
-            
-            return rule10 && rule11;
-        }),
+            .required('Please provide a valid TC Number')
+            .matches(/^[1-9][0-9]{10}$/, 'TC Number must be 11 digits and cannot start with 0')
+            .test('is-valid-tc', 'Invalid TC Number', (value) => {
+                if (!value) return false;
+                const digits = value.split('').map(Number);
+                const oddSum = digits[0] + digits[2] + digits[4] + digits[6] + digits[8];
+                const evenSum = digits[1] + digits[3] + digits[5] + digits[7];
+                const totalSum = oddSum + evenSum + digits[9];
+
+                const rule10 = (oddSum * 7 - evenSum) % 10 === digits[9];
+                const rule11 = totalSum % 10 === digits[10];
+
+                return rule10 && rule11;
+            }),
         email: Yup.string().email('Invalid email').required('Please fill the Email'),
         password: Yup.string()
             .trim()
@@ -214,7 +213,6 @@ const AccountSetting = () => {
         firmaAdresi: Yup.string().required('Please fill Commpany Address'),
     });
 
-
     const submitUpdateUserForm = (values: any) => {
         const toast = Swal.mixin({
             toast: true,
@@ -227,7 +225,7 @@ const AccountSetting = () => {
             title: 'Form user update dev',
             padding: '10px 20px',
         });
-        console.log(values);    
+        console.log(values);
     };
 
     const submitUpdateFarmForm = (values: any) => {
@@ -242,7 +240,7 @@ const AccountSetting = () => {
             title: 'Form Company update dev',
             padding: '10px 20px',
         });
-        console.log(values);    
+        console.log(values);
     };
 
     const submitAddFarmUserForm = (values: any) => {
@@ -257,7 +255,7 @@ const AccountSetting = () => {
             title: 'Form Add Company user update dev',
             padding: '10px 20px',
         });
-        console.log(values);    
+        console.log(values);
     };
 
     const submitUpdateFarmUserForm = (values: any) => {
@@ -272,7 +270,7 @@ const AccountSetting = () => {
             title: 'Form Update Company user update dev',
             padding: '10px 20px',
         });
-        console.log(values);    
+        console.log(values);
     };
 
     const CitySelect = ({ field, form, options }: { field: any; form: any; options: OptionType[] }) => {
@@ -281,11 +279,11 @@ const AccountSetting = () => {
             form.setFieldValue('district', '');
             getDistrictList(selectedOption ? selectedOption.value : '');
         };
-    
+
         return (
             <Select
                 options={options}
-                value={options ? options.find(option => option.value === field.value) : null}
+                value={options ? options.find((option) => option.value === field.value) : null}
                 onChange={handleChange}
                 placeholder={t('Please select a city')}
                 isSearchable={true}
@@ -298,11 +296,11 @@ const AccountSetting = () => {
         const handleChange = (selectedOption: SingleValue<OptionType> | null) => {
             form.setFieldValue(field.name, selectedOption ? selectedOption.value : '');
         };
-    
+
         return (
             <Select
                 options={options}
-                value={options ? options.find(option => option.value === field.value) : null}
+                value={options ? options.find((option) => option.value === field.value) : null}
                 onChange={handleChange}
                 placeholder={t('Please select a city')}
                 isSearchable={true}
@@ -312,116 +310,121 @@ const AccountSetting = () => {
     };
 
     const getDistrictList = (cityID: string) => {
-        axios.get('http://localhost:3030/api/options/districtList?cityID=' + cityID)
-            .then(response => {
+        axios
+            .get('http://localhost:3030/api/options/districtList?cityID=' + cityID)
+            .then((response) => {
                 const districtOptions = response.data.map((district: any) => ({
                     value: district.ID,
-                    label: district.SehirIlceMahalleAdi
+                    label: district.SehirIlceMahalleAdi,
                 }));
                 setDistrictOptions(districtOptions);
                 console.log(districtOptions);
             })
-            .catch(error => {
+            .catch((error) => {
                 console.error('Error fetching district options:', error);
             });
     };
 
     useEffect(() => {
         const fetchData = async () => {
-          try {
-            const response = await axios.post("http://localhost:3030/api/firma/postFirmaBilgileriGetir", {
-              firmaID: userInfo.firmaID,
-            });
-            console.log(response.data);
+            try {
+                const response = await axios.post('http://localhost:3030/api/firma/postFirmaBilgileriGetir', {
+                    firmaID: userInfo.firmaID,
+                });
+                console.log(response.data);
 
-            const firmaInfo = {
-                firmaAdi: response.data.firmaAdi,
-                telefonNo: response.data.telefonNo,
-                firmaAdresi: response.data.firmaAdresi,
-                sehirID: response.data.sehirID,
-                ilceID: response.data.ilceID,
-                bolge: response.data.bolge,
-                hesapDurumu: response.data.hesapDurumu,
-                firmaMail: response.data.firmaMail
-            };
-            setFirmaInfo(firmaInfo);
-            getDistrictList(firmaInfo!.sehirID);
-          } catch (error) {
-            console.error(error);
-            alert(t("An error occurred while saving!") + error);
-          }
+                const firmaInfo = {
+                    firmaAdi: response.data.firmaAdi,
+                    telefonNo: response.data.telefonNo,
+                    firmaAdresi: response.data.firmaAdresi,
+                    sehirID: response.data.sehirID,
+                    ilceID: response.data.ilceID,
+                    bolge: response.data.bolge,
+                    hesapDurumu: response.data.hesapDurumu,
+                    firmaMail: response.data.firmaMail,
+                };
+                setFirmaInfo(firmaInfo);
+                getDistrictList(firmaInfo!.sehirID);
+            } catch (error) {
+                console.error(error);
+                alert(t('An error occurred while saving!') + error);
+            }
 
-          axios.get('http://localhost:3030/api/options/cityList')
-          .then(response => {
-              const cityOpitons = response.data.map((city: any) => ({
-                  value: city.ID,
-                  label: city.SehirIlceMahalleAdi
-              }));
-              setCityOptions(cityOpitons);
-              console.log(cityOpitons);
-          })
-          .catch(error => {
-              console.error('Error fetching city options:', error);
-          });
+            axios
+                .get('http://localhost:3030/api/options/cityList')
+                .then((response) => {
+                    const cityOpitons = response.data.map((city: any) => ({
+                        value: city.ID,
+                        label: city.SehirIlceMahalleAdi,
+                    }));
+                    setCityOptions(cityOpitons);
+                    console.log(cityOpitons);
+                })
+                .catch((error) => {
+                    console.error('Error fetching city options:', error);
+                });
         };
         fetchData();
     }, []);
 
     const handleKullaniciEkle = () => {
-       alert("Dev");
-    }; 
+        alert('Dev');
+    };
 
-    const statusColorYetki = (durum : String) => {
+    const statusColorYetki = (durum: String) => {
         const color = ['primary', 'secondary', 'success', 'danger', 'warning', 'info'];
-        if(durum == "a"){
-            return color[2]
-        }else if(durum == "k"){
-            return color[0]
-        }else{
-          return color[3]
+        if (durum == 'a') {
+            return color[2];
+        } else if (durum == 'k') {
+            return color[0];
+        } else {
+            return color[3];
         }
     };
 
-    const statusNameYetki = (durum : String) => {
-        if(durum == "a"){
-            return "Admin"
-        }else if(durum == "k"){
-            return "Kullanıcı"
-        }else{
-          return "NaN"
+    const statusNameYetki = (durum: String) => {
+        if (durum == 'a') {
+            return 'Admin';
+        } else if (durum == 'k') {
+            return 'Kullanıcı';
+        } else {
+            return 'NaN';
         }
     };
 
-    const statusColorDurum = (durum : String) => {
+    const statusColorDurum = (durum: String) => {
         const color = ['primary', 'secondary', 'success', 'danger', 'warning', 'info'];
-        if(durum == "a"){
-            return color[2]
-        }else if(durum == "p"){
-            return color[3]
-        }else if(durum == "b"){
-          return color[4]
-        }else{
-          return color[3]
+        if (durum == 'a') {
+            return color[2];
+        } else if (durum == 'p') {
+            return color[3];
+        } else if (durum == 'b') {
+            return color[4];
+        } else {
+            return color[3];
         }
-    }; 
-    
-    const statusNameDurum = (durum : String) => {
-        if(durum == "a"){
-            return "Admin"
-        }else if(durum == "p"){
-            return "Pasif"
-        }else if(durum == "b"){
-          return "Beklemede"
-        }else{
-          return "NaN"
+    };
+
+    const statusNameDurum = (durum: String) => {
+        if (durum == 'a') {
+            return 'Admin';
+        } else if (durum == 'p') {
+            return 'Pasif';
+        } else if (durum == 'b') {
+            return 'Beklemede';
+        } else {
+            return 'NaN';
         }
-    }; 
+    };
 
     return (
         <div>
             <div className="pt-5">
                 <div className="flex items-center justify-between mb-5">
-                    <h5 className="font-semibold text-lg dark:text-white-light">{t('Profile')} <span className="text-s bg-success-light rounded text-success px-4 ltr:ml-8 rtl:ml-8">{t('Supplier')}</span><span className="text-s badge badge-outline-primary px-4 ltr:ml-8 rtl:ml-8">{firmaInfo?.firmaAdi}</span></h5>
+                    <h5 className="font-semibold text-lg dark:text-white-light">
+                        {t('Profile')} <span className="text-s bg-success-light rounded text-success px-4 ltr:ml-8 rtl:ml-8">{t('Supplier')}</span>
+                        <span className="text-s badge badge-outline-primary px-4 ltr:ml-8 rtl:ml-8">{firmaInfo?.firmaAdi}</span>
+                    </h5>
                 </div>
                 <div>
                     <ul className="sm:flex font-semibold border-b border-[#ebedf2] dark:border-[#191e3a] mb-5 whitespace-nowrap overflow-y-auto">
@@ -434,46 +437,40 @@ const AccountSetting = () => {
                                 {t('Home')}
                             </button>
                         </li>
-                        
+
                         {userInfo.hesapFirmaYetkisi === 'a' && (
                             <li className="inline-block">
                                 <button
-                                onClick={() => toggleTabs('payment-details')}
-                                className={`flex gap-2 p-4 border-b border-transparent hover:border-primary hover:text-primary ${
-                                    tabs === 'payment-details' ? '!border-primary text-primary' : ''
-                                }`}
+                                    onClick={() => toggleTabs('payment-details')}
+                                    className={`flex gap-2 p-4 border-b border-transparent hover:border-primary hover:text-primary ${tabs === 'payment-details' ? '!border-primary text-primary' : ''}`}
                                 >
-                                <IconDollarSignCircle />
-                                {t("Payment Details")}
+                                    <IconDollarSignCircle />
+                                    {t('Payment Details')}
                                 </button>
                             </li>
-                            )}
+                        )}
 
                         {userInfo.hesapFirmaYetkisi === 'a' && (
-                        <li className="inline-block">
-                            <button
-                            onClick={() => toggleTabs('manage-company')}
-                            className={`flex gap-2 p-4 border-b border-transparent hover:border-primary hover:text-primary ${
-                                tabs === 'manage-company' ? '!border-primary text-primary' : ''
-                            }`}
-                            >
-                            <IconNotes />
-                            {t("Manage Company")}
-                            </button>
-                        </li>
+                            <li className="inline-block">
+                                <button
+                                    onClick={() => toggleTabs('manage-company')}
+                                    className={`flex gap-2 p-4 border-b border-transparent hover:border-primary hover:text-primary ${tabs === 'manage-company' ? '!border-primary text-primary' : ''}`}
+                                >
+                                    <IconNotes />
+                                    {t('Manage Company')}
+                                </button>
+                            </li>
                         )}
                         {userInfo.hesapFirmaYetkisi === 'a' && (
-                        <li className="inline-block">
-                            <button
-                            onClick={() => toggleTabs('manage-product')}
-                            className={`flex gap-2 p-4 border-b border-transparent hover:border-primary hover:text-primary ${
-                                tabs === 'manage-product' ? '!border-primary text-primary' : ''
-                            }`}
-                            >
-                            <IconBox />
-                            {t("Manage Product")}
-                            </button>
-                        </li>
+                            <li className="inline-block">
+                                <button
+                                    onClick={() => toggleTabs('manage-product')}
+                                    className={`flex gap-2 p-4 border-b border-transparent hover:border-primary hover:text-primary ${tabs === 'manage-product' ? '!border-primary text-primary' : ''}`}
+                                >
+                                    <IconBox />
+                                    {t('Manage Product')}
+                                </button>
+                            </li>
                         )}
                         <li className="inline-block">
                             <button
@@ -481,7 +478,7 @@ const AccountSetting = () => {
                                 className={`flex gap-2 p-4 border-b border-transparent hover:border-primary hover:text-primary ${tabs === 'danger-zone' ? '!border-primary text-primary' : ''}`}
                             >
                                 <IconTrash />
-                                {t("Danger Zone")}
+                                {t('Danger Zone')}
                             </button>
                         </li>
                     </ul>
@@ -491,155 +488,193 @@ const AccountSetting = () => {
                         <Formik
                             initialValues={{
                                 kullaniciID: userInfo.kullaniciID,
-                                firstname:  userInfo.isim,
+                                firstname: userInfo.isim,
                                 lastname: userInfo.soyisim,
                                 tcNumber: userInfo.tcNo,
                                 email: userInfo.eposta,
                                 telefonNo: userInfo.telefonNo,
                                 password: '',
-                                confirmPassword:'',
+                                confirmPassword: '',
                             }}
                             validationSchema={submitUserFormValidation}
                             onSubmit={() => {}}
-                        >{({ errors, submitCount, touched, values }) => (
-                            <Form className="border border-[#ebedf2] dark:border-[#191e3a] rounded-md p-4 mb-5 bg-white dark:bg-black">
-                                <h6 className="text-lg font-bold mb-5">{t('General Information')}</h6>
-                                <div className="flex flex-col sm:flex-row">
-                                    <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-5">
-                                        <div>
-                                            <label htmlFor="firstname">{t('Name')}</label>
-                                            <Field name="firstname" id="firstname" type="text" className="form-input" />
-                                            {submitCount ? (
-                                                errors.firstname ? (
-                                                    <div className="text-danger mt-1">{errors.firstname?.toString()}</div>
-                                                ) : (
-                                                    <div className="text-[#1abc9c] mt-1">{t('Looks Good!')}</div>
-                                                )
-                                            ) : (
-                                                ''
-                                            )}
-                                        </div>
-                                        <div>
-                                            <label htmlFor="lastname">{t('Last Name')}</label>
-                                            <Field name="lastname" id="lastname" type="text" className="form-input" />
-                                            {submitCount ? (
-                                                errors.lastname ? (
-                                                    <div className="text-danger mt-1">{errors.lastname?.toString()}</div>
-                                                ) : (
-                                                    <div className="text-[#1abc9c] mt-1">{t('Looks Good!')}</div>
-                                                )
-                                            ) : (
-                                                ''
-                                            )}
-                                        </div>
-                                        <div>
-                                            <label htmlFor="telefonNo">{t('Telephone')}</label>
-                                            <Field name="telefonNo" type="text" id="telefonNo" placeholder={t('Enter Telephone')} className="form-input" />
-
-                                            {submitCount ? (
-                                                errors.telefonNo ? (
-                                                    <div className="text-danger mt-1">{errors.telefonNo?.toString()}</div>
-                                                ) : (
-                                                    <div className="text-success mt-1">{t('Looks Good!')}</div>
-                                                )
-                                            ) : (
-                                                ''
-                                            )}
-                                        </div>
-
-                                        <div>
-                                            <label htmlFor="Email">{t('Email')}</label>
-                                            <Field name="email" type="text" id="Email" placeholder={t('Enter Email')} className="form-input" />
-
-                                            {submitCount ? errors.email ? <div className="text-danger mt-1">{errors.email?.toString()}</div> : <div className="text-success mt-1">{t('Looks Good!')}</div> : ''}
-                                        </div>
-                                        <div>
-                                            <label htmlFor="tcNumber">{t('TC Number')}</label>
-                                            <Field name="tcNumber" type="text" id="tcNumber" placeholder={t('Enter TC Number')} className="form-input" />
-
-                                            {submitCount ? (
-                                                errors.tcNumber ? (
-                                                    <div className="text-danger mt-1">{errors.tcNumber?.toString()}</div>
-                                                ) : (
-                                                    <div className="text-success mt-1">{t('Looks Good!')}</div>
-                                                )
-                                            ) : (
-                                                ''
-                                            )}
-                                        </div>
+                        >
+                            {({ errors, submitCount, touched, values }) => (
+                                <Form className="border border-[#ebedf2] dark:border-[#191e3a] rounded-md p-4 mb-5 bg-white dark:bg-black">
+                                    <h6 className="text-lg font-bold mb-5">{t('General Information')}</h6>
+                                    <div className="flex flex-col sm:flex-row">
                                         <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-5">
                                             <div>
-                                                <label htmlFor="hesapFirmaYetkisi">{t('Account Company Authorization')}</label>
-                                                {(() => {
-                                                    if (userInfo.hesapFirmaYetkisi === 'a') {
-                                                        return <span id="hesapFirmaYetkisi" className="badge bg-success text-lg block mx-auto text-center">Admin</span>;
-                                                    } else if (userInfo.hesapFirmaYetkisi === 'k')  {
-                                                        return <span id="hesapFirmaYetkisi"  className="badge bg-primary text-lg block mx-auto text-center">{t('User')}</span>;
-                                                    } else {
-                                                        return <span id="hesapFirmaYetkisi"  className="badge bg-dark text-lg block mx-auto text-center">NaN</span>;; // Return nothing if no condition matches
-                                                    }
-                                                })()}
+                                                <label htmlFor="firstname">{t('Name')}</label>
+                                                <Field name="firstname" id="firstname" type="text" className="form-input" />
+                                                {submitCount ? (
+                                                    errors.firstname ? (
+                                                        <div className="text-danger mt-1">{errors.firstname?.toString()}</div>
+                                                    ) : (
+                                                        <div className="text-[#1abc9c] mt-1">{t('Looks Good!')}</div>
+                                                    )
+                                                ) : (
+                                                    ''
+                                                )}
                                             </div>
                                             <div>
-                                                <label htmlFor="hesapDurumu">{t('Account Status')}</label>
-                                                {(() => {
-                                                    if (userInfo.hesapDurumu === 'a') {
-                                                        return <span id="hesapFirmaYetkisi" className="badge bg-success text-lg block mx-auto text-center">{t('Active')}</span>;
-                                                    } else if (userInfo.hesapDurumu === 'p')  {
-                                                        return <span id="hesapFirmaYetkisi"  className="badge bg-primary text-lg block mx-auto text-center">{t('Passive')}</span>;
-                                                    } else if (userInfo.hesapDurumu === 'b')  {
-                                                        return <span id="hesapFirmaYetkisi"  className="badge bg-warning text-lg block mx-auto text-center">{t('On hold')}</span>;
-                                                    }else {
-                                                        return <span id="hesapFirmaYetkisi"  className="badge bg-dark text-lg block mx-auto text-center">NaN</span>;; // Return nothing if no condition matches
-                                                    }
-                                                })()}
+                                                <label htmlFor="lastname">{t('Last Name')}</label>
+                                                <Field name="lastname" id="lastname" type="text" className="form-input" />
+                                                {submitCount ? (
+                                                    errors.lastname ? (
+                                                        <div className="text-danger mt-1">{errors.lastname?.toString()}</div>
+                                                    ) : (
+                                                        <div className="text-[#1abc9c] mt-1">{t('Looks Good!')}</div>
+                                                    )
+                                                ) : (
+                                                    ''
+                                                )}
+                                            </div>
+                                            <div>
+                                                <label htmlFor="telefonNo">{t('Telephone')}</label>
+                                                <Field name="telefonNo" type="text" id="telefonNo" placeholder={t('Enter Telephone')} className="form-input" />
+
+                                                {submitCount ? (
+                                                    errors.telefonNo ? (
+                                                        <div className="text-danger mt-1">{errors.telefonNo?.toString()}</div>
+                                                    ) : (
+                                                        <div className="text-success mt-1">{t('Looks Good!')}</div>
+                                                    )
+                                                ) : (
+                                                    ''
+                                                )}
+                                            </div>
+
+                                            <div>
+                                                <label htmlFor="Email">{t('Email')}</label>
+                                                <Field name="email" type="text" id="Email" placeholder={t('Enter Email')} className="form-input" />
+
+                                                {submitCount ? (
+                                                    errors.email ? (
+                                                        <div className="text-danger mt-1">{errors.email?.toString()}</div>
+                                                    ) : (
+                                                        <div className="text-success mt-1">{t('Looks Good!')}</div>
+                                                    )
+                                                ) : (
+                                                    ''
+                                                )}
+                                            </div>
+                                            <div>
+                                                <label htmlFor="tcNumber">{t('TC Number')}</label>
+                                                <Field name="tcNumber" type="text" id="tcNumber" placeholder={t('Enter TC Number')} className="form-input" />
+
+                                                {submitCount ? (
+                                                    errors.tcNumber ? (
+                                                        <div className="text-danger mt-1">{errors.tcNumber?.toString()}</div>
+                                                    ) : (
+                                                        <div className="text-success mt-1">{t('Looks Good!')}</div>
+                                                    )
+                                                ) : (
+                                                    ''
+                                                )}
+                                            </div>
+                                            <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-5">
+                                                <div>
+                                                    <label htmlFor="hesapFirmaYetkisi">{t('Account Company Authorization')}</label>
+                                                    {(() => {
+                                                        if (userInfo.hesapFirmaYetkisi === 'a') {
+                                                            return (
+                                                                <span id="hesapFirmaYetkisi" className="badge bg-success text-lg block mx-auto text-center">
+                                                                    Admin
+                                                                </span>
+                                                            );
+                                                        } else if (userInfo.hesapFirmaYetkisi === 'k') {
+                                                            return (
+                                                                <span id="hesapFirmaYetkisi" className="badge bg-primary text-lg block mx-auto text-center">
+                                                                    {t('User')}
+                                                                </span>
+                                                            );
+                                                        } else {
+                                                            return (
+                                                                <span id="hesapFirmaYetkisi" className="badge bg-dark text-lg block mx-auto text-center">
+                                                                    NaN
+                                                                </span>
+                                                            ); // Return nothing if no condition matches
+                                                        }
+                                                    })()}
+                                                </div>
+                                                <div>
+                                                    <label htmlFor="hesapDurumu">{t('Account Status')}</label>
+                                                    {(() => {
+                                                        if (userInfo.hesapDurumu === 'a') {
+                                                            return (
+                                                                <span id="hesapFirmaYetkisi" className="badge bg-success text-lg block mx-auto text-center">
+                                                                    {t('Active')}
+                                                                </span>
+                                                            );
+                                                        } else if (userInfo.hesapDurumu === 'p') {
+                                                            return (
+                                                                <span id="hesapFirmaYetkisi" className="badge bg-primary text-lg block mx-auto text-center">
+                                                                    {t('Passive')}
+                                                                </span>
+                                                            );
+                                                        } else if (userInfo.hesapDurumu === 'b') {
+                                                            return (
+                                                                <span id="hesapFirmaYetkisi" className="badge bg-warning text-lg block mx-auto text-center">
+                                                                    {t('On hold')}
+                                                                </span>
+                                                            );
+                                                        } else {
+                                                            return (
+                                                                <span id="hesapFirmaYetkisi" className="badge bg-dark text-lg block mx-auto text-center">
+                                                                    NaN
+                                                                </span>
+                                                            ); // Return nothing if no condition matches
+                                                        }
+                                                    })()}
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <label htmlFor="password">{t('Password')}</label>
+                                                <Field name="password" type="password" id="password" placeholder={t('Enter Password')} className="form-input" />
+
+                                                {submitCount ? (
+                                                    errors.password ? (
+                                                        <div className="text-danger mt-1">{errors.password}</div>
+                                                    ) : (
+                                                        <div className="text-success mt-1">{t('Looks Good!')}</div>
+                                                    )
+                                                ) : (
+                                                    ''
+                                                )}
+                                            </div>
+                                            <div>
+                                                <label htmlFor="confirmPassword">{t('Confirm Password')}</label>
+                                                <Field name="confirmPassword" type="password" id="confirmPassword" placeholder={t('Enter Password')} className="form-input" />
+
+                                                {submitCount ? (
+                                                    errors.confirmPassword ? (
+                                                        <div className="text-danger mt-1">{errors.confirmPassword}</div>
+                                                    ) : (
+                                                        <div className="text-success mt-1">{t('Looks Good!')}</div>
+                                                    )
+                                                ) : (
+                                                    ''
+                                                )}
+                                            </div>
+                                            <div className="sm:col-span-2 mt-3">
+                                                <button
+                                                    type="submit"
+                                                    className="btn btn-primary !mt-6"
+                                                    onClick={() => {
+                                                        console.log(Object.keys(errors));
+                                                        if (Object.keys(touched).length !== 0 && Object.keys(errors).length === 0) {
+                                                            submitUpdateUserForm(values);
+                                                        }
+                                                    }}
+                                                >
+                                                    {t('Save')}
+                                                </button>
                                             </div>
                                         </div>
-                                        <div>
-                                            <label htmlFor="password">{t('Password')}</label>
-                                            <Field name="password" type="password" id="password" placeholder={t('Enter Password')} className="form-input" />
-
-                                            {submitCount ? (
-                                                errors.password ? (
-                                                    <div className="text-danger mt-1">{errors.password}</div>
-                                                ) : (
-                                                    <div className="text-success mt-1">{t('Looks Good!')}</div>
-                                                )
-                                            ) : (
-                                                ''
-                                            )}
-                                        </div>
-                                        <div>
-                                            <label htmlFor="confirmPassword">{t('Confirm Password')}</label>
-                                            <Field name="confirmPassword" type="password" id="confirmPassword" placeholder={t('Enter Password')} className="form-input" />
-
-                                            {submitCount ? (
-                                                errors.confirmPassword ? (
-                                                    <div className="text-danger mt-1">{errors.confirmPassword}</div>
-                                                ) : (
-                                                    <div className="text-success mt-1">{t('Looks Good!')}</div>
-                                                )
-                                            ) : (
-                                                ''
-                                            )}
-                                        </div>
-                                        <div className="sm:col-span-2 mt-3">
-                                        <button
-                                                type="submit"
-                                                className="btn btn-primary !mt-6"
-                                                onClick={() => {
-                                                    console.log(Object.keys(errors));
-                                                    if (Object.keys(touched).length !== 0 && Object.keys(errors).length === 0) {
-                                                        submitUpdateUserForm(values);
-                                                    }
-                                                }}
-                                            >
-                                                {t('Save')}
-                                            </button>
-                                        </div>
                                     </div>
-                                </div>
-                            </Form>)}
+                                </Form>
+                            )}
                         </Formik>
                     </div>
                 ) : (
@@ -688,7 +723,7 @@ const AccountSetting = () => {
                                                 <li>10 {t('User')}</li>
                                             </ul>
                                             <button type="button" className="btn btn-outline-primary w-full">
-                                            {t('ACTIVE - Days remaining 20')}
+                                                {t('ACTIVE - Days remaining 20')}
                                             </button>
                                         </div>
                                     </div>
@@ -709,7 +744,7 @@ const AccountSetting = () => {
                                                 <li>100 {t('User')}</li>
                                             </ul>
                                             <button type="button" className="btn btn-primary w-full">
-                                            {t('Buy Now')}
+                                                {t('Buy Now')}
                                             </button>
                                         </div>
                                     </div>
@@ -720,9 +755,7 @@ const AccountSetting = () => {
                             <div className="panel">
                                 <div className="mb-5">
                                     <h5 className="font-semibold text-lg mb-4">{t('Billing Address')}</h5>
-                                    <p>
-                                        {t('Changes to your Billing information will take effect starting with scheduled payment and will be refelected on your next invoice.')}
-                                    </p>
+                                    <p>{t('Changes to your Billing information will take effect starting with scheduled payment and will be refelected on your next invoice.')}</p>
                                 </div>
                                 <div className="mb-5">
                                     <div className="border-b border-[#ebedf2] dark:border-[#1b2e4b]">
@@ -764,9 +797,7 @@ const AccountSetting = () => {
                             <div className="panel">
                                 <div className="mb-5">
                                     <h5 className="font-semibold text-lg mb-4">{t('Payment History')}</h5>
-                                    <p>
-                                    {t('Changes to your Payment Method information will take effect starting with scheduled payment and will be refelected on your next invoice.')}
-                                    </p>
+                                    <p>{t('Changes to your Payment Method information will take effect starting with scheduled payment and will be refelected on your next invoice.')}</p>
                                 </div>
                                 <div className="mb-5">
                                     <div className="border-b border-[#ebedf2] dark:border-[#1b2e4b]">
@@ -819,9 +850,7 @@ const AccountSetting = () => {
                             <div className="panel">
                                 <div className="mb-5">
                                     <h5 className="font-semibold text-lg mb-4">{t('Add Billing Address')}</h5>
-                                    <p>
-                                        {t('Changes your New Billing Information.')}
-                                    </p>
+                                    <p>{t('Changes your New Billing Information.')}</p>
                                 </div>
                                 <div className="mb-5">
                                     <form>
@@ -864,9 +893,7 @@ const AccountSetting = () => {
                             <div className="panel">
                                 <div className="mb-5">
                                     <h5 className="font-semibold text-lg mb-4">Add Payment Method</h5>
-                                    <p>
-                                        {t('Changes your New Payment Method Information.')}
-                                    </p>
+                                    <p>{t('Changes your New Payment Method Information.')}</p>
                                 </div>
                                 <div className="mb-5">
                                     <form>
@@ -902,7 +929,7 @@ const AccountSetting = () => {
                                             </div>
                                         </div>
                                         <button type="button" className="btn btn-primary">
-                                        {t('Add')}
+                                            {t('Add')}
                                         </button>
                                     </form>
                                 </div>
@@ -919,122 +946,168 @@ const AccountSetting = () => {
                                 <h5 className="font-semibold text-lg mb-4">{t('Manage Users')}</h5>
                                 <p>{t('Manage users connected to the company')}</p>
                                 <button
-                                onClick={() => {setisVisibleCiftlikKullanici(!isVisibleCiftlikKullanici); isVisibleCiftlikBilgi && setisVisibleCiftlikBilgi(!isVisibleCiftlikBilgi);}}
-                                className="btn btn-secondary">{t('Manage')}</button>
+                                    onClick={() => {
+                                        setisVisibleCiftlikKullanici(!isVisibleCiftlikKullanici);
+                                        isVisibleCiftlikBilgi && setisVisibleCiftlikBilgi(!isVisibleCiftlikBilgi);
+                                    }}
+                                    className="btn btn-secondary"
+                                >
+                                    {t('Manage')}
+                                </button>
                             </div>
                             <div className="panel space-y-5">
                                 <h5 className="font-semibold text-lg mb-4">{t('Company Info')}</h5>
                                 <p>{t('Manage the company info.')}</p>
                                 <button
-                                onClick={() => {setisVisibleCiftlikBilgi(!isVisibleCiftlikBilgi); isVisibleCiftlikKullanici && setisVisibleCiftlikKullanici(!isVisibleCiftlikKullanici);}}
-                                className="btn btn-primary">{t('Manage')}</button>
+                                    onClick={() => {
+                                        setisVisibleCiftlikBilgi(!isVisibleCiftlikBilgi);
+                                        isVisibleCiftlikKullanici && setisVisibleCiftlikKullanici(!isVisibleCiftlikKullanici);
+                                    }}
+                                    className="btn btn-primary"
+                                >
+                                    {t('Manage')}
+                                </button>
                             </div>
                             <div className="panel space-y-5">
                                 <h5 className="font-semibold text-lg mb-4">{t('Delete Company')}</h5>
                                 <p>{t('Once you delete the company, there is no going back. Please be certain.')}</p>
-                                <button  onClick={() => setCiftlikSil(true)} className="btn btn-danger btn-delete-account">{t('Delete My Company')}</button>
+                                <button onClick={() => setCiftlikSil(true)} className="btn btn-danger btn-delete-account">
+                                    {t('Delete My Company')}
+                                </button>
                                 <Transition appear show={ciftlikSil} as={Fragment}>
-                                <Dialog as="div" open={ciftlikSil} onClose={() => setCiftlikSil(false)}>
-                                    <TransitionChild
-                                        as={Fragment}
-                                        enter="ease-out duration-300"
-                                        enterFrom="opacity-0"
-                                        enterTo="opacity-100"
-                                        leave="ease-in duration-200"
-                                        leaveFrom="opacity-100"
-                                        leaveTo="opacity-0"
-                                    >
-                                        <div className="fixed inset-0" />
-                                    </TransitionChild>
-                                    <div id="slideIn_down_modal" className="fixed inset-0 bg-[black]/60 z-[999] overflow-y-auto">
-                                        <div className="flex items-start justify-center min-h-screen px-4">
-                                            <DialogPanel className="panel border-0 p-0 rounded-lg overflow-hidden w-full max-w-lg my-8 text-black dark:text-white-dark animate__animated animate__slideInDown">
-                                                <div className="flex bg-[#fbfbfb] dark:bg-[#121c2c] items-center justify-between px-5 py-3">
-                                                    <h5 className="font-bold text-lg">{t('Company Deletion Process')}</h5>
-                                                </div>
-                                                <div className="p-5">
-                                                    <p>
-                                                        {t('This action will initiate the company deletion process. Based on the system owners\' request, the company can be completely closed and deleted. Please review carefully before confirming the action.')}
-                                                    </p>
-                                                    <div className="flex justify-end items-center mt-8">
-                                                        <button onClick={() => setCiftlikSil(false)} type="button" className="btn btn-outline-danger">
-                                                            {t('Cancel')}
-                                                        </button>
-                                                        <button onClick={() => setCiftlikSil(false)} type="button" className="btn btn-primary ltr:ml-4 rtl:mr-4">
-                                                            {t('Accept')}
-                                                        </button>
+                                    <Dialog as="div" open={ciftlikSil} onClose={() => setCiftlikSil(false)}>
+                                        <TransitionChild
+                                            as={Fragment}
+                                            enter="ease-out duration-300"
+                                            enterFrom="opacity-0"
+                                            enterTo="opacity-100"
+                                            leave="ease-in duration-200"
+                                            leaveFrom="opacity-100"
+                                            leaveTo="opacity-0"
+                                        >
+                                            <div className="fixed inset-0" />
+                                        </TransitionChild>
+                                        <div id="slideIn_down_modal" className="fixed inset-0 bg-[black]/60 z-[999] overflow-y-auto">
+                                            <div className="flex items-start justify-center min-h-screen px-4">
+                                                <DialogPanel className="panel border-0 p-0 rounded-lg overflow-hidden w-full max-w-lg my-8 text-black dark:text-white-dark animate__animated animate__slideInDown">
+                                                    <div className="flex bg-[#fbfbfb] dark:bg-[#121c2c] items-center justify-between px-5 py-3">
+                                                        <h5 className="font-bold text-lg">{t('Company Deletion Process')}</h5>
                                                     </div>
-                                                </div>
-                                            </DialogPanel>
+                                                    <div className="p-5">
+                                                        <p>
+                                                            {t(
+                                                                "This action will initiate the company deletion process. Based on the system owners' request, the company can be completely closed and deleted. Please review carefully before confirming the action."
+                                                            )}
+                                                        </p>
+                                                        <div className="flex justify-end items-center mt-8">
+                                                            <button onClick={() => setCiftlikSil(false)} type="button" className="btn btn-outline-danger">
+                                                                {t('Cancel')}
+                                                            </button>
+                                                            <button onClick={() => setCiftlikSil(false)} type="button" className="btn btn-primary ltr:ml-4 rtl:mr-4">
+                                                                {t('Accept')}
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </DialogPanel>
+                                            </div>
                                         </div>
-                                    </div>
-                                </Dialog>
-                            </Transition>
+                                    </Dialog>
+                                </Transition>
                             </div>
                         </div>
-                        {isVisibleCiftlikBilgi && <div>
-                            <Formik
-                                initialValues={{
-                                    firmaAdi: firmaInfo?.firmaAdi,
-                                    telefonNo: firmaInfo?.telefonNo,
-                                    firmaAdresi: firmaInfo?.firmaAdresi,
-                                    email: firmaInfo?.firmaMail,
-                                    city: firmaInfo?.sehirID,
-                                    district: firmaInfo?.ilceID,
-                                }}
-                                validationSchema={submitFarmFormValidation}
-                                onSubmit={() => {}}
-                            >{({ errors, submitCount, touched, values }) => (
-                                <Form className="border border-[#ebedf2] dark:border-[#191e3a] rounded-md p-4 mb-5 bg-white dark:bg-black panel mt-6">
-                                    <h6 className="text-lg font-bold mb-5">{t('Company Info')}</h6>
-                                        <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-5" style={{ paddingTop: '1%'}}>
-                                            <div>
-                                                <label htmlFor="firmaAdi">{t('Company Name')}</label>
-                                                <Field name="firmaAdi" id="firmaAdi" type="text" className="form-input" />
-                                                {submitCount ? (
-                                                    errors.firmaAdi ? (
-                                                        <div className="text-danger mt-1">{errors.firmaAdi}</div>
+                        {isVisibleCiftlikBilgi && (
+                            <div>
+                                <Formik
+                                    initialValues={{
+                                        firmaAdi: firmaInfo?.firmaAdi,
+                                        telefonNo: firmaInfo?.telefonNo,
+                                        firmaAdresi: firmaInfo?.firmaAdresi,
+                                        email: firmaInfo?.firmaMail,
+                                        city: firmaInfo?.sehirID,
+                                        district: firmaInfo?.ilceID,
+                                    }}
+                                    validationSchema={submitFarmFormValidation}
+                                    onSubmit={() => {}}
+                                >
+                                    {({ errors, submitCount, touched, values }) => (
+                                        <Form className="border border-[#ebedf2] dark:border-[#191e3a] rounded-md p-4 mb-5 bg-white dark:bg-black panel mt-6">
+                                            <h6 className="text-lg font-bold mb-5">{t('Company Info')}</h6>
+                                            <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-5" style={{ paddingTop: '1%' }}>
+                                                <div>
+                                                    <label htmlFor="firmaAdi">{t('Company Name')}</label>
+                                                    <Field name="firmaAdi" id="firmaAdi" type="text" className="form-input" />
+                                                    {submitCount ? (
+                                                        errors.firmaAdi ? (
+                                                            <div className="text-danger mt-1">{errors.firmaAdi}</div>
+                                                        ) : (
+                                                            <div className="text-[#1abc9c] mt-1">{t('Looks Good!')}</div>
+                                                        )
                                                     ) : (
-                                                        <div className="text-[#1abc9c] mt-1">{t('Looks Good!')}</div>
-                                                    )
-                                                ) : (
-                                                    ''
-                                                )}
-                                        </div>
-                                        <div className="flex-1 grid grid-cols-2 sm:grid-cols-2 gap-5">
-                                            <div>
-                                                <label htmlFor="firmaBollge">{t('Company Area')}</label>
-                                                {(() => {
-                                                    if (firmaInfo?.bolge === 'a') {
-                                                        return <span id="firmaBollge" className="badge bg-success text-lg block mx-auto text-center">İç Anadolu</span>;
-                                                    } else if (firmaInfo?.bolge === 'b')  {
-                                                        return <span id="firmaBollge"  className="badge bg-primary text-lg block mx-auto text-center">Marmara</span>;
-                                                    } else {
-                                                        return <span id="firmaBollge"  className="badge bg-dark text-lg block mx-auto text-center">NaN</span>;; // Return nothing if no condition matches
-                                                    }
-                                                })()}
+                                                        ''
+                                                    )}
+                                                </div>
+                                                <div className="flex-1 grid grid-cols-2 sm:grid-cols-2 gap-5">
+                                                    <div>
+                                                        <label htmlFor="firmaBollge">{t('Company Area')}</label>
+                                                        {(() => {
+                                                            if (firmaInfo?.bolge === 'a') {
+                                                                return (
+                                                                    <span id="firmaBollge" className="badge bg-success text-lg block mx-auto text-center">
+                                                                        İç Anadolu
+                                                                    </span>
+                                                                );
+                                                            } else if (firmaInfo?.bolge === 'b') {
+                                                                return (
+                                                                    <span id="firmaBollge" className="badge bg-primary text-lg block mx-auto text-center">
+                                                                        Marmara
+                                                                    </span>
+                                                                );
+                                                            } else {
+                                                                return (
+                                                                    <span id="firmaBollge" className="badge bg-dark text-lg block mx-auto text-center">
+                                                                        NaN
+                                                                    </span>
+                                                                ); // Return nothing if no condition matches
+                                                            }
+                                                        })()}
+                                                    </div>
+                                                    <div>
+                                                        <label htmlFor="hesapDurumu">{t('Account Status')}</label>
+                                                        {(() => {
+                                                            if (firmaInfo?.hesapDurumu === 'a') {
+                                                                return (
+                                                                    <span id="hesapDurumu" className="badge bg-success text-lg block mx-auto text-center">
+                                                                        {t('Active')}
+                                                                    </span>
+                                                                );
+                                                            } else if (userInfo.hesapDurumu === 'p') {
+                                                                return (
+                                                                    <span id="hesapDurumu" className="badge bg-primary text-lg block mx-auto text-center">
+                                                                        {t('Passive')}
+                                                                    </span>
+                                                                );
+                                                            } else if (userInfo.hesapDurumu === 'b') {
+                                                                return (
+                                                                    <span id="hesapDurumu" className="badge bg-primary text-lg block mx-auto text-center">
+                                                                        {t('On hold')}
+                                                                    </span>
+                                                                );
+                                                            } else {
+                                                                return (
+                                                                    <span id="hesapDurumu" className="badge bg-dark text-lg block mx-auto text-center">
+                                                                        NaN
+                                                                    </span>
+                                                                ); // Return nothing if no condition matches
+                                                            }
+                                                        })()}
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div>
-                                                <label htmlFor="hesapDurumu">{t('Account Status')}</label>
-                                                {(() => {
-                                                    if (firmaInfo?.hesapDurumu === 'a') {
-                                                        return <span id="hesapDurumu" className="badge bg-success text-lg block mx-auto text-center">{t('Active')}</span>;
-                                                    } else if (userInfo.hesapDurumu === 'p')  {
-                                                        return <span id="hesapDurumu"  className="badge bg-primary text-lg block mx-auto text-center">{t('Passive')}</span>;
-                                                    } else if (userInfo.hesapDurumu === 'b')  {
-                                                        return <span id="hesapDurumu"  className="badge bg-primary text-lg block mx-auto text-center">{t('On hold')}</span>;
-                                                    }else {
-                                                        return <span id="hesapDurumu"  className="badge bg-dark text-lg block mx-auto text-center">NaN</span>;; // Return nothing if no condition matches
-                                                    }
-                                                })()}
-                                            </div>
-                                            </div>
-                                        </div>
-                                        <div className="flex-1 grid grid-cols-1 sm:grid-cols-1 gap-5" style={{ paddingTop: '1%'}}>
-                                            <div>
-                                                <label htmlFor="firmaAdresi">{t('Address')}</label>
-                                                <Field className="form-textarea" as="textarea" name="firmaAdresi" id="firmaAdresi" rows="3"  placeholder={t('Enter Address')} />
-                                                {submitCount ? (
+                                            <div className="flex-1 grid grid-cols-1 sm:grid-cols-1 gap-5" style={{ paddingTop: '1%' }}>
+                                                <div>
+                                                    <label htmlFor="firmaAdresi">{t('Address')}</label>
+                                                    <Field className="form-textarea" as="textarea" name="firmaAdresi" id="firmaAdresi" rows="3" placeholder={t('Enter Address')} />
+                                                    {submitCount ? (
                                                         errors.firmaAdresi ? (
                                                             <div className="text-danger mt-1">{errors.firmaAdresi}</div>
                                                         ) : (
@@ -1043,385 +1116,117 @@ const AccountSetting = () => {
                                                     ) : (
                                                         ''
                                                     )}
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-5" style={{ paddingTop: '1%'}}>
-                                            <div>
-                                                <label htmlFor="Email">{t('Email')}</label>
-                                                <Field name="email" type="text" id="Email" placeholder={t('Enter Email')} className="form-input" />
+                                            <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-5" style={{ paddingTop: '1%' }}>
+                                                <div>
+                                                    <label htmlFor="Email">{t('Email')}</label>
+                                                    <Field name="email" type="text" id="Email" placeholder={t('Enter Email')} className="form-input" />
 
-                                                {submitCount ? errors.email ? <div className="text-danger mt-1">{errors.email}</div> : <div className="text-success mt-1">Looks Good!</div> : ''}
-                                            </div>
-                                            <div>
-                                                <label htmlFor="telefonNo">{t('Telephone')}</label>
-                                                <Field name="telefonNo" id="lastname" type="text" className="form-input" />
-                                                {submitCount ? (
-                                                    errors.telefonNo ? (
-                                                        <div className="text-danger mt-1">{errors.telefonNo}</div>
-                                                    ) : (
-                                                        <div className="text-[#1abc9c] mt-1">{t('Looks Good!')}</div>
-                                                    )
-                                                ) : (
-                                                    ''
-                                                )}
-                                            </div>
-                                            <div className="form-group">
-                                                <label htmlFor="city">{t('City')}</label>
-                                                <Field 
-                                                        name="city"
-                                                        component={CitySelect}
-                                                        options={cityOpitons}
-                                                />
-                                                {submitCount ? (
-                                                    errors.city ? (
-                                                        <div className="text-danger mt-1">{errors.city}</div>
-                                                    ) : (
-                                                        <div className="text-[#1abc9c] mt-1">{t('Looks Good!')}</div>
-                                                    )
-                                                ) : (
-                                                    ''
-                                                )}
-                                            </div>
-                                            <div className="form-group">
-                                                <label htmlFor="district">{t('District')}</label>
-                                                <Field 
-                                                        name="district"
-                                                        component={DistrictSelect}
-                                                        options={values.city === null ? [{value: '', label: 'Please select a city first'}] : districtOpitons}
-                                                />
-                                                {submitCount ? (
-                                                    errors.district ? (
-                                                        <div className="text-danger mt-1">{errors.district}</div>
-                                                    ) : (
-                                                        <div className="text-[#1abc9c] mt-1">{t('Looks Good!')}</div>
-                                                    )
-                                                ) : (
-                                                    ''
-                                                )}
-                                            </div>
-                                            
-                                            <div className="sm:col-span-2 mt-3">
-                                            <button
-                                                    type="submit"
-                                                    className="btn btn-primary !mt-6"
-                                                    onClick={() => {
-                                                        console.log(Object.keys(errors));
-                                                        if (Object.keys(touched).length !== 0 && Object.keys(errors).length === 0) {
-                                                            submitUpdateFarmForm(values);
-                                                        }
-                                                    }}
-                                                >
-                                                    {t('Save')}
-                                                </button>
-                                            </div>
-                                        </div>
-                                </Form>)}
-                            </Formik>
-                        </div>}
-                        {isVisibleCiftlikKullanici && <div>
-                            <div className="panel mt-6">
-                                <div className="flex md:items-center md:flex-row flex-col mb-5 gap-5">
-                                    <h5 className="font-semibold text-lg dark:text-white-light">{t('Company Users')}</h5>
-                                    <button type="button" className="btn btn-warning ltr:ml-auto rtl:mr-auto" onClick={() => {setisVisibleCiftlikKullaniciEkle(!isVisibleCiftlikKullaniciEkle);}}>{t('Add User')}</button>
-                                    <div className="ltr:ml-auto rtl:mr-auto">
-                                        <input type="text" className="form-input w-auto" placeholder="Search..." value={search} onChange={(e) => setSearch(e.target.value)} />
-                                    </div>
-                                    <Transition appear show={isVisibleCiftlikKullaniciEkle} as={Fragment}>
-                                        <Dialog as="div" open={isVisibleCiftlikKullaniciEkle} onClose={() => setisVisibleCiftlikKullaniciEkle(false)}>
-                                        <div className="fixed inset-0 z-10 overflow-y-auto bg-[black]/10">
-                                            <div className="flex min-h-screen items-center justify-center px-4">
-                                            <Dialog.Panel className="panel my-8 w-full max-w-3xl overflow-hidden rounded-lg py-1 px-4 text-black dark:text-white-dark">
-
-                                                <div className="flex items-center justify-between p-5">
-                                                <h5> {t('Manage User')} </h5>
-                                                <button
-                                                    type="button"
-                                                    onClick={() => setisVisibleCiftlikKullaniciEkle(false)}
-                                                    className="text-white-dark hover:text-dark"
-                                                >
-                                                    <IconX className="w-5 h-5" />
-                                                </button>
+                                                    {submitCount ? errors.email ? <div className="text-danger mt-1">{errors.email}</div> : <div className="text-success mt-1">Looks Good!</div> : ''}
                                                 </div>
                                                 <div>
-                                                <Formik
-                                                    enableReinitialize={true} 
-                                                    initialValues={{
-                                                        kullaniciID: '',
-                                                        firstname: '',
-                                                        lastname: '',
-                                                        tcNumber: '',
-                                                        email: '',
-                                                        telefonNo: '',
-                                                        password: '',
-                                                        confirmPassword: '',
-                                                        hesapFirmaYetkisi: '',
-                                                        hesapDurumu: '',
-                                                    }}
-                                                    validationSchema={submitUserFormValidation}
-                                                    onSubmit={() => {}}
-                                                >{({ errors, submitCount, touched, values }) => (
-                                                    <Form className="border border-[#ebedf2] dark:border-[#191e3a] rounded-md p-4 mb-5 bg-white dark:bg-black">
-                                                        <div className="flex flex-col sm:flex-row">
-                                                            <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-5">
-                                                                <div>
-                                                                    <label htmlFor="firstname">{t('Name')}</label>
-                                                                    <Field name="firstname" id="firstname" type="text" className="form-input" />
-                                                                    {submitCount ? (
-                                                                        errors.firstname ? (
-                                                                            <div className="text-danger mt-1">{errors.firstname?.toString()}</div>
-                                                                        ) : (
-                                                                            <div className="text-[#1abc9c] mt-1">{t('Looks Good!')}</div>
-                                                                        )
-                                                                    ) : (
-                                                                        ''
-                                                                    )}
-                                                                </div>
-                                                                <div>
-                                                                    <label htmlFor="lastname">{t('Last Name')}</label>
-                                                                    <Field name="lastname" id="lastname" type="text" className="form-input" />
-                                                                    {submitCount ? (
-                                                                        errors.lastname ? (
-                                                                            <div className="text-danger mt-1">{errors.lastname?.toString()}</div>
-                                                                        ) : (
-                                                                            <div className="text-[#1abc9c] mt-1">{t('Looks Good!')}</div>
-                                                                        )
-                                                                    ) : (
-                                                                        ''
-                                                                    )}
-                                                                </div>
-                                                                <div>
-                                                                    <label htmlFor="telefonNo">{t('Telephone')}</label>
-                                                                    <Field name="telefonNo" type="text" id="telefonNo" placeholder={t('Enter Telephone')} className="form-input" />
+                                                    <label htmlFor="telefonNo">{t('Telephone')}</label>
+                                                    <Field name="telefonNo" id="lastname" type="text" className="form-input" />
+                                                    {submitCount ? (
+                                                        errors.telefonNo ? (
+                                                            <div className="text-danger mt-1">{errors.telefonNo}</div>
+                                                        ) : (
+                                                            <div className="text-[#1abc9c] mt-1">{t('Looks Good!')}</div>
+                                                        )
+                                                    ) : (
+                                                        ''
+                                                    )}
+                                                </div>
+                                                <div className="form-group">
+                                                    <label htmlFor="city">{t('City')}</label>
+                                                    <Field name="city" component={CitySelect} options={cityOpitons} />
+                                                    {submitCount ? (
+                                                        errors.city ? (
+                                                            <div className="text-danger mt-1">{errors.city}</div>
+                                                        ) : (
+                                                            <div className="text-[#1abc9c] mt-1">{t('Looks Good!')}</div>
+                                                        )
+                                                    ) : (
+                                                        ''
+                                                    )}
+                                                </div>
+                                                <div className="form-group">
+                                                    <label htmlFor="district">{t('District')}</label>
+                                                    <Field
+                                                        name="district"
+                                                        component={DistrictSelect}
+                                                        options={values.city === null ? [{ value: '', label: 'Please select a city first' }] : districtOpitons}
+                                                    />
+                                                    {submitCount ? (
+                                                        errors.district ? (
+                                                            <div className="text-danger mt-1">{errors.district}</div>
+                                                        ) : (
+                                                            <div className="text-[#1abc9c] mt-1">{t('Looks Good!')}</div>
+                                                        )
+                                                    ) : (
+                                                        ''
+                                                    )}
+                                                </div>
 
-                                                                    {submitCount ? (
-                                                                        errors.telefonNo ? (
-                                                                            <div className="text-danger mt-1">{errors.telefonNo?.toString()}</div>
-                                                                        ) : (
-                                                                            <div className="text-success mt-1">{t('Looks Good!')}</div>
-                                                                        )
-                                                                    ) : (
-                                                                        ''
-                                                                    )}
-                                                                </div>
-
-                                                                <div>
-                                                                    <label htmlFor="Email">{t('Email')}</label>
-                                                                    <Field name="email" type="text" id="Email" placeholder={t('Enter Email')} className="form-input" />
-
-                                                                    {submitCount ? errors.email ? <div className="text-danger mt-1">{errors.email?.toString()}</div> : <div className="text-success mt-1">{t('Looks Good!')}</div> : ''}
-                                                                </div>
-                                                                <div>
-                                                                    <label htmlFor="tcNumber">{t('TC Number')}</label>
-                                                                    <Field name="tcNumber" type="text" id="tcNumber" placeholder={t('Enter TC Number')} className="form-input" />
-
-                                                                    {submitCount ? (
-                                                                        errors.tcNumber ? (
-                                                                            <div className="text-danger mt-1">{errors.tcNumber?.toString()}</div>
-                                                                        ) : (
-                                                                            <div className="text-success mt-1">{t('Looks Good!')}</div>
-                                                                        )
-                                                                    ) : (
-                                                                        ''
-                                                                    )}
-                                                                </div>
-                                                                <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-5">
-                                                                <div>
-                                                                        <label htmlFor="hesapFirmaYetkisi">{t('Account Company Authorization')}</label>
-                                                                        <Select
-                                                                            id="hesapFirmaYetkisi"
-                                                                            options={optionsFirmaKullanıcıYetkis}
-                                                                            isSearchable={false}
-                                                                            onChange={(selectedOption) => {
-                                                                                values.hesapFirmaYetkisi = selectedOption!.value
-                                                                            }}
-                                                                        />
-                                                                         {submitCount ? (
-                                                                            errors.hesapFirmaYetkisi ? (
-                                                                                <div className="text-danger mt-1">{errors.hesapFirmaYetkisi}</div>
-                                                                            ) : (
-                                                                                <div className="text-[#1abc9c] mt-1">{t('Looks Good!')}</div>
-                                                                            )
-                                                                        ) : (
-                                                                            ''
-                                                                        )}
-                                                                    </div>
-                                                                    <div>
-                                                                        <label htmlFor="hesapDurumu">{t('Account Status')}</label>
-                                                                        <Select
-                                                                            id="hesapDurumu"
-                                                                            options={statusOptions}
-                                                                            isSearchable={false}                                                                            onChange={(selectedOption) => {
-                                                                                values.hesapDurumu = selectedOption!.value
-                                                                            }}
-                                                                        />
-                                                                      {submitCount ? (
-                                                                            errors.hesapDurumu ? (
-                                                                                <div className="text-danger mt-1">{errors.hesapDurumu}</div>
-                                                                            ) : (
-                                                                                <div className="text-[#1abc9c] mt-1">{t('Looks Good!')}</div>
-                                                                            )
-                                                                        ) : (
-                                                                            ''
-                                                                        )}
-                                                                    </div>
-                                                                </div>
-                                                                <div>
-                                                                    <label htmlFor="password">{t('Password')}</label>
-                                                                    <Field name="password" type="password" id="password" placeholder={t('Enter Password')} className="form-input" />
-
-                                                                    {submitCount ? (
-                                                                        errors.password ? (
-                                                                            <div className="text-danger mt-1">{errors.password}</div>
-                                                                        ) : (
-                                                                            <div className="text-success mt-1">{t('Looks Good!')}</div>
-                                                                        )
-                                                                    ) : (
-                                                                        ''
-                                                                    )}
-                                                                </div>
-                                                                <div>
-                                                                    <label htmlFor="confirmPassword">{t('Confirm Password')}</label>
-                                                                    <Field name="confirmPassword" type="password" id="confirmPassword" placeholder={t('Enter Password')} className="form-input" />
-
-                                                                    {submitCount ? (
-                                                                        errors.confirmPassword ? (
-                                                                            <div className="text-danger mt-1">{errors.confirmPassword}</div>
-                                                                        ) : (
-                                                                            <div className="text-success mt-1">{t('Looks Good!')}</div>
-                                                                        )
-                                                                    ) : (
-                                                                        ''
-                                                                    )}
-                                                                </div>
-                                                                <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-5">
-                                                                <button
-                                                                        type="submit"
-                                                                        className="btn btn-primary !mt-6"
-                                                                        onClick={() => {
-                                                                            console.log(Object.keys(errors));
-                                                                            if (Object.keys(touched).length !== 0 && Object.keys(errors).length === 0) {
-                                                                                submitAddFarmUserForm(values);
-                                                                            }
-                                                                        }}
-                                                                    >
-                                                                        {t('Save')}
-                                                                    </button>
-                                                                    <button
-                                                                        type="submit"
-                                                                        className="btn btn-danger !mt-6"
-                                                                        onClick={() => {
-                                                                            setisVisibleCiftlikKullaniciEkle(false)
-                                                                        }}
-                                                                    >
-                                                                        {t('Cancel')}
-                                                                    </button>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </Form>)}
-                                                </Formik>
+                                                <div className="sm:col-span-2 mt-3">
+                                                    <button
+                                                        type="submit"
+                                                        className="btn btn-primary !mt-6"
+                                                        onClick={() => {
+                                                            console.log(Object.keys(errors));
+                                                            if (Object.keys(touched).length !== 0 && Object.keys(errors).length === 0) {
+                                                                submitUpdateFarmForm(values);
+                                                            }
+                                                        }}
+                                                    >
+                                                        {t('Save')}
+                                                    </button>
+                                                </div>
                                             </div>
-                                            </Dialog.Panel>
-                                            </div>
+                                        </Form>
+                                    )}
+                                </Formik>
+                            </div>
+                        )}
+                        {isVisibleCiftlikKullanici && (
+                            <div>
+                                <div className="panel mt-6">
+                                    <div className="flex md:items-center md:flex-row flex-col mb-5 gap-5">
+                                        <h5 className="font-semibold text-lg dark:text-white-light">{t('Company Users')}</h5>
+                                        <button
+                                            type="button"
+                                            className="btn btn-warning ltr:ml-auto rtl:mr-auto"
+                                            onClick={() => {
+                                                setisVisibleCiftlikKullaniciEkle(!isVisibleCiftlikKullaniciEkle);
+                                            }}
+                                        >
+                                            {t('Add User')}
+                                        </button>
+                                        <div className="ltr:ml-auto rtl:mr-auto">
+                                            <input type="text" className="form-input w-auto" placeholder="Search..." value={search} onChange={(e) => setSearch(e.target.value)} />
                                         </div>
-                                        </Dialog>
-                                    </Transition>
-                                </div>    
-                                
-                                <div className="datatables">
-                                    <DataTable
-                                        className="whitespace-nowrap table-hover"
-                                        records={recordsData}
-                                        columns={[
-                                            {
-                                                accessor: 'kullaniciID',
-                                                title: t('ID'),
-                                                sortable: true
-                                            },
-                                            {
-                                                accessor: 'isim',
-                                                title: t('Name'),
-                                                sortable: true
-                                            },
-                                            {
-                                                accessor: 'soyisim',
-                                                title: t('Last Name'),
-                                                sortable: true,
-                                            },
-                                            {
-                                                accessor: 'eposta',
-                                                title: t('Email'),
-                                                sortable: true,
-                                            },
-                                            {
-                                                accessor: 'telefonNo',
-                                                title: t('Telephone'),
-                                                sortable: true,
-                                            },
-                                            {
-                                                accessor: 'hesapFirmaYetkisi',
-                                                title: t('Account Company Authorization'),
-                                                sortable: true,
-                                                render: ({ hesapFirmaYetkisi }) => <span className={`badge bg-${statusColorYetki(hesapFirmaYetkisi)}`}>{statusNameYetki(hesapFirmaYetkisi)}</span>, 
-                                            },
-                                            {
-                                                accessor: 'hesapDurumu',
-                                                title: t('Account Status'),
-                                                sortable: true,
-                                                render: ({ hesapDurumu }) => <span className={`badge bg-${statusColorDurum(hesapDurumu)}`}>{statusNameDurum(hesapDurumu)}</span>, 
-                                            },
-                                            {
-                                                accessor: 'manage',
-                                                title: t('Manage'),
-                                                titleClassName: '!text-center',
-                                                render: ({kullaniciID, isim, soyisim, tcNo, eposta, telefonNo, hesapFirmaYetkisi, hesapDurumu, firmaID}) => (
-                                                    <div className="flex items-center w-max mx-auto gap-2">
-                                                        <Tippy>
-                                                            <button type="button"
-                                                            onClick={() => {
-                                                                setSelectedUser({
-                                                                    kullaniciID: kullaniciID,
-                                                                    isim: isim,
-                                                                    soyisim: soyisim,
-                                                                    tcNo: tcNo,
-                                                                    eposta: eposta,
-                                                                    telefonNo: telefonNo,
-                                                                    hesapFirmaYetkisi: hesapFirmaYetkisi,
-                                                                    hesapDurumu: hesapDurumu,
-                                                                    firmaID: firmaID,                     
-                                                                    firmaAdi: ' '
-                                                                });
-                                                                setModal22(true);
-                                                            }}>
-                                                                <IconPencilPaper/>
-                                                            </button>
-                                                        </Tippy>
-                                                      <Transition appear show={modal22} as={Fragment}>
-                                                      <Dialog as="div" open={modal22} onClose={() => setModal22(false)}>
-                                                        <div className="fixed inset-0 z-10 overflow-y-auto bg-[black]/10">
-                                                          <div className="flex min-h-screen items-center justify-center px-4">
-                                                          <Dialog.Panel className="panel my-8 w-full max-w-3xl overflow-hidden rounded-lg py-1 px-4 text-black dark:text-white-dark">
-
-                                                              <div className="flex items-center justify-between p-5">
+                                        <Transition appear show={isVisibleCiftlikKullaniciEkle} as={Fragment}>
+                                            <Dialog as="div" open={isVisibleCiftlikKullaniciEkle} onClose={() => setisVisibleCiftlikKullaniciEkle(false)}>
+                                                <div className="fixed inset-0 z-10 overflow-y-auto bg-[black]/10">
+                                                    <div className="flex min-h-screen items-center justify-center px-4">
+                                                        <Dialog.Panel className="panel my-8 w-full max-w-3xl overflow-hidden rounded-lg py-1 px-4 text-black dark:text-white-dark">
+                                                            <div className="flex items-center justify-between p-5">
                                                                 <h5> {t('Manage User')} </h5>
-                                                                <button
-                                                                  type="button"
-                                                                  onClick={() => setModal22(false)}
-                                                                  className="text-white-dark hover:text-dark"
-                                                                >
-                                                                  <IconX className="w-5 h-5" />
+                                                                <button type="button" onClick={() => setisVisibleCiftlikKullaniciEkle(false)} className="text-white-dark hover:text-dark">
+                                                                    <IconX className="w-5 h-5" />
                                                                 </button>
-                                                              </div>
-                                                              <div>
-                                                              <Formik
-                                                                    enableReinitialize={true} 
+                                                            </div>
+                                                            <div>
+                                                                <Formik
+                                                                    enableReinitialize={true}
                                                                     initialValues={{
-                                                                        kullaniciID: selectedUser?.kullaniciID || '',
-                                                                        firstname: selectedUser?.isim || '',
-                                                                        lastname: selectedUser?.soyisim || '',
-                                                                        tcNumber: selectedUser?.tcNo || '',
-                                                                        email: selectedUser?.eposta || '',
-                                                                        telefonNo: selectedUser?.telefonNo || '',
+                                                                        kullaniciID: '',
+                                                                        firstname: '',
+                                                                        lastname: '',
+                                                                        tcNumber: '',
+                                                                        email: '',
+                                                                        telefonNo: '',
                                                                         password: '',
                                                                         confirmPassword: '',
                                                                         hesapFirmaYetkisi: '',
@@ -1429,179 +1234,514 @@ const AccountSetting = () => {
                                                                     }}
                                                                     validationSchema={submitUserFormValidation}
                                                                     onSubmit={() => {}}
-                                                                >{({ errors, submitCount, touched, values }) => (
-                                                                    <Form className="border border-[#ebedf2] dark:border-[#191e3a] rounded-md p-4 mb-5 bg-white dark:bg-black">
-                                                                        <div className="flex flex-col sm:flex-row">
-                                                                            <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-5">
-                                                                                <div>
-                                                                                    <label htmlFor="firstname">{t('Name')}</label>
-                                                                                    <Field name="firstname" id="firstname" type="text" className="form-input" />
-                                                                                    {submitCount ? (
-                                                                                        errors.firstname ? (
-                                                                                            <div className="text-danger mt-1">{errors.firstname?.toString()}</div>
-                                                                                        ) : (
-                                                                                            <div className="text-[#1abc9c] mt-1">{t('Looks Good!')}</div>
-                                                                                        )
-                                                                                    ) : (
-                                                                                        ''
-                                                                                    )}
-                                                                                </div>
-                                                                                <div>
-                                                                                    <label htmlFor="lastname">{t('Last Name')}</label>
-                                                                                    <Field name="lastname" id="lastname" type="text" className="form-input" />
-                                                                                    {submitCount ? (
-                                                                                        errors.lastname ? (
-                                                                                            <div className="text-danger mt-1">{errors.lastname?.toString()}</div>
-                                                                                        ) : (
-                                                                                            <div className="text-[#1abc9c] mt-1">{t('Looks Good!')}</div>
-                                                                                        )
-                                                                                    ) : (
-                                                                                        ''
-                                                                                    )}
-                                                                                </div>
-                                                                                <div>
-                                                                                    <label htmlFor="telefonNo">{t('Telephone')}</label>
-                                                                                    <Field name="telefonNo" type="text" id="telefonNo" placeholder={t('Enter Telephone')} className="form-input" />
-
-                                                                                    {submitCount ? (
-                                                                                        errors.telefonNo ? (
-                                                                                            <div className="text-danger mt-1">{errors.telefonNo?.toString()}</div>
-                                                                                        ) : (
-                                                                                            <div className="text-success mt-1">{t('Looks Good!')}</div>
-                                                                                        )
-                                                                                    ) : (
-                                                                                        ''
-                                                                                    )}
-                                                                                </div>
-
-                                                                                <div>
-                                                                                    <label htmlFor="Email">{t('Email')}</label>
-                                                                                    <Field name="email" type="text" id="Email" placeholder={t('Enter Email')} className="form-input" />
-
-                                                                                    {submitCount ? errors.email ? <div className="text-danger mt-1">{errors.email?.toString()}</div> : <div className="text-success mt-1">{t('Looks Good!')}</div> : ''}
-                                                                                </div>
-                                                                                <div>
-                                                                                    <label htmlFor="tcNumber">{t('TC Number')}</label>
-                                                                                    <Field name="tcNumber" type="text" id="tcNumber" placeholder={t('Enter TC Number')} className="form-input" />
-
-                                                                                    {submitCount ? (
-                                                                                        errors.tcNumber ? (
-                                                                                            <div className="text-danger mt-1">{errors.tcNumber?.toString()}</div>
-                                                                                        ) : (
-                                                                                            <div className="text-success mt-1">{t('Looks Good!')}</div>
-                                                                                        )
-                                                                                    ) : (
-                                                                                        ''
-                                                                                    )}
-                                                                                </div>
+                                                                >
+                                                                    {({ errors, submitCount, touched, values }) => (
+                                                                        <Form className="border border-[#ebedf2] dark:border-[#191e3a] rounded-md p-4 mb-5 bg-white dark:bg-black">
+                                                                            <div className="flex flex-col sm:flex-row">
                                                                                 <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-5">
-                                                                                <div>
-                                                                                        <label htmlFor="hesapFirmaYetkisi">{t('Account Company Authorization')}</label>
-                                                                                        <Select
-                                                                                            id="hesapFirmaYetkisi"
-                                                                                            options={optionsFirmaKullanıcıYetkis}
-                                                                                            isSearchable={false}
-                                                                                            defaultValue={optionsFirmaKullanıcıYetkis.find(optionsFirmaKullanıcıYetkis => optionsFirmaKullanıcıYetkis.value === selectedUser?.hesapFirmaYetkisi)}
-                                                                                            onChange={(selectedOption) => {
-                                                                                                if (!selectedUser) return; // Prevents null errors
-
-                                                                                                setSelectedUser((prev) => ({
-                                                                                                    ...(prev as UserData), // Ensures full UserData type
-                                                                                                    hesapFirmaYetkisi: selectedOption!.value
-                                                                                                }));
-                                                                                            }}
-                                                                                        />
-
+                                                                                    <div>
+                                                                                        <label htmlFor="firstname">{t('Name')}</label>
+                                                                                        <Field name="firstname" id="firstname" type="text" className="form-input" />
+                                                                                        {submitCount ? (
+                                                                                            errors.firstname ? (
+                                                                                                <div className="text-danger mt-1">{errors.firstname?.toString()}</div>
+                                                                                            ) : (
+                                                                                                <div className="text-[#1abc9c] mt-1">{t('Looks Good!')}</div>
+                                                                                            )
+                                                                                        ) : (
+                                                                                            ''
+                                                                                        )}
                                                                                     </div>
                                                                                     <div>
-                                                                                        <label htmlFor="hesapDurumu">{t('Account Status')}</label>
-                                                                                        <Select
-                                                                                            id="hesapDurumu"
-                                                                                            options={statusOptions}
-                                                                                            isSearchable={false}
-                                                                                            defaultValue={statusOptions.find(option => option.value === selectedUser?.hesapDurumu)}
-                                                                                            onChange={(selectedOption) => {
-                                                                                                if (!selectedUser) return; // Prevents null errors
+                                                                                        <label htmlFor="lastname">{t('Last Name')}</label>
+                                                                                        <Field name="lastname" id="lastname" type="text" className="form-input" />
+                                                                                        {submitCount ? (
+                                                                                            errors.lastname ? (
+                                                                                                <div className="text-danger mt-1">{errors.lastname?.toString()}</div>
+                                                                                            ) : (
+                                                                                                <div className="text-[#1abc9c] mt-1">{t('Looks Good!')}</div>
+                                                                                            )
+                                                                                        ) : (
+                                                                                            ''
+                                                                                        )}
+                                                                                    </div>
+                                                                                    <div>
+                                                                                        <label htmlFor="telefonNo">{t('Telephone')}</label>
+                                                                                        <Field name="telefonNo" type="text" id="telefonNo" placeholder={t('Enter Telephone')} className="form-input" />
 
-                                                                                                setSelectedUser((prev) => ({
-                                                                                                    ...(prev as UserData), // Ensures full UserData structure is kept
-                                                                                                    hesapDurumu: selectedOption!.value
-                                                                                                }));
-                                                                                            }}
+                                                                                        {submitCount ? (
+                                                                                            errors.telefonNo ? (
+                                                                                                <div className="text-danger mt-1">{errors.telefonNo?.toString()}</div>
+                                                                                            ) : (
+                                                                                                <div className="text-success mt-1">{t('Looks Good!')}</div>
+                                                                                            )
+                                                                                        ) : (
+                                                                                            ''
+                                                                                        )}
+                                                                                    </div>
+
+                                                                                    <div>
+                                                                                        <label htmlFor="Email">{t('Email')}</label>
+                                                                                        <Field name="email" type="text" id="Email" placeholder={t('Enter Email')} className="form-input" />
+
+                                                                                        {submitCount ? (
+                                                                                            errors.email ? (
+                                                                                                <div className="text-danger mt-1">{errors.email?.toString()}</div>
+                                                                                            ) : (
+                                                                                                <div className="text-success mt-1">{t('Looks Good!')}</div>
+                                                                                            )
+                                                                                        ) : (
+                                                                                            ''
+                                                                                        )}
+                                                                                    </div>
+                                                                                    <div>
+                                                                                        <label htmlFor="tcNumber">{t('TC Number')}</label>
+                                                                                        <Field name="tcNumber" type="text" id="tcNumber" placeholder={t('Enter TC Number')} className="form-input" />
+
+                                                                                        {submitCount ? (
+                                                                                            errors.tcNumber ? (
+                                                                                                <div className="text-danger mt-1">{errors.tcNumber?.toString()}</div>
+                                                                                            ) : (
+                                                                                                <div className="text-success mt-1">{t('Looks Good!')}</div>
+                                                                                            )
+                                                                                        ) : (
+                                                                                            ''
+                                                                                        )}
+                                                                                    </div>
+                                                                                    <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-5">
+                                                                                        <div>
+                                                                                            <label htmlFor="hesapFirmaYetkisi">{t('Account Company Authorization')}</label>
+                                                                                            <Select
+                                                                                                id="hesapFirmaYetkisi"
+                                                                                                options={optionsFirmaKullanıcıYetkis}
+                                                                                                isSearchable={false}
+                                                                                                onChange={(selectedOption) => {
+                                                                                                    values.hesapFirmaYetkisi = selectedOption!.value;
+                                                                                                }}
+                                                                                            />
+                                                                                            {submitCount ? (
+                                                                                                errors.hesapFirmaYetkisi ? (
+                                                                                                    <div className="text-danger mt-1">{errors.hesapFirmaYetkisi}</div>
+                                                                                                ) : (
+                                                                                                    <div className="text-[#1abc9c] mt-1">{t('Looks Good!')}</div>
+                                                                                                )
+                                                                                            ) : (
+                                                                                                ''
+                                                                                            )}
+                                                                                        </div>
+                                                                                        <div>
+                                                                                            <label htmlFor="hesapDurumu">{t('Account Status')}</label>
+                                                                                            <Select
+                                                                                                id="hesapDurumu"
+                                                                                                options={statusOptions}
+                                                                                                isSearchable={false}
+                                                                                                onChange={(selectedOption) => {
+                                                                                                    values.hesapDurumu = selectedOption!.value;
+                                                                                                }}
+                                                                                            />
+                                                                                            {submitCount ? (
+                                                                                                errors.hesapDurumu ? (
+                                                                                                    <div className="text-danger mt-1">{errors.hesapDurumu}</div>
+                                                                                                ) : (
+                                                                                                    <div className="text-[#1abc9c] mt-1">{t('Looks Good!')}</div>
+                                                                                                )
+                                                                                            ) : (
+                                                                                                ''
+                                                                                            )}
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div>
+                                                                                        <label htmlFor="password">{t('Password')}</label>
+                                                                                        <Field name="password" type="password" id="password" placeholder={t('Enter Password')} className="form-input" />
+
+                                                                                        {submitCount ? (
+                                                                                            errors.password ? (
+                                                                                                <div className="text-danger mt-1">{errors.password}</div>
+                                                                                            ) : (
+                                                                                                <div className="text-success mt-1">{t('Looks Good!')}</div>
+                                                                                            )
+                                                                                        ) : (
+                                                                                            ''
+                                                                                        )}
+                                                                                    </div>
+                                                                                    <div>
+                                                                                        <label htmlFor="confirmPassword">{t('Confirm Password')}</label>
+                                                                                        <Field
+                                                                                            name="confirmPassword"
+                                                                                            type="password"
+                                                                                            id="confirmPassword"
+                                                                                            placeholder={t('Enter Password')}
+                                                                                            className="form-input"
                                                                                         />
+
+                                                                                        {submitCount ? (
+                                                                                            errors.confirmPassword ? (
+                                                                                                <div className="text-danger mt-1">{errors.confirmPassword}</div>
+                                                                                            ) : (
+                                                                                                <div className="text-success mt-1">{t('Looks Good!')}</div>
+                                                                                            )
+                                                                                        ) : (
+                                                                                            ''
+                                                                                        )}
+                                                                                    </div>
+                                                                                    <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-5">
+                                                                                        <button
+                                                                                            type="submit"
+                                                                                            className="btn btn-primary !mt-6"
+                                                                                            onClick={() => {
+                                                                                                console.log(Object.keys(errors));
+                                                                                                if (Object.keys(touched).length !== 0 && Object.keys(errors).length === 0) {
+                                                                                                    submitAddFarmUserForm(values);
+                                                                                                }
+                                                                                            }}
+                                                                                        >
+                                                                                            {t('Save')}
+                                                                                        </button>
+                                                                                        <button
+                                                                                            type="submit"
+                                                                                            className="btn btn-danger !mt-6"
+                                                                                            onClick={() => {
+                                                                                                setisVisibleCiftlikKullaniciEkle(false);
+                                                                                            }}
+                                                                                        >
+                                                                                            {t('Cancel')}
+                                                                                        </button>
                                                                                     </div>
                                                                                 </div>
-                                                                                <div>
-                                                                                    <label htmlFor="password">{t('Password')}</label>
-                                                                                    <Field name="password" type="password" id="password" placeholder={t('Enter Password')} className="form-input" />
-
-                                                                                    {submitCount ? (
-                                                                                        errors.password ? (
-                                                                                            <div className="text-danger mt-1">{errors.password}</div>
-                                                                                        ) : (
-                                                                                            <div className="text-success mt-1">{t('Looks Good!')}</div>
-                                                                                        )
-                                                                                    ) : (
-                                                                                        ''
-                                                                                    )}
-                                                                                </div>
-                                                                                <div>
-                                                                                    <label htmlFor="confirmPassword">{t('Confirm Password')}</label>
-                                                                                    <Field name="confirmPassword" type="password" id="confirmPassword" placeholder={t('Enter Password')} className="form-input" />
-
-                                                                                    {submitCount ? (
-                                                                                        errors.confirmPassword ? (
-                                                                                            <div className="text-danger mt-1">{errors.confirmPassword}</div>
-                                                                                        ) : (
-                                                                                            <div className="text-success mt-1">{t('Looks Good!')}</div>
-                                                                                        )
-                                                                                    ) : (
-                                                                                        ''
-                                                                                    )}
-                                                                                </div>
-                                                                                <div className="sm:col-span-2 mt-3">
-                                                                                <button
-                                                                                        type="submit"
-                                                                                        className="btn btn-primary !mt-6"
-                                                                                        onClick={() => {
-                                                                                            console.log(Object.keys(errors));
-                                                                                            if (Object.keys(touched).length !== 0 && Object.keys(errors).length === 0) {
-                                                                                                submitUpdateFarmUserForm(values);
-                                                                                            }
-                                                                                        }}
-                                                                                    >
-                                                                                        {t('Save')}
-                                                                                    </button>
-                                                                                </div>
                                                                             </div>
-                                                                        </div>
-                                                                    </Form>)}
+                                                                        </Form>
+                                                                    )}
                                                                 </Formik>
                                                             </div>
-                                                            </Dialog.Panel>
-                                                          </div>
-                                                        </div>
-                                                      </Dialog>
-                                                    </Transition>
+                                                        </Dialog.Panel>
+                                                    </div>
                                                 </div>
-                                                     
-                                                ),
-                                            },
-                                        ]}
-                                        totalRecords={initialRecords.length}
-                                        recordsPerPage={pageSize}
-                                        page={page}
-                                        onPageChange={(p) => setPage(p)}
-                                        recordsPerPageOptions={PAGE_SIZES}
-                                        onRecordsPerPageChange={setPageSize}
-                                        sortStatus={sortStatus}
-                                        onSortStatusChange={setSortStatus}
-                                        minHeight={200}
-                                        paginationText={({ from, to, totalRecords }) => `Showing  ${from} to ${to} of ${totalRecords} entries`}
-                                    />
+                                            </Dialog>
+                                        </Transition>
+                                    </div>
+
+                                    <div className="datatables">
+                                        <DataTable
+                                            className="whitespace-nowrap table-hover"
+                                            records={recordsData}
+                                            columns={[
+                                                {
+                                                    accessor: 'kullaniciID',
+                                                    title: t('ID'),
+                                                    sortable: true,
+                                                },
+                                                {
+                                                    accessor: 'isim',
+                                                    title: t('Name'),
+                                                    sortable: true,
+                                                },
+                                                {
+                                                    accessor: 'soyisim',
+                                                    title: t('Last Name'),
+                                                    sortable: true,
+                                                },
+                                                {
+                                                    accessor: 'eposta',
+                                                    title: t('Email'),
+                                                    sortable: true,
+                                                },
+                                                {
+                                                    accessor: 'telefonNo',
+                                                    title: t('Telephone'),
+                                                    sortable: true,
+                                                },
+                                                {
+                                                    accessor: 'hesapFirmaYetkisi',
+                                                    title: t('Account Company Authorization'),
+                                                    sortable: true,
+                                                    render: ({ hesapFirmaYetkisi }) => <span className={`badge bg-${statusColorYetki(hesapFirmaYetkisi)}`}>{statusNameYetki(hesapFirmaYetkisi)}</span>,
+                                                },
+                                                {
+                                                    accessor: 'hesapDurumu',
+                                                    title: t('Account Status'),
+                                                    sortable: true,
+                                                    render: ({ hesapDurumu }) => <span className={`badge bg-${statusColorDurum(hesapDurumu)}`}>{statusNameDurum(hesapDurumu)}</span>,
+                                                },
+                                                {
+                                                    accessor: 'manage',
+                                                    title: t('Manage'),
+                                                    titleClassName: '!text-center',
+                                                    render: ({ kullaniciID, isim, soyisim, tcNo, eposta, telefonNo, hesapFirmaYetkisi, hesapDurumu, firmaID }) => (
+                                                        <div className="flex items-center w-max mx-auto gap-2">
+                                                            <Tippy>
+                                                                <button
+                                                                    type="button"
+                                                                    onClick={() => {
+                                                                        setSelectedUser({
+                                                                            kullaniciID: kullaniciID,
+                                                                            isim: isim,
+                                                                            soyisim: soyisim,
+                                                                            tcNo: tcNo,
+                                                                            eposta: eposta,
+                                                                            telefonNo: telefonNo,
+                                                                            hesapFirmaYetkisi: hesapFirmaYetkisi,
+                                                                            hesapDurumu: hesapDurumu,
+                                                                            firmaID: firmaID,
+                                                                            firmaAdi: ' ',
+                                                                        });
+                                                                        setModal22(true);
+                                                                    }}
+                                                                >
+                                                                    <IconPencilPaper />
+                                                                </button>
+                                                            </Tippy>
+                                                            <Transition appear show={modal22} as={Fragment}>
+                                                                <Dialog as="div" open={modal22} onClose={() => setModal22(false)}>
+                                                                    <div className="fixed inset-0 z-10 overflow-y-auto bg-[black]/10">
+                                                                        <div className="flex min-h-screen items-center justify-center px-4">
+                                                                            <Dialog.Panel className="panel my-8 w-full max-w-3xl overflow-hidden rounded-lg py-1 px-4 text-black dark:text-white-dark">
+                                                                                <div className="flex items-center justify-between p-5">
+                                                                                    <h5> {t('Manage User')} </h5>
+                                                                                    <button type="button" onClick={() => setModal22(false)} className="text-white-dark hover:text-dark">
+                                                                                        <IconX className="w-5 h-5" />
+                                                                                    </button>
+                                                                                </div>
+                                                                                <div>
+                                                                                    <Formik
+                                                                                        enableReinitialize={true}
+                                                                                        initialValues={{
+                                                                                            kullaniciID: selectedUser?.kullaniciID || '',
+                                                                                            firstname: selectedUser?.isim || '',
+                                                                                            lastname: selectedUser?.soyisim || '',
+                                                                                            tcNumber: selectedUser?.tcNo || '',
+                                                                                            email: selectedUser?.eposta || '',
+                                                                                            telefonNo: selectedUser?.telefonNo || '',
+                                                                                            password: '',
+                                                                                            confirmPassword: '',
+                                                                                            hesapFirmaYetkisi: '',
+                                                                                            hesapDurumu: '',
+                                                                                        }}
+                                                                                        validationSchema={submitUserFormValidation}
+                                                                                        onSubmit={() => {}}
+                                                                                    >
+                                                                                        {({ errors, submitCount, touched, values }) => (
+                                                                                            <Form className="border border-[#ebedf2] dark:border-[#191e3a] rounded-md p-4 mb-5 bg-white dark:bg-black">
+                                                                                                <div className="flex flex-col sm:flex-row">
+                                                                                                    <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-5">
+                                                                                                        <div>
+                                                                                                            <label htmlFor="firstname">{t('Name')}</label>
+                                                                                                            <Field name="firstname" id="firstname" type="text" className="form-input" />
+                                                                                                            {submitCount ? (
+                                                                                                                errors.firstname ? (
+                                                                                                                    <div className="text-danger mt-1">{errors.firstname?.toString()}</div>
+                                                                                                                ) : (
+                                                                                                                    <div className="text-[#1abc9c] mt-1">{t('Looks Good!')}</div>
+                                                                                                                )
+                                                                                                            ) : (
+                                                                                                                ''
+                                                                                                            )}
+                                                                                                        </div>
+                                                                                                        <div>
+                                                                                                            <label htmlFor="lastname">{t('Last Name')}</label>
+                                                                                                            <Field name="lastname" id="lastname" type="text" className="form-input" />
+                                                                                                            {submitCount ? (
+                                                                                                                errors.lastname ? (
+                                                                                                                    <div className="text-danger mt-1">{errors.lastname?.toString()}</div>
+                                                                                                                ) : (
+                                                                                                                    <div className="text-[#1abc9c] mt-1">{t('Looks Good!')}</div>
+                                                                                                                )
+                                                                                                            ) : (
+                                                                                                                ''
+                                                                                                            )}
+                                                                                                        </div>
+                                                                                                        <div>
+                                                                                                            <label htmlFor="telefonNo">{t('Telephone')}</label>
+                                                                                                            <Field
+                                                                                                                name="telefonNo"
+                                                                                                                type="text"
+                                                                                                                id="telefonNo"
+                                                                                                                placeholder={t('Enter Telephone')}
+                                                                                                                className="form-input"
+                                                                                                            />
+
+                                                                                                            {submitCount ? (
+                                                                                                                errors.telefonNo ? (
+                                                                                                                    <div className="text-danger mt-1">{errors.telefonNo?.toString()}</div>
+                                                                                                                ) : (
+                                                                                                                    <div className="text-success mt-1">{t('Looks Good!')}</div>
+                                                                                                                )
+                                                                                                            ) : (
+                                                                                                                ''
+                                                                                                            )}
+                                                                                                        </div>
+
+                                                                                                        <div>
+                                                                                                            <label htmlFor="Email">{t('Email')}</label>
+                                                                                                            <Field
+                                                                                                                name="email"
+                                                                                                                type="text"
+                                                                                                                id="Email"
+                                                                                                                placeholder={t('Enter Email')}
+                                                                                                                className="form-input"
+                                                                                                            />
+
+                                                                                                            {submitCount ? (
+                                                                                                                errors.email ? (
+                                                                                                                    <div className="text-danger mt-1">{errors.email?.toString()}</div>
+                                                                                                                ) : (
+                                                                                                                    <div className="text-success mt-1">{t('Looks Good!')}</div>
+                                                                                                                )
+                                                                                                            ) : (
+                                                                                                                ''
+                                                                                                            )}
+                                                                                                        </div>
+                                                                                                        <div>
+                                                                                                            <label htmlFor="tcNumber">{t('TC Number')}</label>
+                                                                                                            <Field
+                                                                                                                name="tcNumber"
+                                                                                                                type="text"
+                                                                                                                id="tcNumber"
+                                                                                                                placeholder={t('Enter TC Number')}
+                                                                                                                className="form-input"
+                                                                                                            />
+
+                                                                                                            {submitCount ? (
+                                                                                                                errors.tcNumber ? (
+                                                                                                                    <div className="text-danger mt-1">{errors.tcNumber?.toString()}</div>
+                                                                                                                ) : (
+                                                                                                                    <div className="text-success mt-1">{t('Looks Good!')}</div>
+                                                                                                                )
+                                                                                                            ) : (
+                                                                                                                ''
+                                                                                                            )}
+                                                                                                        </div>
+                                                                                                        <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-5">
+                                                                                                            <div>
+                                                                                                                <label htmlFor="hesapFirmaYetkisi">{t('Account Company Authorization')}</label>
+                                                                                                                <Select
+                                                                                                                    id="hesapFirmaYetkisi"
+                                                                                                                    options={optionsFirmaKullanıcıYetkis}
+                                                                                                                    isSearchable={false}
+                                                                                                                    defaultValue={optionsFirmaKullanıcıYetkis.find(
+                                                                                                                        (optionsFirmaKullanıcıYetkis) =>
+                                                                                                                            optionsFirmaKullanıcıYetkis.value === selectedUser?.hesapFirmaYetkisi
+                                                                                                                    )}
+                                                                                                                    onChange={(selectedOption) => {
+                                                                                                                        if (!selectedUser) return; // Prevents null errors
+
+                                                                                                                        setSelectedUser((prev) => ({
+                                                                                                                            ...(prev as UserData), // Ensures full UserData type
+                                                                                                                            hesapFirmaYetkisi: selectedOption!.value,
+                                                                                                                        }));
+                                                                                                                    }}
+                                                                                                                />
+                                                                                                            </div>
+                                                                                                            <div>
+                                                                                                                <label htmlFor="hesapDurumu">{t('Account Status')}</label>
+                                                                                                                <Select
+                                                                                                                    id="hesapDurumu"
+                                                                                                                    options={statusOptions}
+                                                                                                                    isSearchable={false}
+                                                                                                                    defaultValue={statusOptions.find(
+                                                                                                                        (option) => option.value === selectedUser?.hesapDurumu
+                                                                                                                    )}
+                                                                                                                    onChange={(selectedOption) => {
+                                                                                                                        if (!selectedUser) return; // Prevents null errors
+
+                                                                                                                        setSelectedUser((prev) => ({
+                                                                                                                            ...(prev as UserData), // Ensures full UserData structure is kept
+                                                                                                                            hesapDurumu: selectedOption!.value,
+                                                                                                                        }));
+                                                                                                                    }}
+                                                                                                                />
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                        <div>
+                                                                                                            <label htmlFor="password">{t('Password')}</label>
+                                                                                                            <Field
+                                                                                                                name="password"
+                                                                                                                type="password"
+                                                                                                                id="password"
+                                                                                                                placeholder={t('Enter Password')}
+                                                                                                                className="form-input"
+                                                                                                            />
+
+                                                                                                            {submitCount ? (
+                                                                                                                errors.password ? (
+                                                                                                                    <div className="text-danger mt-1">{errors.password}</div>
+                                                                                                                ) : (
+                                                                                                                    <div className="text-success mt-1">{t('Looks Good!')}</div>
+                                                                                                                )
+                                                                                                            ) : (
+                                                                                                                ''
+                                                                                                            )}
+                                                                                                        </div>
+                                                                                                        <div>
+                                                                                                            <label htmlFor="confirmPassword">{t('Confirm Password')}</label>
+                                                                                                            <Field
+                                                                                                                name="confirmPassword"
+                                                                                                                type="password"
+                                                                                                                id="confirmPassword"
+                                                                                                                placeholder={t('Enter Password')}
+                                                                                                                className="form-input"
+                                                                                                            />
+
+                                                                                                            {submitCount ? (
+                                                                                                                errors.confirmPassword ? (
+                                                                                                                    <div className="text-danger mt-1">{errors.confirmPassword}</div>
+                                                                                                                ) : (
+                                                                                                                    <div className="text-success mt-1">{t('Looks Good!')}</div>
+                                                                                                                )
+                                                                                                            ) : (
+                                                                                                                ''
+                                                                                                            )}
+                                                                                                        </div>
+                                                                                                        <div className="sm:col-span-2 mt-3">
+                                                                                                            <button
+                                                                                                                type="submit"
+                                                                                                                className="btn btn-primary !mt-6"
+                                                                                                                onClick={() => {
+                                                                                                                    console.log(Object.keys(errors));
+                                                                                                                    if (Object.keys(touched).length !== 0 && Object.keys(errors).length === 0) {
+                                                                                                                        submitUpdateFarmUserForm(values);
+                                                                                                                    }
+                                                                                                                }}
+                                                                                                            >
+                                                                                                                {t('Save')}
+                                                                                                            </button>
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </Form>
+                                                                                        )}
+                                                                                    </Formik>
+                                                                                </div>
+                                                                            </Dialog.Panel>
+                                                                        </div>
+                                                                    </div>
+                                                                </Dialog>
+                                                            </Transition>
+                                                        </div>
+                                                    ),
+                                                },
+                                            ]}
+                                            totalRecords={initialRecords.length}
+                                            recordsPerPage={pageSize}
+                                            page={page}
+                                            onPageChange={(p) => setPage(p)}
+                                            recordsPerPageOptions={PAGE_SIZES}
+                                            onRecordsPerPageChange={setPageSize}
+                                            sortStatus={sortStatus}
+                                            onSortStatusChange={setSortStatus}
+                                            minHeight={200}
+                                            paginationText={({ from, to, totalRecords }) => `Showing  ${from} to ${to} of ${totalRecords} entries`}
+                                        />
+                                    </div>
                                 </div>
                             </div>
-                        </div>}
+                        )}
+                    </div>
+                ) : (
+                    ''
+                )}
+                {tabs === 'manage-product' ? (
+                    <div>
+                        <YemTanımlamaları></YemTanımlamaları>
                     </div>
                 ) : (
                     ''
@@ -1612,88 +1752,95 @@ const AccountSetting = () => {
                             <div className="panel space-y-5">
                                 <h5 className="font-semibold text-lg mb-4">{t('Deactivate Account')}</h5>
                                 <p>{t('The account will be switched to inactive status and after switching to inactive status, it is necessary to apply for activation again. (For Vacation)')}</p>
-                                <button onClick={() => setHesapDondur(true)} className="btn btn-warning btn-delete-account">{t('Deactivate Account')}</button>
+                                <button onClick={() => setHesapDondur(true)} className="btn btn-warning btn-delete-account">
+                                    {t('Deactivate Account')}
+                                </button>
                                 <Transition appear show={hesapDondur} as={Fragment}>
-                                <Dialog as="div" open={hesapDondur} onClose={() => setHesapDondur(false)}>
-                                    <TransitionChild
-                                        as={Fragment}
-                                        enter="ease-out duration-300"
-                                        enterFrom="opacity-0"
-                                        enterTo="opacity-100"
-                                        leave="ease-in duration-200"
-                                        leaveFrom="opacity-100"
-                                        leaveTo="opacity-0"
-                                    >
-                                        <div className="fixed inset-0" />
-                                    </TransitionChild>
-                                    <div id="slideIn_down_modal" className="fixed inset-0 bg-[black]/60 z-[999] overflow-y-auto">
-                                        <div className="flex items-start justify-center min-h-screen px-4">
-                                            <DialogPanel className="panel border-0 p-0 rounded-lg overflow-hidden w-full max-w-lg my-8 text-black dark:text-white-dark animate__animated animate__slideInDown">
-                                                <div className="flex bg-[#fbfbfb] dark:bg-[#121c2c] items-center justify-between px-5 py-3">
-                                                    <h5 className="font-bold text-lg">{t('Account Deactivation')}</h5>
-                                                </div>
-                                                <div className="p-5">
-                                                    <p>
-                                                        {t('This action will initiate the account deactivation process. The account will be set to inactive, and an activation request will be required to reactivate it. A deactivated user will not receive notifications and will appear as inactive in the system (For holidays).')}
-                                                    </p>
-                                                    <div className="flex justify-end items-center mt-8">
-                                                        <button onClick={() => setHesapDondur(false)} type="button" className="btn btn-outline-danger">
-                                                            {t('Cancel')}
-                                                        </button>
-                                                        <button onClick={() => setHesapDondur(false)} type="button" className="btn btn-primary ltr:ml-4 rtl:mr-4">
-                                                            {t('Accept')}
-                                                        </button>
+                                    <Dialog as="div" open={hesapDondur} onClose={() => setHesapDondur(false)}>
+                                        <TransitionChild
+                                            as={Fragment}
+                                            enter="ease-out duration-300"
+                                            enterFrom="opacity-0"
+                                            enterTo="opacity-100"
+                                            leave="ease-in duration-200"
+                                            leaveFrom="opacity-100"
+                                            leaveTo="opacity-0"
+                                        >
+                                            <div className="fixed inset-0" />
+                                        </TransitionChild>
+                                        <div id="slideIn_down_modal" className="fixed inset-0 bg-[black]/60 z-[999] overflow-y-auto">
+                                            <div className="flex items-start justify-center min-h-screen px-4">
+                                                <DialogPanel className="panel border-0 p-0 rounded-lg overflow-hidden w-full max-w-lg my-8 text-black dark:text-white-dark animate__animated animate__slideInDown">
+                                                    <div className="flex bg-[#fbfbfb] dark:bg-[#121c2c] items-center justify-between px-5 py-3">
+                                                        <h5 className="font-bold text-lg">{t('Account Deactivation')}</h5>
                                                     </div>
-                                                </div>
-                                            </DialogPanel>
+                                                    <div className="p-5">
+                                                        <p>
+                                                            {t(
+                                                                'This action will initiate the account deactivation process. The account will be set to inactive, and an activation request will be required to reactivate it. A deactivated user will not receive notifications and will appear as inactive in the system (For holidays).'
+                                                            )}
+                                                        </p>
+                                                        <div className="flex justify-end items-center mt-8">
+                                                            <button onClick={() => setHesapDondur(false)} type="button" className="btn btn-outline-danger">
+                                                                {t('Cancel')}
+                                                            </button>
+                                                            <button onClick={() => setHesapDondur(false)} type="button" className="btn btn-primary ltr:ml-4 rtl:mr-4">
+                                                                {t('Accept')}
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </DialogPanel>
+                                            </div>
                                         </div>
-                                    </div>
-                                </Dialog>
-                            </Transition>
+                                    </Dialog>
+                                </Transition>
                             </div>
                             <div className="panel space-y-5">
                                 <h5 className="font-semibold text-lg mb-4">{t('Delete Account')}</h5>
                                 <p>{t('Once you delete the account, there is no going back. Please be certain.')}</p>
-                                <button onClick={() => setHesapSil(true)} className="btn btn-danger btn-delete-account">{t('Delete my account')}</button>
+                                <button onClick={() => setHesapSil(true)} className="btn btn-danger btn-delete-account">
+                                    {t('Delete my account')}
+                                </button>
                                 <Transition appear show={hesapSil} as={Fragment}>
-                                <Dialog as="div" open={hesapSil} onClose={() => setHesapSil(false)}>
-                                    <TransitionChild
-                                        as={Fragment}
-                                        enter="ease-out duration-300"
-                                        enterFrom="opacity-0"
-                                        enterTo="opacity-100"
-                                        leave="ease-in duration-200"
-                                        leaveFrom="opacity-100"
-                                        leaveTo="opacity-0"
-                                    >
-                                        <div className="fixed inset-0" />
-                                    </TransitionChild>
-                                    <div id="slideIn_down_modal" className="fixed inset-0 bg-[black]/60 z-[999] overflow-y-auto">
-                                        <div className="flex items-start justify-center min-h-screen px-4">
-                                            <DialogPanel className="panel border-0 p-0 rounded-lg overflow-hidden w-full max-w-lg my-8 text-black dark:text-white-dark animate__animated animate__slideInDown">
-                                                <div className="flex bg-[#fbfbfb] dark:bg-[#121c2c] items-center justify-between px-5 py-3">
-                                                    <h5 className="font-bold text-lg">{t('Account Deletion Process')}</h5>
-                                                </div>
-                                                <div className="p-5">
-                                                    <p>
-                                                        {t('This action will initiate the account deletion process. The same processes applied to farms will also apply to this account, but the action requires approval from the company admin. Once deleted, the account cannot be restored. Please make sure and confirm the action carefully.')}
-                                                    </p>
-                                                    <div className="flex justify-end items-center mt-8">
-                                                        <button onClick={() => setHesapSil(false)} type="button" className="btn btn-outline-danger">
-                                                            {t('Cancel')}
-                                                        </button>
-                                                        <button onClick={() => setHesapSil(false)} type="button" className="btn btn-primary ltr:ml-4 rtl:mr-4">
-                                                            {t('Accept')}
-                                                        </button>
+                                    <Dialog as="div" open={hesapSil} onClose={() => setHesapSil(false)}>
+                                        <TransitionChild
+                                            as={Fragment}
+                                            enter="ease-out duration-300"
+                                            enterFrom="opacity-0"
+                                            enterTo="opacity-100"
+                                            leave="ease-in duration-200"
+                                            leaveFrom="opacity-100"
+                                            leaveTo="opacity-0"
+                                        >
+                                            <div className="fixed inset-0" />
+                                        </TransitionChild>
+                                        <div id="slideIn_down_modal" className="fixed inset-0 bg-[black]/60 z-[999] overflow-y-auto">
+                                            <div className="flex items-start justify-center min-h-screen px-4">
+                                                <DialogPanel className="panel border-0 p-0 rounded-lg overflow-hidden w-full max-w-lg my-8 text-black dark:text-white-dark animate__animated animate__slideInDown">
+                                                    <div className="flex bg-[#fbfbfb] dark:bg-[#121c2c] items-center justify-between px-5 py-3">
+                                                        <h5 className="font-bold text-lg">{t('Account Deletion Process')}</h5>
                                                     </div>
-                                                </div>
-                                            </DialogPanel>
+                                                    <div className="p-5">
+                                                        <p>
+                                                            {t(
+                                                                'This action will initiate the account deletion process. The same processes applied to farms will also apply to this account, but the action requires approval from the company admin. Once deleted, the account cannot be restored. Please make sure and confirm the action carefully.'
+                                                            )}
+                                                        </p>
+                                                        <div className="flex justify-end items-center mt-8">
+                                                            <button onClick={() => setHesapSil(false)} type="button" className="btn btn-outline-danger">
+                                                                {t('Cancel')}
+                                                            </button>
+                                                            <button onClick={() => setHesapSil(false)} type="button" className="btn btn-primary ltr:ml-4 rtl:mr-4">
+                                                                {t('Accept')}
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </DialogPanel>
+                                            </div>
                                         </div>
-                                    </div>
-                                </Dialog>
-                            </Transition>
+                                    </Dialog>
+                                </Transition>
                             </div>
-                            
                         </div>
                     </div>
                 ) : (

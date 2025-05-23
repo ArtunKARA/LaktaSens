@@ -88,8 +88,7 @@ const TedarikciSidear = () => {
                             <li className="menu nav-item">
                                 <button type="button" className={`${currentMenu === t('Analysis') ? 'active' : ''} nav-link group w-full`} onClick={() => toggleMenu(t('Analysis'))}>
                                     <div className="flex items-center">
-                                        <IconMenuDashboard
-                                         className="group-hover:!text-primary shrink-0" />
+                                        <IconMenuDashboard className="group-hover:!text-primary shrink-0" />
                                         <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Analysis')}</span>
                                     </div>
 
@@ -186,7 +185,7 @@ const TedarikciSidear = () => {
                                 <span>{t('Warehouse')}</span>
                             </h2>
                             <li className="nav-item">
-                                <NavLink to="/" className="group">
+                                <NavLink to="/tedarikci/MalKabul" className="group">
                                     <div className="flex items-center">
                                         <IconFolderMinus className="group-hover:!text-primary shrink-0" />
                                         <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Goods Receipt')}</span>
@@ -194,7 +193,7 @@ const TedarikciSidear = () => {
                                 </NavLink>
                             </li>
                             <li className="nav-item">
-                                <NavLink to="/" className="group">
+                                <NavLink to="/tedarikci/Sevk" className="group">
                                     <div className="flex items-center">
                                         <IconFolderPlus className="group-hover:!text-primary shrink-0" />
                                         <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Dispatch')}</span>
@@ -202,10 +201,13 @@ const TedarikciSidear = () => {
                                 </NavLink>
                             </li>
                             <li className="menu nav-item">
-                                <button type="button" className={`${currentMenu === t('Warehouse Tracking') ? 'active' : ''} nav-link group w-full`} onClick={() => toggleMenu(t('Warehouse Tracking'))}>
+                                <button
+                                    type="button"
+                                    className={`${currentMenu === t('Warehouse Tracking') ? 'active' : ''} nav-link group w-full`}
+                                    onClick={() => toggleMenu(t('Warehouse Tracking'))}
+                                >
                                     <div className="flex items-center">
-                                        <IconMenuDashboard
-                                         className="group-hover:!text-primary shrink-0" />
+                                        <IconMenuDashboard className="group-hover:!text-primary shrink-0" />
                                         <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Warehouse Tracking')}</span>
                                     </div>
 
@@ -217,20 +219,20 @@ const TedarikciSidear = () => {
                                 <AnimateHeight duration={300} height={currentMenu === t('Warehouse Tracking') ? 'auto' : 0}>
                                     <ul className="sub-menu text-gray-500">
                                         <li>
-                                            <NavLink to="/">{t('Stock')}</NavLink>
+                                            <NavLink to="/tedarikci/DepoTakip/Stok">{t('Stock')}</NavLink>
                                         </li>
                                         <li>
-                                            <NavLink to="/">{t('Goods Acceptance History')}</NavLink>
+                                            <NavLink to="/tedarikci/DepoTakip/MalKabul">{t('Goods Acceptance History')}</NavLink>
                                         </li>
                                         <li>
-                                            <NavLink to="/">{t('Goods Dispatch History')}</NavLink>
+                                            <NavLink to="/tedarikci/DepoTakip/Sevk">{t('Goods Dispatch History')}</NavLink>
                                         </li>
                                     </ul>
                                 </AnimateHeight>
                             </li>
                             <h2 className="py-3 px-7 flex items-center uppercase font-extrabold bg-white-light/30 dark:bg-dark dark:bg-opacity-[0.08] -mx-4 mb-1">
                                 <IconMinus className="w-4 h-5 flex-none hidden" />
-                                <span>{t('Defination')}</span>
+                                <span>{t('Product Defination')}</span>
                             </h2>
                             <li className="nav-item">
                                 <NavLink to="/tedarikci/tanımlamalar/yem" className="group">
@@ -240,8 +242,6 @@ const TedarikciSidear = () => {
                                     </div>
                                 </NavLink>
                             </li>
-                            
-
                         </ul>
                     </PerfectScrollbar>
                 </div>

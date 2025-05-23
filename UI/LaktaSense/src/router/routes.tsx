@@ -45,10 +45,26 @@ const AdminStandartYemler = lazy(() => import('../pages/Admin/Parametreler/YemTa
 const AdminBesinDeğerleri = lazy(() => import('../pages/Admin/Parametreler/YemTanımlamaları/Besinİhtiyaçları'));
 const AdminStandartYemlerDetay = lazy(() => import('../pages/Admin/Parametreler/YemTanımlamaları/StandartYemlerDetaylar'));
 const AdminBesinDeğerleriDetay = lazy(() => import('../pages/Admin/Parametreler/YemTanımlamaları/BesinİhtiyaçlarıDetaylar'));
-const TedarikciYemTanımlamaları = lazy(() => import('../pages/Tedarikci/Tanımlamalar/YemTanımlamaları'));
-const TedarikciYemTanımlamalarıDetay = lazy(() => import('../pages/Tedarikci/Tanımlamalar/YemTanımlamalarıDetay'));
+const TedarikciYemTanımlamaları = lazy(() => import('../pages/Tedarikci/UrunTanımlamalar/YemTanımlamaları'));
+const TedarikciYemTanımlamalarıDetay = lazy(() => import('../pages/Tedarikci/UrunTanımlamalar/YemTanımlamalarıDetay'));
 const AdminYemBasvurulari = lazy(() => import('../pages/Admin/Basvurular/Yem/YemBasvurulari'));
 const AdminYemBasvurulariDetay = lazy(() => import('../pages/Admin/Basvurular/Yem/YemBasvuruDetay'));
+const CifciDepoTakipStok = lazy(() => import('../pages/Cifci/DepoModul/DepoTakip/Stok'));
+const CifciDepoTakipTüketim = lazy(() => import('../pages/Cifci/DepoModul/DepoTakip/TüketimGecmisi'));
+const CifciDepoTakipMalKabul = lazy(() => import('../pages/Cifci/DepoModul/DepoTakip/MalKabulGecmisi'));
+const CifciDepoTakipSevk = lazy(() => import('../pages/Cifci/DepoModul/DepoTakip/SevkGecmisi'));
+const TedarikciDepoTakipStok = lazy(() => import('../pages/Tedarikci/DepoModul/DepoTakip/Stok'));
+const TedarikciDepoTakipMalKabul = lazy(() => import('../pages/Tedarikci/DepoModul/DepoTakip/MalKabulGecmisi'));
+const TedarikciDepoTakipSevk = lazy(() => import('../pages/Tedarikci/DepoModul/DepoTakip/SevkGecmisi'));
+const CifciTuketimKaydi = lazy(() => import('../pages/Cifci/DepoModul/TuketimKaydi'));
+const CifciMalKabul = lazy(() => import('../pages/Cifci/DepoModul/CifciMalKabul'));
+const CifciSevk = lazy(() => import('../pages/Cifci/DepoModul/CifciMalSevk'));
+const TedarikciMalKabul = lazy(() => import('../pages/Tedarikci/DepoModul/TedarikciMalKabul'));
+const TedarikciSevk = lazy(() => import('../pages/Tedarikci/DepoModul/TedarikciSevk'));
+const CifciYemDetay = lazy(() => import('../pages/Cifci/CifciYemDetay'));
+const CifciTuketimAnalizi = lazy(() => import('../pages/Cifci/DepoModul/YemAnalizi/TuketimAnalizi'));
+const CifciTedarikAnalizi = lazy(() => import('../pages/Cifci/DepoModul/YemAnalizi/TedarikAnalizi'));
+const CifciIhtiyacAnalizi = lazy(() => import('../pages/Cifci/DepoModul/YemAnalizi/IhtiyacAnalizi'));
 
 const routes = [
     //landing page
@@ -283,6 +299,106 @@ const routes = [
         ),
         layout: 'cifci',
     },
+    //Cifci depo takip stok sayfası
+    {
+        path: '/cifci/DepoTakip/Stok',
+        element: (
+            <AuthGuard allowedRoles={['c']}>
+                <CifciDepoTakipStok />
+            </AuthGuard>
+        ),
+        layout: 'cifci',
+    },
+    {
+        path: '/cifci/DepoTakip/Tüketim',
+        element: (
+            <AuthGuard allowedRoles={['c']}>
+                <CifciDepoTakipTüketim />
+            </AuthGuard>
+        ),
+        layout: 'cifci',
+    },
+    {
+        path: '/cifci/DepoTakip/MalKabul',
+        element: (
+            <AuthGuard allowedRoles={['c']}>
+                <CifciDepoTakipMalKabul />
+            </AuthGuard>
+        ),
+        layout: 'cifci',
+    },
+    {
+        path: '/cifci/DepoTakip/Sevk',
+        element: (
+            <AuthGuard allowedRoles={['c']}>
+                <CifciDepoTakipSevk />
+            </AuthGuard>
+        ),
+        layout: 'cifci',
+    },
+    {
+        path: '/cifci/TuketimKaydi',
+        element: (
+            <AuthGuard allowedRoles={['c']}>
+                <CifciTuketimKaydi />
+            </AuthGuard>
+        ),
+        layout: 'cifci',
+    },
+    {
+        path: '/cifci/MalKabul',
+        element: (
+            <AuthGuard allowedRoles={['c']}>
+                <CifciMalKabul />
+            </AuthGuard>
+        ),
+        layout: 'cifci',
+    },
+    {
+        path: '/cifci/Sevk',
+        element: (
+            <AuthGuard allowedRoles={['c']}>
+                <CifciSevk />
+            </AuthGuard>
+        ),
+        layout: 'cifci',
+    },
+    {
+        path: '/cifci/yemDetay',
+        element: (
+            <AuthGuard allowedRoles={['c']}>
+                <CifciYemDetay />
+            </AuthGuard>
+        ),
+        layout: 'cifci',
+    },
+    {
+        path: '/cifci/yemAnaliz/IhtiyacAnalizi',
+        element: (
+            <AuthGuard allowedRoles={['c']}>
+                <CifciIhtiyacAnalizi />
+            </AuthGuard>
+        ),
+        layout: 'cifci',
+    },
+    {
+        path: '/cifci/yemAnaliz/TedarikAnalizi',
+        element: (
+            <AuthGuard allowedRoles={['c']}>
+                <CifciTedarikAnalizi />
+            </AuthGuard>
+        ),
+        layout: 'cifci',
+    },
+    {
+        path: '/cifci/yemAnaliz/TuketimAnalizi',
+        element: (
+            <AuthGuard allowedRoles={['c']}>
+                <CifciTuketimAnalizi />
+            </AuthGuard>
+        ),
+        layout: 'cifci',
+    },
 
     //Admin
     //Admin Dashboard
@@ -501,6 +617,51 @@ const routes = [
         element: (
             <AuthGuard allowedRoles={['t']}>
                 <TedarikciYemTanımlamalarıDetay />
+            </AuthGuard>
+        ),
+        layout: 'tedarikci',
+    },
+    {
+        path: '/tedarikci/DepoTakip/Sevk',
+        element: (
+            <AuthGuard allowedRoles={['t']}>
+                <TedarikciDepoTakipSevk />
+            </AuthGuard>
+        ),
+        layout: 'tedarikci',
+    },
+    {
+        path: '/tedarikci/DepoTakip/Stok',
+        element: (
+            <AuthGuard allowedRoles={['t']}>
+                <TedarikciDepoTakipStok />
+            </AuthGuard>
+        ),
+        layout: 'tedarikci',
+    },
+    {
+        path: '/tedarikci/DepoTakip/MalKabul',
+        element: (
+            <AuthGuard allowedRoles={['t']}>
+                <TedarikciDepoTakipMalKabul />
+            </AuthGuard>
+        ),
+        layout: 'tedarikci',
+    },
+    {
+        path: '/tedarikci/MalKabul',
+        element: (
+            <AuthGuard allowedRoles={['t']}>
+                <TedarikciMalKabul />
+            </AuthGuard>
+        ),
+        layout: 'tedarikci',
+    },
+    {
+        path: '/tedarikci/Sevk',
+        element: (
+            <AuthGuard allowedRoles={['t']}>
+                <TedarikciSevk />
             </AuthGuard>
         ),
         layout: 'tedarikci',
