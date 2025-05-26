@@ -554,7 +554,6 @@
     "Set Passive": "Pasif Yap",
     "Approve": "Onayla",
     "Login": "Giriş yap",
-<<<<<<< HEAD
     "Register": "Kayıt ol",
     "Smart Milk Monitoring and Feed Optimization System for Small Farmers": "Küçük Çiftçiler İçin Akıllı Süt Takip ve Yem Optimizasyon Sistemi",
     "LaktaSens increases efficiency in milk production while reducing feed costs through IoT-based sensors and algorithms.": "LaktaSens, IoT tabanlı sensörler ve algoritmalar ile süt üretiminde verimliliği artırırken yem maliyetlerini düşürür.",
@@ -609,9 +608,7 @@
     "Apply Now!": "Başvur!",
     "Contact Us": "Bizimle İletişime Geçin",
     "For detailed information about the project, email: info@laktasens.com": "Proje hakkında detaylı bilgi için e-posta: info@laktasens.com",
-    "© 2025 LaktaSens. All rights reserved.": "© 2025 LaktaSens. Tüm hakları saklıdır."
-}
-=======
+    "© 2025 LaktaSens. All rights reserved.": "© 2025 LaktaSens. Tüm hakları saklıdır.",
     "Reject Reason": "Red Sebebi",
     "Rejected By": "Rededen",
     "Cycle Tracking Module": "Döngü Takip Modülü",
@@ -730,4 +727,4 @@
 
     
 }
->>>>>>> f42aaa26509656727e36f20865efaddb30492bb1
+
