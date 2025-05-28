@@ -338,7 +338,7 @@ const KayitSayfasi = () => {
                     >
                         <div className="mx-auto w-full max-w-[600px]">
                             <div className="mb-10">
-                                <h1 className="text-3xl font-extrabold uppercase !leading-snug text-primary md:text-3xl">{t('Sign Up')}</h1>
+                                <h1 className="text-3xl font-extrabold uppercase !leading-snug text-green-600 md:text-3xl">{t('Sign Up')}</h1>
                                 <p className="text-base font-bold leading-normal text-white-dark">{t('Enter your personal information to register')}</p>
                             </div>
                             <div className="inline-block w-full mb-10">
@@ -346,7 +346,7 @@ const KayitSayfasi = () => {
                                     <ul className="mb-5 grid grid-cols-3 text-center">
                                         <li>
                                             <div
-                                                className={`${activeTab === 1 ? '!bg-primary text-white' : ''}
+                                                className={`${activeTab === 1 ? '!bg-green-700 text-white' : ''}
                 block rounded-full bg-[#f3f2ee] p-2.5 dark:bg-[#1b2e4b]`}
                                                 onClick={() => setActiveTab(1)}
                                             >
@@ -355,7 +355,7 @@ const KayitSayfasi = () => {
                                         </li>
                                         <li>
                                             <div
-                                                className={`${activeTab === 2 ? '!bg-primary text-white' : ''}
+                                                className={`${activeTab === 2 ? '!bg-green-700 text-white' : ''}
                 block rounded-full bg-[#f3f2ee] p-2.5 dark:bg-[#1b2e4b]`}
                                                 onClick={() => setActiveTab(2)}
                                             >
@@ -364,7 +364,7 @@ const KayitSayfasi = () => {
                                         </li>
                                         <li>
                                             <div
-                                                className={`${activeTab === 3 ? '!bg-primary text-white' : ''}
+                                                className={`${activeTab === 3 ? '!bg-green-700 text-white' : ''}
                 block rounded-full bg-[#f3f2ee] p-2.5 dark:bg-[#1b2e4b]`}
                                                 onClick={() => setActiveTab(3)}
                                             >
@@ -675,7 +675,7 @@ const KayitSayfasi = () => {
                                         {!firmaID ? (
                                             <button
                                                 type="submit"
-                                                className="btn btn-primary !mt-6"
+                                                className="btn btn-primary bg-green-700 border-green-500 !mt-6"
                                                 onClick={() => {
                                                     console.log(Object.keys(errors));
                                                     if (Object.keys(touched).length !== 0 && Object.keys(errors).length === 0) {
@@ -688,7 +688,7 @@ const KayitSayfasi = () => {
                                         ) : (
                                             <button
                                                 type="submit"
-                                                className="btn btn-primary !mt-6"
+                                                className="btn btn-primary bg-green-700 border-green-600a !mt-6"
                                                 onClick={() => {
                                                     console.log(Object.keys(errors));
                                                     if (Object.keys(touched).length !== 0 && Object.keys(errors).length === 0) {
@@ -708,7 +708,7 @@ const KayitSayfasi = () => {
                             </div>
                             <div className="text-center dark:text-white">
                                 {t('Already have an account ?')}&nbsp;
-                                <Link to="/login" className="uppercase text-primary underline transition hover:text-black dark:hover:text-white">
+                                <Link to="/login" className="uppercase text-green-600 underline transition hover:text-black dark:hover:text-white">
                                     {t('SIGN IN')}
                                 </Link>
                             </div>

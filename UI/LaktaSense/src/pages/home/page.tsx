@@ -13,7 +13,12 @@ import 'aos/dist/aos.css';
 
 export default function LandingPage() {
     const { t, i18n } = useTranslation();
-    const imagePath = i18n.language === 'tr' ? '/photo/diyagram2.png' : '/photo/diyagram2-e.png';
+    const imagePath = i18n.language === 'tr' ? '/photo/diyagram2.png' : '/photo/en/diyagraming.png';
+    const imagePath2 = i18n.language === 'tr' ? '/photo/ihale-modulu2.png' : '/photo/en/ihaleing.png';
+    const imagePath3 = i18n.language === 'tr' ? '/photo/sagmal-dongu.png' : '/photo/en/sagmaldonguing.png';
+    const imagePath4 = i18n.language === 'tr' ? '/photo/ahir-takip-modulu.png' : '/photo/en/ahırtakiping.png';
+    const imagePath5 = i18n.language === 'tr' ? '/photo/feed-optimization.png' : '/photo/en/yeming.png';
+
     const isRtl = useSelector((state: IRootState) => state.themeConfig.rtlClass) === 'rtl' ? true : false;
     const themeConfig = useSelector((state: IRootState) => state.themeConfig);
     const [flag, setFlag] = useState(themeConfig.locale);
@@ -28,8 +33,7 @@ export default function LandingPage() {
     };
 
     useEffect(() => {
-        AOS.init({
-        });
+        AOS.init({});
     }, []);
 
     return (
@@ -143,7 +147,7 @@ export default function LandingPage() {
                 <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
                     {/* Sol: Fotoğraf */}
                     <div className="flex justify-center" data-aos="fade-left" data-aos-duration="2000">
-                        <img src="/photo/sagmal-dongu.png" alt="Milking Cycle Diagram" className="max-w-[300px] w-full h-auto" />
+                        <img src={imagePath3} alt="Milking Cycle Diagram" className="max-w-[300px] w-full h-auto" />
                     </div>
 
                     {/* Sağ: Açıklama */}
@@ -179,7 +183,7 @@ export default function LandingPage() {
                     </div>
                     {/* Sağ: Fotoğraf */}
                     <div className="flex justify-center" data-aos="fade-right" data-aos-duration="2000">
-                        <img src="/photo/ihale-modulu2.png" alt="İhale Modülü Diyagramı" className="max-w-[500px] w-full h-auto" />
+                        <img src={imagePath2} alt="İhale Modülü Diyagramı" className="max-w-[500px] w-full h-auto" />
                     </div>
                 </div>
             </section>
@@ -188,7 +192,7 @@ export default function LandingPage() {
                 <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
                     {/* Sol: Fotoğraf */}
                     <div className="flex justify-center" data-aos="fade-left" data-aos-duration="2000">
-                        <img src="/photo/ahir-takip-modulu.png" alt="Barn Tracking Module Diagram" className="max-w-[500px] w-full h-auto" />
+                        <img src={imagePath5} alt="Barn Tracking Module Diagram" className="max-w-[500px] w-full h-auto" />
                     </div>
 
                     {/* Sağ: Açıklama */}
@@ -211,7 +215,7 @@ export default function LandingPage() {
                 <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
                     {/* Sol: Fotoğraf */}
                     <div className="flex justify-center" data-aos="fade-left" data-aos-duration="2000">
-                        <img src="/photo/feed-optimization.png" alt="Feed Requirement Determination" className="max-w-[500px] w-full h-auto" />
+                        <img src={imagePath4} alt="Feed Requirement Determination" className="max-w-[500px] w-full h-auto" />
                     </div>
 
                     {/* Sağ: Açıklama */}
