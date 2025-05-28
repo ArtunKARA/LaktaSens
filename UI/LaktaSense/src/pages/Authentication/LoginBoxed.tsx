@@ -35,6 +35,7 @@ const LoginBoxed = () => {
 
     const submitForm = async (e: React.FormEvent) => {
         e.preventDefault();
+        console.log('Form submitted:', { email, password });
         setErrorMessage('');
         try {
             const response = await fetch('http://localhost:3030/api/login/giris', {
@@ -45,10 +46,36 @@ const LoginBoxed = () => {
             const data = await response.json();
             if (!response.ok) return setErrorMessage(data.message || t('Email or password is incorrect.'));
             const userInfo = {
-                /* ... */
+                kullaniciID: data.kullaniciID,
+                kullaniciTuru: data.kullaniciTuru,
+                hesapDurumu: data.hesapDurumu,
+                hesapFirmaYetkisi: data.hesapFirmaYetkisi,
+                eposta: data.eposta,
+                isim: data.isim,
+                soyisim: data.soyisim,
+                telefonNo: data.telefonNo,
+                tcNo: data.tcNo,
+                firmaID: data.firmaID,
             };
             localStorage.setItem('userInfo', JSON.stringify(userInfo));
-            // yönlendirmeler...
+            if (data.hesapDurumu === 'a' && data.firmaHesapDurumu === 'a') {
+                switch (data.kullaniciTuru) {
+                    case 'a':
+                        return navigate('/admin/dashboard');
+                    case 'c':
+                        return navigate('/cifci/dashboard');
+                    case 't':
+                        return navigate('/tedarikci/dashboard');
+                    default:
+                        return setErrorMessage(t('A type of user that does not exist.'));
+                }
+            } else if (data.firmaHesapDurumu === 'b') {
+                return navigate('/basvuruDurum', { state: { BasvuruDurum: data.firmaHesapDurumu } });
+            } else if (data.firmaHesapDurumu === 'p') {
+                return navigate('/basvuruDurum', { state: { BasvuruDurum: data.firmaHesapDurumu, FirmaID: data.firmaID } });
+            } else {
+                return setErrorMessage(data.message || t('Your account has been suspended.'));
+            }
         } catch (err) {
             setErrorMessage(t('A network error occurred. Please check your connection.'));
         }

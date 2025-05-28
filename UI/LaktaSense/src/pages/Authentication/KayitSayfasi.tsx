@@ -20,6 +20,9 @@ import axios from 'axios';
 import { s } from '@fullcalendar/core/internal-common';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
+import { set } from 'lodash';
+import IconArrowForward from '../../components/Icon/IconArrowForward';
+import IconArrowBackward from '../../components/Icon/IconArrowBackward';
 
 interface CompanyDataAplication {
     Firstname: string;
@@ -282,54 +285,48 @@ const KayitSayfasi = () => {
             </div>
 
             <div className="relative flex min-h-screen items-center justify-center bg-[url(/assets/images/auth/loginArkaPlan.jpg)] bg-cover bg-center bg-no-repeat px-6 py-10 dark:bg-[#060818] sm:px-16">
-                <img src="/assets/images/auth/coming-soon-object1.png" alt="image" className="absolute left-0 top-1/2 h-full max-h-[893px] -translate-y-1/2" />
-                <img src="/assets/images/auth/coming-soon-object2.png" alt="image" className="absolute left-24 top-0 h-40 md:left-[30%]" />
-                <img src="/assets/images/auth/coming-soon-object3.png" alt="image" className="absolute right-0 top-0 h-[300px]" />
-                <img src="/assets/images/auth/polygon-object.svg" alt="image" className="absolute bottom-0 end-[28%]" />
-                
-
                 <div className="absolute top-4 right-4 z-50">
-                        <div className="dropdown">
-                            <Dropdown
-                                offset={[0, 8]}
-                                placement={`${isRtl ? 'bottom-start' : 'bottom-end'}`}
-                                btnClassName="flex items-center gap-2.5 rounded-lg border border-white-dark/30 bg-white px-2 py-1.5 text-white-dark hover:border-primary hover:text-primary dark:bg-black"
-                                button={
-                                    <>
-                                        <div>
-                                            <img src={`/assets/images/flags/${flag.toUpperCase()}.svg`} alt="image" className="h-5 w-5 rounded-full object-cover" />
-                                        </div>
-                                        <div className="text-base font-bold uppercase">{flag}</div>
-                                        <span className="shrink-0">
-                                            <IconCaretDown />
-                                        </span>
-                                    </>
-                                }
-                            >
-                                <ul className="!px-2 text-dark dark:text-white-dark grid grid-cols-2 gap-2 font-semibold dark:text-white-light/90 w-[280px]">
-                                    {themeConfig.languageList.map((item: any) => {
-                                        return (
-                                            <li key={item.code}>
-                                                <button
-                                                    type="button"
-                                                    className={`flex w-full hover:text-primary rounded-lg ${flag === item.code ? 'bg-primary/10 text-primary bg-white' : ''}`}
-                                                    onClick={() => {
-                                                        i18next.changeLanguage(item.code);
-                                                        // setFlag(item.code);
-                                                        setLocale(item.code);
-                                                    }}
-                                                >
-                                                    <img src={`/assets/images/flags/${item.code.toUpperCase()}.svg`} alt="flag" className="w-5 h-5 object-cover rounded-full" />
-                                                    <span className="ltr:ml-3 rtl:mr-3">{item.name}</span>
-                                                </button>
-                                            </li>
-                                        );
-                                    })}
-                                </ul>
-                            </Dropdown>
-                        </div>
+                    <div className="dropdown">
+                        <Dropdown
+                            offset={[0, 8]}
+                            placement={`${isRtl ? 'bottom-start' : 'bottom-end'}`}
+                            btnClassName="flex items-center gap-2.5 rounded-lg border border-white-dark/30 bg-white px-2 py-1.5 text-white-dark hover:border-primary hover:text-primary dark:bg-black"
+                            button={
+                                <>
+                                    <div>
+                                        <img src={`/assets/images/flags/${flag.toUpperCase()}.svg`} alt="image" className="h-5 w-5 rounded-full object-cover" />
+                                    </div>
+                                    <div className="text-base font-bold uppercase">{flag}</div>
+                                    <span className="shrink-0">
+                                        <IconCaretDown />
+                                    </span>
+                                </>
+                            }
+                        >
+                            <ul className="!px-2 text-dark dark:text-white-dark grid grid-cols-2 gap-2 font-semibold dark:text-white-light/90 w-[280px]">
+                                {themeConfig.languageList.map((item: any) => {
+                                    return (
+                                        <li key={item.code}>
+                                            <button
+                                                type="button"
+                                                className={`flex w-full hover:text-primary rounded-lg ${flag === item.code ? 'bg-primary/10 text-primary bg-white' : ''}`}
+                                                onClick={() => {
+                                                    i18next.changeLanguage(item.code);
+                                                    // setFlag(item.code);
+                                                    setLocale(item.code);
+                                                }}
+                                            >
+                                                <img src={`/assets/images/flags/${item.code.toUpperCase()}.svg`} alt="flag" className="w-5 h-5 object-cover rounded-full" />
+                                                <span className="ltr:ml-3 rtl:mr-3">{item.name}</span>
+                                            </button>
+                                        </li>
+                                    );
+                                })}
+                            </ul>
+                        </Dropdown>
                     </div>
-                
+                </div>
+
                 <div className="relative w-full max-w-[870px] rounded-md bg-[linear-gradient(45deg,#fff9f9_0%,rgba(255,255,255,0)_25%,rgba(255,255,255,0)_75%,_#fff9f9_100%)] p-2 dark:bg-[linear-gradient(52.22deg,#0E1726_0%,rgba(14,23,38,0)_18.66%,rgba(14,23,38,0)_51.04%,rgba(14,23,38,0)_80.07%,#0E1726_100%)]">
                     <div
                         className="relative flex flex-col justify-center rounded-md bg-white/60 backdrop-blur-lg dark:bg-black/50 px-6 lg:min-h-[758px] py-20"
@@ -506,26 +503,39 @@ const KayitSayfasi = () => {
                                                         )}
                                                     </div>
                                                 </div>
+                                                <div className="relative flex items-center justify-end">
+                                                    <button
+                                                        type="button"
+                                                        className="btn btn-primary bg-green-500 border-green-700 !mt-6"
+                                                        onClick={() => {
+                                                            setActiveTab(2);
+                                                        }}
+                                                    >
+                                                        {t('Next')}
+                                                        <IconArrowForward></IconArrowForward>
+                                                    </button>
+                                                </div>
                                             </>
                                         )}{' '}
-                                        <div className="relative my-7 text-center md:mb-9 grid">
-                                            <span className="absolute inset-x-0 top-1/2 h-px w-full -translate-y-1/2 bg-white-light dark:bg-white-dark"></span>
-                                        </div>
                                         {activeTab === 2 && (
                                             <>
-                                                <div className="mb-10">
-                                                    <p className="text-base font-bold leading-normal text-white-dark">{t('Enter your commpany information to register')}</p>
-                                                </div>
+                                                <p className="text-base font-bold leading-normal text-white-dark">{t('Enter your commpany information to register')}</p>
                                                 <div>
-                                                    <label htmlFor="hesapDurumu">{t('Company Type')}</label>
-                                                    <Select
-                                                        id="hesapDurumu"
-                                                        options={companyTypeOptions}
-                                                        isSearchable={false}
-                                                        onChange={(selectedOption) => {
-                                                            values.firmaTipi = selectedOption!.value;
-                                                        }}
-                                                    />
+                                                    <label htmlFor="firmaTipi">{t('Company Type')}</label>
+                                                    <Field name="firmaTipi">
+                                                        {({ field, form }: any) => (
+                                                            <Select
+                                                                id="firmaTipi"
+                                                                options={companyTypeOptions}
+                                                                isSearchable={false}
+                                                                value={companyTypeOptions.find((option) => option.value === field.value) || null}
+                                                                onChange={(selectedOption) => {
+                                                                    form.setFieldValue('firmaTipi', selectedOption ? selectedOption.value : '');
+                                                                    selectedOption!.label;
+                                                                }}
+                                                            />
+                                                        )}
+                                                    </Field>
                                                     {submitCount ? (
                                                         errors.firmaTipi ? (
                                                             <div className="text-danger mt-1">{errors.firmaTipi}</div>
@@ -558,7 +568,7 @@ const KayitSayfasi = () => {
                                                             errors.firmaEmail ? (
                                                                 <div className="text-danger mt-1">{errors.firmaEmail}</div>
                                                             ) : (
-                                                                <div className="text-success mt-1">Looks Good!</div>
+                                                                <div className="text-success mt-1">{t('Looks Good!')}</div>
                                                             )
                                                         ) : (
                                                             ''
@@ -619,11 +629,33 @@ const KayitSayfasi = () => {
                                                         errors.firmaAdresi ? (
                                                             <div className="text-danger mt-1">{errors.firmaAdresi}</div>
                                                         ) : (
-                                                            <div className="text-[#1abc9c] mt-1">Looks Good!</div>
+                                                            <div className="text-[#1abc9c] mt-1">{t('Looks Good!')}</div>
                                                         )
                                                     ) : (
                                                         ''
                                                     )}
+                                                </div>
+                                                <div className="flex justify-between mt-6">
+                                                    <button
+                                                        type="button"
+                                                        className="btn btn-primary bg-green-500 border-green-700"
+                                                        onClick={() => {
+                                                            setActiveTab(1);
+                                                        }}
+                                                    >
+                                                        <IconArrowBackward></IconArrowBackward>
+                                                        {t('Previous')}
+                                                    </button>
+                                                    <button
+                                                        type="button"
+                                                        className="btn btn-primary bg-green-500 border-green-700"
+                                                        onClick={() => {
+                                                            setActiveTab(3);
+                                                        }}
+                                                    >
+                                                        {t('Next')}
+                                                        <IconArrowForward></IconArrowForward>
+                                                    </button>
                                                 </div>
                                             </>
                                         )}
@@ -631,34 +663,46 @@ const KayitSayfasi = () => {
                                             <div className="space-y-4 text-black">
                                                 <h3 className="text-xl font-bold mb-4">Girdiğiniz Bilgiler</h3>
                                                 <div>
-                                                    <strong>Ad Soyad:</strong> {values.firstname} {values.lastname}
+                                                    <strong>{t('Ad Soyad')}:</strong> {values.firstname} {values.lastname}
                                                 </div>
                                                 <div>
                                                     <strong>TC:</strong> {values.tcNumber}
                                                 </div>
                                                 <div>
-                                                    <strong>Email:</strong> {values.email}
+                                                    <strong>{t('Email')}:</strong> {values.email}
                                                 </div>
                                                 <div>
-                                                    <strong>Telefon:</strong> {values.telefonNo}
+                                                    <strong>{t('Telephone')}:</strong> {values.telefonNo}
                                                 </div>
                                                 <div>
-                                                    <strong>Tedarik Durumu:</strong> {values.firmaTipi}
+                                                    <strong>{t('Supply Status')}:</strong> {companyTypeOptions.find((option) => option.value === values.firmaTipi)?.label || 'Seçili Değil'}
                                                 </div>
                                                 <div>
-                                                    <strong>Firma Adı:</strong> {values.firmaAdi}
+                                                    <strong>{t('Company Name')}:</strong> {values.firmaAdi}
                                                 </div>
                                                 <div>
-                                                    <strong>Firma Email:</strong> {values.firmaEmail}
+                                                    <strong>{t('Company Email')}:</strong> {values.firmaEmail}
                                                 </div>
                                                 <div>
-                                                    <strong>Telefon:</strong> {values.firmaTelefonNo}
+                                                    <strong>{t('Company Telephone')}:</strong> {values.firmaTelefonNo}
                                                 </div>
                                                 <div>
-                                                    <strong>Adres:</strong> {values.firmaAdresi}
+                                                    <strong>{t('Company Address')}:</strong> {values.firmaAdresi}
                                                 </div>
                                                 <div>
-                                                    <strong>Şehir / İlçe:</strong> {values.city} / {values.district}
+                                                    <strong>{t('City / District')}:</strong> {values.city} / {values.district}
+                                                </div>
+                                                <div className="relative flex items-center justify-start">
+                                                    <button
+                                                        type="button"
+                                                        className="btn btn-primary bg-green-500 border-green-700"
+                                                        onClick={() => {
+                                                            setActiveTab(2);
+                                                        }}
+                                                    >
+                                                        <IconArrowBackward></IconArrowBackward>
+                                                        {t('Previous')}
+                                                    </button>
                                                 </div>
                                             </div>
                                         )}

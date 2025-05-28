@@ -759,7 +759,15 @@
     "kg / Day": "kg / Gün",
     "Cow Count": "İnek Sayısı",
     "Net Consumption by Feed Type":"Yem Türüne Göre Net Tüketim",
-    "Input-Output Balance": "Girdi-Çıktı Dengesi"
+    "Input-Output Balance": "Girdi-Çıktı Dengesi",
+    "Next":"Sonraki",
+    "Previous":"Önceki",
+    "Ad Soyad": "Ad Soyad",
+    "Supply Status": "Tedarik Durumu",
+    "Company Email": "Firma E-Posta",
+    "Company Telephone": "Firma Telefonu",
+    "Company Address": "Firma Adresi",
+    "City / District": "Şehir / İlçe"
 
     
 }
