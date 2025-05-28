@@ -758,5 +758,8 @@
     "Feed KPI": "Yem KPI",
     "kg / Day": "kg / Gün",
     "Cow Count": "İnek Sayısı",
-    "Net Consumption by Feed Type": "Yem Türüne Göre Net Tüketim"
+    "Net Consumption by Feed Type":"Yem Türüne Göre Net Tüketim",
+    "Input-Output Balance": "Girdi-Çıktı Dengesi"
+
+    
 }
