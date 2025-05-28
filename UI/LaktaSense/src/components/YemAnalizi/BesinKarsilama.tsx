@@ -132,7 +132,7 @@ const BesinKarsilama: React.FC = () => {
         <div className="panel h-full">
             <div className="flex items-center mb-5">
                 <h5 className="font-semibold text-lg dark:text-white-light">{t('Rate of Meeting Nutritional Needs')}</h5>
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 ml-3">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 ml-3 flex-1 pl-5">
                     <div>
                         <label htmlFor="select" className="block mb-1 font-medium">
                             {t('Standard Selection')}

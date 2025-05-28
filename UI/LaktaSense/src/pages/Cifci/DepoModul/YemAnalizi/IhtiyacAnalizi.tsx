@@ -20,6 +20,7 @@ import TuketimAnaliz from '../../../../components/YemDetay/TuketimAnaliz';
 import { Field, Form, Formik } from 'formik';
 import Select, { SingleValue, StylesConfig } from 'react-select';
 import IconSettings from '../../../../components/Icon/IconSettings';
+import BesinKarsilama from '../../../../components/YemAnalizi/BesinKarsilama';
 
 interface YemDepoTumUrunlerGecmisiAnaliz {
     yemID: number;
@@ -136,6 +137,7 @@ const Index = () => {
             {tabs === 'circular' ? (
                 <div>
                     <DongulereGoreIhtıyacAnalizi></DongulereGoreIhtıyacAnalizi>
+                    <BesinKarsilama></BesinKarsilama>
                 </div>
             ) : (
                 ''
