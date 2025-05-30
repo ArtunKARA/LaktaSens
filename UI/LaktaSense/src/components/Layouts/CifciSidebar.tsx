@@ -280,7 +280,7 @@ const Sidebar = () => {
                                     <NavLink to="/" className="group">
                                         <div className="flex items-center">
                                             <IconMenuDashboard className="group-hover:!text-primary shrink-0" />
-                                            <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Tender Tracking')}</span>
+                                            <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('My Tenders')}</span>
                                         </div>
                                     </NavLink>
                                 </li>
@@ -296,7 +296,7 @@ const Sidebar = () => {
                                     <NavLink to="/" className="group">
                                         <div className="flex items-center">
                                             <IconMenuForms className="group-hover:!text-primary shrink-0" />
-                                            <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Order Tracking')}</span>
+                                            <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('My Order')}</span>
                                         </div>
                                     </NavLink>
                                 </li>

@@ -24,6 +24,7 @@ import IconDownload from '../Icon/IconDownload';
 import IconRouter from '../Icon/IconRouter';
 import IconFolderPlus from '../Icon/IconFolderPlus';
 import IconFolderMinus from '../Icon/IconFolderMinus';
+import IconRefresh from '../Icon/IconRefresh';
 
 const TedarikciSidear = () => {
     const [currentMenu, setCurrentMenu] = useState<string>('');
@@ -141,16 +142,16 @@ const TedarikciSidear = () => {
                                     <li className="nav-item">
                                         <NavLink to="/" className="group">
                                             <div className="flex items-center">
-                                                <IconOpenBook className="group-hover:!text-primary shrink-0" />
-                                                <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Active Orders')}</span>
+                                                <IconMenuDocumentation className="group-hover:!text-primary shrink-0" />
+                                                <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Pending Approval')}</span>
                                             </div>
                                         </NavLink>
                                     </li>
                                     <li className="nav-item">
                                         <NavLink to="/" className="group">
                                             <div className="flex items-center">
-                                                <IconMenuDocumentation className="group-hover:!text-primary shrink-0" />
-                                                <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Current Orders')}</span>
+                                                <IconOpenBook className="group-hover:!text-primary shrink-0" />
+                                                <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Prepared Orders')}</span>
                                             </div>
                                         </NavLink>
                                     </li>
@@ -158,7 +159,7 @@ const TedarikciSidear = () => {
                                         <NavLink to="/" className="group">
                                             <div className="flex items-center">
                                                 <IconArrowForward className="group-hover:!text-primary shrink-0" />
-                                                <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Shipped Orders')}</span>
+                                                <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Shipped')}</span>
                                             </div>
                                         </NavLink>
                                     </li>
@@ -166,7 +167,7 @@ const TedarikciSidear = () => {
                                         <NavLink to="/" className="group">
                                             <div className="flex items-center">
                                                 <IconBox className="group-hover:!text-primary shrink-0" />
-                                                <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Finished Orders')}</span>
+                                                <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Finished')}</span>
                                             </div>
                                         </NavLink>
                                     </li>
@@ -174,7 +175,15 @@ const TedarikciSidear = () => {
                                         <NavLink to="/" className="group">
                                             <div className="flex items-center">
                                                 <IconXCircle className="group-hover:!text-primary shrink-0" />
-                                                <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Cancelled Orders')}</span>
+                                                <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Cancelled')}</span>
+                                            </div>
+                                        </NavLink>
+                                    </li>
+                                    <li className="nav-item">
+                                        <NavLink to="/" className="group">
+                                            <div className="flex items-center">
+                                                <IconRefresh className="group-hover:!text-primary shrink-0" />
+                                                <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Return Requests')}</span>
                                             </div>
                                         </NavLink>
                                     </li>

@@ -405,3 +405,234 @@ BEGIN
 END
 
 
+-- Ihale ve Sipariş tabloları
+CREATE TABLE Ihaleler (
+    ihaleID INT PRIMARY KEY IDENTITY(1,1),
+    ihaleAdi NVARCHAR(100),
+    ihaleBaslangicTarihi DATETIME,
+    ihaleBitisTarihi DATETIME,
+    durum CHAR(1), -- -a	Açık (tekliflere açık)
+                   -- -k	Kapalı (süre doldu, kazanan henüz seçilmedi)
+                   -- -t	Tamamlandı (kazanan seçildi → siparişe dönüştü)
+                   -- -i	İptal edildi (ihale iptal edildi)
+    CONSTRAINT CK_Ihaleler_Durum CHECK (durum IN ('a', 'k', 't', 'i')),
+    aciklama NVARCHAR(500),
+    acanFirmaID INT,
+    FOREIGN KEY (firmaID) REFERENCES firmalar(firmaID)
+);
+
+CREATE TABLE Teklifler (
+    teklifID INT PRIMARY KEY IDENTITY(1,1),
+    ihaleID INT NOT NULL,
+    tedarikciID INT NOT NULL,
+    toplamTutar DECIMAL(14,2) NOT NULL,
+    teklifTarihi DATETIME NOT NULL,
+    durum CHAR(1) NOT NULL,     -- 	b	Beklemede (Çiftçi değerlendirecek)
+                                -- 	s	Seçildi (Çiftçi bu teklifi seçti)
+                                -- 	r	Reddedildi (Çiftçi bu teklifi reddetti)
+                                -- 	ç	Çekildi (Tedarikçi teklifi geri çekti)
+    CONSTRAINT CK_Teklifler_Durum CHECK (durum IN ('b', 's', 'r', 'ç')),
+    FOREIGN KEY (ihaleID) REFERENCES Ihaleler(ihaleID),
+    FOREIGN KEY (tedarikciID) REFERENCES firmalar(firmaID)
+);
+
+CREATE TABLE Siparisler (
+    siparisID INT PRIMARY KEY IDENTITY(1,1),
+    teklifID INT,
+    olusturanFirmaID INT NOT NULL,
+    siparisTarihi DATETIME NOT NULL,
+    toplamTutar DECIMAL(14,2) NOT NULL,
+    durum CHAR(1) NOT NULL,     -- 	b	Beklemede (tedarikçi onayı bekliyor)
+                                -- 	o	Onaylandı (tedarikçi siparişi onayladı)
+                                -- 	i	İptal Edildi (çiftçi iptal)
+                                -- 	r	Reddedildi (tedarikçi reddetti)
+                                -- 	t	Tamamlandı (sipariş teslim edildi)
+    CONSTRAINT CK_Siparisler_Durum CHECK (durum IN ('b', 'o', 'i', 'r', 't')),
+    FOREIGN KEY (teklifID) REFERENCES Teklifler(teklifID),
+    FOREIGN KEY (olusturanFirmaID) REFERENCES firmalar(firmaID)
+);
+
+CREATE TABLE SiparisKalemleri (
+    kalemID INT PRIMARY KEY IDENTITY(1,1),
+    siparisID INT NOT NULL,
+    yemID INT NOT NULL,
+    miktarKg DECIMAL(12,2) NOT NULL,
+    birimFiyat DECIMAL(10,2) NOT NULL,
+    FOREIGN KEY (siparisID) REFERENCES Siparisler(siparisID),
+    FOREIGN KEY (yemID) REFERENCES YemMaddeleri(yemID)
+);
+
+CREATE TABLE SiparisDurumLog (
+    logID INT PRIMARY KEY IDENTITY(1,1),
+    siparisID INT NOT NULL,
+    eskiDurum CHAR(1) NULL,          -- Önceki durum (null olabilir)
+    yeniDurum CHAR(1) NOT NULL,      -- Yeni durum
+    degisiklikTarihi DATETIME NOT NULL DEFAULT GETDATE(),
+    yapanKullaniciID INT NOT NULL,   -- Durumu değiştiren kullanıcı
+    FOREIGN KEY (siparisID) REFERENCES Siparisler(siparisID),
+    FOREIGN KEY (yapanKullaniciID) REFERENCES kullanicilar(kullaniciID)
+);
+
+CREATE PROCEDURE sp_SiparisDurumGuncelle
+    @siparisID INT,
+    @yeniDurum CHAR(1),
+    @yapanKullaniciID INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @eskiDurum CHAR(1);
+
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        -- Önceki durumu al
+        SELECT @eskiDurum = durum
+        FROM Siparisler
+        WHERE siparisID = @siparisID;
+
+        -- Durumu güncelle
+        UPDATE Siparisler
+        SET durum = @yeniDurum
+        WHERE siparisID = @siparisID;
+
+        -- Log kaydı ekle
+        INSERT INTO SiparisDurumLog (siparisID, eskiDurum, yeniDurum, degisiklikTarihi, yapanKullaniciID)
+        VALUES (@siparisID, @eskiDurum, @yeniDurum, GETDATE(), @yapanKullaniciID);
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+
+        DECLARE @ErrMsg NVARCHAR(4000) = ERROR_MESSAGE();
+        RAISERROR(@ErrMsg, 16, 1);
+    END CATCH
+END;
+GO
+
+-- Sevkiyat ve Kabul tabloları
+CREATE TABLE Sevkiyatlar (
+    SevkiyatID       INT            IDENTITY(1,1) PRIMARY KEY,
+    SiparisID        INT            NOT NULL,
+    SevkTarihi       DATETIME       NOT NULL,
+    BeklenenTeslim   DATETIME       NOT NULL,
+    Durum            CHAR(1)        NOT NULL,           -- h	Hazırlıkta (ambar/üretim hazırlıyor)
+                                                        -- y	Yolda (nakliye aracı yola çıktı)
+                                                        -- t	Tamamlandı (teslim alındı)
+                                                        -- i	İptal Edildi (sevk iptal edildi)
+    CONSTRAINT CK_Sevkiyatlar_Durum CHECK (Durum IN ('h','y','t','i')),
+    FOREIGN KEY (SiparisID) REFERENCES Siparisler(siparisID)
+);
+
+CREATE TABLE SevkiyatKalemleri (
+    SevkiyatKalemID  INT            IDENTITY(1,1) PRIMARY KEY,
+    SevkiyatID       INT            NOT NULL,
+    YemID            INT            NOT NULL,
+    MiktarKg         DECIMAL(12,2)  NOT NULL
+    FOREIGN KEY (SevkiyatID) REFERENCES dbo.Sevkiyatlar(SevkiyatID),
+    FOREIGN KEY (YemID) REFERENCES dbo.YemMaddeleri(YemID)
+);
+
+CREATE TABLE SevkiyatDurumLog (
+    LogID            INT            IDENTITY(1,1) PRIMARY KEY,
+    SevkiyatID       INT            NOT NULL,
+    EskiDurum        CHAR(1)        NULL,               -- Önceki durum (null olabilir)
+    YeniDurum        CHAR(1)        NOT NULL,           -- Yeni durum
+    DegisiklikTarihi DATETIME       NOT NULL DEFAULT GETDATE(),
+    YapanKullaniciID INT            NOT NULL,           -- Durumu değiştiren kullanıcı
+    FOREIGN KEY (SevkiyatID) REFERENCES Sevkiyatlar(SevkiyatID),
+    FOREIGN KEY (YapanKullaniciID) REFERENCES kullanicilar(kullaniciID)
+);
+
+CREATE PROCEDURE sp_SevkiyatDurumGuncelle
+    @SevkiyatID INT,
+    @YeniDurum CHAR(1),
+    @YapanKullaniciID INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @EskiDurum CHAR(1);
+
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        -- Önceki durumu al
+        SELECT @EskiDurum = Durum
+        FROM Sevkiyatlar
+        WHERE SevkiyatID = @SevkiyatID;
+
+        -- Durumu güncelle
+        UPDATE Sevkiyatlar
+        SET Durum = @YeniDurum
+        WHERE SevkiyatID = @SevkiyatID;
+
+        -- Log kaydı ekle
+        INSERT INTO SevkiyatDurumLog (SevkiyatID, EskiDurum, YeniDurum, DegisiklikTarihi, YapanKullaniciID)
+        VALUES (@SevkiyatID, @EskiDurum, @YeniDurum, GETDATE(), @YapanKullaniciID);
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+
+        DECLARE @ErrMsg NVARCHAR(4000) = ERROR_MESSAGE();
+        RAISERROR(@ErrMsg, 16, 1);
+    END CATCH
+END;
+GO
+
+CREATE TABLE Kabul (
+    KabulID         INT            IDENTITY(1,1) PRIMARY KEY,
+    SevkiyatID      INT            NOT NULL,
+    KabulTarihi     DATETIME       NOT NULL,
+    Durum           CHAR(1)        NOT NULL,            -- k	Tam kabul
+                                                        -- p	Parçalı kabul (bazı kalemler kabul edildi)
+                                                        -- i	Iade (tüm sevkiyat iade edildi)
+    CONSTRAINT CK_Kabul_Durum CHECK (Durum IN ('k','p','i')),
+    FOREIGN KEY (SevkiyatID) REFERENCES Sevkiyatlar(SevkiyatID)
+);
+
+CREATE TABLE KabulKalemleri (
+    KabulKalemID    INT            IDENTITY(1,1) PRIMARY KEY,
+    KabulID         INT            NOT NULL,
+    YemID           INT            NOT NULL,
+    KabulMiktarKg   DECIMAL(12,2)  NOT NULL,
+    IadeMiktarKg    DECIMAL(12,2)  NOT NULL DEFAULT 0,
+    CONSTRAINT CK_KabulKalemleri_Miktar CHECK (KabulMiktarKg + IadeMiktarKg > 0),
+    FOREIGN KEY (KabulID) REFERENCES Kabul(KabulID),
+    FOREIGN KEY (YemID) REFERENCES YemMaddeleri(YemID)
+);
+
+CREATE TABLE Iade (
+    IadeID          INT            IDENTITY(1,1) PRIMARY KEY,
+    KabulKalemID    INT            NOT NULL,
+    IadeTarihi      DATETIME       NOT NULL,
+    IadeMiktarKg    DECIMAL(12,2)  NOT NULL,
+    IadeNedeni      NVARCHAR(255)  NOT NULL,           -- İade nedeni açıklaması
+    IadeDurumu     CHAR(1)        NOT NULL,         -- a	Alındı (iade kabul edildi)
+                                                    -- r	Reddedildi (iade reddedildi)
+                                                    -- b	beklemede (iade beklemede)
+    CONSTRAINT CK_Iade_Durum CHECK (IadeDurumu IN ('a', 'r', 'b')),
+    FOREIGN KEY (KabulKalemID) REFERENCES KabulKalemleri(KabulKalemID)
+);
+
+/* DurumKodlari (opsiyonel) */
+CREATE TABLE dbo.DurumKodlari (
+    Tip        NVARCHAR(20)  NOT NULL,
+    Kod        CHAR(1)       NOT NULL,
+    Aciklama   NVARCHAR(50)  NOT NULL,
+    CONSTRAINT PK_DurumKodlari PRIMARY KEY (Tip,Kod)
+);
+GO
+
+/* Dosyalar */
+CREATE TABLE dbo.Dosyalar (
+    DosyaID     INT            IDENTITY(1,1) PRIMARY KEY,
+    TabloAdi    NVARCHAR(30)   NOT NULL,
+    KayitID     INT            NOT NULL,
+    DosyaYol    NVARCHAR(250)  NOT NULL,
+    DosyaTipi   NVARCHAR(20)   NOT NULL
+);
+GO

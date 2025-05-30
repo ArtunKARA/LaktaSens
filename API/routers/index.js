@@ -20,7 +20,10 @@ const yemTanimlari = require("./admin/tanımlamalar/yemTanimlari.js");
 const cifciDepo = require("./çiftçi/yem/yemHesaplama.js");
 const yemYonetimTedarikci = require("./tedarikci/yemYonetim.js")
 const depo = require("./depo.js");
-
+const tedarikciIhale = require("./tedarikci/tedarik/ihale.js");
+const tedarikciSiparis = require("./tedarikci/tedarik/siparis.js");
+const ciftciIhale = require("./çiftçi/tedarik/ihale.js");
+const ciftciSiparis = require("./çiftçi/tedarik/siparis.js");
 
 const router = express.Router();
 
@@ -52,6 +55,11 @@ router.use("/api/cifci/depo", cifciDepo);
 router.use("/api/tedarikci/yemYonetim", yemYonetimTedarikci);
 
 router.use("/api/depo", depo);
+
+router.use("/api/tedarikci/ihale", tedarikciIhale);
+router.use("/api/tedarikci/siparis", tedarikciSiparis);
+router.use("/api/ciftci/ihale", ciftciIhale);
+router.use("/api/ciftci/siparis", ciftciSiparis);
 
 
 

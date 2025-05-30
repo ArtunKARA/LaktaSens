@@ -380,3 +380,37 @@ EXEC sp_YemIslemiEkle @firmaID = 3, @yemID = 2, @miktarKg = 38.00, @kullaniciID 
 EXEC sp_YemIslemiEkle @firmaID = 3, @yemID = 3, @miktarKg = 75.00, @kullaniciID = 7, @aciklama = 'Zayi kaydı', @islemNedeniID = 10;
 EXEC sp_YemIslemiEkle @firmaID = 3, @yemID = 1, @miktarKg = 65.00, @kullaniciID = 7, @aciklama = 'Üretimde kullanıldı', @islemNedeniID = 8;
 EXEC sp_YemIslemiEkle @firmaID = 3, @yemID = 2, @miktarKg = 50.00, @kullaniciID = 7, @aciklama = 'Fire kaybı', @islemNedeniID = 9;
+
+INSERT INTO dbo.DurumKodlari (Tip, Kod, Aciklama) VALUES
+-- Ihale
+('Ihale','a','Açık'),
+('Ihale','k','Kapalı'),
+('Ihale','t','Tamamlandı'),
+('Ihale','i','İptal'),
+-- Teklif
+('Teklif','b','Beklemede'),
+('Teklif','s','Seçildi'),
+('Teklif','r','Reddedildi'),
+('Teklif','ç','Çekildi'),
+-- Siparis
+('Siparis','b','Beklemede'),
+('Siparis','o','Onaylandı'),
+('Siparis','i','İptal'),
+('Siparis','r','Reddedildi'),
+('Siparis','t','Tamamlandı'),
+-- Sevkiyat
+('Sevkiyat','h','Hazırlıkta'),
+('Sevkiyat','y','Yolda'),
+('Sevkiyat','t','Teslim Edildi'),
+-- Kabul
+('Kabul','k','Kabul'),
+('Kabul','p','Kısmi Kabul'),
+('Kabul','i','İade'),
+-- IadeOnay
+('IadeOnay','o','Onay'),
+('IadeOnay','r','Red'),
+-- Depo işlem
+('DepoIslem','G','Giriş'),
+('DepoIslem','C','Çıkış');
+
+

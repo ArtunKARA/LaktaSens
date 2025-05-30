@@ -201,7 +201,7 @@ export default function LandingPage() {
                         <p className="text-lg leading-relaxed text-gray-700">
                             {t('The LaktaSens Barn Tracking Module digitalizes herd management, allowing farmers to monitor their animals more closely:')}
                             <br />
-                            <br />- 🐮 <strong>{t('Identification:')}</strong> {t('Each animal is registered in the system using a QR code.')}
+                            <br />- 🐮 <strong>{t('Identification: ')}</strong> {t('Each animal is registered in the system using a QR code.')}
                             <br />- 🔎 <strong>{t('Health Monitoring:')}</strong> {t('Cow-specific milk yield, lactation status, and health indicators are recorded.')}
                             <br />- 🗂️ <strong>{t('Historical Records:')}</strong> {t('All milking and feed consumption history is archived for each individual animal.')}
                             <br />- 📈 <strong>{t('Analysis and Alert System:')}</strong> {t('Irregularities are detected and alerts are sent to the farmer.')}

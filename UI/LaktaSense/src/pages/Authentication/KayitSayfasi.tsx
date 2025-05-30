@@ -690,7 +690,8 @@ const KayitSayfasi = () => {
                                                     <strong>{t('Company Address')}:</strong> {values.firmaAdresi}
                                                 </div>
                                                 <div>
-                                                    <strong>{t('City / District')}:</strong> {values.city} / {values.district}
+                                                    <strong>{t('City / District')}:</strong> {cityOpitons.find((option) => option.value === values.city)?.label || 'Seçili Değil'} /{' '}
+                                                    {districtOpitons.find((option) => option.value === values.district)?.label || 'Seçili Değil'}
                                                 </div>
                                                 <div className="relative flex items-center justify-start">
                                                     <button
@@ -706,42 +707,46 @@ const KayitSayfasi = () => {
                                                 </div>
                                             </div>
                                         )}
-                                        <div className={submitCount ? (errors.agree ? 'has-error' : 'has-success') : ''}>
-                                            <div className="flex">
-                                                <Field name="agree" id="agree" type="checkbox" className="form-checkbox" />
-                                                {values.agree}
-                                                <label htmlFor="agree" className="text-white-dark font-semibold">
-                                                    {t('Agree to terms and conditions')}
-                                                </label>
+                                        {activeTab === 3 && (
+                                            <div>
+                                                <div className={submitCount ? (errors.agree ? 'has-error' : 'has-success') : ''}>
+                                                    <div className="flex">
+                                                        <Field name="agree" id="agree" type="checkbox" className="form-checkbox" />
+                                                        {values.agree}
+                                                        <label htmlFor="agree" className="text-white-dark font-semibold">
+                                                            {t('Agree to terms and conditions')}
+                                                        </label>
+                                                    </div>
+                                                    {submitCount ? errors.agree ? <div className="text-danger mt-1">{errors.agree}</div> : '' : ''}
+                                                </div>
+                                                {!firmaID ? (
+                                                    <button
+                                                        type="submit"
+                                                        className="btn btn-primary bg-green-700 border-green-500 !mt-6"
+                                                        onClick={() => {
+                                                            console.log(Object.keys(errors));
+                                                            if (Object.keys(touched).length !== 0 && Object.keys(errors).length === 0) {
+                                                                submitForm(values);
+                                                            }
+                                                        }}
+                                                    >
+                                                        {t('Submit Form')}
+                                                    </button>
+                                                ) : (
+                                                    <button
+                                                        type="submit"
+                                                        className="btn btn-primary bg-green-700 border-green-600a !mt-6"
+                                                        onClick={() => {
+                                                            console.log(Object.keys(errors));
+                                                            if (Object.keys(touched).length !== 0 && Object.keys(errors).length === 0) {
+                                                                submitReaplyForm(values);
+                                                            }
+                                                        }}
+                                                    >
+                                                        {t('Reapply')}
+                                                    </button>
+                                                )}
                                             </div>
-                                            {submitCount ? errors.agree ? <div className="text-danger mt-1">{errors.agree}</div> : '' : ''}
-                                        </div>
-                                        {!firmaID ? (
-                                            <button
-                                                type="submit"
-                                                className="btn btn-primary bg-green-700 border-green-500 !mt-6"
-                                                onClick={() => {
-                                                    console.log(Object.keys(errors));
-                                                    if (Object.keys(touched).length !== 0 && Object.keys(errors).length === 0) {
-                                                        submitForm(values);
-                                                    }
-                                                }}
-                                            >
-                                                {t('Submit Form')}
-                                            </button>
-                                        ) : (
-                                            <button
-                                                type="submit"
-                                                className="btn btn-primary bg-green-700 border-green-600a !mt-6"
-                                                onClick={() => {
-                                                    console.log(Object.keys(errors));
-                                                    if (Object.keys(touched).length !== 0 && Object.keys(errors).length === 0) {
-                                                        submitReaplyForm(values);
-                                                    }
-                                                }}
-                                            >
-                                                {t('Reapply')}
-                                            </button>
                                         )}
                                     </Form>
                                 )}
