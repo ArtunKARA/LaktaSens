@@ -121,3 +121,355 @@ exports.postYemTanimlariDetay = async (req, res) => {
     return res.status(500).json({ error: 'Internal server error' });
   }
 };
+
+exports.postAcikIhaleList = async (req, res) => {
+  const { yemID } = req.body ?? {};
+
+  try {
+    const pool = await poolPromise;
+    const request = pool.request();
+    let query = `
+      SELECT
+        i.ihaleID,
+        i.ihaleAdi,
+        i.ihaleBaslangicTarihi,
+        i.ihaleBitisTarihi,
+        i.durum,
+        i.aciklama,
+        i.acanFirmaID,
+        f.firmaAdi AS acanFirmaAdi,
+        k.ihaleKalemID,
+        k.yemID,
+        y.yemAdi,
+        k.talepMiktarKg,
+        k.kalanMiktarKg
+      FROM Ihaleler i
+      INNER JOIN IhaleKalemleri k ON i.ihaleID = k.ihaleID
+      INNER JOIN YemMaddeleri y ON k.yemID = y.yemID
+      INNER JOIN firmalar f ON i.acanFirmaID = f.firmaID
+      WHERE i.durum = 'a'
+        AND i.ihaleBitisTarihi >= GETDATE()
+    `;
+
+    if (yemID) {
+      query += ' AND k.yemID = @yemID';
+      request.input('yemID', sql.Int, yemID);
+    }
+
+    query += ' ORDER BY i.ihaleBaslangicTarihi DESC';
+
+    const result = await request.query(query);
+    if (result.recordset.length === 0) return res.status(404).json([]);
+    return res.json(result.recordset);
+  } catch (error) {
+    console.error('Açık ihaleler alınamadı:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+exports.postTeklifOlustur = async (req, res) => {
+  const { ihaleID, tedarikciID, teklifMiktarKg, birimFiyat, yapanKullaniciID } = req.body ?? {};
+  if (!ihaleID || !tedarikciID || !teklifMiktarKg || !birimFiyat) {
+    return res.status(400).json({ error: 'ihaleID, tedarikciID, teklifMiktarKg, birimFiyat zorunlu' });
+  }
+
+  let pool, transaction;
+  try {
+    pool = await poolPromise;
+    transaction = new sql.Transaction(pool);
+    await transaction.begin();
+
+    const ihaleResult = await transaction.request()
+      .input('ihaleID', sql.Int, ihaleID)
+      .query(`
+        SELECT
+          i.durum,
+          k.talepMiktarKg
+        FROM Ihaleler i
+        INNER JOIN IhaleKalemleri k ON i.ihaleID = k.ihaleID
+        WHERE i.ihaleID = @ihaleID
+      `);
+
+    if (ihaleResult.recordset.length === 0) {
+      await transaction.rollback();
+      return res.status(404).json({ error: 'İhale bulunamadı' });
+    }
+
+    const ihale = ihaleResult.recordset[0];
+    if (ihale.durum !== 'a') {
+      await transaction.rollback();
+      return res.status(400).json({ error: 'İhale aktif değil' });
+    }
+
+    if (Number(teklifMiktarKg) > Number(ihale.talepMiktarKg)) {
+      await transaction.rollback();
+      return res.status(400).json({ error: 'Teklif miktarı talep miktarını aşamaz' });
+    }
+
+    const toplamTutar = Number(teklifMiktarKg) * Number(birimFiyat);
+
+    const teklifInsert = await transaction.request()
+      .input('ihaleID', sql.Int, ihaleID)
+      .input('tedarikciID', sql.Int, tedarikciID)
+      .input('teklifMiktarKg', sql.Decimal(12, 2), teklifMiktarKg)
+      .input('birimFiyat', sql.Decimal(10, 2), birimFiyat)
+      .input('toplamTutar', sql.Decimal(14, 2), toplamTutar)
+      .query(`
+        INSERT INTO Teklifler (ihaleID, tedarikciID, teklifMiktarKg, birimFiyat, toplamTutar, teklifTarihi, durum)
+        OUTPUT INSERTED.teklifID
+        VALUES (@ihaleID, @tedarikciID, @teklifMiktarKg, @birimFiyat, @toplamTutar, GETDATE(), 'b')
+      `);
+
+    const teklifID = teklifInsert.recordset?.[0]?.teklifID;
+    if (!teklifID) {
+      await transaction.rollback();
+      return res.status(500).json({ error: 'Teklif oluşturulamadı' });
+    }
+
+    await transaction.request()
+      .input('teklifID', sql.Int, teklifID)
+      .input('ihaleID', sql.Int, ihaleID)
+      .input('tedarikciID', sql.Int, tedarikciID)
+      .input('aksiyonTipi', sql.NVarChar(20), 'olustur')
+      .input('eskiDurum', sql.Char(1), null)
+      .input('yeniDurum', sql.Char(1), 'b')
+      .input('teklifMiktarKg', sql.Decimal(12, 2), teklifMiktarKg)
+      .input('birimFiyat', sql.Decimal(10, 2), birimFiyat)
+      .input('toplamTutar', sql.Decimal(14, 2), toplamTutar)
+      .input('yapanKullaniciID', sql.Int, yapanKullaniciID || null)
+      .input('aciklama', sql.NVarChar(255), 'Teklif oluşturuldu')
+      .query(`
+        INSERT INTO TeklifAksiyonLog (
+          teklifID, ihaleID, tedarikciID, aksiyonTipi, eskiDurum, yeniDurum,
+          teklifMiktarKg, birimFiyat, toplamTutar, yapanKullaniciID, aciklama
+        )
+        VALUES (
+          @teklifID, @ihaleID, @tedarikciID, @aksiyonTipi, @eskiDurum, @yeniDurum,
+          @teklifMiktarKg, @birimFiyat, @toplamTutar, @yapanKullaniciID, @aciklama
+        )
+      `);
+
+    await transaction.commit();
+    return res.json({ teklifID });
+  } catch (error) {
+    if (transaction?.inTransaction) await transaction.rollback();
+    console.error('Teklif oluşturulamadı:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+exports.postTeklifCek = async (req, res) => {
+  const { teklifID, tedarikciID, yapanKullaniciID } = req.body ?? {};
+  if (!teklifID || !tedarikciID) {
+    return res.status(400).json({ error: 'teklifID ve tedarikciID zorunlu' });
+  }
+
+  let pool, transaction;
+  try {
+    pool = await poolPromise;
+    transaction = new sql.Transaction(pool);
+    await transaction.begin();
+
+    const teklifResult = await transaction.request()
+      .input('teklifID', sql.Int, teklifID)
+      .input('tedarikciID', sql.Int, tedarikciID)
+      .query(`
+        SELECT teklifID, ihaleID, tedarikciID, teklifMiktarKg, birimFiyat, toplamTutar, durum
+        FROM Teklifler
+        WHERE teklifID = @teklifID AND tedarikciID = @tedarikciID
+      `);
+
+    if (teklifResult.recordset.length === 0) {
+      await transaction.rollback();
+      return res.status(404).json({ error: 'Teklif bulunamadı veya çekilemez' });
+    }
+
+    const teklif = teklifResult.recordset[0];
+    if (teklif.durum !== 'b') {
+      await transaction.rollback();
+      return res.status(400).json({ error: 'Teklif çekilemez' });
+    }
+
+    await transaction.request()
+      .input('teklifID', sql.Int, teklifID)
+      .query(`
+        UPDATE Teklifler
+        SET durum = 'c'
+        WHERE teklifID = @teklifID
+      `);
+
+    await transaction.request()
+      .input('teklifID', sql.Int, teklifID)
+      .input('ihaleID', sql.Int, teklif.ihaleID)
+      .input('tedarikciID', sql.Int, teklif.tedarikciID)
+      .input('aksiyonTipi', sql.NVarChar(20), 'cek')
+      .input('eskiDurum', sql.Char(1), teklif.durum)
+      .input('yeniDurum', sql.Char(1), 'c')
+      .input('teklifMiktarKg', sql.Decimal(12, 2), teklif.teklifMiktarKg)
+      .input('birimFiyat', sql.Decimal(10, 2), teklif.birimFiyat)
+      .input('toplamTutar', sql.Decimal(14, 2), teklif.toplamTutar)
+      .input('yapanKullaniciID', sql.Int, yapanKullaniciID || null)
+      .input('aciklama', sql.NVarChar(255), 'Teklif geri çekildi')
+      .query(`
+        INSERT INTO TeklifAksiyonLog (
+          teklifID, ihaleID, tedarikciID, aksiyonTipi, eskiDurum, yeniDurum,
+          teklifMiktarKg, birimFiyat, toplamTutar, yapanKullaniciID, aciklama
+        )
+        VALUES (
+          @teklifID, @ihaleID, @tedarikciID, @aksiyonTipi, @eskiDurum, @yeniDurum,
+          @teklifMiktarKg, @birimFiyat, @toplamTutar, @yapanKullaniciID, @aciklama
+        )
+      `);
+
+    await transaction.commit();
+    return res.json({ message: 'Teklif çekildi' });
+  } catch (error) {
+    if (transaction?.inTransaction) await transaction.rollback();
+    console.error('Teklif çekilemedi:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+exports.postTeklifList = async (req, res) => {
+  const { tedarikciID, durum } = req.body ?? {};
+  if (!tedarikciID) return res.status(400).json({ error: 'tedarikciID zorunlu' });
+
+  try {
+    const pool = await poolPromise;
+    const request = pool.request();
+    let query = `
+      SELECT
+        t.teklifID,
+        t.ihaleID,
+        t.tedarikciID,
+        t.teklifMiktarKg,
+        t.birimFiyat,
+        t.toplamTutar,
+        t.teklifTarihi,
+        t.durum,
+        i.ihaleAdi,
+        i.ihaleBaslangicTarihi,
+        i.ihaleBitisTarihi,
+        i.durum AS ihaleDurum,
+        k.yemID,
+        y.yemAdi,
+        k.talepMiktarKg,
+        k.kalanMiktarKg
+      FROM Teklifler t
+      INNER JOIN Ihaleler i ON t.ihaleID = i.ihaleID
+      INNER JOIN IhaleKalemleri k ON i.ihaleID = k.ihaleID
+      INNER JOIN YemMaddeleri y ON k.yemID = y.yemID
+      WHERE t.tedarikciID = @tedarikciID
+    `;
+
+    request.input('tedarikciID', sql.Int, tedarikciID);
+    if (durum) {
+      query += ' AND t.durum = @durum';
+      request.input('durum', sql.Char(1), durum);
+    }
+
+    query += ' ORDER BY t.teklifTarihi DESC';
+
+    const result = await request.query(query);
+    if (result.recordset.length === 0) return res.status(404).json([]);
+    return res.json(result.recordset);
+  } catch (error) {
+    console.error('Teklif listesi alınamadı:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+exports.postTeklifGuncelle = async (req, res) => {
+  const { teklifID, tedarikciID, teklifMiktarKg, birimFiyat, yapanKullaniciID } = req.body ?? {};
+  if (!teklifID || !tedarikciID || !teklifMiktarKg || !birimFiyat) {
+    return res.status(400).json({ error: 'teklifID, tedarikciID, teklifMiktarKg, birimFiyat zorunlu' });
+  }
+
+  let pool, transaction;
+  try {
+    pool = await poolPromise;
+    transaction = new sql.Transaction(pool);
+    await transaction.begin();
+
+    const teklifResult = await transaction.request()
+      .input('teklifID', sql.Int, teklifID)
+      .input('tedarikciID', sql.Int, tedarikciID)
+      .query(`
+        SELECT
+          t.ihaleID,
+          t.teklifMiktarKg AS eskiMiktarKg,
+          t.birimFiyat AS eskiBirimFiyat,
+          t.toplamTutar AS eskiToplamTutar,
+          t.durum AS teklifDurum,
+          i.durum AS ihaleDurum,
+          k.talepMiktarKg
+        FROM Teklifler t
+        INNER JOIN Ihaleler i ON t.ihaleID = i.ihaleID
+        INNER JOIN IhaleKalemleri k ON i.ihaleID = k.ihaleID
+        WHERE t.teklifID = @teklifID AND t.tedarikciID = @tedarikciID
+      `);
+
+    if (teklifResult.recordset.length === 0) {
+      await transaction.rollback();
+      return res.status(404).json({ error: 'Teklif bulunamadı' });
+    }
+
+    const teklif = teklifResult.recordset[0];
+    if (teklif.teklifDurum !== 'b') {
+      await transaction.rollback();
+      return res.status(400).json({ error: 'Teklif güncellenebilir durumda değil' });
+    }
+    if (teklif.ihaleDurum !== 'a') {
+      await transaction.rollback();
+      return res.status(400).json({ error: 'İhale aktif değil' });
+    }
+    if (Number(teklifMiktarKg) > Number(teklif.talepMiktarKg)) {
+      await transaction.rollback();
+      return res.status(400).json({ error: 'Teklif miktarı talep miktarını aşamaz' });
+    }
+
+    const toplamTutar = Number(teklifMiktarKg) * Number(birimFiyat);
+    await transaction.request()
+      .input('teklifID', sql.Int, teklifID)
+      .input('teklifMiktarKg', sql.Decimal(12, 2), teklifMiktarKg)
+      .input('birimFiyat', sql.Decimal(10, 2), birimFiyat)
+      .input('toplamTutar', sql.Decimal(14, 2), toplamTutar)
+      .query(`
+        UPDATE Teklifler
+        SET teklifMiktarKg = @teklifMiktarKg,
+            birimFiyat = @birimFiyat,
+            toplamTutar = @toplamTutar
+        WHERE teklifID = @teklifID
+      `);
+
+    await transaction.request()
+      .input('teklifID', sql.Int, teklifID)
+      .input('ihaleID', sql.Int, teklif.ihaleID)
+      .input('tedarikciID', sql.Int, tedarikciID)
+      .input('aksiyonTipi', sql.NVarChar(20), 'guncelle')
+      .input('eskiDurum', sql.Char(1), teklif.teklifDurum)
+      .input('yeniDurum', sql.Char(1), 'b')
+      .input('teklifMiktarKg', sql.Decimal(12, 2), teklifMiktarKg)
+      .input('birimFiyat', sql.Decimal(10, 2), birimFiyat)
+      .input('toplamTutar', sql.Decimal(14, 2), toplamTutar)
+      .input('yapanKullaniciID', sql.Int, yapanKullaniciID || null)
+      .input('aciklama', sql.NVarChar(255), 'Teklif güncellendi')
+      .query(`
+        INSERT INTO TeklifAksiyonLog (
+          teklifID, ihaleID, tedarikciID, aksiyonTipi, eskiDurum, yeniDurum,
+          teklifMiktarKg, birimFiyat, toplamTutar, yapanKullaniciID, aciklama
+        )
+        VALUES (
+          @teklifID, @ihaleID, @tedarikciID, @aksiyonTipi, @eskiDurum, @yeniDurum,
+          @teklifMiktarKg, @birimFiyat, @toplamTutar, @yapanKullaniciID, @aciklama
+        )
+      `);
+
+    await transaction.commit();
+    return res.json({ message: 'Teklif güncellendi' });
+  } catch (error) {
+    if (transaction?.inTransaction) await transaction.rollback();
+    console.error('Teklif güncellenemedi:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+};

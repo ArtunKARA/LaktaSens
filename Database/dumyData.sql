@@ -210,18 +210,18 @@ INSERT INTO BesinIhtiyacDetay (standartID, tipID, miktar) VALUES
 (4, 4, 0.65),  -- Kalsiyum (%)
 (4, 5, 0.45);  -- Fosfor (%)
 
-INSERT INTO YemMaddeleri (yemAdi, ozelYem, durum, yemFirmaID, aciklama)
+INSERT INTO YemMaddeleri (yemAdi, ozelYem, durum, yemFirmaID, birimFiyat, minSiparisKg, maxSiparisKg, aciklama)
 VALUES 
-('Mısır Silajı', 0, 'a', NULL, 'Standart veri kaynağından'),
-('Çayır Kuru Otu', 0, 'a', NULL, 'Standart veri kaynağından'),
-('Melas', 0, 'a', NULL, 'Standart veri kaynağından'),
-('Arpa', 0, 'a', NULL, 'Standart veri kaynağından'),
-('PTK', 0, 'a', NULL, 'Standart veri kaynağından'),
-('Kireç Taşı', 0, 'a', NULL, 'Standart veri kaynağından'),
-('DCP', 0, 'a', NULL, 'Standart veri kaynağından'),
-('Buğday Silajı', 1, 'a', 3, 'Firma 3 – örnek veri'),
-('Yonca Silajı', 1, 'a', 3, 'Firma 3 – örnek veri'),
-('Soya Küspesi', 1, 'a', 3, 'Firma 3 – örnek veri');
+('Mısır Silajı', 0, 'a', NULL, 7.50, 100, 5000, 'Standart veri kaynağından'),
+('Çayır Kuru Otu', 0, 'a', NULL, 6.80, 50, 4000, 'Standart veri kaynağından'),
+('Melas', 0, 'a', NULL, 5.20, 50, 3500, 'Standart veri kaynağından'),
+('Arpa', 0, 'a', NULL, 8.10, 150, 3500, 'Standart veri kaynağından'),
+('PTK', 0, 'a', NULL, 10.50, 100, 3000, 'Standart veri kaynağından'),
+('Kireç Taşı', 0, 'a', NULL, 4.40, 200, 5000, 'Standart veri kaynağından'),
+('DCP', 0, 'a', NULL, 12.80, 100, 2500, 'Standart veri kaynağından'),
+('Buğday Silajı', 1, 'a', 3, 9.20, 100, 3000, 'Firma 3 – örnek veri'),
+('Yonca Silajı', 1, 'a', 3, 8.75, 100, 2800, 'Firma 3 – örnek veri'),
+('Soya Küspesi', 1, 'a', 3, 14.50, 50, 2000, 'Firma 3 – örnek veri');
 
 -- Mısır Silajı
 INSERT INTO YemBesinDegerleri (yemID, tipID, miktar) VALUES
@@ -381,6 +381,10 @@ EXEC sp_YemIslemiEkle @firmaID = 3, @yemID = 3, @miktarKg = 75.00, @kullaniciID 
 EXEC sp_YemIslemiEkle @firmaID = 3, @yemID = 1, @miktarKg = 65.00, @kullaniciID = 7, @aciklama = 'Üretimde kullanıldı', @islemNedeniID = 8;
 EXEC sp_YemIslemiEkle @firmaID = 3, @yemID = 2, @miktarKg = 50.00, @kullaniciID = 7, @aciklama = 'Fire kaybı', @islemNedeniID = 9;
 
+-- Tedarikçi (firmaID=6) stok girişleri
+EXEC sp_YemIslemiEkle @firmaID = 6, @yemID = 1, @miktarKg = 800.00, @kullaniciID = 7, @aciklama = 'Stok girişi', @islemNedeniID = 1;
+EXEC sp_YemIslemiEkle @firmaID = 6, @yemID = 4, @miktarKg = 650.00, @kullaniciID = 7, @aciklama = 'Stok girişi', @islemNedeniID = 1;
+
 INSERT INTO dbo.DurumKodlari (Tip, Kod, Aciklama) VALUES
 -- Ihale
 ('Ihale','a','Açık'),
@@ -391,7 +395,7 @@ INSERT INTO dbo.DurumKodlari (Tip, Kod, Aciklama) VALUES
 ('Teklif','b','Beklemede'),
 ('Teklif','s','Seçildi'),
 ('Teklif','r','Reddedildi'),
-('Teklif','ç','Çekildi'),
+('Teklif','c','Çekildi'),
 -- Siparis
 ('Siparis','b','Beklemede'),
 ('Siparis','o','Onaylandı'),
@@ -411,6 +415,265 @@ INSERT INTO dbo.DurumKodlari (Tip, Kod, Aciklama) VALUES
 ('IadeOnay','r','Red'),
 -- Depo işlem
 ('DepoIslem','G','Giriş'),
-('DepoIslem','C','Çıkış');
+('DepoIslem','C','Çıkış'),
+-- Depo giriş plan
+('DepoGirisPlan','p','Planlandı'),
+('DepoGirisPlan','k','Kısmi'),
+('DepoGirisPlan','t','Tamamlandı'),
+('DepoGirisPlan','i','İptal');
+
+GO
+
+-- Tedarik süreci örnek verileri
+DECLARE @ihale1 INT, @ihale2 INT;
+DECLARE @teklif1 INT, @teklif2 INT, @teklif3 INT;
+DECLARE @siparis1 INT, @siparis2 INT;
+DECLARE @sevkiyat1 INT, @sevkiyat2 INT;
+DECLARE @kabul1 INT, @kabul2 INT;
+DECLARE @kabulKalem1 INT;
+
+-- Ihale 1 (açık, kısmi kalan)
+INSERT INTO Ihaleler (ihaleAdi, ihaleBaslangicTarihi, ihaleBitisTarihi, durum, aciklama, acanFirmaID)
+VALUES (N'Mısır Silajı Alımı', DATEADD(DAY, -2, GETDATE()), DATEADD(DAY, 5, GETDATE()), 'a', N'Acil ihtiyaç', 2);
+SET @ihale1 = SCOPE_IDENTITY();
+
+INSERT INTO IhaleKalemleri (ihaleID, yemID, talepMiktarKg, kalanMiktarKg)
+VALUES (@ihale1, 1, 1000, 300);
+
+-- Ihale 2 (tamamlandı)
+INSERT INTO Ihaleler (ihaleAdi, ihaleBaslangicTarihi, ihaleBitisTarihi, durum, aciklama, acanFirmaID)
+VALUES (N'Çayır Kuru Otu Alımı', DATEADD(DAY, -10, GETDATE()), DATEADD(DAY, -2, GETDATE()), 't', N'Tamamlandı', 4);
+SET @ihale2 = SCOPE_IDENTITY();
+
+INSERT INTO IhaleKalemleri (ihaleID, yemID, talepMiktarKg, kalanMiktarKg)
+VALUES (@ihale2, 2, 500, 0);
+
+-- Teklifler
+INSERT INTO Teklifler (ihaleID, tedarikciID, teklifMiktarKg, birimFiyat, toplamTutar, teklifTarihi, durum)
+VALUES (@ihale1, 3, 700, 7.50, 5250.00, DATEADD(HOUR, -3, GETDATE()), 's');
+SET @teklif1 = SCOPE_IDENTITY();
+
+INSERT INTO Teklifler (ihaleID, tedarikciID, teklifMiktarKg, birimFiyat, toplamTutar, teklifTarihi, durum)
+VALUES (@ihale1, 6, 300, 7.20, 2160.00, GETDATE(), 'b');
+SET @teklif2 = SCOPE_IDENTITY();
+
+INSERT INTO Teklifler (ihaleID, tedarikciID, teklifMiktarKg, birimFiyat, toplamTutar, teklifTarihi, durum)
+VALUES (@ihale2, 3, 500, 6.00, 3000.00, DATEADD(DAY, -8, GETDATE()), 's');
+SET @teklif3 = SCOPE_IDENTITY();
+
+-- Siparişler
+INSERT INTO Siparisler (teklifID, olusturanFirmaID, siparisTarihi, toplamTutar, durum)
+VALUES (@teklif1, 2, DATEADD(DAY, -1, GETDATE()), 5250.00, 'o');
+SET @siparis1 = SCOPE_IDENTITY();
+
+INSERT INTO SiparisKalemleri (siparisID, yemID, miktarKg, birimFiyat)
+VALUES (@siparis1, 1, 700, 7.50);
+
+INSERT INTO Siparisler (teklifID, olusturanFirmaID, siparisTarihi, toplamTutar, durum)
+VALUES (@teklif3, 4, DATEADD(DAY, -7, GETDATE()), 3000.00, 't');
+SET @siparis2 = SCOPE_IDENTITY();
+
+INSERT INTO SiparisKalemleri (siparisID, yemID, miktarKg, birimFiyat)
+VALUES (@siparis2, 2, 500, 6.00);
+
+-- Sevkiyatlar
+INSERT INTO Sevkiyatlar (SiparisID, SevkTarihi, BeklenenTeslim, Durum)
+VALUES (@siparis1, DATEADD(DAY, -1, GETDATE()), DATEADD(DAY, 1, GETDATE()), 't');
+SET @sevkiyat1 = SCOPE_IDENTITY();
+
+INSERT INTO SevkiyatKalemleri (SevkiyatID, YemID, MiktarKg)
+VALUES (@sevkiyat1, 1, 400);
+
+INSERT INTO Sevkiyatlar (SiparisID, SevkTarihi, BeklenenTeslim, Durum)
+VALUES (@siparis2, DATEADD(DAY, -6, GETDATE()), DATEADD(DAY, -5, GETDATE()), 't');
+SET @sevkiyat2 = SCOPE_IDENTITY();
+
+INSERT INTO SevkiyatKalemleri (SevkiyatID, YemID, MiktarKg)
+VALUES (@sevkiyat2, 2, 500);
+
+-- Kabul + Iade
+INSERT INTO Kabul (SevkiyatID, KabulTarihi, Durum)
+VALUES (@sevkiyat1, GETDATE(), 'p');
+SET @kabul1 = SCOPE_IDENTITY();
+
+INSERT INTO KabulKalemleri (KabulID, YemID, KabulMiktarKg, IadeMiktarKg)
+VALUES (@kabul1, 1, 350, 50);
+SET @kabulKalem1 = SCOPE_IDENTITY();
+
+INSERT INTO Iade (KabulKalemID, IadeTarihi, IadeMiktarKg, IadeNedeni, IadeDurumu)
+VALUES (@kabulKalem1, GETDATE(), 50, N'Kalite sorunu', 'b');
+
+INSERT INTO Kabul (SevkiyatID, KabulTarihi, Durum)
+VALUES (@sevkiyat2, DATEADD(DAY, -5, GETDATE()), 'k');
+SET @kabul2 = SCOPE_IDENTITY();
+
+INSERT INTO KabulKalemleri (KabulID, YemID, KabulMiktarKg, IadeMiktarKg)
+VALUES (@kabul2, 2, 500, 0);
 
 
+
+GO
+
+-- Tedarik süreci örnek verileri (zenginleştirme)
+DECLARE @ihale3 INT, @ihale4 INT, @ihale5 INT, @ihale6 INT;
+DECLARE @teklif4 INT, @teklif5 INT, @teklif6 INT, @teklif7 INT, @teklif8 INT, @teklif9 INT, @teklif10 INT;
+DECLARE @siparis3 INT, @siparis4 INT, @siparis5 INT;
+DECLARE @sevkiyat3 INT, @sevkiyat4 INT;
+DECLARE @kabul3 INT, @kabul4 INT;
+DECLARE @kabulKalem2 INT, @kabulKalem3 INT;
+
+-- Ihale 3 (açık, kısmi kalan)
+INSERT INTO Ihaleler (ihaleAdi, ihaleBaslangicTarihi, ihaleBitisTarihi, durum, aciklama, acanFirmaID)
+VALUES (N'Melas Alımı', DATEADD(DAY, -1, GETDATE()), DATEADD(DAY, 6, GETDATE()), 'a', N'Planlı alım', 2);
+SET @ihale3 = SCOPE_IDENTITY();
+
+INSERT INTO IhaleKalemleri (ihaleID, yemID, talepMiktarKg, kalanMiktarKg)
+VALUES (@ihale3, 3, 800, 500);
+
+-- Ihale 4 (kapalı, kalan var)
+INSERT INTO Ihaleler (ihaleAdi, ihaleBaslangicTarihi, ihaleBitisTarihi, durum, aciklama, acanFirmaID)
+VALUES (N'Arpa Alımı', DATEADD(DAY, -12, GETDATE()), DATEADD(DAY, -4, GETDATE()), 'k', N'Süre doldu, kalan var', 2);
+SET @ihale4 = SCOPE_IDENTITY();
+
+INSERT INTO IhaleKalemleri (ihaleID, yemID, talepMiktarKg, kalanMiktarKg)
+VALUES (@ihale4, 4, 600, 200);
+
+-- Ihale 5 (iptal)
+INSERT INTO Ihaleler (ihaleAdi, ihaleBaslangicTarihi, ihaleBitisTarihi, durum, aciklama, acanFirmaID)
+VALUES (N'Yonca Silajı Alımı', DATEADD(DAY, -8, GETDATE()), DATEADD(DAY, 2, GETDATE()), 'i', N'Bütçe revizyonu', 4);
+SET @ihale5 = SCOPE_IDENTITY();
+
+INSERT INTO IhaleKalemleri (ihaleID, yemID, talepMiktarKg, kalanMiktarKg)
+VALUES (@ihale5, 9, 900, 900);
+
+-- Ihale 6 (tamamlandı)
+INSERT INTO Ihaleler (ihaleAdi, ihaleBaslangicTarihi, ihaleBitisTarihi, durum, aciklama, acanFirmaID)
+VALUES (N'Buğday Silajı Alımı', DATEADD(DAY, -16, GETDATE()), DATEADD(DAY, -9, GETDATE()), 't', N'Tamamlandı', 4);
+SET @ihale6 = SCOPE_IDENTITY();
+
+INSERT INTO IhaleKalemleri (ihaleID, yemID, talepMiktarKg, kalanMiktarKg)
+VALUES (@ihale6, 8, 500, 0);
+
+-- Teklifler (İhale 3)
+INSERT INTO Teklifler (ihaleID, tedarikciID, teklifMiktarKg, birimFiyat, toplamTutar, teklifTarihi, durum)
+VALUES (@ihale3, 3, 300, 7.10, 2130.00, DATEADD(HOUR, -6, GETDATE()), 's');
+SET @teklif4 = SCOPE_IDENTITY();
+
+INSERT INTO Teklifler (ihaleID, tedarikciID, teklifMiktarKg, birimFiyat, toplamTutar, teklifTarihi, durum)
+VALUES (@ihale3, 6, 200, 6.95, 1390.00, DATEADD(HOUR, -4, GETDATE()), 'b');
+SET @teklif5 = SCOPE_IDENTITY();
+
+INSERT INTO Teklifler (ihaleID, tedarikciID, teklifMiktarKg, birimFiyat, toplamTutar, teklifTarihi, durum)
+VALUES (@ihale3, 3, 150, 7.30, 1095.00, DATEADD(HOUR, -2, GETDATE()), 'r');
+SET @teklif6 = SCOPE_IDENTITY();
+
+INSERT INTO Teklifler (ihaleID, tedarikciID, teklifMiktarKg, birimFiyat, toplamTutar, teklifTarihi, durum)
+VALUES (@ihale3, 6, 100, 7.50, 750.00, DATEADD(HOUR, -1, GETDATE()), 'c');
+SET @teklif7 = SCOPE_IDENTITY();
+
+-- Teklifler (İhale 4)
+INSERT INTO Teklifler (ihaleID, tedarikciID, teklifMiktarKg, birimFiyat, toplamTutar, teklifTarihi, durum)
+VALUES (@ihale4, 6, 400, 6.40, 2560.00, DATEADD(DAY, -5, GETDATE()), 's');
+SET @teklif8 = SCOPE_IDENTITY();
+
+INSERT INTO Teklifler (ihaleID, tedarikciID, teklifMiktarKg, birimFiyat, toplamTutar, teklifTarihi, durum)
+VALUES (@ihale4, 3, 200, 6.60, 1320.00, DATEADD(DAY, -5, GETDATE()), 'r');
+SET @teklif9 = SCOPE_IDENTITY();
+
+-- Teklifler (İhale 5/6)
+INSERT INTO Teklifler (ihaleID, tedarikciID, teklifMiktarKg, birimFiyat, toplamTutar, teklifTarihi, durum)
+VALUES (@ihale5, 3, 400, 7.80, 3120.00, DATEADD(DAY, -3, GETDATE()), 'c');
+
+INSERT INTO Teklifler (ihaleID, tedarikciID, teklifMiktarKg, birimFiyat, toplamTutar, teklifTarihi, durum)
+VALUES (@ihale6, 6, 500, 6.10, 3050.00, DATEADD(DAY, -14, GETDATE()), 's');
+SET @teklif10 = SCOPE_IDENTITY();
+
+-- Siparişler (İhale 3 - tamamlandı)
+INSERT INTO Siparisler (teklifID, olusturanFirmaID, siparisTarihi, toplamTutar, durum)
+VALUES (@teklif4, 2, DATEADD(HOUR, -5, GETDATE()), 2130.00, 't');
+SET @siparis3 = SCOPE_IDENTITY();
+
+INSERT INTO SiparisKalemleri (siparisID, yemID, miktarKg, birimFiyat)
+VALUES (@siparis3, 3, 300, 7.10);
+
+-- Siparişler (İhale 4 - reddedildi)
+INSERT INTO Siparisler (teklifID, olusturanFirmaID, siparisTarihi, toplamTutar, durum)
+VALUES (@teklif8, 2, DATEADD(DAY, -4, GETDATE()), 2560.00, 'r');
+SET @siparis4 = SCOPE_IDENTITY();
+
+INSERT INTO SiparisKalemleri (siparisID, yemID, miktarKg, birimFiyat)
+VALUES (@siparis4, 4, 400, 6.40);
+
+-- Siparişler (İhale 6 - tamamlandı)
+INSERT INTO Siparisler (teklifID, olusturanFirmaID, siparisTarihi, toplamTutar, durum)
+VALUES (@teklif10, 4, DATEADD(DAY, -14, GETDATE()), 3050.00, 't');
+SET @siparis5 = SCOPE_IDENTITY();
+
+INSERT INTO SiparisKalemleri (siparisID, yemID, miktarKg, birimFiyat)
+VALUES (@siparis5, 8, 500, 6.10);
+
+-- Sevkiyatlar (Sipariş 3)
+INSERT INTO Sevkiyatlar (SiparisID, SevkTarihi, BeklenenTeslim, Durum)
+VALUES (@siparis3, DATEADD(DAY, -2, GETDATE()), DATEADD(DAY, -1, GETDATE()), 't');
+SET @sevkiyat3 = SCOPE_IDENTITY();
+
+INSERT INTO SevkiyatKalemleri (SevkiyatID, YemID, MiktarKg)
+VALUES (@sevkiyat3, 3, 300);
+
+INSERT INTO Kabul (SevkiyatID, KabulTarihi, Durum)
+VALUES (@sevkiyat3, DATEADD(DAY, -1, GETDATE()), 'k');
+SET @kabul3 = SCOPE_IDENTITY();
+
+INSERT INTO KabulKalemleri (KabulID, YemID, KabulMiktarKg, IadeMiktarKg)
+VALUES (@kabul3, 3, 300, 0);
+
+-- Sevkiyatlar (Sipariş 5 - iade örneği)
+INSERT INTO Sevkiyatlar (SiparisID, SevkTarihi, BeklenenTeslim, Durum)
+VALUES (@siparis5, DATEADD(DAY, -13, GETDATE()), DATEADD(DAY, -12, GETDATE()), 't');
+SET @sevkiyat4 = SCOPE_IDENTITY();
+
+INSERT INTO SevkiyatKalemleri (SevkiyatID, YemID, MiktarKg)
+VALUES (@sevkiyat4, 8, 500);
+
+INSERT INTO Kabul (SevkiyatID, KabulTarihi, Durum)
+VALUES (@sevkiyat4, DATEADD(DAY, -12, GETDATE()), 'p');
+SET @kabul4 = SCOPE_IDENTITY();
+
+INSERT INTO KabulKalemleri (KabulID, YemID, KabulMiktarKg, IadeMiktarKg)
+VALUES (@kabul4, 8, 450, 50);
+SET @kabulKalem2 = SCOPE_IDENTITY();
+
+INSERT INTO Iade (KabulKalemID, IadeTarihi, IadeMiktarKg, IadeNedeni, IadeDurumu)
+VALUES (@kabulKalem2, DATEADD(DAY, -11, GETDATE()), 50, N'Hasarlı ürün', 'a');
+
+-- Ihale durum logları
+INSERT INTO IhaleDurumLog (ihaleID, eskiDurum, yeniDurum, yapanKullaniciID, aciklama)
+VALUES
+(@ihale3, NULL, 'a', 2, N'İhale oluşturuldu'),
+(@ihale4, NULL, 'k', 2, N'İhale kapalı başlatıldı'),
+(@ihale5, NULL, 'i', 5, N'İhale iptal edildi'),
+(@ihale6, NULL, 't', 5, N'İhale tamamlandı');
+
+-- Teklif aksiyon logları
+INSERT INTO TeklifAksiyonLog (
+  teklifID, ihaleID, tedarikciID, aksiyonTipi, eskiDurum, yeniDurum,
+  teklifMiktarKg, birimFiyat, toplamTutar, yapanKullaniciID, aciklama
+)
+VALUES
+(@teklif4, @ihale3, 3, N'sec', 'b', 's', 300, 7.10, 2130.00, 2, N'Çiftçi seçti'),
+(@teklif5, @ihale3, 6, N'olustur', NULL, 'b', 200, 6.95, 1390.00, 7, N'Teklif oluşturuldu'),
+(@teklif6, @ihale3, 3, N'reddet', 'b', 'r', 150, 7.30, 1095.00, 2, N'Çiftçi reddetti'),
+(@teklif7, @ihale3, 6, N'cek', 'b', 'c', 100, 7.50, 750.00, 7, N'Teklif geri çekildi'),
+(@teklif8, @ihale4, 6, N'sec', 'b', 's', 400, 6.40, 2560.00, 2, N'Çiftçi seçti'),
+(@teklif9, @ihale4, 3, N'reddet', 'b', 'r', 200, 6.60, 1320.00, 2, N'Çiftçi reddetti'),
+(@teklif10, @ihale6, 6, N'sec', 'b', 's', 500, 6.10, 3050.00, 5, N'Çiftçi seçti');
+
+-- Depo giriş planları
+INSERT INTO DepoGirisPlanlari (
+  siparisID, teklifID, ciftciFirmaID, tedarikciID, yemID,
+  planlananMiktarKg, planlananGirisTarihi, gerceklesenMiktarKg, kalanMiktarKg, durum, aciklama
+)
+VALUES
+(@siparis3, @teklif4, 2, 3, 3, 300, DATEADD(DAY, -1, GETDATE()), 300, 0, 't', N'Plan tamamlandı'),
+(@siparis4, @teklif8, 2, 6, 4, 400, DATEADD(DAY, -3, GETDATE()), 0, 400, 'i', N'Sipariş reddedildi'),
+(@siparis5, @teklif10, 4, 6, 8, 500, DATEADD(DAY, -12, GETDATE()), 450, 50, 'k', N'Kısmi kabul');

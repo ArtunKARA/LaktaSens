@@ -26,6 +26,9 @@ interface DefData {
     yemAdi: string;
     durum: string;
     yemAciklama: string;
+    birimFiyat?: number;
+    minSiparisKg?: number;
+    maxSiparisKg?: number;
 }
 interface SelectedData {
     yemID: string;
@@ -140,7 +143,10 @@ const MultipleTables = () => {
                     item.yemID.toString().toLowerCase().includes(search.toLowerCase()) ||
                     item.yemAdi.toLowerCase().includes(search.toLowerCase()) ||
                     item.durum.toLowerCase().includes(search.toLowerCase()) ||
-                    item.yemAciklama.toLowerCase().includes(search.toLowerCase())
+                    item.yemAciklama.toLowerCase().includes(search.toLowerCase()) ||
+                    (item.birimFiyat ?? '').toString().toLowerCase().includes(search.toLowerCase()) ||
+                    (item.minSiparisKg ?? '').toString().toLowerCase().includes(search.toLowerCase()) ||
+                    (item.maxSiparisKg ?? '').toString().toLowerCase().includes(search.toLowerCase())
                 );
             });
         });
@@ -265,6 +271,21 @@ const MultipleTables = () => {
                             {
                                 accessor: 'yemAdi',
                                 title: t('Standart Feed Name'),
+                                sortable: true
+                            },
+                            {
+                                accessor: 'birimFiyat',
+                                title: t('Unit Price'),
+                                sortable: true
+                            },
+                            {
+                                accessor: 'minSiparisKg',
+                                title: t('Min Order (kg)'),
+                                sortable: true
+                            },
+                            {
+                                accessor: 'maxSiparisKg',
+                                title: t('Max Order (kg)'),
                                 sortable: true
                             },
                             {

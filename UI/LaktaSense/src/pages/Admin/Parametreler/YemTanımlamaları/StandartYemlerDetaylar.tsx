@@ -38,6 +38,9 @@ interface MetaData {
   yemAdi: string;
   durum: string;
   yemAciklama: string;
+  birimFiyat?: string;
+  minSiparisKg?: string;
+  maxSiparisKg?: string;
 }
 interface SelectedData {
   besinDegeriID: string;
@@ -87,7 +90,7 @@ const MultipleTables = () => {
           const data = await response.json();
     
           // Üst bilgileri ayır
-          const { yemID: id, yemAdi, durum, yemAciklama, besinDegerleri } = data;
+          const { yemID: id, yemAdi, durum, yemAciklama, birimFiyat, minSiparisKg, maxSiparisKg, besinDegerleri } = data;
     
           // State’lere ata
           setMetaData({
@@ -95,6 +98,9 @@ const MultipleTables = () => {
             yemAdi,
             durum,
             yemAciklama,
+            birimFiyat: birimFiyat != null ? String(birimFiyat) : '',
+            minSiparisKg: minSiparisKg != null ? String(minSiparisKg) : '',
+            maxSiparisKg: maxSiparisKg != null ? String(maxSiparisKg) : '',
           });
           setRowData(besinDegerleri);
     
@@ -316,7 +322,15 @@ const MultipleTables = () => {
       }
     };
     //-----------Metadata verisi burdan güncele-----------
-    const MetaUpdate = async (ID:string,yemAdi:String,yemAciklama:String,durum:String) => {
+    const MetaUpdate = async (
+      ID: string,
+      yemAdi: String,
+      yemAciklama: String,
+      durum: String,
+      birimFiyat?: string,
+      minSiparisKg?: string,
+      maxSiparisKg?: string
+    ) => {
       const toast = Swal.mixin({
           toast: true,
           position: 'top',
@@ -324,11 +338,15 @@ const MultipleTables = () => {
           timer: 3000,
       });
       try {
+        const normalizeNumber = (value?: string) => (value === undefined || value === null || value === '' ? null : Number(value));
         const response = await axios.post("http://localhost:3030/api/tanimlamalar/yemTanimlari/postYemTanimlariGuncele", {
           yemID: ID,
           yemAdi: yemAdi,
           yemAciklama: yemAciklama,
-          durum: durum
+          durum: durum,
+          birimFiyat: normalizeNumber(birimFiyat),
+          minSiparisKg: normalizeNumber(minSiparisKg),
+          maxSiparisKg: normalizeNumber(maxSiparisKg)
         });
   
         console.log(response.data);
@@ -348,7 +366,10 @@ const MultipleTables = () => {
     const MetaAdd = async (
       yemAdi: string,
       yemAciklama: string,
-      durum: string
+      durum: string,
+      birimFiyat?: string,
+      minSiparisKg?: string,
+      maxSiparisKg?: string
     ) => {
       const toast = Swal.mixin({
         toast: true,
@@ -358,9 +379,17 @@ const MultipleTables = () => {
       });
   
       try {
+        const normalizeNumber = (value?: string) => (value === undefined || value === null || value === '' ? null : Number(value));
         const { data } = await axios.post(
           'http://localhost:3030/api/tanimlamalar/yemTanimlari/postYemTanimlariOlustur',
-          { yemAdi, yemAciklama, durum }
+          {
+            yemAdi,
+            yemAciklama,
+            durum,
+            birimFiyat: normalizeNumber(birimFiyat),
+            minSiparisKg: normalizeNumber(minSiparisKg),
+            maxSiparisKg: normalizeNumber(maxSiparisKg)
+          }
         );
   
         /** ⬇⬇⬇ API’den gelen yeni ID burada  ------------------- */
@@ -406,6 +435,9 @@ const MultipleTables = () => {
                 yemAdi: metaData?.yemAdi || '',
                 durum: metaData?.durum || '',
                 yemAciklama: metaData?.yemAciklama || '',
+                birimFiyat: metaData?.birimFiyat || '',
+                minSiparisKg: metaData?.minSiparisKg || '',
+                maxSiparisKg: metaData?.maxSiparisKg || '',
               }}
               enableReinitialize
               validationSchema={Yup.object().shape({
@@ -416,10 +448,10 @@ const MultipleTables = () => {
               onSubmit={(values) => {
                 console.log('Form values:', values);
                 if (isEmpty(metaData?.yemID)) {
-                  MetaAdd(values.yemAdi, values.yemAciklama, values.durum);
+                  MetaAdd(values.yemAdi, values.yemAciklama, values.durum, values.birimFiyat, values.minSiparisKg, values.maxSiparisKg);
                 }
                 else {
-                  MetaUpdate(metaData!.yemID, values.yemAdi, values.yemAciklama, values.durum);
+                  MetaUpdate(metaData!.yemID, values.yemAdi, values.yemAciklama, values.durum, values.birimFiyat, values.minSiparisKg, values.maxSiparisKg);
                 }
                 setModalAdd(false);
               }}
@@ -464,6 +496,18 @@ const MultipleTables = () => {
                     ) : (
                         ''
                     )}
+                  </div>
+                  <div>
+                    <label className="form-label">{t('Unit Price')}</label>
+                    <Field name="birimFiyat" type="number" className="form-input" />
+                  </div>
+                  <div>
+                    <label className="form-label">{t('Min Order (kg)')}</label>
+                    <Field name="minSiparisKg" type="number" className="form-input" />
+                  </div>
+                  <div>
+                    <label className="form-label">{t('Max Order (kg)')}</label>
+                    <Field name="maxSiparisKg" type="number" className="form-input" />
                   </div>
                   <div className="md:col-span-2">
                   <label className="form-label">{t('Description')}</label>

@@ -20,6 +20,9 @@ exports.getYemTanimlari = async (req, res) => {
         END AS durum,
         ym.yemFirmaID,
         f.firmaAdi,
+        ym.birimFiyat,
+        ym.minSiparisKg,
+        ym.maxSiparisKg,
         ym.aciklama AS yemAciklama
       FROM YemMaddeleri ym
       LEFT JOIN firmalar f
@@ -60,17 +63,20 @@ exports.postYemTanimlariDetay = async (req, res) => {
   
       // 1) Meta veriyi çek
       const metaQuery = `
-        SELECT 
-          ym.yemID,
-          ym.yemAdi,
-          ym.ozelYem,
-          ym.durum AS durum,
-          ym.yemFirmaID,
-          f.firmaAdi,
-          ym.aciklama AS yemAciklama
-        FROM YemMaddeleri ym
-        LEFT JOIN firmalar f 
-          ON ym.yemFirmaID = f.firmaID
+      SELECT 
+        ym.yemID,
+        ym.yemAdi,
+        ym.ozelYem,
+        ym.durum AS durum,
+        ym.yemFirmaID,
+        f.firmaAdi,
+        ym.birimFiyat,
+        ym.minSiparisKg,
+        ym.maxSiparisKg,
+        ym.aciklama AS yemAciklama
+      FROM YemMaddeleri ym
+      LEFT JOIN firmalar f 
+        ON ym.yemFirmaID = f.firmaID
         WHERE ym.yemID = @yemID
       `;
       const metaResult = await pool
@@ -175,7 +181,10 @@ exports.postYemTanimlariGuncele = async (req, res) => {
     ozelYem,
     durum,
     yemFirmaID,
-    yemAciklama
+    yemAciklama,
+    birimFiyat,
+    minSiparisKg,
+    maxSiparisKg
   } = req.body ?? {};
 
   // ---- Basit validasyon ---------------------------------------------------
@@ -187,7 +196,10 @@ exports.postYemTanimlariGuncele = async (req, res) => {
     ozelYem === undefined &&
     durum === undefined &&
     yemFirmaID === undefined &&
-    yemAciklama === undefined
+    yemAciklama === undefined &&
+    birimFiyat === undefined &&
+    minSiparisKg === undefined &&
+    maxSiparisKg === undefined
   ) {
     return res
       .status(400)
@@ -233,6 +245,30 @@ exports.postYemTanimlariGuncele = async (req, res) => {
       name: 'yemAciklama',
       type: sql.NVarChar(sql.MAX),
       value: yemAciklama
+    });
+  }
+  if (birimFiyat !== undefined) {
+    setClauses.push('birimFiyat = @birimFiyat');
+    params.push({
+      name: 'birimFiyat',
+      type: sql.Decimal(10, 2),
+      value: birimFiyat
+    });
+  }
+  if (minSiparisKg !== undefined) {
+    setClauses.push('minSiparisKg = @minSiparisKg');
+    params.push({
+      name: 'minSiparisKg',
+      type: sql.Decimal(12, 2),
+      value: minSiparisKg
+    });
+  }
+  if (maxSiparisKg !== undefined) {
+    setClauses.push('maxSiparisKg = @maxSiparisKg');
+    params.push({
+      name: 'maxSiparisKg',
+      type: sql.Decimal(12, 2),
+      value: maxSiparisKg
     });
   }
 
@@ -291,7 +327,10 @@ exports.postYemTanimlariOlustur = async (req, res) => {
     ozelYem = false,
     durum = "b",
     yemFirmaID = null,
-    yemAciklama = null
+    yemAciklama = null,
+    birimFiyat = null,
+    minSiparisKg = null,
+    maxSiparisKg = null
   } = req.body ?? {};
 
   if (!yemAdi || typeof yemAdi !== 'string') {
@@ -306,9 +345,12 @@ exports.postYemTanimlariOlustur = async (req, res) => {
       .input('durum',        sql.VarChar(1),        durum)
       .input('yemFirmaID',   sql.Int,            yemFirmaID)
       .input('yemAciklama',  sql.NVarChar(sql.MAX), yemAciklama)
+      .input('birimFiyat',   sql.Decimal(10,2),    birimFiyat)
+      .input('minSiparisKg', sql.Decimal(12,2),    minSiparisKg)
+      .input('maxSiparisKg', sql.Decimal(12,2),    maxSiparisKg)
       .query(`
-        INSERT INTO YemMaddeleri (yemAdi, ozelYem, durum, yemFirmaID, aciklama)
-        VALUES (@yemAdi, @ozelYem, @durum, @yemFirmaID, @yemAciklama);
+        INSERT INTO YemMaddeleri (yemAdi, ozelYem, durum, yemFirmaID, birimFiyat, minSiparisKg, maxSiparisKg, aciklama)
+        VALUES (@yemAdi, @ozelYem, @durum, @yemFirmaID, @birimFiyat, @minSiparisKg, @maxSiparisKg, @yemAciklama);
         SELECT SCOPE_IDENTITY() AS yemID;
       `);
 

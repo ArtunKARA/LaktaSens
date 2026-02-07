@@ -113,7 +113,7 @@ const Sidebar = () => {
                                     <button type="button" className={`${currentMenu === 'Analysis' ? 'active' : ''} nav-link group w-full`} onClick={() => toggleMenu('Analysis')}>
                                         <div className="flex items-center">
                                             <IconGithub className="group-hover:!text-primary shrink-0" />
-                                            <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Analysis')}</span>
+                                            <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('AI Analysis')}</span>
                                         </div>
 
                                         <div className={currentMenu !== 'Analysis' ? 'rtl:rotate-90 -rotate-90' : ''}>
@@ -124,10 +124,19 @@ const Sidebar = () => {
                                     <AnimateHeight duration={300} height={currentMenu === 'Analysis' ? 'auto' : 0}>
                                         <ul className="sub-menu text-gray-500">
                                             <li>
-                                                <NavLink to="/">{t('Need Dev')}</NavLink>
+                                                <NavLink to="/cifci/ai/ozet">{t('AI Overview')}</NavLink>
                                             </li>
                                             <li>
-                                                <NavLink to="/">{t('Need Dev')}</NavLink>
+                                                <NavLink to="/cifci/ai/tahminler">{t('AI Predictions')}</NavLink>
+                                            </li>
+                                            <li>
+                                                <NavLink to="/cifci/ai/anomaliler">{t('AI Anomalies')}</NavLink>
+                                            </li>
+                                            <li>
+                                                <NavLink to="/cifci/ai/risk-skorlari">{t('AI Risk Scores')}</NavLink>
+                                            </li>
+                                            <li>
+                                                <NavLink to="/cifci/ai/oneriler">{t('AI Recommendation Center')}</NavLink>
                                             </li>
                                         </ul>
                                     </AnimateHeight>
@@ -269,7 +278,7 @@ const Sidebar = () => {
                                     <span>{t('Supply Module')}</span>
                                 </h2>
                                 <li className="nav-item">
-                                    <NavLink to="/" className="group">
+                                    <NavLink to="/cifci/tedarik/ihale-baslat" className="group">
                                         <div className="flex items-center">
                                             <IconMenuFontIcons className="group-hover:!text-primary shrink-0" />
                                             <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Start a Tender')}</span>
@@ -277,7 +286,7 @@ const Sidebar = () => {
                                     </NavLink>
                                 </li>
                                 <li className="nav-item">
-                                    <NavLink to="/" className="group">
+                                    <NavLink to="/cifci/tedarik/ihalelerim" className="group">
                                         <div className="flex items-center">
                                             <IconMenuDashboard className="group-hover:!text-primary shrink-0" />
                                             <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('My Tenders')}</span>
@@ -285,18 +294,18 @@ const Sidebar = () => {
                                     </NavLink>
                                 </li>
                                 <li className="nav-item">
-                                    <NavLink to="/" className="group">
+                                    <NavLink to="/cifci/tedarik/market" className="group">
                                         <div className="flex items-center">
                                             <IconShoppingCart className="group-hover:!text-primary shrink-0" />
-                                            <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Start a Order')}</span>
+                                            <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Market')}</span>
                                         </div>
                                     </NavLink>
                                 </li>
                                 <li className="nav-item">
-                                    <NavLink to="/" className="group">
+                                    <NavLink to="/cifci/tedarik/siparis" className="group">
                                         <div className="flex items-center">
                                             <IconMenuForms className="group-hover:!text-primary shrink-0" />
-                                            <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('My Order')}</span>
+                                            <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Order Tracking')}</span>
                                         </div>
                                     </NavLink>
                                 </li>

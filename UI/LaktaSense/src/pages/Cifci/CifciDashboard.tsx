@@ -29,6 +29,19 @@ const Index = () => {
     const isRtl = useSelector((state: IRootState) => state.themeConfig.rtlClass) === 'rtl' ? true : false;
 
     const [loading] = useState(false);
+    const aiRecommendations = [
+        { id: 1, recommendation: 'Sağım saatleri 2 gün üst üste kaydı - sabitleme önerilir.', impact: 'Verim +%2', priority: 'Orta', date: '06.02.2026' },
+        { id: 2, recommendation: 'Yem tüketimi %12 düştü - enerji yoğunluğu artırılmalı.', impact: 'Verim +%4', priority: 'Yüksek', date: '06.02.2026' },
+        { id: 3, recommendation: 'Laktasyon günü 150+ grupta düşüş var.', impact: 'Verim +%3', priority: 'Orta', date: '06.02.2026' },
+        { id: 4, recommendation: 'Soğuk zincir 1.5°C yüksek.', impact: 'Kalite riski', priority: 'Kritik', date: '06.02.2026' },
+    ];
+
+    const aiPriorityBadge = (priority: string) => {
+        if (priority === 'Kritik') return 'badge bg-danger';
+        if (priority === 'Yüksek') return 'badge bg-warning';
+        if (priority === 'Orta') return 'badge bg-primary';
+        return 'badge bg-success';
+    };
 
     const [kuruda_olanlar, kuruda_olanlarSet] = useState<number>();
     const [sagimda_olanlar, sagimda_olanlarSet] = useState<number>();
@@ -471,6 +484,40 @@ const Index = () => {
                                     <ReactApexChart series={aklimaGelmedi.series} options={aklimaGelmedi.options} type="donut" height={460} />
                                 )}
                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className="pt-5">
+                <div className="grid xl:grid-cols-1 gap-6 mb-6">
+                    <div className="panel h-full">
+                        <div className="flex items-center mb-5">
+                            <h5 className="font-semibold text-lg dark:text-white-light">{t('AI Recommendations')}</h5>
+                            <span className="ml-auto text-xs text-gray-500">{t('Demo Only')}</span>
+                        </div>
+                        <div className="table-responsive">
+                            <table className="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>{t('Recommendation')}</th>
+                                        <th>{t('Impact')}</th>
+                                        <th>{t('Priority')}</th>
+                                        <th>{t('Date')}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {aiRecommendations.map((item) => (
+                                        <tr key={item.id}>
+                                            <td className="min-w-[320px]">{item.recommendation}</td>
+                                            <td>{item.impact}</td>
+                                            <td>
+                                                <span className={aiPriorityBadge(item.priority)}>{item.priority}</span>
+                                            </td>
+                                            <td>{item.date}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
