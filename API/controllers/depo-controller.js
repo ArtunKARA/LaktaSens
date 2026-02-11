@@ -897,7 +897,9 @@ exports.postSevkKayidiEkle = async (req, res) => {
       miktarKg,
       kullaniciID,
       aciklama,
-      islemNedeniID
+      islemNedeniID,
+      kaynakTipi,
+      kaynakID
     } = req.body;
 
     // Gerekli parametre kontrolü
@@ -921,6 +923,8 @@ exports.postSevkKayidiEkle = async (req, res) => {
       request.input('kullaniciID', sql.Int, kullaniciID);
       request.input('aciklama', sql.NVarChar(250), aciklama || '');
       request.input('islemNedeniID', sql.Int, islemNedeniID);
+      request.input('kaynakTipi', sql.NVarChar(20), kaynakTipi || null);
+      request.input('kaynakID', sql.Int, kaynakID || null);
   
       const result = await request.execute('sp_YemIslemiEkle');
   

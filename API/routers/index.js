@@ -24,6 +24,7 @@ const tedarikciIhale = require("./tedarikci/tedarik/ihale.js");
 const tedarikciSiparis = require("./tedarikci/tedarik/siparis.js");
 const ciftciIhale = require("./çiftçi/tedarik/ihale.js");
 const ciftciSiparis = require("./çiftçi/tedarik/siparis.js");
+const ciftciMarket = require("./çiftçi/tedarik/market.js");
 
 const router = express.Router();
 
@@ -60,6 +61,7 @@ router.use("/api/tedarikci/ihale", tedarikciIhale);
 router.use("/api/tedarikci/siparis", tedarikciSiparis);
 router.use("/api/ciftci/ihale", ciftciIhale);
 router.use("/api/ciftci/siparis", ciftciSiparis);
+router.use("/api/ciftci/market", ciftciMarket);
 
 
 

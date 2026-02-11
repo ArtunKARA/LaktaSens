@@ -774,7 +774,30 @@
     "Company Email": "Firma E-Posta",
     "Company Telephone": "Firma Telefonu",
     "Company Address": "Firma Adresi",
-    "City / District": "Şehir / İlçe"
-
-    
+    "City / District": "Şehir / İlçe",
+    "AI Overview": "AI Genel Özet",
+    "AI Analysis": "AI Analiz",
+    "AI Predictions": "Tahminler",
+    "AI Anomalies": "Anomaliler",
+    "AI Risk Scores": "Risk Skorları",
+    "AI Recommendation Center": "Öneri Merkezi",
+    "AI Recommendations": "AI Önerileri",
+    "Daily AI Notes": "Günlük AI Notları",
+    "Recommendation": "Öneri",
+    "Impact": "Etki",
+    "Priority": "Öncelik",
+    "Trend": "Trend",
+    "Metric": "Metrik",
+    "Today": "Bugün",
+    "7 Days": "7 Gün",
+    "30 Days": "30 Gün",
+    "Risk": "Risk",
+    "Score": "Skor",
+    "Notes": "Not",
+    "Demo Only": "Sadece demo amaçlıdır, fonksiyonel değildir.",
+    "Expected Yield": "Beklenen Verim",
+    "Critical Risk": "Kritik Risk",
+    "Total Anomalies": "Toplam Anomali",
+    "Recommendations This Week": "Bu Hafta Öneri",
+    "Anomaly": "Anomali"
 }

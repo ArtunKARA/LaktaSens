@@ -101,16 +101,31 @@ const TedarikciSidear = () => {
                                 <AnimateHeight duration={300} height={currentMenu === t('Analysis') ? 'auto' : 0}>
                                     <ul className="sub-menu text-gray-500">
                                         <li>
-                                            <NavLink to="/">{t('Dashboard')}</NavLink>
+                                            <NavLink to="/tedarikci/dashboard">{t('Dashboard')}</NavLink>
                                         </li>
                                         <li>
-                                            <NavLink to="/">{t('Active Orders Report')}</NavLink>
+                                            <NavLink to="/tedarikci/tedarik/siparis">{t('Active Orders Report')}</NavLink>
                                         </li>
                                         <li>
-                                            <NavLink to="/">{t('Tenders Report')}</NavLink>
+                                            <NavLink to="/tedarikci/tedarik/ihale">{t('Tenders Report')}</NavLink>
                                         </li>
                                         <li>
-                                            <NavLink to="/">{t('All Orders Report')}</NavLink>
+                                            <NavLink to="/tedarikci/tedarik/siparis">{t('All Orders Report')}</NavLink>
+                                        </li>
+                                        <li>
+                                            <NavLink to="/tedarikci/analiz/ai-genel-ozet">{t('AI Genel Özet')}</NavLink>
+                                        </li>
+                                        <li>
+                                            <NavLink to="/tedarikci/analiz/tahminler">{t('Tahminler')}</NavLink>
+                                        </li>
+                                        <li>
+                                            <NavLink to="/tedarikci/analiz/anomaliler">{t('Anomaliler')}</NavLink>
+                                        </li>
+                                        <li>
+                                            <NavLink to="/tedarikci/analiz/risk-skorlari">{t('Risk Skorları')}</NavLink>
+                                        </li>
+                                        <li>
+                                            <NavLink to="/tedarikci/analiz/oneri-merkezi">{t('Öneri Merkezi')}</NavLink>
                                         </li>
                                     </ul>
                                 </AnimateHeight>
@@ -124,7 +139,7 @@ const TedarikciSidear = () => {
                             <li className="nav-item">
                                 <ul>
                                     <li className="nav-item">
-                                        <NavLink to="/" className="group">
+                                        <NavLink to="/tedarikci/tedarik/ihale" className="group">
                                             <div className="flex items-center">
                                                 <IconUsersGroup className="group-hover:!text-primary shrink-0" />
                                                 <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Open Tenders')}</span>
@@ -132,7 +147,7 @@ const TedarikciSidear = () => {
                                         </NavLink>
                                     </li>
                                     <li className="nav-item">
-                                        <NavLink to="/" className="group">
+                                        <NavLink to="/tedarikci/tedarik/ihale" className="group">
                                             <div className="flex items-center">
                                                 <IconUserPlus className="group-hover:!text-primary shrink-0" />
                                                 <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('My Tenders')}</span>
@@ -140,7 +155,7 @@ const TedarikciSidear = () => {
                                         </NavLink>
                                     </li>
                                     <li className="nav-item">
-                                        <NavLink to="/" className="group">
+                                        <NavLink to="/tedarikci/tedarik/siparis" className="group">
                                             <div className="flex items-center">
                                                 <IconMenuDocumentation className="group-hover:!text-primary shrink-0" />
                                                 <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Pending Approval')}</span>
@@ -148,7 +163,7 @@ const TedarikciSidear = () => {
                                         </NavLink>
                                     </li>
                                     <li className="nav-item">
-                                        <NavLink to="/" className="group">
+                                        <NavLink to="/tedarikci/tedarik/siparis" className="group">
                                             <div className="flex items-center">
                                                 <IconOpenBook className="group-hover:!text-primary shrink-0" />
                                                 <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Prepared Orders')}</span>
@@ -156,7 +171,7 @@ const TedarikciSidear = () => {
                                         </NavLink>
                                     </li>
                                     <li className="nav-item">
-                                        <NavLink to="/" className="group">
+                                        <NavLink to="/tedarikci/tedarik/siparis" className="group">
                                             <div className="flex items-center">
                                                 <IconArrowForward className="group-hover:!text-primary shrink-0" />
                                                 <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Shipped')}</span>
@@ -164,7 +179,7 @@ const TedarikciSidear = () => {
                                         </NavLink>
                                     </li>
                                     <li className="nav-item">
-                                        <NavLink to="/" className="group">
+                                        <NavLink to="/tedarikci/tedarik/siparis" className="group">
                                             <div className="flex items-center">
                                                 <IconBox className="group-hover:!text-primary shrink-0" />
                                                 <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Finished')}</span>
@@ -172,7 +187,7 @@ const TedarikciSidear = () => {
                                         </NavLink>
                                     </li>
                                     <li className="nav-item">
-                                        <NavLink to="/" className="group">
+                                        <NavLink to="/tedarikci/tedarik/siparis" className="group">
                                             <div className="flex items-center">
                                                 <IconXCircle className="group-hover:!text-primary shrink-0" />
                                                 <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Cancelled')}</span>
@@ -180,7 +195,7 @@ const TedarikciSidear = () => {
                                         </NavLink>
                                     </li>
                                     <li className="nav-item">
-                                        <NavLink to="/" className="group">
+                                        <NavLink to="/tedarikci/tedarik/siparis" className="group">
                                             <div className="flex items-center">
                                                 <IconRefresh className="group-hover:!text-primary shrink-0" />
                                                 <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Return Requests')}</span>

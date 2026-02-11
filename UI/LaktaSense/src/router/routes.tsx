@@ -5,6 +5,11 @@ import CifciYemMarket from '../pages/Cifci/CifciYemMarket';
 const LandingPage = lazy(() => import('../pages/home/page'));
 const LoginBoxed = lazy(() => import('../pages/Authentication/LoginBoxed'));
 const CifciDashboard = lazy(() => import('../pages/Cifci/CifciDashboard'));
+const CifciAIOverview = lazy(() => import('../pages/Cifci/AI/AIOverview'));
+const CifciAIPredictions = lazy(() => import('../pages/Cifci/AI/AIPredictions'));
+const CifciAIAnomalies = lazy(() => import('../pages/Cifci/AI/AIAnomalies'));
+const CifciAIRiskScores = lazy(() => import('../pages/Cifci/AI/AIRiskScores'));
+const CifciAIRecommendationCenter = lazy(() => import('../pages/Cifci/AI/AIRecommendationCenter'));
 const GenelTakip = lazy(() => import('../pages/Cifci/GenelTakip'));
 const SagmalTakip = lazy(() => import('../pages/Cifci/SagmalTakip'));
 const KuruTakip = lazy(() => import('../pages/Cifci/KuruTakip'));
@@ -66,11 +71,6 @@ const CifciYemDetay = lazy(() => import('../pages/Cifci/CifciYemDetay'));
 const CifciTuketimAnalizi = lazy(() => import('../pages/Cifci/DepoModul/YemAnalizi/TuketimAnalizi'));
 const CifciTedarikAnalizi = lazy(() => import('../pages/Cifci/DepoModul/YemAnalizi/TedarikAnalizi'));
 const CifciIhtiyacAnalizi = lazy(() => import('../pages/Cifci/DepoModul/YemAnalizi/IhtiyacAnalizi'));
-const TedarikciUrunYonetimi = lazy(() => import('../pages/Tedarikci/TedarikModul/UrunYonetimi'));
-const TedarikciMarketSiparisleri = lazy(() => import('../pages/Tedarikci/TedarikModul/TedarikciMarketSiparisleri'));
-const TedarikciSevkiyatIade = lazy(() => import('../pages/Tedarikci/TedarikModul/TedarikciSevkiyatIade'));
-
-
 
 const routes = [
     //landing page
@@ -105,6 +105,51 @@ const routes = [
         element: (
             <AuthGuard allowedRoles={['c']}>
                 <CifciDashboard />
+            </AuthGuard>
+        ),
+        layout: 'cifci',
+    },
+    {
+        path: '/cifci/ai/ozet',
+        element: (
+            <AuthGuard allowedRoles={['c']}>
+                <CifciAIOverview />
+            </AuthGuard>
+        ),
+        layout: 'cifci',
+    },
+    {
+        path: '/cifci/ai/tahminler',
+        element: (
+            <AuthGuard allowedRoles={['c']}>
+                <CifciAIPredictions />
+            </AuthGuard>
+        ),
+        layout: 'cifci',
+    },
+    {
+        path: '/cifci/ai/anomaliler',
+        element: (
+            <AuthGuard allowedRoles={['c']}>
+                <CifciAIAnomalies />
+            </AuthGuard>
+        ),
+        layout: 'cifci',
+    },
+    {
+        path: '/cifci/ai/risk-skorlari',
+        element: (
+            <AuthGuard allowedRoles={['c']}>
+                <CifciAIRiskScores />
+            </AuthGuard>
+        ),
+        layout: 'cifci',
+    },
+    {
+        path: '/cifci/ai/oneriler',
+        element: (
+            <AuthGuard allowedRoles={['c']}>
+                <CifciAIRecommendationCenter />
             </AuthGuard>
         ),
         layout: 'cifci',
@@ -405,6 +450,51 @@ const routes = [
         ),
         layout: 'cifci',
     },
+    {
+        path: '/cifci/tedarik/ihale-baslat',
+        element: (
+            <AuthGuard allowedRoles={['c']}>
+                <CifciTedarikIhaleBaslat />
+            </AuthGuard>
+        ),
+        layout: 'cifci',
+    },
+    {
+        path: '/cifci/tedarik/ihalelerim',
+        element: (
+            <AuthGuard allowedRoles={['c']}>
+                <CifciTedarikIhalelerim />
+            </AuthGuard>
+        ),
+        layout: 'cifci',
+    },
+    {
+        path: '/cifci/tedarik/ihale/:ihaleID',
+        element: (
+            <AuthGuard allowedRoles={['c']}>
+                <CifciTedarikIhaleDetay />
+            </AuthGuard>
+        ),
+        layout: 'cifci',
+    },
+    {
+        path: '/cifci/tedarik/market',
+        element: (
+            <AuthGuard allowedRoles={['c']}>
+                <CifciTedarikMarket />
+            </AuthGuard>
+        ),
+        layout: 'cifci',
+    },
+    {
+        path: '/cifci/tedarik/siparis',
+        element: (
+            <AuthGuard allowedRoles={['c']}>
+                <CifciTedarikSiparis />
+            </AuthGuard>
+        ),
+        layout: 'cifci',
+    },
 
     //Admin
     //Admin Dashboard
@@ -672,43 +762,6 @@ const routes = [
         ),
         layout: 'tedarikci',
     },
-    {
-        path: '/tedarikci/urun-yonetimi',
-        element: (
-            <AuthGuard allowedRoles={['t']}>
-                <TedarikciUrunYonetimi />
-            </AuthGuard>
-        ),
-        layout: 'tedarikci',
-    },
-    {
-        path: '/tedarikci/market-siparisleri',
-        element: (
-            <AuthGuard allowedRoles={['t']}>
-                <TedarikciMarketSiparisleri />
-            </AuthGuard>
-        ),
-        layout: 'tedarikci',
-    },
-    {
-        path: '/tedarikci/sevkiyat-iade',
-        element: (
-            <AuthGuard allowedRoles={['t']}>
-                <TedarikciSevkiyatIade />
-            </AuthGuard>
-        ),
-        layout: 'tedarikci',
-    },
-    {
-        path: '/cifci/yem-market',
-        element: (
-            <AuthGuard allowedRoles={['c']}>
-                <CifciYemMarket />
-            </AuthGuard>
-        ),
-        layout: 'cifci',
-    },
-
 ];
 
 export { routes };

@@ -1,0 +1,551 @@
+{
+  "info": {
+    "_postman_id": "f3b4c7c8-4d8f-4c09-9f40-2e6e22c7c2a1",
+    "name": "LaktaSens Tedarik API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3030",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Ciftci - Ihale",
+      "item": [
+        {
+          "name": "postIhaleOlustur",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"acanFirmaID\": 1,\n  \"ihaleAdi\": \"Yem Alimi\",\n  \"ihaleBaslangicTarihi\": \"2026-02-06T09:00:00.000Z\",\n  \"ihaleBitisTarihi\": \"2026-02-10T09:00:00.000Z\",\n  \"aciklama\": \"Aciklama\",\n  \"yemID\": 1,\n  \"talepMiktarKg\": 1000,\n  \"yapanKullaniciID\": 5\n}"
+            },
+            "url": "{{baseUrl}}/api/ciftci/ihale/postIhaleOlustur"
+          }
+        },
+        {
+          "name": "postIhaleList",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"acanFirmaID\": 1,\n  \"durum\": \"a\",\n  \"baslangicTarihi\": \"2026-02-01T00:00:00.000Z\",\n  \"bitisTarihi\": \"2026-02-28T23:59:59.000Z\"\n}"
+            },
+            "url": "{{baseUrl}}/api/ciftci/ihale/postIhaleList"
+          }
+        },
+        {
+          "name": "postIhaleDetay",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ihaleID\": 1\n}"
+            },
+            "url": "{{baseUrl}}/api/ciftci/ihale/postIhaleDetay"
+          }
+        },
+        {
+          "name": "postIhaleDurumGuncelle",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ihaleID\": 1,\n  \"durum\": \"k\",\n  \"yapanKullaniciID\": 5,\n  \"aciklama\": \"Çiftçi ihale kapattı\"\n}"
+            },
+            "url": "{{baseUrl}}/api/ciftci/ihale/postIhaleDurumGuncelle"
+          }
+        },
+        {
+          "name": "postIhaleTeklifList",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ihaleID\": 1,\n  \"basariPeriyotAy\": 3\n}"
+            },
+            "url": "{{baseUrl}}/api/ciftci/ihale/postIhaleTeklifList"
+          }
+        },
+        {
+          "name": "postTeklifSec",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"teklifID\": 1,\n  \"yapanKullaniciID\": 5,\n  \"tahminiGirisTarihi\": \"2026-02-08T10:00:00.000Z\"\n}"
+            },
+            "url": "{{baseUrl}}/api/ciftci/ihale/postTeklifSec"
+          }
+        },
+        {
+          "name": "postTeklifReddet",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"teklifID\": 1,\n  \"yapanKullaniciID\": 5\n}"
+            },
+            "url": "{{baseUrl}}/api/ciftci/ihale/postTeklifReddet"
+          }
+        },
+        {
+          "name": "postIhaleDurumLogList",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ihaleID\": 1\n}"
+            },
+            "url": "{{baseUrl}}/api/ciftci/ihale/postIhaleDurumLogList"
+          }
+        },
+        {
+          "name": "postTeklifAksiyonLogList",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ihaleID\": 1\n}"
+            },
+            "url": "{{baseUrl}}/api/ciftci/ihale/postTeklifAksiyonLogList"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Tedarikci - Ihale",
+      "item": [
+        {
+          "name": "postAcikIhaleList",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"yemID\": 1\n}"
+            },
+            "url": "{{baseUrl}}/api/tedarikci/ihale/postAcikIhaleList"
+          }
+        },
+        {
+          "name": "postTeklifOlustur",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ihaleID\": 1,\n  \"tedarikciID\": 2,\n  \"teklifMiktarKg\": 500,\n  \"birimFiyat\": 7.5,\n  \"yapanKullaniciID\": 7\n}"
+            },
+            "url": "{{baseUrl}}/api/tedarikci/ihale/postTeklifOlustur"
+          }
+        },
+        {
+          "name": "postTeklifCek",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"teklifID\": 1,\n  \"tedarikciID\": 2,\n  \"yapanKullaniciID\": 7\n}"
+            },
+            "url": "{{baseUrl}}/api/tedarikci/ihale/postTeklifCek"
+          }
+        },
+        {
+          "name": "postTeklifList",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tedarikciID\": 2,\n  \"durum\": \"b\"\n}"
+            },
+            "url": "{{baseUrl}}/api/tedarikci/ihale/postTeklifList"
+          }
+        },
+        {
+          "name": "postTeklifGuncelle",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"teklifID\": 1,\n  \"tedarikciID\": 2,\n  \"teklifMiktarKg\": 450,\n  \"birimFiyat\": 7.3,\n  \"yapanKullaniciID\": 7\n}"
+            },
+            "url": "{{baseUrl}}/api/tedarikci/ihale/postTeklifGuncelle"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Ciftci - Siparis",
+      "item": [
+        {
+          "name": "postSiparisList",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firmaID\": 1,\n  \"durum\": \"b\",\n  \"kaynakTipi\": \"market\"\n}"
+            },
+            "url": "{{baseUrl}}/api/ciftci/siparis/postSiparisList"
+          }
+        },
+        {
+          "name": "postSiparisIptal",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"siparisID\": 1,\n  \"yapanKullaniciID\": 5\n}"
+            },
+            "url": "{{baseUrl}}/api/ciftci/siparis/postSiparisIptal"
+          }
+        },
+        {
+          "name": "postSevkiyatList",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"siparisID\": 1\n}"
+            },
+            "url": "{{baseUrl}}/api/ciftci/siparis/postSevkiyatList"
+          }
+        },
+        {
+          "name": "postDepoGirisPlanList",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firmaID\": 1\n}"
+            },
+            "url": "{{baseUrl}}/api/ciftci/siparis/postDepoGirisPlanList"
+          }
+        },
+        {
+          "name": "postKabulOlustur",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sevkiyatID\": 1,\n  \"kabulMiktarKg\": 300,\n  \"iadeMiktarKg\": 20,\n  \"iadeNedeni\": \"Kalite sorunu\",\n  \"kabulYapanKullaniciID\": 5,\n  \"islemNedeniIDKabul\": 1,\n  \"islemNedeniIDIadeCiftci\": 2,\n  \"islemNedeniIDIadeTedarikci\": 3\n}"
+            },
+            "url": "{{baseUrl}}/api/ciftci/siparis/postKabulOlustur"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Ciftci - Market",
+      "item": [
+        {
+          "name": "postMarketList",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"arama\": \"\",\n  \"ozelYem\": false,\n  \"tedarikciID\": 3,\n  \"minFiyat\": 6,\n  \"maxFiyat\": 12,\n  \"minStok\": 50,\n  \"stokVar\": true,\n  \"siralama\": \"fiyat_asc\"\n}"
+            },
+            "url": "{{baseUrl}}/api/ciftci/market/postMarketList"
+          }
+        },
+        {
+          "name": "postMarketDetay",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"yemID\": 1,\n  \"tedarikciID\": 3\n}"
+            },
+            "url": "{{baseUrl}}/api/ciftci/market/postMarketDetay"
+          }
+        },
+        {
+          "name": "postMarketSiparisOlustur",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ciftciFirmaID\": 2,\n  \"tedarikciID\": 3,\n  \"yemID\": 1,\n  \"miktarKg\": 200,\n  \"planlananGirisTarihi\": \"2026-02-10T10:00:00.000Z\"\n}"
+            },
+            "url": "{{baseUrl}}/api/ciftci/market/postMarketSiparisOlustur"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Tedarikci - Siparis",
+      "item": [
+        {
+          "name": "postSiparisList",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tedarikciID\": 2,\n  \"durum\": \"b\",\n  \"kaynakTipi\": \"market\"\n}"
+            },
+            "url": "{{baseUrl}}/api/tedarikci/siparis/postSiparisList"
+          }
+        },
+        {
+          "name": "postSiparisOnay",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"siparisID\": 1,\n  \"yapanKullaniciID\": 7\n}"
+            },
+            "url": "{{baseUrl}}/api/tedarikci/siparis/postSiparisOnay"
+          }
+        },
+        {
+          "name": "postSiparisRed",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"siparisID\": 1,\n  \"yapanKullaniciID\": 7\n}"
+            },
+            "url": "{{baseUrl}}/api/tedarikci/siparis/postSiparisRed"
+          }
+        },
+        {
+          "name": "postSevkiyatOlustur",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"siparisID\": 1,\n  \"sevkTarihi\": \"2026-02-06T10:00:00.000Z\",\n  \"beklenenTeslim\": \"2026-02-07T10:00:00.000Z\",\n  \"miktarKg\": 200,\n  \"kullaniciID\": 7,\n  \"islemNedeniIDSevk\": 4\n}"
+            },
+            "url": "{{baseUrl}}/api/tedarikci/siparis/postSevkiyatOlustur"
+          }
+        },
+        {
+          "name": "postSevkiyatList",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tedarikciID\": 2,\n  \"durum\": \"y\",\n  \"siparisID\": 1\n}"
+            },
+            "url": "{{baseUrl}}/api/tedarikci/siparis/postSevkiyatList"
+          }
+        },
+        {
+          "name": "postSevkiyatDurumGuncelle",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sevkiyatID\": 1,\n  \"yeniDurum\": \"y\",\n  \"yapanKullaniciID\": 7\n}"
+            },
+            "url": "{{baseUrl}}/api/tedarikci/siparis/postSevkiyatDurumGuncelle"
+          }
+        },
+        {
+          "name": "postIadeList",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tedarikciID\": 2,\n  \"durum\": \"b\"\n}"
+            },
+            "url": "{{baseUrl}}/api/tedarikci/siparis/postIadeList"
+          }
+        },
+        {
+          "name": "postIadeDurumGuncelle",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"iadeID\": 1,\n  \"yeniDurum\": \"a\",\n  \"yapanKullaniciID\": 7,\n  \"islemNedeniIDIadeCiftci\": 2,\n  \"islemNedeniIDIadeTedarikci\": 3\n}"
+            },
+            "url": "{{baseUrl}}/api/tedarikci/siparis/postIadeDurumGuncelle"
+          }
+        }
+      ]
+    }
+  ]
+}

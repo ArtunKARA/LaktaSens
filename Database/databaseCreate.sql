@@ -241,6 +241,9 @@ CREATE TABLE YemMaddeleri (
     ozelYem BIT,                 
     durum CHAR(1),  -- a aktif, p pasif, b beklemede             
     yemFirmaID INT,
+    birimFiyat DECIMAL(10,2) NULL,
+    minSiparisKg DECIMAL(12,2) NULL,
+    maxSiparisKg DECIMAL(12,2) NULL,
     aciklama NVARCHAR(200),
     FOREIGN KEY (yemFirmaID) REFERENCES firmalar(firmaID)
 );
@@ -304,6 +307,8 @@ CREATE TABLE FirmaDepoLog (
     kullaniciID INT,                     -- işlemi yapan kullanıcı
     aciklama NVARCHAR(255),              -- açıklama
     islemNedeniID INT NOT NULL,           -- giriş/çıkış nedeni
+    kaynakTipi NVARCHAR(20) NULL,         -- Siparis / Sevkiyat / Kabul / Iade vb.
+    kaynakID INT NULL,                    -- kaynak kaydın ID'si
 
     FOREIGN KEY (firmaID) REFERENCES firmalar(firmaID),
     FOREIGN KEY (yemID) REFERENCES YemMaddeleri(yemID),
@@ -318,7 +323,9 @@ CREATE PROCEDURE sp_YemIslemiEkle
     @miktarKg DECIMAL(10,2),
     @kullaniciID INT,
     @aciklama NVARCHAR(255),
-    @islemNedeniID INT  -- Sadece neden ID veriyoruz
+    @islemNedeniID INT,  -- Sadece neden ID veriyoruz
+    @kaynakTipi NVARCHAR(20) = NULL,
+    @kaynakID INT = NULL
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -364,8 +371,28 @@ BEGIN
         END
 
         -- Log kaydı yapılır
-        INSERT INTO FirmaDepoLog (firmaID, yemID, islemTipi, miktarKg, kullaniciID, aciklama, islemNedeniID)
-        VALUES (@firmaID, @yemID, @islemTipi, @miktarKg, @kullaniciID, @aciklama, @islemNedeniID);
+        INSERT INTO FirmaDepoLog (
+            firmaID,
+            yemID,
+            islemTipi,
+            miktarKg,
+            kullaniciID,
+            aciklama,
+            islemNedeniID,
+            kaynakTipi,
+            kaynakID
+        )
+        VALUES (
+            @firmaID,
+            @yemID,
+            @islemTipi,
+            @miktarKg,
+            @kullaniciID,
+            @aciklama,
+            @islemNedeniID,
+            @kaynakTipi,
+            @kaynakID
+        );
 
         -- Depo güncellemesi
         IF EXISTS (SELECT 1 FROM FirmaDepo WHERE firmaID = @firmaID AND yemID = @yemID)
@@ -418,30 +445,80 @@ CREATE TABLE Ihaleler (
     CONSTRAINT CK_Ihaleler_Durum CHECK (durum IN ('a', 'k', 't', 'i')),
     aciklama NVARCHAR(500),
     acanFirmaID INT,
-    FOREIGN KEY (firmaID) REFERENCES firmalar(firmaID)
+    FOREIGN KEY (acanFirmaID) REFERENCES firmalar(firmaID)
+);
+
+CREATE TABLE IhaleKalemleri (
+    ihaleKalemID INT PRIMARY KEY IDENTITY(1,1),
+    ihaleID INT NOT NULL,
+    yemID INT NOT NULL,
+    talepMiktarKg DECIMAL(12,2) NOT NULL,
+    kalanMiktarKg DECIMAL(12,2) NOT NULL,
+    CONSTRAINT CK_IhaleKalemleri_Miktar CHECK (
+        kalanMiktarKg >= 0 AND kalanMiktarKg <= talepMiktarKg
+    ),
+    CONSTRAINT UQ_IhaleKalemleri_Ihale UNIQUE (ihaleID),
+    FOREIGN KEY (ihaleID) REFERENCES Ihaleler(ihaleID),
+    FOREIGN KEY (yemID) REFERENCES YemMaddeleri(yemID)
 );
 
 CREATE TABLE Teklifler (
     teklifID INT PRIMARY KEY IDENTITY(1,1),
     ihaleID INT NOT NULL,
     tedarikciID INT NOT NULL,
+    teklifMiktarKg DECIMAL(12,2) NOT NULL,
+    birimFiyat DECIMAL(10,2) NOT NULL,
     toplamTutar DECIMAL(14,2) NOT NULL,
     teklifTarihi DATETIME NOT NULL,
     durum CHAR(1) NOT NULL,     -- 	b	Beklemede (Çiftçi değerlendirecek)
                                 -- 	s	Seçildi (Çiftçi bu teklifi seçti)
                                 -- 	r	Reddedildi (Çiftçi bu teklifi reddetti)
-                                -- 	ç	Çekildi (Tedarikçi teklifi geri çekti)
-    CONSTRAINT CK_Teklifler_Durum CHECK (durum IN ('b', 's', 'r', 'ç')),
+                                -- 	c	Çekildi (Tedarikçi teklifi geri çekti)
+    CONSTRAINT CK_Teklifler_Durum CHECK (durum IN ('b', 's', 'r', 'c')),
     FOREIGN KEY (ihaleID) REFERENCES Ihaleler(ihaleID),
     FOREIGN KEY (tedarikciID) REFERENCES firmalar(firmaID)
+);
+
+CREATE TABLE IhaleDurumLog (
+    logID INT PRIMARY KEY IDENTITY(1,1),
+    ihaleID INT NOT NULL,
+    eskiDurum CHAR(1) NULL,
+    yeniDurum CHAR(1) NOT NULL,
+    degisiklikTarihi DATETIME NOT NULL DEFAULT GETDATE(),
+    yapanKullaniciID INT NULL,
+    aciklama NVARCHAR(255) NULL,
+    FOREIGN KEY (ihaleID) REFERENCES Ihaleler(ihaleID),
+    FOREIGN KEY (yapanKullaniciID) REFERENCES kullanicilar(kullaniciID)
+);
+
+CREATE TABLE TeklifAksiyonLog (
+    logID INT PRIMARY KEY IDENTITY(1,1),
+    teklifID INT NOT NULL,
+    ihaleID INT NOT NULL,
+    tedarikciID INT NOT NULL,
+    aksiyonTipi NVARCHAR(20) NOT NULL,
+    eskiDurum CHAR(1) NULL,
+    yeniDurum CHAR(1) NULL,
+    teklifMiktarKg DECIMAL(12,2) NULL,
+    birimFiyat DECIMAL(10,2) NULL,
+    toplamTutar DECIMAL(14,2) NULL,
+    aksiyonTarihi DATETIME NOT NULL DEFAULT GETDATE(),
+    yapanKullaniciID INT NULL,
+    aciklama NVARCHAR(255) NULL,
+    FOREIGN KEY (teklifID) REFERENCES Teklifler(teklifID),
+    FOREIGN KEY (ihaleID) REFERENCES Ihaleler(ihaleID),
+    FOREIGN KEY (tedarikciID) REFERENCES firmalar(firmaID),
+    FOREIGN KEY (yapanKullaniciID) REFERENCES kullanicilar(kullaniciID)
 );
 
 CREATE TABLE Siparisler (
     siparisID INT PRIMARY KEY IDENTITY(1,1),
     teklifID INT,
+    tedarikciID INT NULL,
     olusturanFirmaID INT NOT NULL,
     siparisTarihi DATETIME NOT NULL,
     toplamTutar DECIMAL(14,2) NOT NULL,
+    kaynakTipi NVARCHAR(20) NULL,   -- ihale / market
     durum CHAR(1) NOT NULL,     -- 	b	Beklemede (tedarikçi onayı bekliyor)
                                 -- 	o	Onaylandı (tedarikçi siparişi onayladı)
                                 -- 	i	İptal Edildi (çiftçi iptal)
@@ -449,6 +526,7 @@ CREATE TABLE Siparisler (
                                 -- 	t	Tamamlandı (sipariş teslim edildi)
     CONSTRAINT CK_Siparisler_Durum CHECK (durum IN ('b', 'o', 'i', 'r', 't')),
     FOREIGN KEY (teklifID) REFERENCES Teklifler(teklifID),
+    FOREIGN KEY (tedarikciID) REFERENCES firmalar(firmaID),
     FOREIGN KEY (olusturanFirmaID) REFERENCES firmalar(firmaID)
 );
 
@@ -459,6 +537,29 @@ CREATE TABLE SiparisKalemleri (
     miktarKg DECIMAL(12,2) NOT NULL,
     birimFiyat DECIMAL(10,2) NOT NULL,
     FOREIGN KEY (siparisID) REFERENCES Siparisler(siparisID),
+    FOREIGN KEY (yemID) REFERENCES YemMaddeleri(yemID)
+);
+
+CREATE TABLE DepoGirisPlanlari (
+    planID INT PRIMARY KEY IDENTITY(1,1),
+    siparisID INT NOT NULL,
+    teklifID INT NULL,
+    ciftciFirmaID INT NOT NULL,
+    tedarikciID INT NOT NULL,
+    yemID INT NOT NULL,
+    planlananMiktarKg DECIMAL(12,2) NOT NULL,
+    planlananGirisTarihi DATETIME NOT NULL,
+    gerceklesenMiktarKg DECIMAL(12,2) NOT NULL DEFAULT 0,
+    kalanMiktarKg DECIMAL(12,2) NOT NULL,
+    durum CHAR(1) NOT NULL DEFAULT 'p', -- p: plan, k: kısmi, t: tamam, i: iptal
+    CONSTRAINT CK_DepoGirisPlanlari_Durum CHECK (durum IN ('p','k','t','i')),
+    olusturmaTarihi DATETIME NOT NULL DEFAULT GETDATE(),
+    guncellemeTarihi DATETIME NULL,
+    aciklama NVARCHAR(255) NULL,
+    FOREIGN KEY (siparisID) REFERENCES Siparisler(siparisID),
+    FOREIGN KEY (teklifID) REFERENCES Teklifler(teklifID),
+    FOREIGN KEY (ciftciFirmaID) REFERENCES firmalar(firmaID),
+    FOREIGN KEY (tedarikciID) REFERENCES firmalar(firmaID),
     FOREIGN KEY (yemID) REFERENCES YemMaddeleri(yemID)
 );
 
@@ -529,7 +630,7 @@ CREATE TABLE SevkiyatKalemleri (
     SevkiyatKalemID  INT            IDENTITY(1,1) PRIMARY KEY,
     SevkiyatID       INT            NOT NULL,
     YemID            INT            NOT NULL,
-    MiktarKg         DECIMAL(12,2)  NOT NULL
+    MiktarKg         DECIMAL(12,2)  NOT NULL,
     FOREIGN KEY (SevkiyatID) REFERENCES dbo.Sevkiyatlar(SevkiyatID),
     FOREIGN KEY (YemID) REFERENCES dbo.YemMaddeleri(YemID)
 );
