@@ -1,6 +1,7 @@
 import path from 'path';
 import { lazy } from 'react';
 import AuthGuard from './AuthGuard';
+import CifciYemMarket from '../pages/Cifci/CifciYemMarket';
 const LandingPage = lazy(() => import('../pages/home/page'));
 const LoginBoxed = lazy(() => import('../pages/Authentication/LoginBoxed'));
 const CifciDashboard = lazy(() => import('../pages/Cifci/CifciDashboard'));
@@ -65,6 +66,11 @@ const CifciYemDetay = lazy(() => import('../pages/Cifci/CifciYemDetay'));
 const CifciTuketimAnalizi = lazy(() => import('../pages/Cifci/DepoModul/YemAnalizi/TuketimAnalizi'));
 const CifciTedarikAnalizi = lazy(() => import('../pages/Cifci/DepoModul/YemAnalizi/TedarikAnalizi'));
 const CifciIhtiyacAnalizi = lazy(() => import('../pages/Cifci/DepoModul/YemAnalizi/IhtiyacAnalizi'));
+const TedarikciUrunYonetimi = lazy(() => import('../pages/Tedarikci/TedarikModul/UrunYonetimi'));
+const TedarikciMarketSiparisleri = lazy(() => import('../pages/Tedarikci/TedarikModul/TedarikciMarketSiparisleri'));
+const TedarikciSevkiyatIade = lazy(() => import('../pages/Tedarikci/TedarikModul/TedarikciSevkiyatIade'));
+
+
 
 const routes = [
     //landing page
@@ -666,6 +672,43 @@ const routes = [
         ),
         layout: 'tedarikci',
     },
+    {
+        path: '/tedarikci/urun-yonetimi',
+        element: (
+            <AuthGuard allowedRoles={['t']}>
+                <TedarikciUrunYonetimi />
+            </AuthGuard>
+        ),
+        layout: 'tedarikci',
+    },
+    {
+        path: '/tedarikci/market-siparisleri',
+        element: (
+            <AuthGuard allowedRoles={['t']}>
+                <TedarikciMarketSiparisleri />
+            </AuthGuard>
+        ),
+        layout: 'tedarikci',
+    },
+    {
+        path: '/tedarikci/sevkiyat-iade',
+        element: (
+            <AuthGuard allowedRoles={['t']}>
+                <TedarikciSevkiyatIade />
+            </AuthGuard>
+        ),
+        layout: 'tedarikci',
+    },
+    {
+        path: '/cifci/yem-market',
+        element: (
+            <AuthGuard allowedRoles={['c']}>
+                <CifciYemMarket />
+            </AuthGuard>
+        ),
+        layout: 'cifci',
+    },
+
 ];
 
 export { routes };
