@@ -71,6 +71,11 @@ const CifciYemDetay = lazy(() => import('../pages/Cifci/CifciYemDetay'));
 const CifciTuketimAnalizi = lazy(() => import('../pages/Cifci/DepoModul/YemAnalizi/TuketimAnalizi'));
 const CifciTedarikAnalizi = lazy(() => import('../pages/Cifci/DepoModul/YemAnalizi/TedarikAnalizi'));
 const CifciIhtiyacAnalizi = lazy(() => import('../pages/Cifci/DepoModul/YemAnalizi/IhtiyacAnalizi'));
+const CifciTedarikIhaleBaslat = lazy(() => import('../pages/Cifci/Tedarik/IhaleBaslat'));
+const CifciTedarikIhalelerim = lazy(() => import('../pages/Cifci/Tedarik/Ihale'));
+const CifciTedarikIhaleDetay = lazy(() => import('../pages/Cifci/Tedarik/IhaleDetay'));
+const CifciTedarikMarket = lazy(() => import('../pages/Cifci/Tedarik/Market'));
+const CifciTedarikSiparis = lazy(() => import('../pages/Cifci/Tedarik/Siparis'));
 
 const routes = [
     //landing page

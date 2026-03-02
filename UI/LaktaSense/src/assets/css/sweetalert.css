@@ -23,7 +23,12 @@ body.swal2-toast-shown .swal2-container.toast {
     width: 100%;
     color: #3b3f5c;
     font-size: 24px;
-    @apply ltr:!pr-10 rtl:!pl-10;
+    padding-right: 2.5rem !important;
+}
+
+[dir="rtl"] .swal2-popup .swal2-title {
+    padding-right: auto;
+    padding-left: 2.5rem !important;
 }
 
 .swal2-popup .swal2-styled {
@@ -64,7 +69,12 @@ body.swal2-toast-shown .swal2-container.toast {
     margin: 0 !important;
     color: #e95f2b;
     font-weight: 300;
-    @apply ltr:!pr-10 rtl:!pl-10;
+    padding-right: 2.5rem !important;
+}
+
+[dir="rtl"] .swal2-popup .swal2-html-container {
+    padding-right: auto;
+    padding-left: 2.5rem !important;
 }
 
 .swal2-popup .swal2-close {
@@ -72,7 +82,12 @@ body.swal2-toast-shown .swal2-container.toast {
     top: 16px;
     transition: color 0.1s ease-out;
     font-family: serif;
-    @apply ltr:right-4 rtl:left-4;
+    right: 1rem;
+}
+
+[dir="rtl"] .swal2-popup .swal2-close {
+    right: auto;
+    left: 1rem;
 }
 
 .dark .swal2-popup .swal2-close {
@@ -237,11 +252,11 @@ body.swal2-toast-shown .swal2-container.toast {
     background: #25d5e4 !important;
 }
 
-.swal2-progress-steps .swal2-progress-step.swal2-active-progress-step ~ .swal2-progress-step {
+.swal2-progress-steps .swal2-progress-step.swal2-active-progress-step~.swal2-progress-step {
     background: #ebedf2 !important;
 }
 
-.dark .swal2-progress-steps .swal2-progress-step.swal2-active-progress-step ~ .swal2-progress-step {
+.dark .swal2-progress-steps .swal2-progress-step.swal2-active-progress-step~.swal2-progress-step {
     background: #3b3f5c !important;
     color: #888ea8 !important;
 }
@@ -253,8 +268,9 @@ body.swal2-toast-shown .swal2-container.toast {
 .sweet-alerts .swal2-icon-content {
     font-size: 5.75rem !important;
 }
+
 .swal2-icon-content {
-    @apply !text-xl;
+    font-size: 1.25rem !important;
 }
 
 .swal2-show {
@@ -281,11 +297,18 @@ body.swal2-toast-shown .swal2-container.toast {
 }
 
 .sweet-alerts.swal2-popup .swal2-html-container {
-    @apply !mt-4 !px-0;
+    margin-top: 1rem !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
 }
 
 .sweet-alerts.swal2-popup .swal2-title {
-    @apply ltr:!pr-6 rtl:!pl-6;
+    padding-right: 1.5rem !important;
+}
+
+[dir="rtl"] .sweet-alerts.swal2-popup .swal2-title {
+    padding-right: auto;
+    padding-left: 1.5rem !important;
 }
 
 .swal2-popup.swal2-toast .swal2-success [class^='swal2-success-circular-line'] {
@@ -334,28 +357,34 @@ body.swal2-toast-shown .swal2-container.toast {
     transform-origin: 26px 26px !important;
     border-radius: 2em 0 0 2em !important;
 }
+
 .swal2-popup.swal2-toast .swal2-success [class^='swal2-success-circular-line'] {
     width: 20px !important;
     height: 43px !important;
 }
+
 .swal2-popup.swal2-toast .swal2-success [class^='swal2-success-line'][class$='tip'] {
     top: 15px !important;
     left: 4px !important;
     width: 8px !important;
 }
+
 .swal2-popup.swal2-toast .swal2-success [class^='swal2-success-line'] {
     height: 3px !important;
 }
+
 .swal2-popup.swal2-toast .swal2-success [class^='swal2-success-line'][class$='long'] {
     top: 12px !important;
     right: 3px !important;
     width: 16px !important;
 }
+
 .swal2-icon.swal2-success .swal2-success-ring {
     top: -2px !important;
     left: -2px !important;
     border: 3px solid rgba(165, 220, 134, 0.3) !important;
 }
+
 .swal2-popup.swal2-toast .swal2-success [class^='swal2-success-circular-line'][class$='right'] {
     border-radius: 0 2em 2em 0 !important;
 }

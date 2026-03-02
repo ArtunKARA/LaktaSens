@@ -530,38 +530,38 @@ CREATE TABLE Siparisler (
     FOREIGN KEY (olusturanFirmaID) REFERENCES firmalar(firmaID)
 );
 
-CREATE TABLE SiparisKalemleri (
-    kalemID INT PRIMARY KEY IDENTITY(1,1),
-    siparisID INT NOT NULL,
-    yemID INT NOT NULL,
-    miktarKg DECIMAL(12,2) NOT NULL,
-    birimFiyat DECIMAL(10,2) NOT NULL,
-    FOREIGN KEY (siparisID) REFERENCES Siparisler(siparisID),
-    FOREIGN KEY (yemID) REFERENCES YemMaddeleri(yemID)
-);
+    CREATE TABLE SiparisKalemleri (
+        kalemID INT PRIMARY KEY IDENTITY(1,1),
+        siparisID INT NOT NULL,
+        yemID INT NOT NULL,
+        miktarKg DECIMAL(12,2) NOT NULL,
+        birimFiyat DECIMAL(10,2) NOT NULL,
+        FOREIGN KEY (siparisID) REFERENCES Siparisler(siparisID),
+        FOREIGN KEY (yemID) REFERENCES YemMaddeleri(yemID)
+    );
 
-CREATE TABLE DepoGirisPlanlari (
-    planID INT PRIMARY KEY IDENTITY(1,1),
-    siparisID INT NOT NULL,
-    teklifID INT NULL,
-    ciftciFirmaID INT NOT NULL,
-    tedarikciID INT NOT NULL,
-    yemID INT NOT NULL,
-    planlananMiktarKg DECIMAL(12,2) NOT NULL,
-    planlananGirisTarihi DATETIME NOT NULL,
-    gerceklesenMiktarKg DECIMAL(12,2) NOT NULL DEFAULT 0,
-    kalanMiktarKg DECIMAL(12,2) NOT NULL,
-    durum CHAR(1) NOT NULL DEFAULT 'p', -- p: plan, k: kısmi, t: tamam, i: iptal
-    CONSTRAINT CK_DepoGirisPlanlari_Durum CHECK (durum IN ('p','k','t','i')),
-    olusturmaTarihi DATETIME NOT NULL DEFAULT GETDATE(),
-    guncellemeTarihi DATETIME NULL,
-    aciklama NVARCHAR(255) NULL,
-    FOREIGN KEY (siparisID) REFERENCES Siparisler(siparisID),
-    FOREIGN KEY (teklifID) REFERENCES Teklifler(teklifID),
-    FOREIGN KEY (ciftciFirmaID) REFERENCES firmalar(firmaID),
-    FOREIGN KEY (tedarikciID) REFERENCES firmalar(firmaID),
-    FOREIGN KEY (yemID) REFERENCES YemMaddeleri(yemID)
-);
+    CREATE TABLE DepoGirisPlanlari (
+        planID INT PRIMARY KEY IDENTITY(1,1),
+        siparisID INT NOT NULL,
+        teklifID INT NULL,
+        ciftciFirmaID INT NOT NULL,
+        tedarikciID INT NOT NULL,
+        yemID INT NOT NULL,
+        planlananMiktarKg DECIMAL(12,2) NOT NULL,
+        planlananGirisTarihi DATETIME NOT NULL,
+        gerceklesenMiktarKg DECIMAL(12,2) NOT NULL DEFAULT 0,
+        kalanMiktarKg DECIMAL(12,2) NOT NULL,
+        durum CHAR(1) NOT NULL DEFAULT 'p', -- p: plan, k: kısmi, t: tamam, i: iptal
+        CONSTRAINT CK_DepoGirisPlanlari_Durum CHECK (durum IN ('p','k','t','i')),
+        olusturmaTarihi DATETIME NOT NULL DEFAULT GETDATE(),
+        guncellemeTarihi DATETIME NULL,
+        aciklama NVARCHAR(255) NULL,
+        FOREIGN KEY (siparisID) REFERENCES Siparisler(siparisID),
+        FOREIGN KEY (teklifID) REFERENCES Teklifler(teklifID),
+        FOREIGN KEY (ciftciFirmaID) REFERENCES firmalar(firmaID),
+        FOREIGN KEY (tedarikciID) REFERENCES firmalar(firmaID),
+        FOREIGN KEY (yemID) REFERENCES YemMaddeleri(yemID)
+    );
 
 CREATE TABLE SiparisDurumLog (
     logID INT PRIMARY KEY IDENTITY(1,1),

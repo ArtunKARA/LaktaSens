@@ -161,12 +161,12 @@ GO
 
 
 
-INSERT INTO Birimler (birimAdi, aciklama)
-VALUES 
-('%km', 'Yüzde kuru madde'),
-('Mcal/kg', 'Enerji değeri (Mcal)'),
-('kg', 'Kilogram'),
-('g/kg', 'Gram/kilogram');
+  INSERT INTO Birimler (birimAdi, aciklama)
+  VALUES 
+  ('%km', 'Yüzde kuru madde'),
+  ('Mcal/kg', 'Enerji değeri (Mcal)'),
+  ('kg', 'Kilogram'),
+  ('g/kg', 'Gram/kilogram');
 
 INSERT INTO BesinTipleri (tipAdi, birimID) VALUES
 ('Kuru Madde', 3),   -- kg
