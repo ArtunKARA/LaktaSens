@@ -139,7 +139,7 @@ const TedarikciSidear = () => {
                             <li className="nav-item">
                                 <ul>
                                     <li className="nav-item">
-                                        <NavLink to="/tedarikci/tedarik/ihale" className="group">
+                                        <NavLink to="/tedarikci/AcikIhaleler" className="group">
                                             <div className="flex items-center">
                                                 <IconUsersGroup className="group-hover:!text-primary shrink-0" />
                                                 <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Open Tenders')}</span>
@@ -147,58 +147,10 @@ const TedarikciSidear = () => {
                                         </NavLink>
                                     </li>
                                     <li className="nav-item">
-                                        <NavLink to="/tedarikci/tedarik/ihale" className="group">
+                                        <NavLink to="/tedarikci/Ihalelerim" className="group">
                                             <div className="flex items-center">
                                                 <IconUserPlus className="group-hover:!text-primary shrink-0" />
                                                 <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('My Tenders')}</span>
-                                            </div>
-                                        </NavLink>
-                                    </li>
-                                    <li className="nav-item">
-                                        <NavLink to="/tedarikci/tedarik/siparis" className="group">
-                                            <div className="flex items-center">
-                                                <IconMenuDocumentation className="group-hover:!text-primary shrink-0" />
-                                                <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Pending Approval')}</span>
-                                            </div>
-                                        </NavLink>
-                                    </li>
-                                    <li className="nav-item">
-                                        <NavLink to="/tedarikci/tedarik/siparis" className="group">
-                                            <div className="flex items-center">
-                                                <IconOpenBook className="group-hover:!text-primary shrink-0" />
-                                                <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Prepared Orders')}</span>
-                                            </div>
-                                        </NavLink>
-                                    </li>
-                                    <li className="nav-item">
-                                        <NavLink to="/tedarikci/tedarik/siparis" className="group">
-                                            <div className="flex items-center">
-                                                <IconArrowForward className="group-hover:!text-primary shrink-0" />
-                                                <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Shipped')}</span>
-                                            </div>
-                                        </NavLink>
-                                    </li>
-                                    <li className="nav-item">
-                                        <NavLink to="/tedarikci/tedarik/siparis" className="group">
-                                            <div className="flex items-center">
-                                                <IconBox className="group-hover:!text-primary shrink-0" />
-                                                <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Finished')}</span>
-                                            </div>
-                                        </NavLink>
-                                    </li>
-                                    <li className="nav-item">
-                                        <NavLink to="/tedarikci/tedarik/siparis" className="group">
-                                            <div className="flex items-center">
-                                                <IconXCircle className="group-hover:!text-primary shrink-0" />
-                                                <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Cancelled')}</span>
-                                            </div>
-                                        </NavLink>
-                                    </li>
-                                    <li className="nav-item">
-                                        <NavLink to="/tedarikci/tedarik/siparis" className="group">
-                                            <div className="flex items-center">
-                                                <IconRefresh className="group-hover:!text-primary shrink-0" />
-                                                <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Return Requests')}</span>
                                             </div>
                                         </NavLink>
                                     </li>
