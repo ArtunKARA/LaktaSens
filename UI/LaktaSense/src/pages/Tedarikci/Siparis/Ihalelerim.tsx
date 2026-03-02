@@ -5,6 +5,37 @@ import Swal from 'sweetalert2';
 
 type TeklifDurum = 'aktif' | 'kazanildi' | 'kaybedildi' | 'iptal' | 'geri_cekildi';
 
+// ✅ “İhalelerim” altında gördüğün alt menüler = işlem/sipariş akışı
+type IslemDurum =
+    | 'bekleyen_onay'
+    | 'hazirlanan'
+    | 'sevk_edilen'
+    | 'tamamlanan'
+    | 'iptal_edilen'
+    | 'iade_talepleri';
+
+type TabKey = 'hepsi' | IslemDurum;
+
+const TABs: { key: TabKey; label: string; tone: 'primary' | 'warning' | 'info' | 'success' | 'danger' | 'secondary' | 'neutral' }[] = [
+    { key: 'hepsi', label: 'Hepsi', tone: 'neutral' },
+    { key: 'bekleyen_onay', label: 'Bekleyen Onay', tone: 'warning' },
+    { key: 'hazirlanan', label: 'Hazırlanan Siparişler', tone: 'info' },
+    { key: 'sevk_edilen', label: 'Sevk Edilen', tone: 'primary' },
+    { key: 'tamamlanan', label: 'Tamamlanan', tone: 'success' },
+    { key: 'iptal_edilen', label: 'İptal Edilen', tone: 'danger' },
+    { key: 'iade_talepleri', label: 'İade Talepleri', tone: 'secondary' },
+];
+
+const toneBadge = (tone: (typeof TABs)[number]['tone']) => {
+    if (tone === 'primary') return 'bg-primary';
+    if (tone === 'warning') return 'bg-warning';
+    if (tone === 'info') return 'bg-info';
+    if (tone === 'success') return 'bg-success';
+    if (tone === 'danger') return 'bg-danger';
+    if (tone === 'secondary') return 'bg-secondary';
+    return 'bg-dark';
+};
+
 interface IhalemRow {
     teklifID: number;
     ihaleID: number;
@@ -27,7 +58,16 @@ interface IhalemRow {
     teklifSayisi?: number | null;
 
     teklifDurum: TeklifDurum;
-    sonucAciklama?: string | null; // kazandı/kaybetti nedeni vb (backend varsa)
+    sonucAciklama?: string | null;
+
+    // ✅ yeni: “İhalelerim” altındaki sekmelere göre filtre
+    // API gelene kadar backend doldurmayacak -> default hepsi gibi davranacağız
+    islemDurum?: IslemDurum | null;
+
+    // opsiyonel (ileride lazım olur)
+    siparisNo?: string | null;
+    sevkNo?: string | null;
+    iadeNo?: string | null;
 }
 
 const formatDT = (value?: string | null) => {
@@ -61,10 +101,10 @@ const badgeTeklif = (d: TeklifDurum) => {
 
 // ✅ burada sadece endpointleri düzelt
 const API = {
-    list: 'http://localhost:3030/api/tedarikci/ihale/postIhalelerimList', // benim tekliflerim listesi
-    update: 'http://localhost:3030/api/tedarikci/ihale/postTeklifGuncelle', // teklif güncelle (varsa)
-    cancel: 'http://localhost:3030/api/tedarikci/ihale/postTeklifIptal', // teklif iptal/geri çek (varsa)
-    detail: 'http://localhost:3030/api/tedarikci/ihale/postIhaleDetay', // ihale detay (varsa) - yoksa row’dan göster
+    list: 'http://localhost:3030/api/tedarikci/ihale/postIhalelerimList',
+    update: 'http://localhost:3030/api/tedarikci/ihale/postTeklifGuncelle',
+    cancel: 'http://localhost:3030/api/tedarikci/ihale/postTeklifIptal',
+    detail: 'http://localhost:3030/api/tedarikci/ihale/postIhaleDetay',
 };
 
 const Ihalelerim = () => {
@@ -77,6 +117,9 @@ const Ihalelerim = () => {
     const [saving, setSaving] = useState(false);
 
     const [rows, setRows] = useState<IhalemRow[]>([]);
+
+    // ✅ yeni: üst sekmeler (menüdeki alt başlıklar)
+    const [activeTab, setActiveTab] = useState<TabKey>('hepsi');
 
     // filtreler
     const [arama, setArama] = useState('');
@@ -101,6 +144,8 @@ const Ihalelerim = () => {
                 minFiyat: minFiyat ? Number(minFiyat) : undefined,
                 maxFiyat: maxFiyat ? Number(maxFiyat) : undefined,
                 siralama,
+                // ✅ API hazır olunca istersen backend tarafında da filtrelersin:
+                // islemDurum: activeTab === 'hepsi' ? undefined : activeTab,
             };
 
             const res = await fetch(API.list, {
@@ -110,7 +155,11 @@ const Ihalelerim = () => {
             });
 
             const data = await res.json();
-            setRows(Array.isArray(data) ? data : []);
+
+            // ✅ API gelmeyince boş da gelebilir
+            const arr: IhalemRow[] = Array.isArray(data) ? data : [];
+
+            setRows(arr);
         } catch (e) {
             console.error(e);
             Swal.fire({ icon: 'error', title: 'Hata', text: 'İhalelerim alınamadı.' });
@@ -129,17 +178,20 @@ const Ihalelerim = () => {
 
         return rows
             .filter((x) => {
-                const okA =
-                    !a ||
-                    `${x.ihaleAdi} ${x.acanFirmaAdi} ${x.yemAdi}`.toLowerCase().includes(a);
+                const okA = !a || `${x.ihaleAdi} ${x.acanFirmaAdi} ${x.yemAdi}`.toLowerCase().includes(a);
 
                 const okD = durum === 'hepsi' || x.teklifDurum === durum;
+
+                // ✅ sekmeye göre filtre:
+                // islemDurum yoksa (API yokken) kayıt sekmelerde kaybolmasın diye “hepsi” gibi davranır.
+                const rowTab = x.islemDurum ?? null;
+                const okTab = activeTab === 'hepsi' ? true : rowTab === activeTab;
 
                 const pf = Number(x.benimTeklifBirimFiyat || 0);
                 const okMin = !minFiyat || pf >= Number(minFiyat);
                 const okMax = !maxFiyat || pf <= Number(maxFiyat);
 
-                return okA && okD && okMin && okMax;
+                return okA && okD && okTab && okMin && okMax;
             })
             .sort((a, b) => {
                 if (siralama === 'tarih_desc') return +new Date(b.benimTeklifTarihi) - +new Date(a.benimTeklifTarihi);
@@ -149,25 +201,46 @@ const Ihalelerim = () => {
                 if (siralama === 'bitis_asc') return +new Date(a.ihaleBitisTarihi) - +new Date(b.ihaleBitisTarihi);
                 return 0;
             });
-    }, [rows, arama, durum, minFiyat, maxFiyat, siralama]);
+    }, [rows, arama, durum, minFiyat, maxFiyat, siralama, activeTab]);
 
+    // ✅ KPI’yı hem teklif durumundan hem tab durumundan gösteriyoruz
     const kpi = useMemo(() => {
-        const total = filtered.length;
-        const aktif = filtered.filter((x) => x.teklifDurum === 'aktif').length;
-        const kazan = filtered.filter((x) => x.teklifDurum === 'kazanildi').length;
-        const kaybet = filtered.filter((x) => x.teklifDurum === 'kaybedildi').length;
+        const total = rows.length;
+
+        const aktif = rows.filter((x) => x.teklifDurum === 'aktif').length;
+        const kazan = rows.filter((x) => x.teklifDurum === 'kazanildi').length;
+        const kaybet = rows.filter((x) => x.teklifDurum === 'kaybedildi').length;
+
+        const countTab = (d: IslemDurum) => rows.filter((x) => (x.islemDurum ?? null) === d).length;
 
         const avg = (() => {
-            const arr = filtered.map((x) => Number(x.benimTeklifBirimFiyat)).filter((n) => Number.isFinite(n) && n > 0);
+            const arr = rows.map((x) => Number(x.benimTeklifBirimFiyat)).filter((n) => Number.isFinite(n) && n > 0);
             if (!arr.length) return null;
             return Math.round((arr.reduce((p, c) => p + c, 0) / arr.length) * 100) / 100;
         })();
 
-        return { total, aktif, kazan, kaybet, avg };
-    }, [filtered]);
+        return {
+            total,
+            aktif,
+            kazan,
+            kaybet,
+            avg,
+            bekleyen: countTab('bekleyen_onay'),
+            hazirlanan: countTab('hazirlanan'),
+            sevk: countTab('sevk_edilen'),
+            tamam: countTab('tamamlanan'),
+            iptal: countTab('iptal_edilen'),
+            iade: countTab('iade_talepleri'),
+        };
+    }, [rows]);
 
     const openDetay = async (row: IhalemRow) => {
         const b = badgeTeklif(row.teklifDurum);
+
+        const tabLabel =
+            row.islemDurum
+                ? TABs.find((t) => t.key === row.islemDurum)?.label ?? '-'
+                : '-';
 
         await Swal.fire({
             title: `Detay • İhale #${row.ihaleID}`,
@@ -177,9 +250,9 @@ const Ihalelerim = () => {
             html: `
               <div style="text-align:left">
                 <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px">
-                  <div style="font-weight:900;color:#111827;font-size:16px">${row.ihaleAdi}</div>
+                  <div style="font-weight:900;color:#111827;font-size:16px">${escapeHtml(row.ihaleAdi)}</div>
                   <span style="padding:6px 10px;border-radius:999px;font-size:12px;font-weight:800;background:rgba(37,99,235,.12);color:#1d4ed8">
-                    ${b.label}
+                    ${escapeHtml(b.label)}
                   </span>
                 </div>
 
@@ -194,6 +267,10 @@ const Ihalelerim = () => {
                   ${infoRow('Benim Miktar (kg)', Number(row.benimTeklifMiktarKg || 0).toLocaleString('tr-TR'))}
                   ${infoRow('Teklif Tarihim', formatDT(row.benimTeklifTarihi))}
                   ${infoRow('En Düşük', row.enDusukBirimFiyat != null ? money(row.enDusukBirimFiyat) : '-')}
+                  ${infoRow('İşlem Durumu', tabLabel)}
+                  ${row.siparisNo ? infoRow('Sipariş No', row.siparisNo) : ''}
+                  ${row.sevkNo ? infoRow('Sevk No', row.sevkNo) : ''}
+                  ${row.iadeNo ? infoRow('İade No', row.iadeNo) : ''}
                 </div>
 
                 ${row.sonucAciklama ? `
@@ -333,6 +410,7 @@ const Ihalelerim = () => {
 
     const IhaleCard = ({ row }: { row: IhalemRow }) => {
         const b = badgeTeklif(row.teklifDurum);
+        const tabLabel = row.islemDurum ? (TABs.find((t) => t.key === row.islemDurum)?.label ?? '-') : null;
 
         return (
             <div className="rounded-2xl border border-white-light dark:border-[#1b2e4b] bg-white/40 dark:bg-[#0e1726]/40 shadow-sm hover:shadow-md transition p-4">
@@ -341,6 +419,7 @@ const Ihalelerim = () => {
                         <div className="flex items-center gap-2">
                             <div className="font-semibold truncate">{row.ihaleAdi}</div>
                             <span className={b.className}>{b.label}</span>
+                            {tabLabel ? <span className="badge bg-dark/20 text-black dark:text-white">{tabLabel}</span> : null}
                         </div>
                         <div className="text-xs text-white-dark mt-1 truncate">
                             {row.acanFirmaAdi} • {row.yemAdi}
@@ -401,7 +480,7 @@ const Ihalelerim = () => {
                 <div className="flex items-start justify-between gap-3">
                     <div>
                         <h5 className="text-lg font-semibold">İhalelerim</h5>
-                        <p className="text-sm text-white-dark mt-1">Verdiğin teklifleri ve sonuçlarını buradan takip et.</p>
+                        <p className="text-sm text-white-dark mt-1">Verdiğin teklifleri ve süreçteki kayıtları tek ekranda yönet.</p>
                     </div>
 
                     <div className="flex items-center gap-2">
@@ -418,6 +497,41 @@ const Ihalelerim = () => {
                         </div>
                     </div>
                 </div>
+
+                {/* ✅ Sekmeler (sol menüdeki alt başlıklar) */}
+                <div className="mt-4 flex flex-wrap gap-2">
+                    {TABs.map((tab) => {
+                        const isActive = activeTab === tab.key;
+                        const count =
+                            tab.key === 'hepsi'
+                                ? kpi.total
+                                : tab.key === 'bekleyen_onay'
+                                    ? kpi.bekleyen
+                                    : tab.key === 'hazirlanan'
+                                        ? kpi.hazirlanan
+                                        : tab.key === 'sevk_edilen'
+                                            ? kpi.sevk
+                                            : tab.key === 'tamamlanan'
+                                                ? kpi.tamam
+                                                : tab.key === 'iptal_edilen'
+                                                    ? kpi.iptal
+                                                    : kpi.iade;
+
+                        return (
+                            <button
+                                key={tab.key}
+                                type="button"
+                                onClick={() => setActiveTab(tab.key)}
+                                className={`rounded-xl border px-3 py-2 text-sm flex items-center gap-2 transition
+                                    ${isActive ? 'border-primary bg-primary text-white' : 'border-white-light dark:border-[#1b2e4b] bg-white/40 dark:bg-[#0e1726]/40'}
+                                `}
+                            >
+                                <span className="font-semibold">{tab.label}</span>
+                                <span className={`badge ${isActive ? 'bg-white/20 text-white' : toneBadge(tab.tone)}`}>{count}</span>
+                            </button>
+                        );
+                    })}
+                </div>
             </div>
 
             {/* Filters + KPI */}
@@ -425,7 +539,7 @@ const Ihalelerim = () => {
                 <div className="flex items-center justify-between mb-4">
                     <h6 className="font-semibold">Filtreler</h6>
                     <div className="text-xs text-white-dark">
-                        Toplam: <b>{kpi.total}</b> • Aktif: <b>{kpi.aktif}</b> • Kazanılan: <b>{kpi.kazan}</b> • Kaybedilen: <b>{kpi.kaybet}</b> • Ortalama Fiyat: <b>{kpi.avg ?? '-'}</b>
+                        Toplam: <b>{kpi.total}</b> • Aktif Teklif: <b>{kpi.aktif}</b> • Kazanılan: <b>{kpi.kazan}</b> • Kaybedilen: <b>{kpi.kaybet}</b> • Ortalama Fiyat: <b>{kpi.avg ?? '-'}</b>
                     </div>
                 </div>
 
@@ -436,7 +550,7 @@ const Ihalelerim = () => {
                     </div>
 
                     <div className="rounded-xl border border-white-light dark:border-[#1b2e4b] bg-white/40 dark:bg-[#0e1726]/40 p-3 shadow-sm">
-                        <label className="block mb-1 text-xs font-semibold text-gray-600 dark:text-white-dark">Durum</label>
+                        <label className="block mb-1 text-xs font-semibold text-gray-600 dark:text-white-dark">Teklif Durumu</label>
                         <select className="form-select w-full" value={durum} onChange={(e) => setDurum(e.target.value as any)}>
                             <option value="hepsi">Hepsi</option>
                             <option value="aktif">Aktif</option>
@@ -478,6 +592,7 @@ const Ihalelerim = () => {
                                 setMinFiyat('');
                                 setMaxFiyat('');
                                 setSiralama('tarih_desc');
+                                setActiveTab('hepsi');
                             }}
                         >
                             Temizle
@@ -492,15 +607,15 @@ const Ihalelerim = () => {
             {/* List/Grid */}
             <div className="panel p-5">
                 <div className="flex items-center justify-between mb-4">
-                    <h5 className="text-lg font-semibold">Teklif Listem</h5>
+                    <h5 className="text-lg font-semibold">Kayıt Listesi</h5>
                     <div className="text-xs text-white-dark">
-                        Gösterilen: <b>{filtered.length}</b>
+                        Sekme: <b>{TABs.find((t) => t.key === activeTab)?.label}</b> • Gösterilen: <b>{filtered.length}</b>
                     </div>
                 </div>
 
                 {filtered.length === 0 ? (
                     <div className="rounded-2xl border border-white-light dark:border-[#1b2e4b] bg-white/40 dark:bg-[#0e1726]/40 p-6 shadow-sm text-center text-white-dark">
-                        Kayıt bulunamadı.
+                        {rows.length === 0 ? 'Henüz veri yok (API hazır olunca burada dolacak).' : 'Bu sekmede kayıt bulunamadı.'}
                     </div>
                 ) : view === 'grid' ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
@@ -521,13 +636,16 @@ const Ihalelerim = () => {
                                         <th>Benim Fiyat</th>
                                         <th>Benim Miktar</th>
                                         <th>Teklif Tarihi</th>
-                                        <th>Durum</th>
+                                        <th>Teklif Durumu</th>
+                                        <th>İşlem Durumu</th>
                                         <th>İşlem</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {filtered.map((row) => {
                                         const b = badgeTeklif(row.teklifDurum);
+                                        const tabLabel = row.islemDurum ? (TABs.find((t) => t.key === row.islemDurum)?.label ?? '-') : '-';
+
                                         return (
                                             <tr key={row.teklifID} className="hover:bg-gray-50 dark:hover:bg-[#0b1220]">
                                                 <td className="font-semibold">{row.teklifID}</td>
@@ -543,6 +661,7 @@ const Ihalelerim = () => {
                                                 <td className="whitespace-nowrap">
                                                     <span className={b.className}>{b.label}</span>
                                                 </td>
+                                                <td className="whitespace-nowrap">{tabLabel}</td>
                                                 <td className="whitespace-nowrap">
                                                     <div className="flex gap-2">
                                                         <button type="button" className="btn btn-sm btn-outline-secondary" onClick={() => openDetay(row)}>
