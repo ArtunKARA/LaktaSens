@@ -1,15 +1,16 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import { setPageTitle } from '../../../store/themeConfigSlice';
 import Swal from 'sweetalert2';
 
-type SiparisDurum = 'b' | 'o' | 'islemde' | 't' | 'r' | 'i' | string; // beklemede / onay / işlemde / tamam / red / iptal
+type SiparisDurum = 'b' | 'o' | 'islemde' | 't' | 'r' | 'i' | string;
 
 interface SiparisRow {
     siparisID: number;
     teklifID?: number | null;
 
-    olusturanFirmaID: number; // çiftçi firma
+    olusturanFirmaID: number; // çiftçi
     ciftciFirmaAdi?: string | null;
 
     tedarikciID: number;
@@ -42,19 +43,8 @@ interface SevkiyatRow {
 }
 
 const API = {
-    // ✅ Bu sayfada tedarikçi kendi siparişlerini görecek: payload ile tedarikciID gönderiyoruz.
-    // Eğer backend’de tedarikçi endpointlerin varsa sadece burayı değiştir.
     list: 'http://localhost:3030/api/tedarikci/siparis/postSiparisList',
     detailShipments: 'http://localhost:3030/api/ciftci/siparis/postSevkiyatList',
-
-    // ✅ aşağıdaki action endpointleri sende varsa düzenle (isimler örnek)
-    approve: 'http://localhost:3030/api/tedarikci/siparis/postSiparisOnayla',
-    process: 'http://localhost:3030/api/tedarikci/siparis/postSiparisIslemeAl',
-    reject: 'http://localhost:3030/api/tedarikci/siparis/postSiparisReddet',
-    cancel: 'http://localhost:3030/api/tedarikci/siparis/postSiparisIptal',
-
-    shipmentCreate: 'http://localhost:3030/api/tedarikci/siparis/postSevkiyatOlustur',
-    shipmentCancel: 'http://localhost:3030/api/tedarikci/siparis/postSevkiyatIptal',
 };
 
 const formatDT = (value?: string | null) => {
@@ -69,71 +59,70 @@ const money = (v?: number | null) => {
     return Number(v).toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 };
 
-const badgeSiparis = (d: SiparisDurum) => {
-    // senin sistemde durum harfleri farklıysa burayı güncellersin
-    if (d === 'b') return { className: 'badge bg-warning', label: 'Beklemede' };
-    if (d === 'o') return { className: 'badge bg-primary', label: 'Onaylandı' };
-    if (d === 'islemde') return { className: 'badge bg-info', label: 'İşlemde' };
-    if (d === 't') return { className: 'badge bg-success', label: 'Tamamlandı' };
-    if (d === 'r') return { className: 'badge bg-danger', label: 'Reddedildi' };
-    if (d === 'i') return { className: 'badge bg-secondary', label: 'İptal' };
-    return { className: 'badge bg-secondary', label: String(d ?? 'Bilinmiyor') };
-};
-
 const kaynakText = (k?: string | null) => {
     if (k === 'ihale') return 'İhale';
     if (k === 'market') return 'Market';
     return k || '-';
 };
 
-const escapeHtml = (s: string) =>
-    (s ?? '')
-        .replaceAll('&', '&amp;')
-        .replaceAll('<', '&lt;')
-        .replaceAll('>', '&gt;')
-        .replaceAll('"', '&quot;')
-        .replaceAll("'", '&#039;');
+const badgeSiparis = (d: SiparisDurum) => {
+    if (d === 'b') return { className: 'badge bg-warning', label: 'Beklemede' };
+    if (d === 'o') return { className: 'badge bg-primary', label: 'Onaylandı' };
+    if (d === 'islemde') return { className: 'badge bg-info', label: 'İşlemde' };
+    if (d === 't') return { className: 'badge bg-success', label: 'Tamamlandı' };
+    if (d === 'r') return { className: 'badge bg-danger', label: 'Reddedildi' };
+    if (d === 'i') return { className: 'badge bg-secondary', label: 'İptal' };
+    return { className: 'badge bg-secondary', label: String(d ?? '-') };
+};
 
-const infoRow = (k: string, v: any) => `
-  <div style="padding:10px 12px;border-radius:12px;border:1px solid rgba(0,0,0,.06);background:rgba(0,0,0,.02)">
-    <div style="font-size:11px;color:#6b7280;font-weight:900;margin-bottom:4px">${escapeHtml(k)}</div>
-    <div style="font-size:13px;color:#111827;font-weight:800">${escapeHtml(String(v ?? '-'))}</div>
-  </div>
-`;
-
-const TedarikciSiparisYonetimi = () => {
+const TedarikciSiparisleri = () => {
+    const { t } = useTranslation();
     const dispatch = useDispatch();
 
     const storedUserInfo = localStorage.getItem('userInfo');
     const userInfo = storedUserInfo ? JSON.parse(storedUserInfo) : null;
 
-    const [loading, setLoading] = useState(false);
-    const [saving, setSaving] = useState(false);
+    const tedarikciID = Number(userInfo?.firmaID ?? userInfo?.tedarikciID ?? 0);
 
+    const [loading, setLoading] = useState(false);
     const [rows, setRows] = useState<SiparisRow[]>([]);
+
     const [view, setView] = useState<'grid' | 'list'>('grid');
 
     const [arama, setArama] = useState('');
-    const [durum, setDurum] = useState<string>(''); // hepsi = ''
-    const [kaynak, setKaynak] = useState<string>(''); // hepsi = ''
+    const [durum, setDurum] = useState<string>('');
+    const [kaynak, setKaynak] = useState<string>('');
     const [siralama, setSiralama] = useState<'tarih_desc' | 'tarih_asc' | 'tutar_desc' | 'tutar_asc'>('tarih_desc');
 
     const [selectedSiparisID, setSelectedSiparisID] = useState<number | null>(null);
     const [sevkiyatlar, setSevkiyatlar] = useState<SevkiyatRow[]>([]);
     const [loadingSevkiyat, setLoadingSevkiyat] = useState(false);
 
+    // Bu kısmı backend’in gerçekten ne beklediğine göre düzenleyeceksin.
+    // Eğer "postSiparisList" aynı zamanda durum güncelliyorsa, genelde payload'da bir "islemTipi/mode" olur.
+    const UPDATE_PAYLOAD_MODE = {
+        enabled: true, // update yoksa false yap, butonlar gizlenir
+        modeKey: 'islem', // örnek: "islem" | "mode" | "action"
+        modeValue: 'durumGuncelle', // örnek: "updateStatus"
+        siparisIDKey: 'siparisID',
+        durumKey: 'durum',
+        yapanKey: 'yapanKullaniciID',
+        tedarikciIDKey: 'tedarikciID',
+    };
+
     useEffect(() => {
-        dispatch(setPageTitle('Sipariş Yönetimi (Tedarikçi)'));
+        dispatch(setPageTitle('Siparişler (Tedarikçi)'));
     }, [dispatch]);
 
     const fetchSiparisler = async () => {
+        if (!tedarikciID) {
+            setRows([]);
+            return;
+        }
         setLoading(true);
         try {
-            const payload = {
-                // ✅ kritik: tedarikçinin kendi siparişleri
-                tedarikciID: userInfo?.firmaID || userInfo?.tedarikciID,
-
-                // filtreler
+            const payload: any = {
+                tedarikciID,
                 durum: durum || undefined,
                 kaynakTipi: kaynak || undefined,
             };
@@ -147,9 +136,8 @@ const TedarikciSiparisYonetimi = () => {
             const data = await res.json();
             const arr = Array.isArray(data) ? data : [];
 
-            // eğer backend filtrelemezse, burada client-side da kısıtlıyoruz
-            const onlyMine = arr.filter((x: SiparisRow) => Number(x.tedarikciID) === Number(payload.tedarikciID));
-
+            // backend filtrelemiyorsa garanti altına al:
+            const onlyMine = arr.filter((x: SiparisRow) => Number(x.tedarikciID) === Number(tedarikciID));
             setRows(onlyMine);
         } catch (e) {
             console.error(e);
@@ -190,10 +178,8 @@ const TedarikciSiparisYonetimi = () => {
                 const okA =
                     !a ||
                     `${x.siparisID} ${x.ciftciFirmaAdi ?? ''} ${x.yemAdi ?? ''} ${x.tedarikciAdi ?? ''}`.toLowerCase().includes(a);
-
                 const okD = !durum || String(x.durum) === String(durum);
                 const okK = !kaynak || String(x.kaynakTipi) === String(kaynak);
-
                 return okA && okD && okK;
             })
             .sort((a, b) => {
@@ -213,9 +199,7 @@ const TedarikciSiparisYonetimi = () => {
         const tamam = filtered.filter((x) => x.durum === 't').length;
         const iptal = filtered.filter((x) => x.durum === 'i').length;
         const red = filtered.filter((x) => x.durum === 'r').length;
-
         const toplamCiro = filtered.reduce((p, c) => p + Number(c.toplamTutar || 0), 0);
-
         return { total, bekleyen, onayli, islemde, tamam, iptal, red, toplamCiro };
     }, [filtered]);
 
@@ -229,39 +213,98 @@ const TedarikciSiparisYonetimi = () => {
             html: `
               <div style="text-align:left">
                 <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px">
-                  <div style="font-weight:900;color:#111827;font-size:16px">${escapeHtml(row.yemAdi)}</div>
+                  <div style="font-weight:900;color:#111827;font-size:16px">${row.yemAdi ?? '-'}</div>
                   <span style="padding:6px 10px;border-radius:999px;font-size:12px;font-weight:900;background:rgba(37,99,235,.12);color:#1d4ed8">
-                    ${escapeHtml(b.label)}
+                    ${b.label}
                   </span>
                 </div>
 
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-                  ${infoRow('Çiftçi', row.ciftciFirmaAdi ?? row.olusturanFirmaID)}
-                  ${infoRow('Kaynak', kaynakText(row.kaynakTipi))}
-                  ${infoRow('Sipariş Tarihi', formatDT(row.siparisTarihi))}
-                  ${infoRow('Yem', `${row.yemAdi} (#${row.yemID})`)}
-                  ${infoRow('Miktar (kg)', Number(row.miktarKg || 0).toLocaleString('tr-TR'))}
-                  ${infoRow('Birim Fiyat', money(row.birimFiyat))}
-                  ${infoRow('Toplam Tutar', money(row.toplamTutar))}
-                  ${infoRow('Tedarikçi', row.tedarikciAdi ?? row.tedarikciID)}
-                </div>
-
-                ${row.aciklama ? `
-                  <div style="margin-top:12px;padding:12px;border-radius:12px;background:rgba(0,0,0,.03);border:1px solid rgba(0,0,0,.06)">
-                    <div style="font-size:11px;color:#6b7280;font-weight:900;margin-bottom:6px">Not</div>
-                    <div style="font-size:13px;color:#111827;line-height:1.5">${escapeHtml(row.aciklama)}</div>
+                  <div style="padding:10px 12px;border-radius:12px;border:1px solid rgba(0,0,0,.06);background:rgba(0,0,0,.02)">
+                    <div style="font-size:11px;color:#6b7280;font-weight:900;margin-bottom:4px">Çiftçi</div>
+                    <div style="font-size:13px;color:#111827;font-weight:800">${row.ciftciFirmaAdi ?? row.olusturanFirmaID ?? '-'}</div>
                   </div>
-                ` : ''}
+
+                  <div style="padding:10px 12px;border-radius:12px;border:1px solid rgba(0,0,0,.06);background:rgba(0,0,0,.02)">
+                    <div style="font-size:11px;color:#6b7280;font-weight:900;margin-bottom:4px">Kaynak</div>
+                    <div style="font-size:13px;color:#111827;font-weight:800">${kaynakText(row.kaynakTipi)}</div>
+                  </div>
+
+                  <div style="padding:10px 12px;border-radius:12px;border:1px solid rgba(0,0,0,.06);background:rgba(0,0,0,.02)">
+                    <div style="font-size:11px;color:#6b7280;font-weight:900;margin-bottom:4px">Sipariş Tarihi</div>
+                    <div style="font-size:13px;color:#111827;font-weight:800">${formatDT(row.siparisTarihi)}</div>
+                  </div>
+
+                  <div style="padding:10px 12px;border-radius:12px;border:1px solid rgba(0,0,0,.06);background:rgba(0,0,0,.02)">
+                    <div style="font-size:11px;color:#6b7280;font-weight:900;margin-bottom:4px">Yem</div>
+                    <div style="font-size:13px;color:#111827;font-weight:800">${row.yemAdi} (#${row.yemID})</div>
+                  </div>
+
+                  <div style="padding:10px 12px;border-radius:12px;border:1px solid rgba(0,0,0,.06);background:rgba(0,0,0,.02)">
+                    <div style="font-size:11px;color:#6b7280;font-weight:900;margin-bottom:4px">Miktar</div>
+                    <div style="font-size:13px;color:#111827;font-weight:800">${Number(row.miktarKg || 0).toLocaleString('tr-TR')} kg</div>
+                  </div>
+
+                  <div style="padding:10px 12px;border-radius:12px;border:1px solid rgba(0,0,0,.06);background:rgba(0,0,0,.02)">
+                    <div style="font-size:11px;color:#6b7280;font-weight:900;margin-bottom:4px">Toplam</div>
+                    <div style="font-size:13px;color:#111827;font-weight:800">${money(row.toplamTutar)}</div>
+                  </div>
+                </div>
               </div>
             `,
         });
     };
 
-    // ---------------- Actions (Onay / İşleme Al / Red / İptal) ----------------
-    const actionPost = async (url: string, payload: any, successMsg: string) => {
-        setSaving(true);
+    const updateSiparisDurum = async (row: SiparisRow) => {
+        if (!UPDATE_PAYLOAD_MODE.enabled) return;
+
+        const result = await Swal.fire({
+            title: 'Durum Güncelle',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Kaydet',
+            cancelButtonText: 'Vazgeç',
+            html: `
+              <div style="text-align:left">
+                <div style="margin-bottom:10px;color:#6b7280;font-size:12px">Sipariş #${row.siparisID} • ${row.yemAdi}</div>
+                <label style="font-size:12px;font-weight:900;color:#374151">Yeni Durum</label>
+                <select id="sw-durum" style="margin-top:6px;width:100%;padding:10px 12px;border-radius:12px;border:1px solid rgba(0,0,0,.15)">
+                  <option value="b" ${row.durum === 'b' ? 'selected' : ''}>Beklemede</option>
+                  <option value="o" ${row.durum === 'o' ? 'selected' : ''}>Onaylandı</option>
+                  <option value="islemde" ${row.durum === 'islemde' ? 'selected' : ''}>İşlemde</option>
+                  <option value="t" ${row.durum === 't' ? 'selected' : ''}>Tamamlandı</option>
+                  <option value="r" ${row.durum === 'r' ? 'selected' : ''}>Reddedildi</option>
+                  <option value="i" ${row.durum === 'i' ? 'selected' : ''}>İptal</option>
+                </select>
+
+                <div style="margin-top:10px;color:#6b7280;font-size:11px">
+                  Not: Bu işlem aynı <b>postSiparisList</b> endpointi üzerinden yapılacak şekilde kurgulandı.
+                  Backend'in parametre isimleri farklıysa aşağıdaki payload anahtarlarını değiştirmen gerekir.
+                </div>
+              </div>
+            `,
+            preConfirm: () => {
+                const yeniDurum = (document.getElementById('sw-durum') as HTMLSelectElement)?.value;
+                if (!yeniDurum) {
+                    Swal.showValidationMessage('Durum seçiniz.');
+                    return;
+                }
+                return { yeniDurum };
+            },
+        });
+
+        if (!result.isConfirmed || !result.value) return;
+
         try {
-            const res = await fetch(url, {
+            const payload: any = {
+                [UPDATE_PAYLOAD_MODE.modeKey]: UPDATE_PAYLOAD_MODE.modeValue,
+                [UPDATE_PAYLOAD_MODE.siparisIDKey]: row.siparisID,
+                [UPDATE_PAYLOAD_MODE.durumKey]: result.value.yeniDurum,
+                [UPDATE_PAYLOAD_MODE.yapanKey]: userInfo?.kullaniciID,
+                [UPDATE_PAYLOAD_MODE.tedarikciIDKey]: tedarikciID,
+            };
+
+            const res = await fetch(API.list, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload),
@@ -276,230 +319,16 @@ const TedarikciSiparisYonetimi = () => {
             }
 
             if (!res.ok) {
-                const msg = typeof data === 'string' ? data : data?.message || data?.error || 'İşlem başarısız.';
+                const msg = typeof data === 'string' ? data : data?.message || data?.error || 'Durum güncellenemedi.';
                 throw new Error(msg);
             }
 
-            await Swal.fire({ icon: 'success', title: successMsg, timer: 1100, showConfirmButton: false });
+            await Swal.fire({ icon: 'success', title: 'Güncellendi', timer: 1000, showConfirmButton: false });
             fetchSiparisler();
-            if (selectedSiparisID) fetchSevkiyatlar(selectedSiparisID);
         } catch (e: any) {
             console.error(e);
-            Swal.fire({ icon: 'error', title: 'Hata', text: e?.message ?? 'İşlem başarısız.' });
-        } finally {
-            setSaving(false);
+            Swal.fire({ icon: 'error', title: 'Hata', text: e?.message ?? 'Durum güncellenemedi.' });
         }
-    };
-
-    const siparisOnayla = async (row: SiparisRow) => {
-        if (row.durum !== 'b') {
-            Swal.fire({ icon: 'info', title: 'Bilgi', text: 'Sadece bekleyen sipariş onaylanabilir.' });
-            return;
-        }
-        const confirm = await Swal.fire({
-            icon: 'question',
-            title: 'Sipariş onaylansın mı?',
-            text: `Sipariş #${row.siparisID}`,
-            showCancelButton: true,
-            confirmButtonText: 'Onayla',
-            cancelButtonText: 'Vazgeç',
-            confirmButtonColor: '#2563eb',
-        });
-        if (!confirm.isConfirmed) return;
-
-        await actionPost(API.approve, {
-            siparisID: row.siparisID,
-            tedarikciID: userInfo?.firmaID || userInfo?.tedarikciID,
-            yapanKullaniciID: userInfo?.kullaniciID,
-        }, 'Onaylandı');
-    };
-
-    const siparisIslemeAl = async (row: SiparisRow) => {
-        if (!(row.durum === 'o' || row.durum === 'b' || row.durum === 'islemde')) {
-            Swal.fire({ icon: 'info', title: 'Bilgi', text: 'Bu sipariş işlemeye uygun değil.' });
-            return;
-        }
-        const confirm = await Swal.fire({
-            icon: 'question',
-            title: 'Sipariş işleme alınsın mı?',
-            text: `Sipariş #${row.siparisID}`,
-            showCancelButton: true,
-            confirmButtonText: 'İşleme Al',
-            cancelButtonText: 'Vazgeç',
-            confirmButtonColor: '#0ea5e9',
-        });
-        if (!confirm.isConfirmed) return;
-
-        await actionPost(API.process, {
-            siparisID: row.siparisID,
-            tedarikciID: userInfo?.firmaID || userInfo?.tedarikciID,
-            yapanKullaniciID: userInfo?.kullaniciID,
-        }, 'İşleme alındı');
-    };
-
-    const siparisReddet = async (row: SiparisRow) => {
-        if (row.durum !== 'b') {
-            Swal.fire({ icon: 'info', title: 'Bilgi', text: 'Sadece bekleyen sipariş reddedilebilir.' });
-            return;
-        }
-
-        const result = await Swal.fire({
-            title: 'Siparişi Reddet',
-            icon: 'warning',
-            width: 720,
-            showCancelButton: true,
-            confirmButtonText: 'Reddet',
-            cancelButtonText: 'Vazgeç',
-            confirmButtonColor: '#dc2626',
-            html: `
-              <div style="text-align:left">
-                <div style="margin-bottom:10px;color:#6b7280;font-size:12px">Sipariş #${row.siparisID} • ${escapeHtml(row.yemAdi)}</div>
-                <label style="font-size:12px;font-weight:900;color:#374151">Red Nedeni *</label>
-                <textarea id="sw-reason" rows="3"
-                  style="margin-top:6px;width:100%;padding:10px 12px;border-radius:12px;border:1px solid rgba(0,0,0,.15)"></textarea>
-              </div>
-            `,
-            preConfirm: () => {
-                const reason = (document.getElementById('sw-reason') as HTMLTextAreaElement)?.value?.trim();
-                if (!reason) {
-                    Swal.showValidationMessage('Red nedeni zorunlu.');
-                    return;
-                }
-                return { reason };
-            },
-        });
-
-        if (!result.isConfirmed || !result.value) return;
-
-        await actionPost(API.reject, {
-            siparisID: row.siparisID,
-            tedarikciID: userInfo?.firmaID || userInfo?.tedarikciID,
-            redNedeni: result.value.reason,
-            yapanKullaniciID: userInfo?.kullaniciID,
-        }, 'Reddedildi');
-    };
-
-    const siparisIptal = async (row: SiparisRow) => {
-        const confirm = await Swal.fire({
-            icon: 'warning',
-            title: 'Siparişi iptal etmek istiyor musunuz?',
-            text: `Sipariş #${row.siparisID}`,
-            showCancelButton: true,
-            confirmButtonText: 'İptal Et',
-            cancelButtonText: 'Vazgeç',
-            confirmButtonColor: '#6b7280',
-        });
-        if (!confirm.isConfirmed) return;
-
-        await actionPost(API.cancel, {
-            siparisID: row.siparisID,
-            tedarikciID: userInfo?.firmaID || userInfo?.tedarikciID,
-            yapanKullaniciID: userInfo?.kullaniciID,
-        }, 'İptal edildi');
-    };
-
-    // ---------------- Sevkiyat işlemleri ----------------
-    const sevkiyatOlustur = async () => {
-        if (!selectedSiparisID) {
-            Swal.fire({ icon: 'info', title: 'Bilgi', text: 'Önce bir sipariş seçin.' });
-            return;
-        }
-
-        const row = rows.find((x) => x.siparisID === selectedSiparisID);
-        const maxKg = row?.miktarKg ?? null;
-
-        const result = await Swal.fire({
-            title: 'Sevkiyat Oluştur',
-            width: 760,
-            showCancelButton: true,
-            confirmButtonText: 'Oluştur',
-            cancelButtonText: 'Vazgeç',
-            confirmButtonColor: '#2563eb',
-            html: `
-              <div style="text-align:left">
-                <div style="margin-bottom:10px;color:#6b7280;font-size:12px">Sipariş #${selectedSiparisID}</div>
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-                  <div>
-                    <label style="font-size:12px;font-weight:900;color:#374151">Sevk Tarihi *</label>
-                    <input id="sw-sevk" type="datetime-local"
-                      style="margin-top:6px;width:100%;padding:10px 12px;border-radius:12px;border:1px solid rgba(0,0,0,.15)" />
-                  </div>
-                  <div>
-                    <label style="font-size:12px;font-weight:900;color:#374151">Beklenen Teslim *</label>
-                    <input id="sw-teslim" type="datetime-local"
-                      style="margin-top:6px;width:100%;padding:10px 12px;border-radius:12px;border:1px solid rgba(0,0,0,.15)" />
-                  </div>
-                  <div style="grid-column:1/3">
-                    <label style="font-size:12px;font-weight:900;color:#374151">Miktar (kg) *</label>
-                    <input id="sw-kg" type="number" step="1" min="1" value="${maxKg ? Math.min(maxKg, 1) : 1}"
-                      style="margin-top:6px;width:100%;padding:10px 12px;border-radius:12px;border:1px solid rgba(0,0,0,.15)" />
-                    <div style="margin-top:6px;font-size:11px;color:#6b7280">Sipariş miktarı: ${maxKg ?? '-'} kg</div>
-                  </div>
-                </div>
-              </div>
-            `,
-            preConfirm: () => {
-                const sevkTarihi = (document.getElementById('sw-sevk') as HTMLInputElement)?.value;
-                const teslim = (document.getElementById('sw-teslim') as HTMLInputElement)?.value;
-                const kg = Number((document.getElementById('sw-kg') as HTMLInputElement)?.value);
-
-                if (!sevkTarihi) {
-                    Swal.showValidationMessage('Sevk tarihi zorunlu.');
-                    return;
-                }
-                if (!teslim) {
-                    Swal.showValidationMessage('Beklenen teslim zorunlu.');
-                    return;
-                }
-                if (!Number.isFinite(kg) || kg <= 0) {
-                    Swal.showValidationMessage('Miktar 0’dan büyük olmalı.');
-                    return;
-                }
-                if (maxKg != null && Number.isFinite(maxKg) && kg > maxKg) {
-                    Swal.showValidationMessage('Sevkiyat miktarı sipariş miktarını aşamaz.');
-                    return;
-                }
-                return { sevkTarihi, teslim, kg };
-            },
-        });
-
-        if (!result.isConfirmed || !result.value) return;
-
-        await actionPost(
-            API.shipmentCreate,
-            {
-                siparisID: selectedSiparisID,
-                sevkTarihi: result.value.sevkTarihi,
-                beklenenTeslim: result.value.teslim,
-                miktarKg: Number(result.value.kg),
-                yapanKullaniciID: userInfo?.kullaniciID,
-                tedarikciID: userInfo?.firmaID || userInfo?.tedarikciID,
-            },
-            'Sevkiyat oluşturuldu'
-        );
-    };
-
-    const sevkiyatIptal = async (sevkiyatID: number) => {
-        const confirm = await Swal.fire({
-            icon: 'warning',
-            title: 'Sevkiyat iptal edilsin mi?',
-            text: `Sevkiyat #${sevkiyatID}`,
-            showCancelButton: true,
-            confirmButtonText: 'İptal Et',
-            cancelButtonText: 'Vazgeç',
-            confirmButtonColor: '#dc2626',
-        });
-        if (!confirm.isConfirmed) return;
-
-        await actionPost(
-            API.shipmentCancel,
-            {
-                sevkiyatID,
-                yapanKullaniciID: userInfo?.kullaniciID,
-                tedarikciID: userInfo?.firmaID || userInfo?.tedarikciID,
-            },
-            'Sevkiyat iptal edildi'
-        );
     };
 
     const OrderCard = ({ row }: { row: SiparisRow }) => {
@@ -518,7 +347,6 @@ const TedarikciSiparisYonetimi = () => {
                             Çiftçi: {row.ciftciFirmaAdi ?? row.olusturanFirmaID} • Kaynak: {kaynakText(row.kaynakTipi)}
                         </div>
                     </div>
-
                     <div className="text-right">
                         <div className="text-xs text-white-dark">Sipariş</div>
                         <div className="text-sm font-semibold">#{row.siparisID}</div>
@@ -546,11 +374,9 @@ const TedarikciSiparisYonetimi = () => {
                         <button type="button" className="btn btn-outline-secondary" onClick={() => openDetay(row)}>
                             Detay
                         </button>
-
                         <button
                             type="button"
                             className="btn btn-outline-primary"
-                            disabled={saving}
                             onClick={() => {
                                 setSelectedSiparisID(row.siparisID);
                                 fetchSevkiyatlar(row.siparisID);
@@ -561,20 +387,13 @@ const TedarikciSiparisYonetimi = () => {
                     </div>
                 </div>
 
-                <div className="mt-3 flex flex-wrap items-center justify-end gap-2">
-                    <button type="button" className="btn btn-outline-primary" disabled={saving || row.durum !== 'b'} onClick={() => siparisOnayla(row)}>
-                        Onayla
-                    </button>
-                    <button type="button" className="btn btn-outline-info" disabled={saving || (row.durum !== 'o' && row.durum !== 'b' && row.durum !== 'islemde')} onClick={() => siparisIslemeAl(row)}>
-                        İşleme Al
-                    </button>
-                    <button type="button" className="btn btn-outline-danger" disabled={saving || row.durum !== 'b'} onClick={() => siparisReddet(row)}>
-                        Reddet
-                    </button>
-                    <button type="button" className="btn btn-outline-secondary" disabled={saving || row.durum === 'i' || row.durum === 't'} onClick={() => siparisIptal(row)}>
-                        İptal
-                    </button>
-                </div>
+                {UPDATE_PAYLOAD_MODE.enabled && (
+                    <div className="mt-3 flex justify-end">
+                        <button type="button" className="btn btn-primary" onClick={() => updateSiparisDurum(row)}>
+                            Durum Güncelle
+                        </button>
+                    </div>
+                )}
             </div>
         );
     };
@@ -585,8 +404,10 @@ const TedarikciSiparisYonetimi = () => {
             <div className="panel p-5">
                 <div className="flex items-start justify-between gap-3">
                     <div>
-                        <h5 className="text-lg font-semibold">Sipariş Yönetimi (Tedarikçi)</h5>
-                        <p className="text-sm text-white-dark mt-1">Kendi ürünlerin için gelen siparişleri gör, onayla/işleme al/reddet/iptal et, sevkiyat oluştur.</p>
+                        <h5 className="text-lg font-semibold">Siparişler (Tedarikçi)</h5>
+                        <p className="text-sm text-white-dark mt-1">
+                            Çiftçilerden gelen siparişleri görüntüle, filtrele ve siparişe bağlı sevkiyatları takip et.
+                        </p>
                     </div>
 
                     <div className="flex items-center gap-2">
@@ -617,39 +438,39 @@ const TedarikciSiparisYonetimi = () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                     <div className="rounded-xl border border-white-light dark:border-[#1b2e4b] bg-white/40 dark:bg-[#0e1726]/40 p-3 shadow-sm">
-                        <label className="block mb-1 text-xs font-semibold text-gray-600 dark:text-white-dark">Arama</label>
+                        <label className="block mb-1 text-xs font-semibold text-gray-600 dark:text-white-dark">{t('Arama')}</label>
                         <input className="form-input w-full" value={arama} onChange={(e) => setArama(e.target.value)} placeholder="Sipariş / çiftçi / yem" />
                     </div>
 
                     <div className="rounded-xl border border-white-light dark:border-[#1b2e4b] bg-white/40 dark:bg-[#0e1726]/40 p-3 shadow-sm">
-                        <label className="block mb-1 text-xs font-semibold text-gray-600 dark:text-white-dark">Durum</label>
+                        <label className="block mb-1 text-xs font-semibold text-gray-600 dark:text-white-dark">{t('Durum')}</label>
                         <select className="form-select w-full" value={durum} onChange={(e) => setDurum(e.target.value)}>
-                            <option value="">Hepsi</option>
-                            <option value="b">Beklemede</option>
-                            <option value="o">Onaylandı</option>
-                            <option value="islemde">İşlemde</option>
-                            <option value="t">Tamamlandı</option>
-                            <option value="r">Reddedildi</option>
-                            <option value="i">İptal</option>
+                            <option value="">{t('Hepsi')}</option>
+                            <option value="b">{t('Beklemede')}</option>
+                            <option value="o">{t('Onaylandı')}</option>
+                            <option value="islemde">{t('İşlemde')}</option>
+                            <option value="t">{t('Tamamlandı')}</option>
+                            <option value="r">{t('Reddedildi')}</option>
+                            <option value="i">{t('İptal')}</option>
                         </select>
                     </div>
 
                     <div className="rounded-xl border border-white-light dark:border-[#1b2e4b] bg-white/40 dark:bg-[#0e1726]/40 p-3 shadow-sm">
-                        <label className="block mb-1 text-xs font-semibold text-gray-600 dark:text-white-dark">Kaynak</label>
+                        <label className="block mb-1 text-xs font-semibold text-gray-600 dark:text-white-dark">{t('Kaynak')}</label>
                         <select className="form-select w-full" value={kaynak} onChange={(e) => setKaynak(e.target.value)}>
-                            <option value="">Hepsi</option>
-                            <option value="market">Market</option>
-                            <option value="ihale">İhale</option>
+                            <option value="">{t('Hepsi')}</option>
+                            <option value="market">{t('Market')}</option>
+                            <option value="ihale">{t('İhale')}</option>
                         </select>
                     </div>
 
                     <div className="rounded-xl border border-white-light dark:border-[#1b2e4b] bg-white/40 dark:bg-[#0e1726]/40 p-3 shadow-sm">
-                        <label className="block mb-1 text-xs font-semibold text-gray-600 dark:text-white-dark">Sıralama</label>
+                        <label className="block mb-1 text-xs font-semibold text-gray-600 dark:text-white-dark">{t('Sıralama')}</label>
                         <select className="form-select w-full" value={siralama} onChange={(e) => setSiralama(e.target.value as any)}>
-                            <option value="tarih_desc">Tarih (Yeni)</option>
-                            <option value="tarih_asc">Tarih (Eski)</option>
-                            <option value="tutar_desc">Tutar (Azalan)</option>
-                            <option value="tutar_asc">Tutar (Artan)</option>
+                            <option value="tarih_desc">{t('Tarih (Yeni)')}</option>
+                            <option value="tarih_asc">{t('Tarih (Eski)')}</option>
+                            <option value="tutar_desc">{t('Tutar (Azalan)')}</option>
+                            <option value="tutar_asc">{t('Tutar (Artan)')}</option>
                         </select>
                     </div>
 
@@ -664,10 +485,10 @@ const TedarikciSiparisYonetimi = () => {
                                 setSiralama('tarih_desc');
                             }}
                         >
-                            Temizle
+                            {t('Temizle')}
                         </button>
                         <button className="btn btn-primary" type="button" onClick={fetchSiparisler} disabled={loading}>
-                            {loading ? 'Yükleniyor...' : 'Uygula'}
+                            {loading ? t('Yükleniyor...') : t('Uygula')}
                         </button>
                     </div>
                 </div>
@@ -676,15 +497,15 @@ const TedarikciSiparisYonetimi = () => {
             {/* Orders */}
             <div className="panel p-5">
                 <div className="flex items-center justify-between mb-4">
-                    <h5 className="text-lg font-semibold">Siparişler</h5>
+                    <h5 className="text-lg font-semibold">{t('Siparişler')}</h5>
                     <div className="text-xs text-white-dark">
-                        Gösterilen: <b>{filtered.length}</b> • Seçili: <b>{selectedSiparisID ?? '-'}</b>
+                        {t('Gösterilen')}: <b>{filtered.length}</b> • {t('Seçili')}: <b>{selectedSiparisID ?? '-'}</b>
                     </div>
                 </div>
 
                 {filtered.length === 0 ? (
                     <div className="rounded-2xl border border-white-light dark:border-[#1b2e4b] bg-white/40 dark:bg-[#0e1726]/40 p-6 shadow-sm text-center text-white-dark">
-                        Kayıt bulunamadı.
+                        {t('Kayıt bulunamadı')}
                     </div>
                 ) : view === 'grid' ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
@@ -698,16 +519,15 @@ const TedarikciSiparisYonetimi = () => {
                             <table className="table">
                                 <thead>
                                     <tr>
-                                        <th>SiparişID</th>
-                                        <th>Çiftçi</th>
-                                        <th>Yem</th>
-                                        <th>Miktar</th>
-                                        <th>Birim</th>
-                                        <th>Toplam</th>
-                                        <th>Tarih</th>
-                                        <th>Kaynak</th>
-                                        <th>Durum</th>
-                                        <th>İşlem</th>
+                                        <th>{t('SiparişID')}</th>
+                                        <th>{t('Çiftçi')}</th>
+                                        <th>{t('Yem')}</th>
+                                        <th>{t('Miktar')}</th>
+                                        <th>{t('Toplam')}</th>
+                                        <th>{t('Tarih')}</th>
+                                        <th>{t('Kaynak')}</th>
+                                        <th>{t('Durum')}</th>
+                                        <th>{t('İşlem')}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -724,7 +544,6 @@ const TedarikciSiparisYonetimi = () => {
                                                     <div className="text-xs text-white-dark">Yem #{row.yemID}</div>
                                                 </td>
                                                 <td className="whitespace-nowrap">{Number(row.miktarKg || 0).toLocaleString('tr-TR')} kg</td>
-                                                <td className="whitespace-nowrap">{money(row.birimFiyat)}</td>
                                                 <td className="whitespace-nowrap font-semibold">{money(row.toplamTutar)}</td>
                                                 <td className="whitespace-nowrap">{formatDT(row.siparisTarihi)}</td>
                                                 <td className="whitespace-nowrap">
@@ -736,28 +555,23 @@ const TedarikciSiparisYonetimi = () => {
                                                 <td className="whitespace-nowrap">
                                                     <div className="flex gap-2 justify-end">
                                                         <button className="btn btn-sm btn-outline-secondary" type="button" onClick={() => openDetay(row)}>
-                                                            Detay
+                                                            {t('Detay')}
                                                         </button>
                                                         <button
                                                             className="btn btn-sm btn-outline-primary"
                                                             type="button"
-                                                            disabled={saving}
                                                             onClick={() => {
                                                                 setSelectedSiparisID(row.siparisID);
                                                                 fetchSevkiyatlar(row.siparisID);
                                                             }}
                                                         >
-                                                            Seç
+                                                            {t('Seç')}
                                                         </button>
-                                                        <button className="btn btn-sm btn-outline-primary" type="button" disabled={saving || row.durum !== 'b'} onClick={() => siparisOnayla(row)}>
-                                                            Onayla
-                                                        </button>
-                                                        <button className="btn btn-sm btn-outline-danger" type="button" disabled={saving || row.durum !== 'b'} onClick={() => siparisReddet(row)}>
-                                                            Reddet
-                                                        </button>
-                                                        <button className="btn btn-sm btn-outline-secondary" type="button" disabled={saving || row.durum === 'i' || row.durum === 't'} onClick={() => siparisIptal(row)}>
-                                                            İptal
-                                                        </button>
+                                                        {UPDATE_PAYLOAD_MODE.enabled && (
+                                                            <button className="btn btn-sm btn-primary" type="button" onClick={() => updateSiparisDurum(row)}>
+                                                                {t('Durum')}
+                                                            </button>
+                                                        )}
                                                     </div>
                                                 </td>
                                             </tr>
@@ -774,32 +588,29 @@ const TedarikciSiparisYonetimi = () => {
             <div className="panel p-5">
                 <div className="flex items-center justify-between mb-4">
                     <div>
-                        <h5 className="text-lg font-semibold">Sevkiyatlar</h5>
-                        <div className="text-xs text-white-dark">Seçili Sipariş: <b>{selectedSiparisID ?? '-'}</b></div>
+                        <h5 className="text-lg font-semibold">{t('Sevkiyatlar')}</h5>
+                        <div className="text-xs text-white-dark">
+                            {t('Seçili Sipariş')}: <b>{selectedSiparisID ?? '-'}</b>
+                        </div>
                     </div>
 
-                    <div className="flex items-center gap-2">
-                        <button
-                            className="btn btn-outline-primary"
-                            type="button"
-                            onClick={() => (selectedSiparisID ? fetchSevkiyatlar(selectedSiparisID) : Swal.fire({ icon: 'info', title: 'Bilgi', text: 'Önce sipariş seç.' }))}
-                            disabled={loadingSevkiyat}
-                        >
-                            {loadingSevkiyat ? 'Yükleniyor...' : 'Yenile'}
-                        </button>
-                        <button className="btn btn-primary" type="button" disabled={saving || !selectedSiparisID} onClick={sevkiyatOlustur}>
-                            Sevkiyat Oluştur
-                        </button>
-                    </div>
+                    <button
+                        className="btn btn-outline-primary"
+                        type="button"
+                        onClick={() => (selectedSiparisID ? fetchSevkiyatlar(selectedSiparisID) : Swal.fire({ icon: 'info', title: 'Bilgi', text: 'Önce sipariş seç.' }))}
+                        disabled={loadingSevkiyat}
+                    >
+                        {loadingSevkiyat ? t('Yükleniyor...') : t('Yenile')}
+                    </button>
                 </div>
 
                 {!selectedSiparisID ? (
                     <div className="rounded-2xl border border-white-light dark:border-[#1b2e4b] bg-white/40 dark:bg-[#0e1726]/40 p-6 shadow-sm text-center text-white-dark">
-                        Sevkiyatları görmek için yukarıdan bir sipariş seç.
+                        {t('Sevkiyatları görmek için yukarıdan bir sipariş seçin.')}
                     </div>
                 ) : sevkiyatlar.length === 0 ? (
                     <div className="rounded-2xl border border-white-light dark:border-[#1b2e4b] bg-white/40 dark:bg-[#0e1726]/40 p-6 shadow-sm text-center text-white-dark">
-                        Sevkiyat bulunamadı.
+                        {t('Kayıt bulunamadı')}
                     </div>
                 ) : (
                     <div className="rounded-2xl border border-white-light dark:border-[#1b2e4b] overflow-hidden shadow-sm">
@@ -807,13 +618,12 @@ const TedarikciSiparisYonetimi = () => {
                             <table className="table">
                                 <thead>
                                     <tr>
-                                        <th>SevkiyatID</th>
-                                        <th>Sevk Tarihi</th>
-                                        <th>Beklenen Teslim</th>
-                                        <th>Yem</th>
-                                        <th>Miktar</th>
-                                        <th>Durum</th>
-                                        <th>İşlem</th>
+                                        <th>{t('SevkiyatID')}</th>
+                                        <th>{t('Sevk Tarihi')}</th>
+                                        <th>{t('Beklenen Teslim')}</th>
+                                        <th>{t('Yem')}</th>
+                                        <th>{t('Miktar')}</th>
+                                        <th>{t('Durum')}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -828,11 +638,6 @@ const TedarikciSiparisYonetimi = () => {
                                             </td>
                                             <td className="whitespace-nowrap">{Number(s.MiktarKg || 0).toLocaleString('tr-TR')} kg</td>
                                             <td className="whitespace-nowrap">{s.Durum}</td>
-                                            <td className="whitespace-nowrap">
-                                                <button className="btn btn-sm btn-outline-danger" type="button" disabled={saving} onClick={() => sevkiyatIptal(s.SevkiyatID)}>
-                                                    Sevkiyatı İptal
-                                                </button>
-                                            </td>
                                         </tr>
                                     ))}
                                 </tbody>
@@ -845,4 +650,4 @@ const TedarikciSiparisYonetimi = () => {
     );
 };
 
-export default TedarikciSiparisYonetimi;
+export default TedarikciSiparisleri;
