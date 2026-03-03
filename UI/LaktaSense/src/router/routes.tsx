@@ -78,6 +78,7 @@ const CifciTedarikMarket = lazy(() => import('../pages/Cifci/Tedarik/Market'));
 const CifciTedarikSiparis = lazy(() => import('../pages/Cifci/Tedarik/Siparis'));
 const TedarikciAcikIhaleler = lazy(() => import('../pages/Tedarikci/Siparis/AcikIhaleler'));
 const TedarikciIhalelerim = lazy(() => import('../pages/Tedarikci/Siparis/Ihalelerim'));
+const TedarikciSiparisler = lazy(() => import('../pages/Tedarikci/Siparis/TedarikciSiparisler'));
 
 const routes = [
     //landing page
@@ -783,6 +784,15 @@ const routes = [
         element: (
             <AuthGuard allowedRoles={['t']}>
                 <TedarikciIhalelerim />
+            </AuthGuard>
+        ),
+        layout: 'tedarikci',
+    },
+    {
+        path: '/tedarikci/TedarikciSiparisler',
+        element: (
+            <AuthGuard allowedRoles={['t']}>
+                <TedarikciSiparisler />
             </AuthGuard>
         ),
         layout: 'tedarikci',
