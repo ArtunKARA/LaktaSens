@@ -168,8 +168,11 @@ exports.postAcikIhaleList = async (req, res) => {
 };
 
 exports.postTeklifOlustur = async (req, res) => {
-  const { ihaleID, tedarikciID, teklifMiktarKg, birimFiyat, yapanKullaniciID } = req.body ?? {};
-  if (!ihaleID || !tedarikciID || !teklifMiktarKg || !birimFiyat) {
+  const { ihaleID, tedarikciID, tedarikciFirmaID, teklifMiktarKg, miktarKg, birimFiyat, yapanKullaniciID } = req.body ?? {};
+  const supplierId = tedarikciID ?? tedarikciFirmaID; // UI bazen tedarikciFirmaID gönderiyor
+  const teklifKg = teklifMiktarKg ?? miktarKg;        // UI bazen miktarKg gönderiyor
+
+  if (!ihaleID || !supplierId || !teklifKg || !birimFiyat) {
     return res.status(400).json({ error: 'ihaleID, tedarikciID, teklifMiktarKg, birimFiyat zorunlu' });
   }
 
@@ -201,17 +204,17 @@ exports.postTeklifOlustur = async (req, res) => {
       return res.status(400).json({ error: 'İhale aktif değil' });
     }
 
-    if (Number(teklifMiktarKg) > Number(ihale.talepMiktarKg)) {
+    if (Number(teklifKg) > Number(ihale.talepMiktarKg)) {
       await transaction.rollback();
       return res.status(400).json({ error: 'Teklif miktarı talep miktarını aşamaz' });
     }
 
-    const toplamTutar = Number(teklifMiktarKg) * Number(birimFiyat);
+    const toplamTutar = Number(teklifKg) * Number(birimFiyat);
 
     const teklifInsert = await transaction.request()
       .input('ihaleID', sql.Int, ihaleID)
-      .input('tedarikciID', sql.Int, tedarikciID)
-      .input('teklifMiktarKg', sql.Decimal(12, 2), teklifMiktarKg)
+      .input('tedarikciID', sql.Int, supplierId)
+      .input('teklifMiktarKg', sql.Decimal(12, 2), teklifKg)
       .input('birimFiyat', sql.Decimal(10, 2), birimFiyat)
       .input('toplamTutar', sql.Decimal(14, 2), toplamTutar)
       .query(`
@@ -229,11 +232,11 @@ exports.postTeklifOlustur = async (req, res) => {
     await transaction.request()
       .input('teklifID', sql.Int, teklifID)
       .input('ihaleID', sql.Int, ihaleID)
-      .input('tedarikciID', sql.Int, tedarikciID)
+      .input('tedarikciID', sql.Int, supplierId)
       .input('aksiyonTipi', sql.NVarChar(20), 'olustur')
       .input('eskiDurum', sql.Char(1), null)
       .input('yeniDurum', sql.Char(1), 'b')
-      .input('teklifMiktarKg', sql.Decimal(12, 2), teklifMiktarKg)
+      .input('teklifMiktarKg', sql.Decimal(12, 2), teklifKg)
       .input('birimFiyat', sql.Decimal(10, 2), birimFiyat)
       .input('toplamTutar', sql.Decimal(14, 2), toplamTutar)
       .input('yapanKullaniciID', sql.Int, yapanKullaniciID || null)
@@ -375,6 +378,124 @@ exports.postTeklifList = async (req, res) => {
     return res.json(result.recordset);
   } catch (error) {
     console.error('Teklif listesi alınamadı:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+// Tedarikçinin kendi teklif/ihale listesi (İhalelerim)
+exports.postIhalelerimList = async (req, res) => {
+  const { tedarikciID, tedarikciFirmaID, arama, durum, minFiyat, maxFiyat, siralama } = req.body ?? {};
+  const supplierId = tedarikciID ?? tedarikciFirmaID;
+  if (!supplierId) return res.status(400).json({ error: 'tedarikciID zorunlu' });
+
+  const mapTeklifDurum = (kod) => {
+    switch (kod) {
+      case 'b': return 'aktif';         // beklemede
+      case 's': return 'kazanildi';     // seçildi
+      case 'r': return 'kaybedildi';    // reddedildi
+      case 'c': return 'geri_cekildi';  // çekildi
+      default: return 'iptal';
+    }
+  };
+
+  const mapSiparisDurum = (kod) => {
+    switch (kod) {
+      case 'b': return 'bekleyen_onay';
+      case 'o': return 'hazirlanan';
+      case 'y': return 'sevk_edilen';
+      case 't': return 'tamamlanan';
+      case 'i':
+      case 'r':
+        return 'iptal_edilen';
+      default:
+        return null;
+    }
+  };
+
+  try {
+    const pool = await poolPromise;
+    const request = pool.request().input('supplierId', sql.Int, supplierId);
+
+    let query = `
+      SELECT
+        t.teklifID,
+        t.ihaleID,
+        i.ihaleAdi,
+        f.firmaAdi AS acanFirmaAdi,
+        y.yemAdi,
+        i.ihaleBaslangicTarihi,
+        i.ihaleBitisTarihi,
+        k.talepMiktarKg,
+        k.kalanMiktarKg,
+        t.birimFiyat        AS benimTeklifBirimFiyat,
+        t.teklifMiktarKg    AS benimTeklifMiktarKg,
+        t.teklifTarihi      AS benimTeklifTarihi,
+        t.durum             AS teklifDurumKod,
+        stats.enDusukBirimFiyat,
+        stats.teklifSayisi,
+        s.durum             AS siparisDurum
+      FROM Teklifler t
+      INNER JOIN Ihaleler i        ON t.ihaleID = i.ihaleID
+      INNER JOIN IhaleKalemleri k  ON i.ihaleID = k.ihaleID
+      INNER JOIN YemMaddeleri y    ON k.yemID   = y.yemID
+      INNER JOIN firmalar f        ON i.acanFirmaID = f.firmaID
+      OUTER APPLY (
+        SELECT MIN(birimFiyat) AS enDusukBirimFiyat, COUNT(1) AS teklifSayisi
+        FROM Teklifler tt
+        WHERE tt.ihaleID = t.ihaleID
+      ) stats
+      LEFT JOIN Siparisler s ON s.teklifID = t.teklifID
+      WHERE t.tedarikciID = @supplierId
+    `;
+
+    if (arama) {
+      query += ' AND (i.ihaleAdi LIKE @arama OR y.yemAdi LIKE @arama OR f.firmaAdi LIKE @arama)';
+      request.input('arama', sql.NVarChar, `%${arama}%`);
+    }
+    if (minFiyat !== undefined && minFiyat !== null && minFiyat !== '') {
+      query += ' AND t.birimFiyat >= @minFiyat';
+      request.input('minFiyat', sql.Decimal(10, 2), minFiyat);
+    }
+    if (maxFiyat !== undefined && maxFiyat !== null && maxFiyat !== '') {
+      query += ' AND t.birimFiyat <= @maxFiyat';
+      request.input('maxFiyat', sql.Decimal(10, 2), maxFiyat);
+    }
+
+    // Sıralama
+    switch (siralama) {
+      case 'tarih_asc':
+        query += ' ORDER BY i.ihaleBitisTarihi ASC';
+        break;
+      case 'fiyat_asc':
+        query += ' ORDER BY t.birimFiyat ASC';
+        break;
+      case 'fiyat_desc':
+        query += ' ORDER BY t.birimFiyat DESC';
+        break;
+      case 'bitis_asc':
+        query += ' ORDER BY i.ihaleBitisTarihi ASC';
+        break;
+      case 'tarih_desc':
+      default:
+        query += ' ORDER BY i.ihaleBitisTarihi DESC';
+        break;
+    }
+
+    const result = await request.query(query);
+    if (result.recordset.length === 0) return res.status(404).json([]);
+
+    const payload = result.recordset
+      .map((row) => ({
+        ...row,
+        teklifDurum: mapTeklifDurum(row.teklifDurumKod),
+        islemDurum: mapSiparisDurum(row.siparisDurum),
+      }))
+      // durum filtresi frontend kodlarına göre uygulanıyor ('aktif','kazanildi', vb.)
+      .filter((row) => !durum || row.teklifDurum === durum);
+
+    return res.json(payload);
+  } catch (error) {
+    console.error('İhalelerim listesi alınamadı:', error);
     return res.status(500).json({ error: 'Internal server error' });
   }
 };

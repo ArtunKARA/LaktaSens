@@ -8,6 +8,7 @@ postAcikIhaleList,
 postTeklifOlustur,
 postTeklifCek,
 postTeklifList,
+postIhalelerimList,
 postTeklifGuncelle
 } = require("../../../controllers/tedarikci/tedarik/ihale-controller.js");
 
@@ -17,6 +18,7 @@ router.post("/postAcikIhaleList", postAcikIhaleList);
 router.post("/postTeklifOlustur", postTeklifOlustur);
 router.post("/postTeklifCek", postTeklifCek);
 router.post("/postTeklifList", postTeklifList);
+router.post("/postIhalelerimList", postIhalelerimList);
 router.post("/postTeklifGuncelle", postTeklifGuncelle);
 
 
