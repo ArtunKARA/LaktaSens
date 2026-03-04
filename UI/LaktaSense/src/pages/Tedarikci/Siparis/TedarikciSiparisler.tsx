@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { setPageTitle } from '../../../store/themeConfigSlice';
 import Swal from 'sweetalert2';
 
-type SiparisDurum = 'b' | 'o' | 'islemde' | 't' | 'r' | 'i' | string;
+type SiparisDurum = 'b' | 'o' | 't' | 'r' | 'i' | string;
 
 interface SiparisRow {
     siparisID: number;
@@ -44,7 +44,11 @@ interface SevkiyatRow {
 
 const API = {
     list: 'http://localhost:3030/api/tedarikci/siparis/postSiparisList',
-    detailShipments: 'http://localhost:3030/api/ciftci/siparis/postSevkiyatList',
+    approve: 'http://localhost:3030/api/tedarikci/siparis/postSiparisOnay',
+    reject: 'http://localhost:3030/api/tedarikci/siparis/postSiparisRed',
+    createShipment: 'http://localhost:3030/api/tedarikci/siparis/postSevkiyatOlustur',
+    shipments: 'http://localhost:3030/api/tedarikci/siparis/postSevkiyatList',
+    shipmentStatus: 'http://localhost:3030/api/tedarikci/siparis/postSevkiyatDurumGuncelle',
 };
 
 const formatDT = (value?: string | null) => {
@@ -68,7 +72,6 @@ const kaynakText = (k?: string | null) => {
 const badgeSiparis = (d: SiparisDurum) => {
     if (d === 'b') return { className: 'badge bg-warning', label: 'Beklemede' };
     if (d === 'o') return { className: 'badge bg-primary', label: 'Onaylandı' };
-    if (d === 'islemde') return { className: 'badge bg-info', label: 'İşlemde' };
     if (d === 't') return { className: 'badge bg-success', label: 'Tamamlandı' };
     if (d === 'r') return { className: 'badge bg-danger', label: 'Reddedildi' };
     if (d === 'i') return { className: 'badge bg-secondary', label: 'İptal' };
@@ -97,18 +100,6 @@ const TedarikciSiparisleri = () => {
     const [selectedSiparisID, setSelectedSiparisID] = useState<number | null>(null);
     const [sevkiyatlar, setSevkiyatlar] = useState<SevkiyatRow[]>([]);
     const [loadingSevkiyat, setLoadingSevkiyat] = useState(false);
-
-    // Bu kısmı backend’in gerçekten ne beklediğine göre düzenleyeceksin.
-    // Eğer "postSiparisList" aynı zamanda durum güncelliyorsa, genelde payload'da bir "islemTipi/mode" olur.
-    const UPDATE_PAYLOAD_MODE = {
-        enabled: true, // update yoksa false yap, butonlar gizlenir
-        modeKey: 'islem', // örnek: "islem" | "mode" | "action"
-        modeValue: 'durumGuncelle', // örnek: "updateStatus"
-        siparisIDKey: 'siparisID',
-        durumKey: 'durum',
-        yapanKey: 'yapanKullaniciID',
-        tedarikciIDKey: 'tedarikciID',
-    };
 
     useEffect(() => {
         dispatch(setPageTitle('Siparişler (Tedarikçi)'));
@@ -150,10 +141,10 @@ const TedarikciSiparisleri = () => {
     const fetchSevkiyatlar = async (siparisID: number) => {
         setLoadingSevkiyat(true);
         try {
-            const res = await fetch(API.detailShipments, {
+            const res = await fetch(API.shipments, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ siparisID }),
+                body: JSON.stringify({ siparisID, tedarikciID }),
             });
             const data = await res.json();
             setSevkiyatlar(Array.isArray(data) ? data : []);
@@ -195,12 +186,11 @@ const TedarikciSiparisleri = () => {
         const total = filtered.length;
         const bekleyen = filtered.filter((x) => x.durum === 'b').length;
         const onayli = filtered.filter((x) => x.durum === 'o').length;
-        const islemde = filtered.filter((x) => x.durum === 'islemde').length;
         const tamam = filtered.filter((x) => x.durum === 't').length;
         const iptal = filtered.filter((x) => x.durum === 'i').length;
         const red = filtered.filter((x) => x.durum === 'r').length;
         const toplamCiro = filtered.reduce((p, c) => p + Number(c.toplamTutar || 0), 0);
-        return { total, bekleyen, onayli, islemde, tamam, iptal, red, toplamCiro };
+        return { total, bekleyen, onayli, tamam, iptal, red, toplamCiro };
     }, [filtered]);
 
     const openDetay = async (row: SiparisRow) => {
@@ -255,36 +245,154 @@ const TedarikciSiparisleri = () => {
         });
     };
 
-    const updateSiparisDurum = async (row: SiparisRow) => {
-        if (!UPDATE_PAYLOAD_MODE.enabled) return;
+    const approveSiparis = async (row: SiparisRow) => {
+        const ok = await Swal.fire({
+            title: 'Siparişi Onayla',
+            text: `Sipariş #${row.siparisID} onaylanacak. Devam?`,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Onayla',
+            cancelButtonText: 'Vazgeç',
+        });
+        if (!ok.isConfirmed) return;
+
+        try {
+            const res = await fetch(API.approve, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ siparisID: row.siparisID, yapanKullaniciID: userInfo?.kullaniciID }),
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data?.error || 'Sipariş onaylanamadı.');
+            await Swal.fire({ icon: 'success', title: 'Onaylandı', timer: 900, showConfirmButton: false });
+            fetchSiparisler();
+        } catch (e: any) {
+            console.error(e);
+            Swal.fire({ icon: 'error', title: 'Hata', text: e?.message ?? 'Sipariş onaylanamadı.' });
+        }
+    };
+
+    const rejectSiparis = async (row: SiparisRow) => {
+        const ok = await Swal.fire({
+            title: 'Siparişi Reddet',
+            text: `Sipariş #${row.siparisID} reddedilecek. Emin misiniz?`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Reddet',
+            cancelButtonText: 'Vazgeç',
+            confirmButtonColor: '#dc2626',
+        });
+        if (!ok.isConfirmed) return;
+
+        try {
+            const res = await fetch(API.reject, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ siparisID: row.siparisID, yapanKullaniciID: userInfo?.kullaniciID }),
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data?.error || 'Sipariş reddedilemedi.');
+            await Swal.fire({ icon: 'success', title: 'Reddedildi', timer: 900, showConfirmButton: false });
+            fetchSiparisler();
+        } catch (e: any) {
+            console.error(e);
+            Swal.fire({ icon: 'error', title: 'Hata', text: e?.message ?? 'Sipariş reddedilemedi.' });
+        }
+    };
+
+    const createSevkiyat = async (row: SiparisRow) => {
+        if (row.durum !== 'o') {
+            Swal.fire({ icon: 'info', title: 'Bilgi', text: 'Sevk oluşturmak için sipariş onaylı olmalı.' });
+            return;
+        }
 
         const result = await Swal.fire({
-            title: 'Durum Güncelle',
+            title: 'Sevkiyat Oluştur',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Oluştur',
+            cancelButtonText: 'Vazgeç',
+            html: `
+              <div style="text-align:left">
+                <div style="margin-bottom:10px;color:#6b7280;font-size:12px">Sipariş #${row.siparisID} • ${row.yemAdi}</div>
+                <label style="font-size:12px;font-weight:900;color:#374151">Sevk Tarihi</label>
+                <input id="sw-sevk" type="datetime-local" style="margin-top:6px;width:100%;padding:10px 12px;border-radius:12px;border:1px solid rgba(0,0,0,.15)" />
+                <label style="font-size:12px;font-weight:900;color:#374151;margin-top:10px;display:block">Beklenen Teslim</label>
+                <input id="sw-teslim" type="datetime-local" style="margin-top:6px;width:100%;padding:10px 12px;border-radius:12px;border:1px solid rgba(0,0,0,.15)" />
+                <label style="font-size:12px;font-weight:900;color:#374151;margin-top:10px;display:block">Sevk Miktarı (kg)</label>
+                <input id="sw-miktar" type="number" min="1" step="0.01" value="${row.miktarKg}" style="margin-top:6px;width:100%;padding:10px 12px;border-radius:12px;border:1px solid rgba(0,0,0,.15)" />
+                <label style="font-size:12px;font-weight:900;color:#374151;margin-top:10px;display:block">İşlem Nedeni ID (opsiyonel)</label>
+                <input id="sw-neden" type="number" min="1" step="1" style="margin-top:6px;width:100%;padding:10px 12px;border-radius:12px;border:1px solid rgba(0,0,0,.15)" />
+              </div>
+            `,
+            didOpen: () => {
+                const now = new Date();
+                const addHours = (h: number) => new Date(now.getTime() + h * 60 * 60 * 1000).toISOString().slice(0, 16);
+                (document.getElementById('sw-sevk') as HTMLInputElement).value = addHours(2);
+                (document.getElementById('sw-teslim') as HTMLInputElement).value = addHours(26);
+            },
+            preConfirm: () => {
+                const sevk = (document.getElementById('sw-sevk') as HTMLInputElement)?.value;
+                const teslim = (document.getElementById('sw-teslim') as HTMLInputElement)?.value;
+                const miktar = Number((document.getElementById('sw-miktar') as HTMLInputElement)?.value);
+                const neden = (document.getElementById('sw-neden') as HTMLInputElement)?.value;
+                if (!sevk || !teslim) {
+                    Swal.showValidationMessage('Sevk ve beklenen teslim tarihleri zorunlu.');
+                    return;
+                }
+                if (!Number.isFinite(miktar) || miktar <= 0) {
+                    Swal.showValidationMessage('Geçerli bir miktar girin.');
+                    return;
+                }
+                return { sevk, teslim, miktar, neden: neden ? Number(neden) : undefined };
+            },
+        });
+
+        if (!result.isConfirmed || !result.value) return;
+
+        try {
+            const res = await fetch(API.createShipment, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    siparisID: row.siparisID,
+                    sevkTarihi: result.value.sevk,
+                    beklenenTeslim: result.value.teslim,
+                    miktarKg: result.value.miktar,
+                    kullaniciID: userInfo?.kullaniciID,
+                    islemNedeniIDSevk: result.value.neden,
+                }),
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data?.error || 'Sevkiyat oluşturulamadı.');
+            await Swal.fire({ icon: 'success', title: 'Sevkiyat oluşturuldu', timer: 1200, showConfirmButton: false });
+            fetchSevkiyatlar(row.siparisID);
+        } catch (e: any) {
+            console.error(e);
+            Swal.fire({ icon: 'error', title: 'Hata', text: e?.message ?? 'Sevkiyat oluşturulamadı.' });
+        }
+    };
+
+    const updateSevkiyatDurum = async (sevkiyat: SevkiyatRow) => {
+        const result = await Swal.fire({
+            title: `Sevkiyat #${sevkiyat.SevkiyatID}`,
             icon: 'question',
             showCancelButton: true,
             confirmButtonText: 'Kaydet',
             cancelButtonText: 'Vazgeç',
             html: `
               <div style="text-align:left">
-                <div style="margin-bottom:10px;color:#6b7280;font-size:12px">Sipariş #${row.siparisID} • ${row.yemAdi}</div>
                 <label style="font-size:12px;font-weight:900;color:#374151">Yeni Durum</label>
-                <select id="sw-durum" style="margin-top:6px;width:100%;padding:10px 12px;border-radius:12px;border:1px solid rgba(0,0,0,.15)">
-                  <option value="b" ${row.durum === 'b' ? 'selected' : ''}>Beklemede</option>
-                  <option value="o" ${row.durum === 'o' ? 'selected' : ''}>Onaylandı</option>
-                  <option value="islemde" ${row.durum === 'islemde' ? 'selected' : ''}>İşlemde</option>
-                  <option value="t" ${row.durum === 't' ? 'selected' : ''}>Tamamlandı</option>
-                  <option value="r" ${row.durum === 'r' ? 'selected' : ''}>Reddedildi</option>
-                  <option value="i" ${row.durum === 'i' ? 'selected' : ''}>İptal</option>
+                <select id="sw-sevkiyat-durum" style="margin-top:6px;width:100%;padding:10px 12px;border-radius:12px;border:1px solid rgba(0,0,0,.15)">
+                  <option value="h" ${sevkiyat.Durum === 'h' ? 'selected' : ''}>Hazırlıkta</option>
+                  <option value="y" ${sevkiyat.Durum === 'y' ? 'selected' : ''}>Yolda</option>
+                  <option value="t" ${sevkiyat.Durum === 't' ? 'selected' : ''}>Teslim Edildi</option>
+                  <option value="i" ${sevkiyat.Durum === 'i' ? 'selected' : ''}>İptal</option>
                 </select>
-
-                <div style="margin-top:10px;color:#6b7280;font-size:11px">
-                  Not: Bu işlem aynı <b>postSiparisList</b> endpointi üzerinden yapılacak şekilde kurgulandı.
-                  Backend'in parametre isimleri farklıysa aşağıdaki payload anahtarlarını değiştirmen gerekir.
-                </div>
               </div>
             `,
             preConfirm: () => {
-                const yeniDurum = (document.getElementById('sw-durum') as HTMLSelectElement)?.value;
+                const yeniDurum = (document.getElementById('sw-sevkiyat-durum') as HTMLSelectElement)?.value;
                 if (!yeniDurum) {
                     Swal.showValidationMessage('Durum seçiniz.');
                     return;
@@ -296,38 +404,22 @@ const TedarikciSiparisleri = () => {
         if (!result.isConfirmed || !result.value) return;
 
         try {
-            const payload: any = {
-                [UPDATE_PAYLOAD_MODE.modeKey]: UPDATE_PAYLOAD_MODE.modeValue,
-                [UPDATE_PAYLOAD_MODE.siparisIDKey]: row.siparisID,
-                [UPDATE_PAYLOAD_MODE.durumKey]: result.value.yeniDurum,
-                [UPDATE_PAYLOAD_MODE.yapanKey]: userInfo?.kullaniciID,
-                [UPDATE_PAYLOAD_MODE.tedarikciIDKey]: tedarikciID,
-            };
-
-            const res = await fetch(API.list, {
+            const res = await fetch(API.shipmentStatus, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload),
+                body: JSON.stringify({
+                    sevkiyatID: sevkiyat.SevkiyatID,
+                    yeniDurum: result.value.yeniDurum,
+                    yapanKullaniciID: userInfo?.kullaniciID,
+                }),
             });
-
-            const txt = await res.text();
-            let data: any = null;
-            try {
-                data = txt ? JSON.parse(txt) : null;
-            } catch {
-                data = txt;
-            }
-
-            if (!res.ok) {
-                const msg = typeof data === 'string' ? data : data?.message || data?.error || 'Durum güncellenemedi.';
-                throw new Error(msg);
-            }
-
-            await Swal.fire({ icon: 'success', title: 'Güncellendi', timer: 1000, showConfirmButton: false });
-            fetchSiparisler();
+            const data = await res.json();
+            if (!res.ok) throw new Error(data?.error || 'Sevkiyat durumu güncellenemedi.');
+            await Swal.fire({ icon: 'success', title: 'Güncellendi', timer: 900, showConfirmButton: false });
+            if (selectedSiparisID) fetchSevkiyatlar(selectedSiparisID);
         } catch (e: any) {
             console.error(e);
-            Swal.fire({ icon: 'error', title: 'Hata', text: e?.message ?? 'Durum güncellenemedi.' });
+            Swal.fire({ icon: 'error', title: 'Hata', text: e?.message ?? 'Sevkiyat durumu güncellenemedi.' });
         }
     };
 
@@ -384,16 +476,24 @@ const TedarikciSiparisleri = () => {
                         >
                             Seç
                         </button>
+                        {row.durum === 'b' && (
+                            <>
+                                <button type="button" className="btn btn-success" onClick={() => approveSiparis(row)}>
+                                    Onayla
+                                </button>
+                                <button type="button" className="btn btn-danger" onClick={() => rejectSiparis(row)}>
+                                    Reddet
+                                </button>
+                            </>
+                        )}
+                        {row.durum === 'o' && (
+                            <button type="button" className="btn btn-info" onClick={() => createSevkiyat(row)}>
+                                Sevk Oluştur
+                            </button>
+                        )}
                     </div>
                 </div>
 
-                {UPDATE_PAYLOAD_MODE.enabled && (
-                    <div className="mt-3 flex justify-end">
-                        <button type="button" className="btn btn-primary" onClick={() => updateSiparisDurum(row)}>
-                            Durum Güncelle
-                        </button>
-                    </div>
-                )}
             </div>
         );
     };
@@ -432,7 +532,7 @@ const TedarikciSiparisleri = () => {
                 <div className="flex items-center justify-between mb-4">
                     <h6 className="font-semibold">Filtreler</h6>
                     <div className="text-xs text-white-dark">
-                        Toplam: <b>{kpi.total}</b> • Bekleyen: <b>{kpi.bekleyen}</b> • Onaylı: <b>{kpi.onayli}</b> • İşlemde: <b>{kpi.islemde}</b> • Tamam: <b>{kpi.tamam}</b> • İptal: <b>{kpi.iptal}</b> • Red: <b>{kpi.red}</b> • Ciro: <b>{money(kpi.toplamCiro)}</b>
+                        Toplam: <b>{kpi.total}</b> • Bekleyen: <b>{kpi.bekleyen}</b> • Onaylı: <b>{kpi.onayli}</b> • Tamam: <b>{kpi.tamam}</b> • İptal: <b>{kpi.iptal}</b> • Red: <b>{kpi.red}</b> • Ciro: <b>{money(kpi.toplamCiro)}</b>
                     </div>
                 </div>
 
@@ -448,7 +548,6 @@ const TedarikciSiparisleri = () => {
                             <option value="">{t('Hepsi')}</option>
                             <option value="b">{t('Beklemede')}</option>
                             <option value="o">{t('Onaylandı')}</option>
-                            <option value="islemde">{t('İşlemde')}</option>
                             <option value="t">{t('Tamamlandı')}</option>
                             <option value="r">{t('Reddedildi')}</option>
                             <option value="i">{t('İptal')}</option>
@@ -567,9 +666,19 @@ const TedarikciSiparisleri = () => {
                                                         >
                                                             {t('Seç')}
                                                         </button>
-                                                        {UPDATE_PAYLOAD_MODE.enabled && (
-                                                            <button className="btn btn-sm btn-primary" type="button" onClick={() => updateSiparisDurum(row)}>
-                                                                {t('Durum')}
+                                                        {row.durum === 'b' && (
+                                                            <>
+                                                                <button className="btn btn-sm btn-success" type="button" onClick={() => approveSiparis(row)}>
+                                                                    {t('Onayla')}
+                                                                </button>
+                                                                <button className="btn btn-sm btn-danger" type="button" onClick={() => rejectSiparis(row)}>
+                                                                    {t('Reddet')}
+                                                                </button>
+                                                            </>
+                                                        )}
+                                                        {row.durum === 'o' && (
+                                                            <button className="btn btn-sm btn-info" type="button" onClick={() => createSevkiyat(row)}>
+                                                                {t('Sevk Oluştur')}
                                                             </button>
                                                         )}
                                                     </div>
@@ -624,6 +733,7 @@ const TedarikciSiparisleri = () => {
                                         <th>{t('Yem')}</th>
                                         <th>{t('Miktar')}</th>
                                         <th>{t('Durum')}</th>
+                                        <th>{t('İşlem')}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -638,6 +748,11 @@ const TedarikciSiparisleri = () => {
                                             </td>
                                             <td className="whitespace-nowrap">{Number(s.MiktarKg || 0).toLocaleString('tr-TR')} kg</td>
                                             <td className="whitespace-nowrap">{s.Durum}</td>
+                                            <td className="whitespace-nowrap">
+                                                <button className="btn btn-sm btn-outline-primary" type="button" onClick={() => updateSevkiyatDurum(s)}>
+                                                    {t('Durum')}
+                                                </button>
+                                            </td>
                                         </tr>
                                     ))}
                                 </tbody>
