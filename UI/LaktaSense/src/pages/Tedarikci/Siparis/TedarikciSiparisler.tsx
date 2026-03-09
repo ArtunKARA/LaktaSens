@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { setPageTitle } from '../../../store/themeConfigSlice';
@@ -41,7 +41,24 @@ interface SevkiyatRow {
     yemAdi: string;
     MiktarKg: number;
 }
+const lastScrollYRef = useRef(0);
+const restoringScrollRef = useRef(false); const restoreScrollPosition = () => {
+    const y = lastScrollYRef.current;
 
+    // tek sefer yetmeyebiliyor, birkaç frame boyunca geri basıyoruz
+    requestAnimationFrame(() => {
+        window.scrollTo(0, y);
+
+        requestAnimationFrame(() => {
+            window.scrollTo(0, y);
+
+            setTimeout(() => {
+                window.scrollTo(0, y);
+                restoringScrollRef.current = false;
+            }, 60);
+        });
+    });
+};
 const API = {
     list: 'http://localhost:3030/api/tedarikci/siparis/postSiparisList',
     approve: 'http://localhost:3030/api/tedarikci/siparis/postSiparisOnay',
@@ -78,6 +95,14 @@ const badgeSiparis = (d: SiparisDurum) => {
     return { className: 'badge bg-secondary', label: String(d ?? '-') };
 };
 
+const badgeSevkiyat = (d?: string | null) => {
+    if (d === 'h') return { className: 'badge bg-info', label: 'Hazırlıkta' };
+    if (d === 'y') return { className: 'badge bg-primary', label: 'Yolda' };
+    if (d === 't') return { className: 'badge bg-success', label: 'Teslim Edildi' };
+    if (d === 'i') return { className: 'badge bg-danger', label: 'İptal' };
+    return { className: 'badge bg-secondary', label: d || '-' };
+};
+
 const TedarikciSiparisleri = () => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
@@ -100,6 +125,15 @@ const TedarikciSiparisleri = () => {
     const [selectedSiparisID, setSelectedSiparisID] = useState<number | null>(null);
     const [sevkiyatlar, setSevkiyatlar] = useState<SevkiyatRow[]>([]);
     const [loadingSevkiyat, setLoadingSevkiyat] = useState(false);
+
+    const btnBase = 'btn min-h-[38px] px-3 whitespace-nowrap';
+    const btnSm = 'btn btn-sm min-h-[34px] px-3 whitespace-nowrap';
+    const statCard =
+        'rounded-2xl border border-white-light dark:border-[#1b2e4b] bg-gradient-to-br from-white/70 to-white/40 dark:from-[#0e1726]/70 dark:to-[#0e1726]/40 p-4 shadow-sm';
+    const softCard =
+        'rounded-2xl border border-white-light dark:border-[#1b2e4b] bg-white/50 dark:bg-[#0e1726]/50 shadow-sm';
+    const innerCard =
+        'rounded-xl border border-white-light dark:border-[#1b2e4b] bg-white/40 dark:bg-[#0b1220]/40 p-3';
 
     useEffect(() => {
         dispatch(setPageTitle('Siparişler (Tedarikçi)'));
@@ -127,7 +161,6 @@ const TedarikciSiparisleri = () => {
             const data = await res.json();
             const arr = Array.isArray(data) ? data : [];
 
-            // backend filtrelemiyorsa garanti altına al:
             const onlyMine = arr.filter((x: SiparisRow) => Number(x.tedarikciID) === Number(tedarikciID));
             setRows(onlyMine);
         } catch (e) {
@@ -160,6 +193,23 @@ const TedarikciSiparisleri = () => {
         fetchSiparisler();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    const handleSelectSiparis = async (e: React.MouseEvent<HTMLButtonElement>, siparisID: number) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        // focus kaynaklı scroll'u engelle
+        e.currentTarget.blur();
+
+        // anlık scroll'u sakla
+        lastScrollYRef.current = window.scrollY;
+        restoringScrollRef.current = true;
+
+        setSelectedSiparisID(siparisID);
+        await fetchSevkiyatlar(siparisID);
+
+        restoreScrollPosition();
+    };
 
     const filtered = useMemo(() => {
         const a = arama.trim().toLowerCase();
@@ -315,13 +365,25 @@ const TedarikciSiparisleri = () => {
             html: `
               <div style="text-align:left">
                 <div style="margin-bottom:10px;color:#6b7280;font-size:12px">Sipariş #${row.siparisID} • ${row.yemAdi}</div>
+
                 <label style="font-size:12px;font-weight:900;color:#374151">Sevk Tarihi</label>
                 <input id="sw-sevk" type="datetime-local" style="margin-top:6px;width:100%;padding:10px 12px;border-radius:12px;border:1px solid rgba(0,0,0,.15)" />
+
                 <label style="font-size:12px;font-weight:900;color:#374151;margin-top:10px;display:block">Beklenen Teslim</label>
                 <input id="sw-teslim" type="datetime-local" style="margin-top:6px;width:100%;padding:10px 12px;border-radius:12px;border:1px solid rgba(0,0,0,.15)" />
+
                 <label style="font-size:12px;font-weight:900;color:#374151;margin-top:10px;display:block">Sevk Miktarı (kg)</label>
                 <input id="sw-miktar" type="number" min="1" step="0.01" value="${row.miktarKg}" style="margin-top:6px;width:100%;padding:10px 12px;border-radius:12px;border:1px solid rgba(0,0,0,.15)" />
-                <label style="font-size:12px;font-weight:900;color:#374151;margin-top:10px;display:block">İşlem Nedeni ID (opsiyonel)</label>
+
+                <label style="font-size:12px;font-weight:900;color:#374151;margin-top:10px;display:block">Yeni Durum *</label>
+                <select id="sw-durum" style="margin-top:6px;width:100%;padding:10px 12px;border-radius:12px;border:1px solid rgba(0,0,0,.15)">
+                  <option value="h">Hazırlıkta</option>
+                  <option value="y" selected>Yolda</option>
+                  <option value="t">Teslim Edildi</option>
+                  <option value="i">İptal</option>
+                </select>
+
+                <label style="font-size:12px;font-weight:900;color:#374151;margin-top:10px;display:block">İşlem Nedeni ID</label>
                 <input id="sw-neden" type="number" min="1" step="1" style="margin-top:6px;width:100%;padding:10px 12px;border-radius:12px;border:1px solid rgba(0,0,0,.15)" />
               </div>
             `,
@@ -335,7 +397,9 @@ const TedarikciSiparisleri = () => {
                 const sevk = (document.getElementById('sw-sevk') as HTMLInputElement)?.value;
                 const teslim = (document.getElementById('sw-teslim') as HTMLInputElement)?.value;
                 const miktar = Number((document.getElementById('sw-miktar') as HTMLInputElement)?.value);
+                const durum = (document.getElementById('sw-durum') as HTMLSelectElement)?.value;
                 const neden = (document.getElementById('sw-neden') as HTMLInputElement)?.value;
+
                 if (!sevk || !teslim) {
                     Swal.showValidationMessage('Sevk ve beklenen teslim tarihleri zorunlu.');
                     return;
@@ -344,7 +408,18 @@ const TedarikciSiparisleri = () => {
                     Swal.showValidationMessage('Geçerli bir miktar girin.');
                     return;
                 }
-                return { sevk, teslim, miktar, neden: neden ? Number(neden) : undefined };
+                if (!durum) {
+                    Swal.showValidationMessage('Durum seçimi zorunlu.');
+                    return;
+                }
+
+                return {
+                    sevk,
+                    teslim,
+                    miktar,
+                    durum,
+                    neden: neden ? Number(neden) : undefined,
+                };
             },
         });
 
@@ -359,6 +434,7 @@ const TedarikciSiparisleri = () => {
                     sevkTarihi: result.value.sevk,
                     beklenenTeslim: result.value.teslim,
                     miktarKg: result.value.miktar,
+                    durum: result.value.durum,
                     kullaniciID: userInfo?.kullaniciID,
                     islemNedeniIDSevk: result.value.neden,
                 }),
@@ -428,72 +504,81 @@ const TedarikciSiparisleri = () => {
         const selected = selectedSiparisID === row.siparisID;
 
         return (
-            <div className={`rounded-2xl border border-white-light dark:border-[#1b2e4b] bg-white/40 dark:bg-[#0e1726]/40 shadow-sm hover:shadow-md transition p-4 ${selected ? 'ring-2 ring-primary/40' : ''}`}>
-                <div className="flex items-start justify-between gap-3">
-                    <div className="min-w-0">
-                        <div className="flex items-center gap-2">
-                            <div className="font-semibold truncate">{row.yemAdi}</div>
+            <div
+                className={`rounded-2xl border transition-all duration-200 p-5 shadow-sm hover:shadow-md ${selected
+                    ? 'border-primary/40 bg-primary/5 dark:bg-primary/10 ring-1 ring-primary/30'
+                    : 'border-white-light dark:border-[#1b2e4b] bg-white/50 dark:bg-[#0e1726]/50'
+                    }`}
+            >
+                <div className="flex items-start justify-between gap-4">
+                    <div className="min-w-0 flex-1">
+                        <div className="flex flex-wrap items-center gap-2">
+                            <div className="text-base font-semibold truncate">{row.yemAdi}</div>
                             <span className={b.className}>{b.label}</span>
+                            <span className="badge bg-info">{kaynakText(row.kaynakTipi)}</span>
                         </div>
-                        <div className="text-xs text-white-dark mt-1 truncate">
-                            Çiftçi: {row.ciftciFirmaAdi ?? row.olusturanFirmaID} • Kaynak: {kaynakText(row.kaynakTipi)}
+                        <div className="mt-2 text-xs text-white-dark">
+                            Çiftçi: <span className="font-semibold text-dark dark:text-white-light">{row.ciftciFirmaAdi ?? row.olusturanFirmaID}</span>
                         </div>
                     </div>
-                    <div className="text-right">
-                        <div className="text-xs text-white-dark">Sipariş</div>
-                        <div className="text-sm font-semibold">#{row.siparisID}</div>
+
+                    <div className="shrink-0 text-right">
+                        <div className="text-[11px] uppercase tracking-wide text-white-dark">Sipariş</div>
+                        <div className="text-sm font-bold">#{row.siparisID}</div>
                     </div>
                 </div>
 
-                <div className="mt-4 grid grid-cols-3 gap-3">
-                    <div className="rounded-xl border border-white-light dark:border-[#1b2e4b] bg-white/30 dark:bg-[#0b1220]/30 p-3">
+                <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div className={innerCard}>
                         <div className="text-xs text-white-dark">Miktar</div>
-                        <div className="text-lg font-semibold">{Number(row.miktarKg || 0).toLocaleString('tr-TR')} kg</div>
+                        <div className="mt-1 text-lg font-semibold">{Number(row.miktarKg || 0).toLocaleString('tr-TR')} kg</div>
                     </div>
-                    <div className="rounded-xl border border-white-light dark:border-[#1b2e4b] bg-white/30 dark:bg-[#0b1220]/30 p-3">
-                        <div className="text-xs text-white-dark">Birim</div>
-                        <div className="text-lg font-semibold">{money(row.birimFiyat)}</div>
+                    <div className={innerCard}>
+                        <div className="text-xs text-white-dark">Birim Fiyat</div>
+                        <div className="mt-1 text-lg font-semibold">{money(row.birimFiyat)}</div>
                     </div>
-                    <div className="rounded-xl border border-white-light dark:border-[#1b2e4b] bg-white/30 dark:bg-[#0b1220]/30 p-3">
-                        <div className="text-xs text-white-dark">Toplam</div>
-                        <div className="text-lg font-semibold">{money(row.toplamTutar)}</div>
+                    <div className={innerCard}>
+                        <div className="text-xs text-white-dark">Toplam Tutar</div>
+                        <div className="mt-1 text-lg font-semibold">{money(row.toplamTutar)}</div>
                     </div>
                 </div>
 
-                <div className="mt-3 flex items-center justify-between">
-                    <div className="text-xs text-white-dark">Tarih: <b>{formatDT(row.siparisTarihi)}</b></div>
-                    <div className="flex items-center gap-2">
-                        <button type="button" className="btn btn-outline-secondary" onClick={() => openDetay(row)}>
+                <div className="mt-4 flex flex-col gap-3">
+                    <div className="text-xs text-white-dark">
+                        Sipariş Tarihi: <span className="font-semibold text-dark dark:text-white-light">{formatDT(row.siparisTarihi)}</span>
+                    </div>
+
+                    <div className="flex flex-wrap gap-2">
+                        <button type="button" className={`${btnBase} btn-outline-secondary`} onClick={() => openDetay(row)}>
                             Detay
                         </button>
                         <button
                             type="button"
-                            className="btn btn-outline-primary"
-                            onClick={() => {
-                                setSelectedSiparisID(row.siparisID);
-                                fetchSevkiyatlar(row.siparisID);
-                            }}
+                            className={`${btnBase} btn-outline-primary`}
+                            onClick={(e) => handleSelectSiparis(e, row.siparisID)}
+                            onMouseDown={(e) => e.preventDefault()}
                         >
                             Seç
                         </button>
+
                         {row.durum === 'b' && (
                             <>
-                                <button type="button" className="btn btn-success" onClick={() => approveSiparis(row)}>
+                                <button type="button" className={`${btnBase} btn-success`} onClick={() => approveSiparis(row)}>
                                     Onayla
                                 </button>
-                                <button type="button" className="btn btn-danger" onClick={() => rejectSiparis(row)}>
+                                <button type="button" className={`${btnBase} btn-danger`} onClick={() => rejectSiparis(row)}>
                                     Reddet
                                 </button>
                             </>
                         )}
+
                         {row.durum === 'o' && (
-                            <button type="button" className="btn btn-info" onClick={() => createSevkiyat(row)}>
+                            <button type="button" className={`${btnBase} btn-info`} onClick={() => createSevkiyat(row)}>
                                 Sevk Oluştur
                             </button>
                         )}
                     </div>
                 </div>
-
             </div>
         );
     };
@@ -502,24 +587,32 @@ const TedarikciSiparisleri = () => {
         <div className="space-y-6">
             {/* Header */}
             <div className="panel p-5">
-                <div className="flex items-start justify-between gap-3">
-                    <div>
-                        <h5 className="text-lg font-semibold">Siparişler (Tedarikçi)</h5>
-                        <p className="text-sm text-white-dark mt-1">
+                <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+                    <div className="min-w-0">
+                        <h5 className="text-xl font-semibold">Siparişler (Tedarikçi)</h5>
+                        <p className="mt-1 text-sm text-white-dark">
                             Çiftçilerden gelen siparişleri görüntüle, filtrele ve siparişe bağlı sevkiyatları takip et.
                         </p>
                     </div>
 
-                    <div className="flex items-center gap-2">
-                        <button className="btn btn-outline-primary" onClick={fetchSiparisler} disabled={loading}>
+                    <div className="flex flex-wrap items-center gap-2">
+                        <button className={`${btnBase} btn-outline-primary`} onClick={fetchSiparisler} disabled={loading}>
                             {loading ? 'Yükleniyor...' : 'Yenile'}
                         </button>
 
-                        <div className="flex items-center rounded-xl border border-white-light dark:border-[#1b2e4b] overflow-hidden">
-                            <button className={`px-3 py-2 text-sm ${view === 'grid' ? 'bg-primary text-white' : 'bg-transparent'}`} onClick={() => setView('grid')} type="button">
+                        <div className="flex items-center overflow-hidden rounded-xl border border-white-light dark:border-[#1b2e4b] bg-white/40 dark:bg-[#0e1726]/40">
+                            <button
+                                className={`min-w-[88px] px-4 py-2.5 text-sm font-medium transition ${view === 'grid' ? 'bg-primary text-white' : 'text-dark dark:text-white-light'}`}
+                                onClick={() => setView('grid')}
+                                type="button"
+                            >
                                 Grid
                             </button>
-                            <button className={`px-3 py-2 text-sm ${view === 'list' ? 'bg-primary text-white' : 'bg-transparent'}`} onClick={() => setView('list')} type="button">
+                            <button
+                                className={`min-w-[88px] px-4 py-2.5 text-sm font-medium transition ${view === 'list' ? 'bg-primary text-white' : 'text-dark dark:text-white-light'}`}
+                                onClick={() => setView('list')}
+                                type="button"
+                            >
                                 Liste
                             </button>
                         </div>
@@ -527,23 +620,51 @@ const TedarikciSiparisleri = () => {
                 </div>
             </div>
 
-            {/* Filters + KPI */}
+            {/* KPI */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-6 gap-4">
+                <div className={statCard}>
+                    <div className="text-xs text-white-dark">Toplam</div>
+                    <div className="mt-1 text-2xl font-bold">{kpi.total}</div>
+                </div>
+                <div className={statCard}>
+                    <div className="text-xs text-white-dark">Bekleyen</div>
+                    <div className="mt-1 text-2xl font-bold">{kpi.bekleyen}</div>
+                </div>
+                <div className={statCard}>
+                    <div className="text-xs text-white-dark">Onaylı</div>
+                    <div className="mt-1 text-2xl font-bold">{kpi.onayli}</div>
+                </div>
+                <div className={statCard}>
+                    <div className="text-xs text-white-dark">Tamam</div>
+                    <div className="mt-1 text-2xl font-bold">{kpi.tamam}</div>
+                </div>
+                <div className={statCard}>
+                    <div className="text-xs text-white-dark">İptal</div>
+                    <div className="mt-1 text-2xl font-bold">{kpi.iptal}</div>
+                </div>
+                <div className={statCard}>
+                    <div className="text-xs text-white-dark">Ciro</div>
+                    <div className="mt-1 text-2xl font-bold">{money(kpi.toplamCiro)}</div>
+                </div>
+            </div>
+
+            {/* Filters */}
             <div className="panel p-5">
-                <div className="flex items-center justify-between mb-4">
+                <div className="mb-4 flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
                     <h6 className="font-semibold">Filtreler</h6>
                     <div className="text-xs text-white-dark">
-                        Toplam: <b>{kpi.total}</b> • Bekleyen: <b>{kpi.bekleyen}</b> • Onaylı: <b>{kpi.onayli}</b> • Tamam: <b>{kpi.tamam}</b> • İptal: <b>{kpi.iptal}</b> • Red: <b>{kpi.red}</b> • Ciro: <b>{money(kpi.toplamCiro)}</b>
+                        Gösterilen: <b>{filtered.length}</b> • Seçili Sipariş: <b>{selectedSiparisID ?? '-'}</b>
                     </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                    <div className="rounded-xl border border-white-light dark:border-[#1b2e4b] bg-white/40 dark:bg-[#0e1726]/40 p-3 shadow-sm">
-                        <label className="block mb-1 text-xs font-semibold text-gray-600 dark:text-white-dark">{t('Arama')}</label>
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+                    <div className={innerCard}>
+                        <label className="mb-1 block text-xs font-semibold text-gray-600 dark:text-white-dark">{t('Arama')}</label>
                         <input className="form-input w-full" value={arama} onChange={(e) => setArama(e.target.value)} placeholder="Sipariş / çiftçi / yem" />
                     </div>
 
-                    <div className="rounded-xl border border-white-light dark:border-[#1b2e4b] bg-white/40 dark:bg-[#0e1726]/40 p-3 shadow-sm">
-                        <label className="block mb-1 text-xs font-semibold text-gray-600 dark:text-white-dark">{t('Durum')}</label>
+                    <div className={innerCard}>
+                        <label className="mb-1 block text-xs font-semibold text-gray-600 dark:text-white-dark">{t('Durum')}</label>
                         <select className="form-select w-full" value={durum} onChange={(e) => setDurum(e.target.value)}>
                             <option value="">{t('Hepsi')}</option>
                             <option value="b">{t('Beklemede')}</option>
@@ -554,8 +675,8 @@ const TedarikciSiparisleri = () => {
                         </select>
                     </div>
 
-                    <div className="rounded-xl border border-white-light dark:border-[#1b2e4b] bg-white/40 dark:bg-[#0e1726]/40 p-3 shadow-sm">
-                        <label className="block mb-1 text-xs font-semibold text-gray-600 dark:text-white-dark">{t('Kaynak')}</label>
+                    <div className={innerCard}>
+                        <label className="mb-1 block text-xs font-semibold text-gray-600 dark:text-white-dark">{t('Kaynak')}</label>
                         <select className="form-select w-full" value={kaynak} onChange={(e) => setKaynak(e.target.value)}>
                             <option value="">{t('Hepsi')}</option>
                             <option value="market">{t('Market')}</option>
@@ -563,8 +684,8 @@ const TedarikciSiparisleri = () => {
                         </select>
                     </div>
 
-                    <div className="rounded-xl border border-white-light dark:border-[#1b2e4b] bg-white/40 dark:bg-[#0e1726]/40 p-3 shadow-sm">
-                        <label className="block mb-1 text-xs font-semibold text-gray-600 dark:text-white-dark">{t('Sıralama')}</label>
+                    <div className={innerCard}>
+                        <label className="mb-1 block text-xs font-semibold text-gray-600 dark:text-white-dark">{t('Sıralama')}</label>
                         <select className="form-select w-full" value={siralama} onChange={(e) => setSiralama(e.target.value as any)}>
                             <option value="tarih_desc">{t('Tarih (Yeni)')}</option>
                             <option value="tarih_asc">{t('Tarih (Eski)')}</option>
@@ -572,48 +693,46 @@ const TedarikciSiparisleri = () => {
                             <option value="tutar_asc">{t('Tutar (Artan)')}</option>
                         </select>
                     </div>
+                </div>
 
-                    <div className="md:col-span-4 flex items-center justify-end gap-2">
-                        <button
-                            className="btn btn-outline-secondary"
-                            type="button"
-                            onClick={() => {
-                                setArama('');
-                                setDurum('');
-                                setKaynak('');
-                                setSiralama('tarih_desc');
-                            }}
-                        >
-                            {t('Temizle')}
-                        </button>
-                        <button className="btn btn-primary" type="button" onClick={fetchSiparisler} disabled={loading}>
-                            {loading ? t('Yükleniyor...') : t('Uygula')}
-                        </button>
-                    </div>
+                <div className="mt-4 flex flex-wrap items-center justify-end gap-2">
+                    <button
+                        className={`${btnBase} btn-outline-secondary`}
+                        type="button"
+                        onClick={() => {
+                            setArama('');
+                            setDurum('');
+                            setKaynak('');
+                            setSiralama('tarih_desc');
+                        }}
+                    >
+                        {t('Temizle')}
+                    </button>
+                    <button className={`${btnBase} btn-primary`} type="button" onClick={fetchSiparisler} disabled={loading}>
+                        {loading ? t('Yükleniyor...') : t('Uygula')}
+                    </button>
                 </div>
             </div>
 
             {/* Orders */}
             <div className="panel p-5">
-                <div className="flex items-center justify-between mb-4">
+                <div className="mb-4 flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
                     <h5 className="text-lg font-semibold">{t('Siparişler')}</h5>
                     <div className="text-xs text-white-dark">
-                        {t('Gösterilen')}: <b>{filtered.length}</b> • {t('Seçili')}: <b>{selectedSiparisID ?? '-'}</b>
+                        {t('Gösterilen')}: <b>{filtered.length}</b>
                     </div>
                 </div>
 
                 {filtered.length === 0 ? (
-                    <div className="rounded-2xl border border-white-light dark:border-[#1b2e4b] bg-white/40 dark:bg-[#0e1726]/40 p-6 shadow-sm text-center text-white-dark">
-                        {t('Kayıt bulunamadı')}
-                    </div>
+                    <div className={`${softCard} p-10 text-center text-white-dark`}>{t('Kayıt bulunamadı')}</div>
                 ) : view === 'grid' ? (
-                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-4">
                         {filtered.map((row) => (
                             <OrderCard key={row.siparisID} row={row} />
                         ))}
                     </div>
                 ) : (
-                    <div className="rounded-2xl border border-white-light dark:border-[#1b2e4b] overflow-hidden shadow-sm">
+                    <div className={`${softCard} overflow-hidden`}>
                         <div className="table-responsive">
                             <table className="table">
                                 <thead>
@@ -626,7 +745,7 @@ const TedarikciSiparisleri = () => {
                                         <th>{t('Tarih')}</th>
                                         <th>{t('Kaynak')}</th>
                                         <th>{t('Durum')}</th>
-                                        <th>{t('İşlem')}</th>
+                                        <th className="text-right">{t('İşlem')}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -637,7 +756,9 @@ const TedarikciSiparisleri = () => {
                                         return (
                                             <tr key={row.siparisID} className={`hover:bg-gray-50 dark:hover:bg-[#0b1220] ${selected ? 'bg-primary/5 dark:bg-primary/10' : ''}`}>
                                                 <td className="font-semibold">#{row.siparisID}</td>
-                                                <td>{row.ciftciFirmaAdi ?? row.olusturanFirmaID}</td>
+                                                <td>
+                                                    <div className="font-semibold">{row.ciftciFirmaAdi ?? row.olusturanFirmaID}</div>
+                                                </td>
                                                 <td className="min-w-[220px]">
                                                     <div className="font-semibold">{row.yemAdi}</div>
                                                     <div className="text-xs text-white-dark">Yem #{row.yemID}</div>
@@ -652,32 +773,30 @@ const TedarikciSiparisleri = () => {
                                                     <span className={b.className}>{b.label}</span>
                                                 </td>
                                                 <td className="whitespace-nowrap">
-                                                    <div className="flex gap-2 justify-end">
-                                                        <button className="btn btn-sm btn-outline-secondary" type="button" onClick={() => openDetay(row)}>
+                                                    <div className="flex flex-wrap justify-end gap-2 min-w-[340px]">
+                                                        <button className={`${btnSm} btn-outline-secondary`} type="button" onClick={() => openDetay(row)}>
                                                             {t('Detay')}
                                                         </button>
                                                         <button
-                                                            className="btn btn-sm btn-outline-primary"
+                                                            className={`${btnSm} btn-outline-primary`}
                                                             type="button"
-                                                            onClick={() => {
-                                                                setSelectedSiparisID(row.siparisID);
-                                                                fetchSevkiyatlar(row.siparisID);
-                                                            }}
+                                                            onClick={(e) => handleSelectSiparis(e, row.siparisID)}
+                                                            onMouseDown={(e) => e.preventDefault()}
                                                         >
                                                             {t('Seç')}
                                                         </button>
                                                         {row.durum === 'b' && (
                                                             <>
-                                                                <button className="btn btn-sm btn-success" type="button" onClick={() => approveSiparis(row)}>
+                                                                <button className={`${btnSm} btn-success`} type="button" onClick={() => approveSiparis(row)}>
                                                                     {t('Onayla')}
                                                                 </button>
-                                                                <button className="btn btn-sm btn-danger" type="button" onClick={() => rejectSiparis(row)}>
+                                                                <button className={`${btnSm} btn-danger`} type="button" onClick={() => rejectSiparis(row)}>
                                                                     {t('Reddet')}
                                                                 </button>
                                                             </>
                                                         )}
                                                         {row.durum === 'o' && (
-                                                            <button className="btn btn-sm btn-info" type="button" onClick={() => createSevkiyat(row)}>
+                                                            <button className={`${btnSm} btn-info`} type="button" onClick={() => createSevkiyat(row)}>
                                                                 {t('Sevk Oluştur')}
                                                             </button>
                                                         )}
@@ -695,7 +814,7 @@ const TedarikciSiparisleri = () => {
 
             {/* Sevkiyatlar */}
             <div className="panel p-5">
-                <div className="flex items-center justify-between mb-4">
+                <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
                     <div>
                         <h5 className="text-lg font-semibold">{t('Sevkiyatlar')}</h5>
                         <div className="text-xs text-white-dark">
@@ -704,7 +823,7 @@ const TedarikciSiparisleri = () => {
                     </div>
 
                     <button
-                        className="btn btn-outline-primary"
+                        className={`${btnBase} btn-outline-primary`}
                         type="button"
                         onClick={() => (selectedSiparisID ? fetchSevkiyatlar(selectedSiparisID) : Swal.fire({ icon: 'info', title: 'Bilgi', text: 'Önce sipariş seç.' }))}
                         disabled={loadingSevkiyat}
@@ -714,15 +833,13 @@ const TedarikciSiparisleri = () => {
                 </div>
 
                 {!selectedSiparisID ? (
-                    <div className="rounded-2xl border border-white-light dark:border-[#1b2e4b] bg-white/40 dark:bg-[#0e1726]/40 p-6 shadow-sm text-center text-white-dark">
+                    <div className={`${softCard} p-10 text-center text-white-dark`}>
                         {t('Sevkiyatları görmek için yukarıdan bir sipariş seçin.')}
                     </div>
                 ) : sevkiyatlar.length === 0 ? (
-                    <div className="rounded-2xl border border-white-light dark:border-[#1b2e4b] bg-white/40 dark:bg-[#0e1726]/40 p-6 shadow-sm text-center text-white-dark">
-                        {t('Kayıt bulunamadı')}
-                    </div>
+                    <div className={`${softCard} p-10 text-center text-white-dark`}>{t('Kayıt bulunamadı')}</div>
                 ) : (
-                    <div className="rounded-2xl border border-white-light dark:border-[#1b2e4b] overflow-hidden shadow-sm">
+                    <div className={`${softCard} overflow-hidden`}>
                         <div className="table-responsive">
                             <table className="table">
                                 <thead>
@@ -733,28 +850,36 @@ const TedarikciSiparisleri = () => {
                                         <th>{t('Yem')}</th>
                                         <th>{t('Miktar')}</th>
                                         <th>{t('Durum')}</th>
-                                        <th>{t('İşlem')}</th>
+                                        <th className="text-right">{t('İşlem')}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {sevkiyatlar.map((s) => (
-                                        <tr key={s.SevkiyatID} className="hover:bg-gray-50 dark:hover:bg-[#0b1220]">
-                                            <td className="font-semibold">#{s.SevkiyatID}</td>
-                                            <td className="whitespace-nowrap">{formatDT(s.SevkTarihi)}</td>
-                                            <td className="whitespace-nowrap">{formatDT(s.BeklenenTeslim)}</td>
-                                            <td className="min-w-[220px]">
-                                                <div className="font-semibold">{s.yemAdi}</div>
-                                                <div className="text-xs text-white-dark">Yem #{s.YemID}</div>
-                                            </td>
-                                            <td className="whitespace-nowrap">{Number(s.MiktarKg || 0).toLocaleString('tr-TR')} kg</td>
-                                            <td className="whitespace-nowrap">{s.Durum}</td>
-                                            <td className="whitespace-nowrap">
-                                                <button className="btn btn-sm btn-outline-primary" type="button" onClick={() => updateSevkiyatDurum(s)}>
-                                                    {t('Durum')}
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    ))}
+                                    {sevkiyatlar.map((s) => {
+                                        const sevkBadge = badgeSevkiyat(s.Durum);
+
+                                        return (
+                                            <tr key={s.SevkiyatID} className="hover:bg-gray-50 dark:hover:bg-[#0b1220]">
+                                                <td className="font-semibold">#{s.SevkiyatID}</td>
+                                                <td className="whitespace-nowrap">{formatDT(s.SevkTarihi)}</td>
+                                                <td className="whitespace-nowrap">{formatDT(s.BeklenenTeslim)}</td>
+                                                <td className="min-w-[220px]">
+                                                    <div className="font-semibold">{s.yemAdi}</div>
+                                                    <div className="text-xs text-white-dark">Yem #{s.YemID}</div>
+                                                </td>
+                                                <td className="whitespace-nowrap">{Number(s.MiktarKg || 0).toLocaleString('tr-TR')} kg</td>
+                                                <td className="whitespace-nowrap">
+                                                    <span className={sevkBadge.className}>{sevkBadge.label}</span>
+                                                </td>
+                                                <td className="whitespace-nowrap">
+                                                    <div className="flex justify-end">
+                                                        <button className={`${btnSm} btn-outline-primary`} type="button" onClick={() => updateSevkiyatDurum(s)}>
+                                                            {t('Durum')}
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        );
+                                    })}
                                 </tbody>
                             </table>
                         </div>
