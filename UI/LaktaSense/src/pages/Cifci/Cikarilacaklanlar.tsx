@@ -15,7 +15,6 @@ import { Dialog, Transition } from '@headlessui/react';
 import IconX from '../../components/Icon/IconX';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import Add from '../Apps/Invoice/Add';
 import { toNumber } from 'lodash';
 
 interface CowData {
@@ -32,30 +31,29 @@ const MultipleTables = () => {
     const storedUserInfo = localStorage.getItem('userInfo');
     const userInfo = storedUserInfo ? JSON.parse(storedUserInfo) : null;
     const [rowData, setRowData] = useState<CowData[]>([]);
-    const [selectedDate, setSelectedDate] = useState("");
-    const [reson, setReson] = useState("");
+    const [selectedDate, setSelectedDate] = useState('');
+    const [reson, setReson] = useState('');
     useEffect(() => {
         // API'yi çağırma
         const fetchData = async () => {
-          try {
-            const response = await fetch('http://localhost:3030/api/cikarilacaklar/postCikarilanlar', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({ firmaID:userInfo.firmaID}), // Kullanıcı ID'sini gönderiyorsunuz
-            });
-            const data = await response.json();
-            console.log('Gelen veri:', data);
-            setRowData(data); // Sadece doğrudan kullanılabilecek bir dizi olduğunda kullanı
-          } catch (error) {
-            console.error('API çağrısı sırasında bir hata oluştu:', error);
-          }
+            try {
+                const response = await fetch('http://localhost:3030/api/cikarilacaklar/postCikarilanlar', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ firmaID: userInfo.firmaID }), // Kullanıcı ID'sini gönderiyorsunuz
+                });
+                const data = await response.json();
+                console.log('Gelen veri:', data);
+                setRowData(data); // Sadece doğrudan kullanılabilecek bir dizi olduğunda kullanı
+            } catch (error) {
+                console.error('API çağrısı sırasında bir hata oluştu:', error);
+            }
         };
-    
-        fetchData();
-      }, []); // Boş bağımlılık dizisi, component mount olduğunda sadece bir kez çalıştırılır
 
+        fetchData();
+    }, []); // Boş bağımlılık dizisi, component mount olduğunda sadece bir kez çalıştırılır
 
     const { t } = useTranslation();
     const dispatch = useDispatch();
@@ -70,7 +68,7 @@ const MultipleTables = () => {
         const sortedData = sortBy(rowData, 'inekID');
         setInitialRecords(sortedData);
     }, [rowData]);
-    
+
     const [recordsData, setRecordsData] = useState(initialRecords);
     const [modal21, setModal21] = useState(false);
     const [modal22, setModal22] = useState(false);
@@ -112,77 +110,79 @@ const MultipleTables = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [sortStatus]);
 
-    const handleSave = async (ID:number) => {
+    const handleSave = async (ID: number) => {
         if (!selectedDate) {
-          alert(t("Please select a date!"));
-          return;
+            alert(t('Please select a date!'));
+            return;
         }
-    
+
         try {
-          const response = await axios.post("http://localhost:3030/api/sagim/postSagimAksiyon", {
-            ID: ID, 
-            Tarih: selectedDate,
-          });
-    
-          console.log(response.data);
-          alert(t("Saved successfully!"));
-          setModal21(false); // Modalı kapat.
-          window.location.reload();
+            const response = await axios.post('http://localhost:3030/api/sagim/postSagimAksiyon', {
+                ID: ID,
+                Tarih: selectedDate,
+            });
+
+            console.log(response.data);
+            alert(t('Saved successfully!'));
+            setModal21(false); // Modalı kapat.
+            window.location.reload();
         } catch (error) {
-          console.error(error);
-          alert(t("An error occurred while saving!")+ error);
+            console.error(error);
+            alert(t('An error occurred while saving!') + error);
         }
-      };
-    const navigate = useNavigate();
-    const handleDetailClickService = (İnekID : any, ad:string, dollenmeSayisi:number) => {
-        navigate('/cifci/ServisTakipDetay', { state: { cowID: İnekID, ad: ad,dollenmeSayisi: dollenmeSayisi } });
     };
-    const handleEditInekEkle = (id : any) => {
+    const navigate = useNavigate();
+    const handleDetailClickService = (İnekID: any, ad: string, dollenmeSayisi: number) => {
+        navigate('/cifci/ServisTakipDetay', { state: { cowID: İnekID, ad: ad, dollenmeSayisi: dollenmeSayisi } });
+    };
+    const handleEditInekEkle = (id: any) => {
         navigate('/cifci/InekEkle', { state: { cowID: id } });
     };
-    
-    const inCycle = (İnekID : string, BulunduğuDöngü : string, DöllenmeSayısı: number,Ad: string) => {
-        if(BulunduğuDöngü == "Sagim"){
-          setModal21(true);
-        }else if(BulunduğuDöngü == "Gebe"){
-          handleEditInekEkle(İnekID);
-        }else if(BulunduğuDöngü == "Servis"){
-          handleDetailClickService(İnekID,Ad,DöllenmeSayısı);
+
+    const inCycle = (İnekID: string, BulunduğuDöngü: string, DöllenmeSayısı: number, Ad: string) => {
+        if (BulunduğuDöngü == 'Sagim') {
+            setModal21(true);
+        } else if (BulunduğuDöngü == 'Gebe') {
+            handleEditInekEkle(İnekID);
+        } else if (BulunduğuDöngü == 'Servis') {
+            handleDetailClickService(İnekID, Ad, DöllenmeSayısı);
         }
     };
 
-    const handleOutCycle = async (İnekID : number) =>{
-      if (!selectedDate) {
-        alert(t("Please select a date!"));
-        return;
-      }
-  
-      try {
-        const response = await axios.post("http://localhost:3030/api/cikarilacaklar/postCikarilanInek", {
-          İnekID: İnekID, 
-          CikarilmaTarihi: selectedDate,
-          CikarilmaSebebi: reson
-        });
-  
-        console.log(response.data);
-        alert(t("Saved successfully!"));
-        setModal22(false); // Modalı kapat.
-        window.location.reload();
-      } catch (error) {
-        console.error(error);
-        alert(t("An error occurred while saving!")+ error);
-      }
-    }
+    const handleOutCycle = async (İnekID: number) => {
+        if (!selectedDate) {
+            alert(t('Please select a date!'));
+            return;
+        }
+
+        try {
+            const response = await axios.post('http://localhost:3030/api/cikarilacaklar/postCikarilanInek', {
+                İnekID: İnekID,
+                CikarilmaTarihi: selectedDate,
+                CikarilmaSebebi: reson,
+            });
+
+            console.log(response.data);
+            alert(t('Saved successfully!'));
+            setModal22(false); // Modalı kapat.
+            window.location.reload();
+        } catch (error) {
+            console.error(error);
+            alert(t('An error occurred while saving!') + error);
+        }
+    };
 
     const handleCikarilanlar = () => {
-      navigate('/cifci/CikarilacaklarTakip');
-    }; 
+        navigate('/cifci/CikarilacaklarTakip');
+    };
     return (
         <div>
             <div className="panel mt-6">
                 <div className="flex md:items-center md:flex-row flex-col mb-5 gap-5">
                     <h5 className="font-semibold text-lg dark:text-white-light">{t('Removed Cows')}</h5>
-                    <button type="button" className="btn btn-warning ltr:ml-auto rtl:mr-auto" onClick={() => handleCikarilanlar()}>{t('Will Be Removed')}</button>
+                    <button type="button" className="btn btn-warning ltr:ml-auto rtl:mr-auto" onClick={() => handleCikarilanlar()}>
+                        {t('Will Be Removed')}
+                    </button>
                     <div className="ltr:ml-auto rtl:mr-auto">
                         <input type="text" className="form-input w-auto" placeholder="Search..." value={search} onChange={(e) => setSearch(e.target.value)} />
                     </div>
@@ -195,12 +195,12 @@ const MultipleTables = () => {
                             {
                                 accessor: 'İnekID',
                                 title: t('ID'),
-                                sortable: true
+                                sortable: true,
                             },
                             {
                                 accessor: 'Ad',
                                 title: t('Name'),
-                                sortable: true
+                                sortable: true,
                             },
                             {
                                 accessor: 'Irkı',
@@ -208,9 +208,9 @@ const MultipleTables = () => {
                                 sortable: true,
                             },
                             {
-                              accessor: 'CikarilmaTarihi',
-                              title: t('Date of Removal from the Loop'),
-                              sortable: true,
+                                accessor: 'CikarilmaTarihi',
+                                title: t('Date of Removal from the Loop'),
+                                sortable: true,
                             },
                             {
                                 accessor: 'CikarilmaSebebi',
