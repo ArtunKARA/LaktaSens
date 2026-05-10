@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { setPageTitle } from '../../../store/themeConfigSlice';
 import Swal from 'sweetalert2';
+import { Flex } from '@mantine/core';
 
 interface Siparis {
     siparisID: number;
@@ -300,9 +301,7 @@ const Siparis = () => {
                 <div className="flex items-center justify-between gap-3">
                     <div>
                         <h5 className="text-lg font-semibold">{t('Sipariş Yönetimi')}</h5>
-                        <p className="text-sm text-white-dark mt-1">
-                            Siparişleri filtrele, sevkiyat ve depo planlarını takip et, kabul/iade işlemlerini tamamla.
-                        </p>
+                        <p className="text-sm text-white-dark mt-1">Siparişleri filtrele, sevkiyat ve depo planlarını takip et, kabul/iade işlemlerini tamamla.</p>
                     </div>
 
                     <div className="flex items-center gap-2">
@@ -350,7 +349,13 @@ const Siparis = () => {
                     </div>
 
                     <div className="rounded-xl border border-white-light dark:border-[#1b2e4b] bg-white/40 dark:bg-[#0e1726]/40 p-3 shadow-sm flex items-end gap-2">
-                        <button className="btn btn-outline-secondary w-full" onClick={() => { setDurumFilter(''); setKaynakFilter(''); }}>
+                        <button
+                            className="btn btn-outline-secondary w-full"
+                            onClick={() => {
+                                setDurumFilter('');
+                                setKaynakFilter('');
+                            }}
+                        >
                             {t('Temizle')}
                         </button>
                         <button className="btn btn-primary w-full" onClick={fetchSiparisler} disabled={loadingSiparis}>
@@ -390,8 +395,7 @@ const Siparis = () => {
                                 {siparisler.map((siparis) => (
                                     <tr
                                         key={siparis.siparisID}
-                                        className={`hover:bg-gray-50 dark:hover:bg-[#0b1220] ${selectedSiparisID === siparis.siparisID ? 'bg-primary/5 dark:bg-primary/10' : ''
-                                            }`}
+                                        className={`hover:bg-gray-50 dark:hover:bg-[#0b1220] ${selectedSiparisID === siparis.siparisID ? 'bg-primary/5 dark:bg-primary/10' : ''}`}
                                     >
                                         <td className="font-semibold">{siparis.siparisID}</td>
                                         <td>
@@ -482,22 +486,30 @@ const Siparis = () => {
                     <div className="rounded-xl border border-white-light dark:border-[#1b2e4b] bg-white/40 dark:bg-[#0e1726]/40 p-4 shadow-sm">
                         <div className="text-xs text-white-dark">{t('Planlandı')}</div>
                         <div className="text-2xl font-semibold mt-1">{planSummary.planned}</div>
-                        <div className="text-xs text-white-dark mt-1">{t('Toplam')}: {planSummary.total}</div>
+                        <div className="text-xs text-white-dark mt-1">
+                            {t('Toplam')}: {planSummary.total}
+                        </div>
                     </div>
                     <div className="rounded-xl border border-white-light dark:border-[#1b2e4b] bg-white/40 dark:bg-[#0e1726]/40 p-4 shadow-sm">
                         <div className="text-xs text-white-dark">{t('Kısmi')}</div>
                         <div className="text-2xl font-semibold mt-1">{planSummary.partial}</div>
-                        <div className="text-xs text-white-dark mt-1">{t('Toplam')}: {planSummary.total}</div>
+                        <div className="text-xs text-white-dark mt-1">
+                            {t('Toplam')}: {planSummary.total}
+                        </div>
                     </div>
                     <div className="rounded-xl border border-white-light dark:border-[#1b2e4b] bg-white/40 dark:bg-[#0e1726]/40 p-4 shadow-sm">
                         <div className="text-xs text-white-dark">{t('Tamamlandı')}</div>
                         <div className="text-2xl font-semibold mt-1">{planSummary.done}</div>
-                        <div className="text-xs text-white-dark mt-1">{t('Toplam')}: {planSummary.total}</div>
+                        <div className="text-xs text-white-dark mt-1">
+                            {t('Toplam')}: {planSummary.total}
+                        </div>
                     </div>
                     <div className="rounded-xl border border-white-light dark:border-[#1b2e4b] bg-white/40 dark:bg-[#0e1726]/40 p-4 shadow-sm">
                         <div className="text-xs text-white-dark">{t('İptal')}</div>
                         <div className="text-2xl font-semibold mt-1">{planSummary.cancelled}</div>
-                        <div className="text-xs text-white-dark mt-1">{t('Toplam')}: {planSummary.total}</div>
+                        <div className="text-xs text-white-dark mt-1">
+                            {t('Toplam')}: {planSummary.total}
+                        </div>
                     </div>
                 </div>
 
@@ -615,11 +627,7 @@ const Siparis = () => {
                             </thead>
                             <tbody>
                                 {sevkiyatlar.map((sevk) => (
-                                    <tr
-                                        key={sevk.SevkiyatID}
-                                        className={`hover:bg-gray-50 dark:hover:bg-[#0b1220] ${selectedSevkiyatID === sevk.SevkiyatID ? 'bg-primary/5 dark:bg-primary/10' : ''
-                                            }`}
-                                    >
+                                    <tr key={sevk.SevkiyatID} className={`hover:bg-gray-50 dark:hover:bg-[#0b1220] ${selectedSevkiyatID === sevk.SevkiyatID ? 'bg-primary/5 dark:bg-primary/10' : ''}`}>
                                         <td className="font-semibold">{sevk.SevkiyatID}</td>
                                         <td>{formatDate(sevk.SevkTarihi)}</td>
                                         <td>{formatDate(sevk.BeklenenTeslim)}</td>
@@ -659,22 +667,12 @@ const Siparis = () => {
 
                     <div className="rounded-xl border border-white-light dark:border-[#1b2e4b] bg-white/40 dark:bg-[#0e1726]/40 p-3 shadow-sm">
                         <label className="block mb-1 text-xs font-semibold text-gray-600 dark:text-white-dark">{t('Kabul Miktarı (kg)')}</label>
-                        <input
-                            type="number"
-                            className="form-input w-full"
-                            value={kabulForm.kabulMiktarKg}
-                            onChange={(e) => setKabulForm({ ...kabulForm, kabulMiktarKg: e.target.value })}
-                        />
+                        <input type="number" className="form-input w-full" value={kabulForm.kabulMiktarKg} onChange={(e) => setKabulForm({ ...kabulForm, kabulMiktarKg: e.target.value })} />
                     </div>
 
                     <div className="rounded-xl border border-white-light dark:border-[#1b2e4b] bg-white/40 dark:bg-[#0e1726]/40 p-3 shadow-sm">
                         <label className="block mb-1 text-xs font-semibold text-gray-600 dark:text-white-dark">{t('İade Miktarı (kg)')}</label>
-                        <input
-                            type="number"
-                            className="form-input w-full"
-                            value={kabulForm.iadeMiktarKg}
-                            onChange={(e) => setKabulForm({ ...kabulForm, iadeMiktarKg: e.target.value })}
-                        />
+                        <input type="number" className="form-input w-full" value={kabulForm.iadeMiktarKg} onChange={(e) => setKabulForm({ ...kabulForm, iadeMiktarKg: e.target.value })} />
                     </div>
 
                     <div className="md:col-span-2 rounded-xl border border-white-light dark:border-[#1b2e4b] bg-white/40 dark:bg-[#0e1726]/40 p-3 shadow-sm">
@@ -684,12 +682,7 @@ const Siparis = () => {
 
                     <div className="rounded-xl border border-white-light dark:border-[#1b2e4b] bg-white/40 dark:bg-[#0e1726]/40 p-3 shadow-sm">
                         <label className="block mb-1 text-xs font-semibold text-gray-600 dark:text-white-dark">{t('Kabul İşlem Neden ID')}</label>
-                        <input
-                            type="number"
-                            className="form-input w-full"
-                            value={kabulForm.islemNedeniIDKabul}
-                            onChange={(e) => setKabulForm({ ...kabulForm, islemNedeniIDKabul: e.target.value })}
-                        />
+                        <input type="number" className="form-input w-full" value={kabulForm.islemNedeniIDKabul} onChange={(e) => setKabulForm({ ...kabulForm, islemNedeniIDKabul: e.target.value })} />
                     </div>
                 </div>
 

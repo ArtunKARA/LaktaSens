@@ -1,0 +1,270 @@
+sources:
+  - source_code: embryo_losses_mendeley
+    source_name: EmbryoLosses - Mendeley Data
+    role: ana_omurga_adayi
+    url: https://data.mendeley.com/datasets/5mk46rtr7j/1
+    license: CC BY 4.0
+    expected_format: Mendeley landing page; repository files require manual or API inspection
+    priority: A1
+    target_raw_tables:
+      - raw_milk
+      - raw_repro_loss
+      - raw_health
+      - raw_culling
+    target_event_tables:
+      - event_dogurma
+      - event_dollenme
+      - event_sut_olcum
+      - event_health
+      - event_suruden_cikarma
+    has_animal_id: true
+    has_date: true
+    has_culling: true
+    has_milk: true
+    has_reproduction: true
+    has_health: true
+    has_economic_parameter: false
+    manual_download_required: true
+    notes: "Landing page states calving date, drying off or culling, milk production, reproduction, mastitis and lameness records. TODO / manual inspection required for exact file names and column schema."
+
+  - source_code: primiparous_social_env
+    source_name: Productional data of primiparous dairy cows reared in different social environments
+    role: ana_omurga_etl_tasarim_adayi
+    url: https://data.mendeley.com/datasets/j42n4x723g/2
+    license: CC BY 4.0
+    expected_format: Mendeley landing page; tabular files and documentation
+    priority: A2
+    target_raw_tables:
+      - raw_milk
+      - raw_repro_loss
+      - raw_culling
+      - raw_health
+    target_event_tables:
+      - event_dogurma
+      - event_dollenme
+      - event_sut_olcum
+      - event_suruden_cikarma
+      - event_health
+    has_animal_id: true
+    has_date: true
+    has_culling: true
+    has_milk: true
+    has_reproduction: true
+    has_health: true
+    has_economic_parameter: false
+    manual_download_required: true
+    notes: "Published metadata names CowID, CalfID, Date, Yield, Conductivity, activity, service period and Events including insemination, pregnancy diagnostics, group changes and exit. TODO / manual inspection required for exact file schemas."
+
+  - source_code: marcenat_inrae
+    source_name: Marcenat / INRAE productive-functional-longevity dataset
+    role: culling_health_feeding_destek_verisi
+    url: https://entrepot.recherche.data.gouv.fr/dataset.xhtml?persistentId=doi:10.15454/MEN81R
+    license: Etalab Open License 2.0
+    expected_format: CSV, TAB, XLSX via Recherche Data Gouv landing page
+    priority: A3
+    target_raw_tables:
+      - raw_milk
+      - raw_repro_loss
+      - raw_health
+      - raw_culling
+    target_event_tables:
+      - event_dogurma
+      - event_dollenme
+      - event_sut_olcum
+      - event_health
+      - event_suruden_cikarma
+    has_animal_id: true
+    has_date: true
+    has_culling: true
+    has_milk: true
+    has_reproduction: true
+    has_health: true
+    has_economic_parameter: true
+    manual_download_required: true
+    notes: "Dataset metadata lists dairy performance, BW, BCS, fertility, health events, culling dates and causes, and feeding records. TODO / manual inspection required for exact source columns before raw load."
+
+  - source_code: scc_grazing_cows
+    source_name: Associations of somatic cell count with milk yield and reproductive performance in grazing dairy cows
+    role: yardimci_sut_ureme_saglik_verisi
+    url: https://data.mendeley.com/datasets/d8kgk57b9h/3
+    license: CC BY 4.0; restricted-access data note in article
+    expected_format: Mendeley landing page; restricted-access dataset
+    priority: B1
+    target_raw_tables:
+      - raw_milk
+      - raw_repro_loss
+      - raw_health
+    target_event_tables:
+      - event_sut_olcum
+      - event_dollenme
+      - event_dogurma
+      - event_health
+    has_animal_id: true
+    has_date: true
+    has_culling: false
+    has_milk: true
+    has_reproduction: true
+    has_health: true
+    has_economic_parameter: false
+    manual_download_required: true
+    notes: "Metadata includes milk yield, fat, protein, SCC, service dates, positive pregnancy diagnosis and calving. It does not expose explicit culling/removal. TODO / manual inspection required; article notes restricted access."
+
+  - source_code: chiozza_lameness
+    source_name: Chiozza-LogronoJ Lameness Grazing Dairy Cows
+    role: yardimci_saglik_verisi
+    url: https://data.mendeley.com/datasets/thb3rmxxr6/1
+    license: CC BY 4.0
+    expected_format: Mendeley landing page; repository files require manual or API inspection
+    priority: D2
+    target_raw_tables:
+      - raw_health
+      - raw_milk
+      - raw_repro_loss
+    target_event_tables:
+      - event_health
+      - event_sut_olcum
+      - event_dollenme
+      - event_dogurma
+    has_animal_id: true
+    has_date: true
+    has_culling: false
+    has_milk: true
+    has_reproduction: true
+    has_health: true
+    has_economic_parameter: false
+    manual_download_required: true
+    notes: "Lameness timing, milk production and reproductive performance source. TODO / manual inspection required for exact source columns and date granularity."
+
+  - source_code: organic_scm
+    source_name: Subclinical mastitis in certified organic herds supplemental dataset
+    role: yardimci_saglik_mastitis_scc_verisi
+    url: https://data.mendeley.com/datasets/rx9hfpzg6m/1
+    license: CC BY 4.0
+    expected_format: Mendeley supplemental material landing page
+    priority: D1
+    target_raw_tables:
+      - raw_health
+      - raw_milk
+      - raw_culling
+      - raw_repro_loss
+    target_event_tables:
+      - event_health
+      - event_sut_olcum
+      - event_suruden_cikarma
+      - event_dollenme
+    has_animal_id: true
+    has_date: true
+    has_culling: true
+    has_milk: true
+    has_reproduction: true
+    has_health: true
+    has_economic_parameter: false
+    manual_download_required: true
+    notes: "Supplemental material for subclinical mastitis, SCC linear scores, milk yield, fertility and culling. TODO / manual inspection required for file and column schema."
+
+  - source_code: calving_afc_culling
+    source_name: Calving difficulty / AFC / culling dataset
+    role: yardimci_ureme_culling_risk_verisi
+    url: https://data.mendeley.com/datasets/4k96p8z3d3/1
+    license: CC BY 4.0
+    expected_format: Mendeley landing page; repository files require manual or API inspection
+    priority: C1
+    target_raw_tables:
+      - raw_repro_loss
+      - raw_milk
+      - raw_culling
+      - raw_health
+    target_event_tables:
+      - event_dogurma
+      - event_suruden_cikarma
+      - event_sut_olcum
+      - event_health
+    has_animal_id: true
+    has_date: true
+    has_culling: true
+    has_milk: true
+    has_reproduction: true
+    has_health: true
+    has_economic_parameter: false
+    manual_download_required: true
+    notes: "Metadata states calving difficulty, age at first calving, milk traits and culling reasons. TODO / manual inspection required for exact time fields and animal identifiers."
+
+  - source_code: usda_nass_milk_price
+    source_name: USDA NASS milk price
+    role: ekonomik_reward_parametre
+    url: https://quickstats.nass.usda.gov/api
+    license: Official public USDA data; verify API terms before production use
+    expected_format: API/CSV
+    priority: E1
+    target_raw_tables: []
+    target_event_tables:
+      - feat_reward_parametre
+    has_animal_id: false
+    has_date: true
+    has_culling: false
+    has_milk: false
+    has_reproduction: false
+    has_health: false
+    has_economic_parameter: true
+    manual_download_required: true
+    notes: "Use NASS QuickStats for all-milk price by month/state. API key and exact query parameters must be configured manually before automated extraction."
+
+  - source_code: usda_ams_cull_cow
+    source_name: USDA AMS cull cow reports
+    role: ekonomik_reward_parametre
+    url: https://www.ams.usda.gov/mnreports/ams_2467.pdf
+    license: Official public USDA market report; verify terms before production use
+    expected_format: PDF report; related XML/JSON may be available from USDA MPR Datamart
+    priority: E2
+    target_raw_tables: []
+    target_event_tables:
+      - feat_reward_parametre
+    has_animal_id: false
+    has_date: true
+    has_culling: false
+    has_milk: false
+    has_reproduction: false
+    has_health: false
+    has_economic_parameter: true
+    manual_download_required: false
+    notes: "Direct PDF is downloadable, but transforming cull-cow price ranges into reward parameters requires a separate parser and market-class mapping."
+
+  - source_code: usda_ers_milk_cost
+    source_name: USDA ERS milk cost of production
+    role: ekonomik_reward_parametre
+    url: https://www.ers.usda.gov/data-products/milk-cost-of-production-estimates/
+    license: Official public USDA ERS data; verify data-use terms before production use
+    expected_format: CSV/XLSX downloads from ERS page
+    priority: E3
+    target_raw_tables: []
+    target_event_tables:
+      - feat_reward_parametre
+    has_animal_id: false
+    has_date: true
+    has_culling: false
+    has_milk: false
+    has_reproduction: false
+    has_health: false
+    has_economic_parameter: true
+    manual_download_required: true
+    notes: "ERS page exposes CSV/XLSX downloads, but exact file URLs can change. Manual download or a dedicated ERS scraper is required."
+
+  - source_code: iowa_state_heifer_cost
+    source_name: Iowa State heifer raising costs
+    role: ekonomik_reward_parametre
+    url: https://www.extension.iastate.edu/dairyteam/files/documents/What%27s%20It%20Cost%20to%20Raise%20Heifers%202024_0.pdf
+    license: Iowa State University Extension publication; verify reuse terms before production use
+    expected_format: PDF
+    priority: E4
+    target_raw_tables: []
+    target_event_tables:
+      - feat_reward_parametre
+    has_animal_id: false
+    has_date: true
+    has_culling: false
+    has_milk: false
+    has_reproduction: false
+    has_health: false
+    has_economic_parameter: true
+    manual_download_required: false
+    notes: "Direct PDF is downloadable. Values must not be copied into baseline SQL until manually reviewed and approved for the scenario."
