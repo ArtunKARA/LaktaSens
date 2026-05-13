@@ -1,0 +1,1161 @@
+Commodity,Category,Item,Item2,Units,Size,Region,Country,Year,Value,Survey base year
+Milk,Supporting information,Milk cows,Milk cows (head per farm),head per farm,"1,000–1,999 cows",U.S. total,United States,2025,1411,Base survey of 2021
+Milk,Allocated overhead,Opportunity cost of land,Opportunity cost of land,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2025,0.05,Base survey of 2021
+Milk,Gross value of production,Cattle,Cattle,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2025,2.92,Base survey of 2021
+Milk,Operating costs,"Other, operating costs ² ","Other, operating costs ² ",dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2025,0,Base survey of 2021
+Milk,Allocated overhead,Hired labor,Hired labor,dollars per hundredweight sold,All sizes,U.S. total,United States,2025,2.32,Base survey of 2021
+Milk,Operating costs,Grazed feed,Grazed feed,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2025,0.01,Base survey of 2021
+Milk,Costs listed,"Total, costs listed","Total, costs listed",dollars per hundredweight sold,500–999 cows,U.S. total,United States,2025,23.06,Base survey of 2021
+Milk,Allocated overhead,Capital recovery of machinery and equipment ³ ,Capital recovery of machinery and equipment ³ ,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2025,4.05,Base survey of 2021
+Milk,Operating costs,"Total, feed costs","Total, feed costs",dollars per hundredweight sold,50–99 cows,U.S. total,United States,2025,11.89,Base survey of 2021
+Milk,Allocated overhead,Opportunity cost of unpaid labor,Opportunity cost of unpaid labor,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2025,0.64,Base survey of 2021
+Milk,Gross value of production,Cattle,Cattle,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2025,2.46,Base survey of 2021
+Milk,Net value,Value of production less total costs listed,Value of production less total costs listed,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2025,4.25,Base survey of 2021
+Milk,Operating costs,"Total, operating costs","Total, operating costs",dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2025,13.32,Base survey of 2021
+Milk,Operating costs,Bedding and litter,Bedding and litter,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2025,0.15,Base survey of 2021
+Milk,Operating costs,Repairs,Repairs,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2025,1.06,Base survey of 2021
+Milk,Operating costs,Marketing,Marketing,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2025,0.23,Base survey of 2021
+Milk,Operating costs,Custom services,Custom services,dollars per hundredweight sold,All sizes,U.S. total,United States,2025,0.9,Base survey of 2021
+Milk,Allocated overhead,"Total, allocated overhead","Total, allocated overhead",dollars per hundredweight sold,500–999 cows,U.S. total,United States,2025,8.74,Base survey of 2021
+Milk,Operating costs,"Other, operating costs ² ","Other, operating costs ² ",dollars per hundredweight sold,100–199 cows,U.S. total,United States,2025,0.02,Base survey of 2021
+Milk,Allocated overhead,Taxes and insurance,Taxes and insurance,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2025,0.34,Base survey of 2021
+Milk,Allocated overhead,Capital recovery of machinery and equipment ³ ,Capital recovery of machinery and equipment ³ ,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2025,10.46,Base survey of 2021
+Milk,Supporting information,Output per cow,Output per cow (pounds),pounds,All sizes,U.S. total,United States,2025,22653,Base survey of 2021
+Milk,Operating costs,Homegrown harvested feed,Homegrown harvested feed,dollars per hundredweight sold,All sizes,U.S. total,United States,2025,3.48,Base survey of 2021
+Milk,Net value,Value of production less operating costs,Value of production less operating costs,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2025,9.74,Base survey of 2021
+Milk,Operating costs,Interest on operating capital,Interest on operating capital,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2025,0.28,Base survey of 2021
+Milk,Gross value of production,Milk sold,Milk sold,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2025,21.04,Base survey of 2021
+Milk,Operating costs,"Total, operating costs","Total, operating costs",dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2025,16.37,Base survey of 2021
+Milk,Operating costs,Bedding and litter,Bedding and litter,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2025,0.4,Base survey of 2021
+Milk,Operating costs,"Fuel, lube, and electricity","Fuel, lube, and electricity",dollars per hundredweight sold,50–99 cows,U.S. total,United States,2025,1.08,Base survey of 2021
+Milk,Allocated overhead,General farm overhead,General farm overhead,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2025,1.35,Base survey of 2021
+Milk,Allocated overhead,Opportunity cost of land,Opportunity cost of land,dollars per hundredweight sold,All sizes,U.S. total,United States,2025,0.03,Base survey of 2021
+Milk,Operating costs,Marketing,Marketing,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2025,0.04,Base survey of 2021
+Milk,Operating costs,"Other, operating costs ² ","Other, operating costs ² ",dollars per hundredweight sold,All sizes,U.S. total,United States,2025,0.01,Base survey of 2021
+Milk,Allocated overhead,Hired labor,Hired labor,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2025,0.84,Base survey of 2021
+Milk,Operating costs,Homegrown harvested feed,Homegrown harvested feed,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2025,5.24,Base survey of 2021
+Milk,Operating costs,"Total, feed costs","Total, feed costs",dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2025,9.41,Base survey of 2021
+Milk,Net value,Value of production less operating costs,Value of production less operating costs,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2025,9.69,Base survey of 2021
+Milk,Operating costs,Interest on operating capital,Interest on operating capital,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2025,0.28,Base survey of 2021
+Milk,Gross value of production,"Total, gross value of production","Total, gross value of production",dollars per hundredweight sold,200–499 cows,U.S. total,United States,2025,23.62,Base survey of 2021
+Milk,Gross value of production,Milk sold,Milk sold,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2025,23.45,Base survey of 2021
+Milk,Gross value of production,Other income ¹ ,Other income ¹ ,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2025,0.62,Base survey of 2021
+Milk,Operating costs,"Total, operating costs","Total, operating costs",dollars per hundredweight sold,50–99 cows,U.S. total,United States,2025,16.77,Base survey of 2021
+Milk,Operating costs,"Fuel, lube, and electricity","Fuel, lube, and electricity",dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2025,0.49,Base survey of 2021
+Milk,Supporting information,Milk cows,Milk cows (head per farm),head per farm,500–999 cows,U.S. total,United States,2025,680,Base survey of 2021
+Milk,Allocated overhead,Opportunity cost of land,Opportunity cost of land,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2025,0.07,Base survey of 2021
+Milk,Gross value of production,Cattle,Cattle,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2025,3.42,Base survey of 2021
+Milk,Operating costs,Purchased feed,Purchased feed,dollars per hundredweight sold,All sizes,U.S. total,United States,2025,6.3,Base survey of 2021
+Milk,Allocated overhead,Hired labor,Hired labor,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2025,2.4,Base survey of 2021
+Milk,Operating costs,Grazed feed,Grazed feed,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2025,0.04,Base survey of 2021
+Milk,Costs listed,"Total, costs listed","Total, costs listed",dollars per hundredweight sold,200–499 cows,U.S. total,United States,2025,27.21,Base survey of 2021
+Milk,Allocated overhead,Capital recovery of machinery and equipment ³ ,Capital recovery of machinery and equipment ³ ,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2025,4.33,Base survey of 2021
+Milk,Operating costs,"Total, feed costs","Total, feed costs",dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2025,11.04,Base survey of 2021
+Milk,Net value,Value of production less operating costs,Value of production less operating costs,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2025,10.21,Base survey of 2021
+Milk,Supporting information,Output per cow,Output per cow (pounds),pounds,200–499 cows,U.S. total,United States,2025,23479,Base survey of 2021
+Milk,Net value,Value of production less total costs listed,Value of production less total costs listed,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2025,-10.59,Base survey of 2021
+Milk,Operating costs,Bedding and litter,Bedding and litter,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2025,0.31,Base survey of 2021
+Milk,Allocated overhead,General farm overhead,General farm overhead,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2025,0.6,Base survey of 2021
+Milk,Operating costs,Custom services,Custom services,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2025,1.01,Base survey of 2021
+Milk,Operating costs,Veterinary and medicine,Veterinary and medicine,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2025,1.04,Base survey of 2021
+Milk,Operating costs,Marketing,Marketing,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2025,0.23,Base survey of 2021
+Milk,Operating costs,Purchased feed,Purchased feed,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2025,4.72,Base survey of 2021
+Milk,Allocated overhead,Taxes and insurance,Taxes and insurance,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2025,0.15,Base survey of 2021
+Milk,Gross value of production,Milk sold,Milk sold,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2021,20.38,Base survey of 2021
+Milk,Gross value of production,Milk sold,Milk sold,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2022,27.65,Base survey of 2021
+Milk,Gross value of production,Milk sold,Milk sold,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2023,22.52,Base survey of 2021
+Milk,Gross value of production,Milk sold,Milk sold,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2024,24.85,Base survey of 2021
+Milk,Gross value of production,Milk sold,Milk sold,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2021,19.92,Base survey of 2021
+Milk,Gross value of production,Milk sold,Milk sold,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2022,27.04,Base survey of 2021
+Milk,Gross value of production,Milk sold,Milk sold,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2023,21.87,Base survey of 2021
+Milk,Gross value of production,Milk sold,Milk sold,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2024,24.23,Base survey of 2021
+Milk,Gross value of production,Milk sold,Milk sold,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2021,18.91,Base survey of 2021
+Milk,Gross value of production,Milk sold,Milk sold,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2022,25.63,Base survey of 2021
+Milk,Gross value of production,Milk sold,Milk sold,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2023,20.71,Base survey of 2021
+Milk,Gross value of production,Milk sold,Milk sold,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2024,22.99,Base survey of 2021
+Milk,Gross value of production,Milk sold,Milk sold,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2021,18.27,Base survey of 2021
+Milk,Gross value of production,Milk sold,Milk sold,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2022,24.78,Base survey of 2021
+Milk,Gross value of production,Milk sold,Milk sold,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2023,20.05,Base survey of 2021
+Milk,Gross value of production,Milk sold,Milk sold,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2024,22.25,Base survey of 2021
+Milk,Gross value of production,Milk sold,Milk sold,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2021,19.16,Base survey of 2021
+Milk,Gross value of production,Milk sold,Milk sold,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2022,25.9,Base survey of 2021
+Milk,Gross value of production,Milk sold,Milk sold,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2023,20.86,Base survey of 2021
+Milk,Gross value of production,Milk sold,Milk sold,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2024,23,Base survey of 2021
+Milk,Gross value of production,Milk sold,Milk sold,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2021,18.55,Base survey of 2021
+Milk,Gross value of production,Milk sold,Milk sold,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2022,25.35,Base survey of 2021
+Milk,Gross value of production,Milk sold,Milk sold,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2023,20.4,Base survey of 2021
+Milk,Gross value of production,Milk sold,Milk sold,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2024,22.43,Base survey of 2021
+Milk,Gross value of production,Milk sold,Milk sold,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2021,17.77,Base survey of 2021
+Milk,Gross value of production,Milk sold,Milk sold,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2022,24.48,Base survey of 2021
+Milk,Gross value of production,Milk sold,Milk sold,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2023,19.54,Base survey of 2021
+Milk,Gross value of production,Milk sold,Milk sold,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2024,21.64,Base survey of 2021
+Milk,Gross value of production,Milk sold,Milk sold,dollars per hundredweight sold,All sizes,U.S. total,United States,2021,18.44,Base survey of 2021
+Milk,Gross value of production,Milk sold,Milk sold,dollars per hundredweight sold,All sizes,U.S. total,United States,2022,25.18,Base survey of 2021
+Milk,Gross value of production,Milk sold,Milk sold,dollars per hundredweight sold,All sizes,U.S. total,United States,2023,20.24,Base survey of 2021
+Milk,Gross value of production,Milk sold,Milk sold,dollars per hundredweight sold,All sizes,U.S. total,United States,2024,22.38,Base survey of 2021
+Milk,Gross value of production,Cattle,Cattle,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2021,1.61,Base survey of 2021
+Milk,Gross value of production,Cattle,Cattle,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2022,1.92,Base survey of 2021
+Milk,Gross value of production,Cattle,Cattle,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2023,2.34,Base survey of 2021
+Milk,Gross value of production,Cattle,Cattle,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2024,2.96,Base survey of 2021
+Milk,Gross value of production,Cattle,Cattle,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2021,1.38,Base survey of 2021
+Milk,Gross value of production,Cattle,Cattle,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2022,1.64,Base survey of 2021
+Milk,Gross value of production,Cattle,Cattle,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2023,2,Base survey of 2021
+Milk,Gross value of production,Cattle,Cattle,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2024,2.53,Base survey of 2021
+Milk,Gross value of production,Cattle,Cattle,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2021,1.1,Base survey of 2021
+Milk,Gross value of production,Cattle,Cattle,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2022,1.31,Base survey of 2021
+Milk,Gross value of production,Cattle,Cattle,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2023,1.59,Base survey of 2021
+Milk,Gross value of production,Cattle,Cattle,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2024,2.02,Base survey of 2021
+Milk,Gross value of production,Cattle,Cattle,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2021,0.97,Base survey of 2021
+Milk,Gross value of production,Cattle,Cattle,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2022,1.16,Base survey of 2021
+Milk,Gross value of production,Cattle,Cattle,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2023,1.41,Base survey of 2021
+Milk,Gross value of production,Cattle,Cattle,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2024,1.79,Base survey of 2021
+Milk,Gross value of production,Cattle,Cattle,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2021,1.11,Base survey of 2021
+Milk,Gross value of production,Cattle,Cattle,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2022,1.32,Base survey of 2021
+Milk,Gross value of production,Cattle,Cattle,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2023,1.61,Base survey of 2021
+Milk,Gross value of production,Cattle,Cattle,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2024,2.04,Base survey of 2021
+Milk,Gross value of production,Cattle,Cattle,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2021,1.16,Base survey of 2021
+Milk,Gross value of production,Cattle,Cattle,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2022,1.38,Base survey of 2021
+Milk,Gross value of production,Cattle,Cattle,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2023,1.68,Base survey of 2021
+Milk,Gross value of production,Cattle,Cattle,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2024,2.13,Base survey of 2021
+Milk,Gross value of production,Cattle,Cattle,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2021,0.93,Base survey of 2021
+Milk,Gross value of production,Cattle,Cattle,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2022,1.11,Base survey of 2021
+Milk,Gross value of production,Cattle,Cattle,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2023,1.35,Base survey of 2021
+Milk,Gross value of production,Cattle,Cattle,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2024,1.71,Base survey of 2021
+Milk,Gross value of production,Cattle,Cattle,dollars per hundredweight sold,All sizes,U.S. total,United States,2021,1.06,Base survey of 2021
+Milk,Gross value of production,Cattle,Cattle,dollars per hundredweight sold,All sizes,U.S. total,United States,2022,1.26,Base survey of 2021
+Milk,Gross value of production,Cattle,Cattle,dollars per hundredweight sold,All sizes,U.S. total,United States,2023,1.54,Base survey of 2021
+Milk,Gross value of production,Cattle,Cattle,dollars per hundredweight sold,All sizes,U.S. total,United States,2024,1.94,Base survey of 2021
+Milk,Gross value of production,Other income ¹ ,Other income ¹ ,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2021,0.77,Base survey of 2021
+Milk,Gross value of production,Other income ¹ ,Other income ¹ ,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2022,1.25,Base survey of 2021
+Milk,Gross value of production,Other income ¹ ,Other income ¹ ,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2023,1.01,Base survey of 2021
+Milk,Gross value of production,Other income ¹ ,Other income ¹ ,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2024,0.86,Base survey of 2021
+Milk,Gross value of production,Other income ¹ ,Other income ¹ ,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2021,0.68,Base survey of 2021
+Milk,Gross value of production,Other income ¹ ,Other income ¹ ,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2022,1.1,Base survey of 2021
+Milk,Gross value of production,Other income ¹ ,Other income ¹ ,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2023,0.89,Base survey of 2021
+Milk,Gross value of production,Other income ¹ ,Other income ¹ ,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2024,0.75,Base survey of 2021
+Milk,Gross value of production,Other income ¹ ,Other income ¹ ,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2021,0.61,Base survey of 2021
+Milk,Gross value of production,Other income ¹ ,Other income ¹ ,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2022,0.99,Base survey of 2021
+Milk,Gross value of production,Other income ¹ ,Other income ¹ ,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2023,0.79,Base survey of 2021
+Milk,Gross value of production,Other income ¹ ,Other income ¹ ,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2024,0.68,Base survey of 2021
+Milk,Gross value of production,Other income ¹ ,Other income ¹ ,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2021,0.52,Base survey of 2021
+Milk,Gross value of production,Other income ¹ ,Other income ¹ ,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2022,0.84,Base survey of 2021
+Milk,Gross value of production,Other income ¹ ,Other income ¹ ,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2023,0.68,Base survey of 2021
+Milk,Gross value of production,Other income ¹ ,Other income ¹ ,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2024,0.57,Base survey of 2021
+Milk,Gross value of production,Other income ¹ ,Other income ¹ ,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2021,0.52,Base survey of 2021
+Milk,Gross value of production,Other income ¹ ,Other income ¹ ,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2022,0.85,Base survey of 2021
+Milk,Gross value of production,Other income ¹ ,Other income ¹ ,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2023,0.68,Base survey of 2021
+Milk,Gross value of production,Other income ¹ ,Other income ¹ ,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2024,0.58,Base survey of 2021
+Milk,Gross value of production,Other income ¹ ,Other income ¹ ,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2021,0.51,Base survey of 2021
+Milk,Gross value of production,Other income ¹ ,Other income ¹ ,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2022,0.82,Base survey of 2021
+Milk,Gross value of production,Other income ¹ ,Other income ¹ ,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2023,0.66,Base survey of 2021
+Milk,Gross value of production,Other income ¹ ,Other income ¹ ,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2024,0.56,Base survey of 2021
+Milk,Gross value of production,Other income ¹ ,Other income ¹ ,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2021,0.56,Base survey of 2021
+Milk,Gross value of production,Other income ¹ ,Other income ¹ ,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2022,0.91,Base survey of 2021
+Milk,Gross value of production,Other income ¹ ,Other income ¹ ,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2023,0.73,Base survey of 2021
+Milk,Gross value of production,Other income ¹ ,Other income ¹ ,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2024,0.62,Base survey of 2021
+Milk,Gross value of production,Other income ¹ ,Other income ¹ ,dollars per hundredweight sold,All sizes,U.S. total,United States,2021,0.55,Base survey of 2021
+Milk,Gross value of production,Other income ¹ ,Other income ¹ ,dollars per hundredweight sold,All sizes,U.S. total,United States,2022,0.9,Base survey of 2021
+Milk,Gross value of production,Other income ¹ ,Other income ¹ ,dollars per hundredweight sold,All sizes,U.S. total,United States,2023,0.73,Base survey of 2021
+Milk,Gross value of production,Other income ¹ ,Other income ¹ ,dollars per hundredweight sold,All sizes,U.S. total,United States,2024,0.62,Base survey of 2021
+Milk,Gross value of production,"Total, gross value of production","Total, gross value of production",dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2021,22.76,Base survey of 2021
+Milk,Gross value of production,"Total, gross value of production","Total, gross value of production",dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2022,30.83,Base survey of 2021
+Milk,Gross value of production,"Total, gross value of production","Total, gross value of production",dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2023,25.87,Base survey of 2021
+Milk,Gross value of production,"Total, gross value of production","Total, gross value of production",dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2024,28.67,Base survey of 2021
+Milk,Gross value of production,"Total, gross value of production","Total, gross value of production",dollars per hundredweight sold,50–99 cows,U.S. total,United States,2021,21.98,Base survey of 2021
+Milk,Gross value of production,"Total, gross value of production","Total, gross value of production",dollars per hundredweight sold,50–99 cows,U.S. total,United States,2022,29.78,Base survey of 2021
+Milk,Gross value of production,"Total, gross value of production","Total, gross value of production",dollars per hundredweight sold,50–99 cows,U.S. total,United States,2023,24.76,Base survey of 2021
+Milk,Gross value of production,"Total, gross value of production","Total, gross value of production",dollars per hundredweight sold,50–99 cows,U.S. total,United States,2024,27.51,Base survey of 2021
+Milk,Gross value of production,"Total, gross value of production","Total, gross value of production",dollars per hundredweight sold,100–199 cows,U.S. total,United States,2021,20.61,Base survey of 2021
+Milk,Gross value of production,"Total, gross value of production","Total, gross value of production",dollars per hundredweight sold,100–199 cows,U.S. total,United States,2022,27.93,Base survey of 2021
+Milk,Gross value of production,"Total, gross value of production","Total, gross value of production",dollars per hundredweight sold,100–199 cows,U.S. total,United States,2023,23.1,Base survey of 2021
+Milk,Gross value of production,"Total, gross value of production","Total, gross value of production",dollars per hundredweight sold,100–199 cows,U.S. total,United States,2024,25.68,Base survey of 2021
+Milk,Gross value of production,"Total, gross value of production","Total, gross value of production",dollars per hundredweight sold,200–499 cows,U.S. total,United States,2021,19.76,Base survey of 2021
+Milk,Gross value of production,"Total, gross value of production","Total, gross value of production",dollars per hundredweight sold,200–499 cows,U.S. total,United States,2022,26.78,Base survey of 2021
+Milk,Gross value of production,"Total, gross value of production","Total, gross value of production",dollars per hundredweight sold,200–499 cows,U.S. total,United States,2023,22.13,Base survey of 2021
+Milk,Gross value of production,"Total, gross value of production","Total, gross value of production",dollars per hundredweight sold,200–499 cows,U.S. total,United States,2024,24.62,Base survey of 2021
+Milk,Gross value of production,"Total, gross value of production","Total, gross value of production",dollars per hundredweight sold,500–999 cows,U.S. total,United States,2021,20.79,Base survey of 2021
+Milk,Gross value of production,"Total, gross value of production","Total, gross value of production",dollars per hundredweight sold,500–999 cows,U.S. total,United States,2022,28.07,Base survey of 2021
+Milk,Gross value of production,"Total, gross value of production","Total, gross value of production",dollars per hundredweight sold,500–999 cows,U.S. total,United States,2023,23.15,Base survey of 2021
+Milk,Gross value of production,"Total, gross value of production","Total, gross value of production",dollars per hundredweight sold,500–999 cows,U.S. total,United States,2024,25.61,Base survey of 2021
+Milk,Gross value of production,"Total, gross value of production","Total, gross value of production",dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2021,20.21,Base survey of 2021
+Milk,Gross value of production,"Total, gross value of production","Total, gross value of production",dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2022,27.55,Base survey of 2021
+Milk,Gross value of production,"Total, gross value of production","Total, gross value of production",dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2023,22.74,Base survey of 2021
+Milk,Gross value of production,"Total, gross value of production","Total, gross value of production",dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2024,25.12,Base survey of 2021
+Milk,Gross value of production,"Total, gross value of production","Total, gross value of production",dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2021,19.25,Base survey of 2021
+Milk,Gross value of production,"Total, gross value of production","Total, gross value of production",dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2022,26.49,Base survey of 2021
+Milk,Gross value of production,"Total, gross value of production","Total, gross value of production",dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2023,21.62,Base survey of 2021
+Milk,Gross value of production,"Total, gross value of production","Total, gross value of production",dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2024,23.97,Base survey of 2021
+Milk,Gross value of production,"Total, gross value of production","Total, gross value of production",dollars per hundredweight sold,All sizes,U.S. total,United States,2021,20.05,Base survey of 2021
+Milk,Gross value of production,"Total, gross value of production","Total, gross value of production",dollars per hundredweight sold,All sizes,U.S. total,United States,2022,27.35,Base survey of 2021
+Milk,Gross value of production,"Total, gross value of production","Total, gross value of production",dollars per hundredweight sold,All sizes,U.S. total,United States,2023,22.5,Base survey of 2021
+Milk,Gross value of production,"Total, gross value of production","Total, gross value of production",dollars per hundredweight sold,All sizes,U.S. total,United States,2024,24.94,Base survey of 2021
+Milk,Operating costs,Purchased feed,Purchased feed,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2021,5.23,Base survey of 2021
+Milk,Operating costs,Purchased feed,Purchased feed,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2022,6.49,Base survey of 2021
+Milk,Operating costs,Purchased feed,Purchased feed,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2023,5.75,Base survey of 2021
+Milk,Operating costs,Purchased feed,Purchased feed,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2024,4.24,Base survey of 2021
+Milk,Operating costs,Purchased feed,Purchased feed,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2021,5.7,Base survey of 2021
+Milk,Operating costs,Purchased feed,Purchased feed,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2022,7.07,Base survey of 2021
+Milk,Operating costs,Purchased feed,Purchased feed,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2023,6.26,Base survey of 2021
+Milk,Operating costs,Purchased feed,Purchased feed,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2024,4.62,Base survey of 2021
+Milk,Operating costs,Purchased feed,Purchased feed,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2021,5.98,Base survey of 2021
+Milk,Operating costs,Purchased feed,Purchased feed,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2022,7.42,Base survey of 2021
+Milk,Operating costs,Purchased feed,Purchased feed,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2023,6.57,Base survey of 2021
+Milk,Operating costs,Purchased feed,Purchased feed,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2024,4.85,Base survey of 2021
+Milk,Operating costs,Purchased feed,Purchased feed,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2021,6.16,Base survey of 2021
+Milk,Operating costs,Purchased feed,Purchased feed,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2022,7.64,Base survey of 2021
+Milk,Operating costs,Purchased feed,Purchased feed,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2023,6.77,Base survey of 2021
+Milk,Operating costs,Purchased feed,Purchased feed,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2024,4.99,Base survey of 2021
+Milk,Operating costs,Purchased feed,Purchased feed,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2021,7.77,Base survey of 2021
+Milk,Operating costs,Purchased feed,Purchased feed,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2022,9.64,Base survey of 2021
+Milk,Operating costs,Purchased feed,Purchased feed,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2023,8.54,Base survey of 2021
+Milk,Operating costs,Purchased feed,Purchased feed,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2024,6.3,Base survey of 2021
+Milk,Operating costs,Purchased feed,Purchased feed,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2021,8.39,Base survey of 2021
+Milk,Operating costs,Purchased feed,Purchased feed,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2022,10.41,Base survey of 2021
+Milk,Operating costs,Purchased feed,Purchased feed,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2023,9.22,Base survey of 2021
+Milk,Operating costs,Purchased feed,Purchased feed,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2024,6.8,Base survey of 2021
+Milk,Operating costs,Purchased feed,Purchased feed,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2021,9.35,Base survey of 2021
+Milk,Operating costs,Purchased feed,Purchased feed,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2022,11.6,Base survey of 2021
+Milk,Operating costs,Purchased feed,Purchased feed,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2023,10.27,Base survey of 2021
+Milk,Operating costs,Purchased feed,Purchased feed,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2024,7.58,Base survey of 2021
+Milk,Operating costs,Purchased feed,Purchased feed,dollars per hundredweight sold,All sizes,U.S. total,United States,2021,7.99,Base survey of 2021
+Milk,Operating costs,Purchased feed,Purchased feed,dollars per hundredweight sold,All sizes,U.S. total,United States,2022,9.92,Base survey of 2021
+Milk,Operating costs,Purchased feed,Purchased feed,dollars per hundredweight sold,All sizes,U.S. total,United States,2023,8.79,Base survey of 2021
+Milk,Operating costs,Purchased feed,Purchased feed,dollars per hundredweight sold,All sizes,U.S. total,United States,2024,6.48,Base survey of 2021
+Milk,Operating costs,Homegrown harvested feed,Homegrown harvested feed,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2021,7.38,Base survey of 2021
+Milk,Operating costs,Homegrown harvested feed,Homegrown harvested feed,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2022,9.1,Base survey of 2021
+Milk,Operating costs,Homegrown harvested feed,Homegrown harvested feed,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2023,8.95,Base survey of 2021
+Milk,Operating costs,Homegrown harvested feed,Homegrown harvested feed,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2024,7.18,Base survey of 2021
+Milk,Operating costs,Homegrown harvested feed,Homegrown harvested feed,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2021,8.15,Base survey of 2021
+Milk,Operating costs,Homegrown harvested feed,Homegrown harvested feed,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2022,10.05,Base survey of 2021
+Milk,Operating costs,Homegrown harvested feed,Homegrown harvested feed,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2023,9.88,Base survey of 2021
+Milk,Operating costs,Homegrown harvested feed,Homegrown harvested feed,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2024,7.93,Base survey of 2021
+Milk,Operating costs,Homegrown harvested feed,Homegrown harvested feed,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2021,5.89,Base survey of 2021
+Milk,Operating costs,Homegrown harvested feed,Homegrown harvested feed,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2022,7.27,Base survey of 2021
+Milk,Operating costs,Homegrown harvested feed,Homegrown harvested feed,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2023,7.15,Base survey of 2021
+Milk,Operating costs,Homegrown harvested feed,Homegrown harvested feed,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2024,5.73,Base survey of 2021
+Milk,Operating costs,Homegrown harvested feed,Homegrown harvested feed,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2021,5.61,Base survey of 2021
+Milk,Operating costs,Homegrown harvested feed,Homegrown harvested feed,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2022,6.92,Base survey of 2021
+Milk,Operating costs,Homegrown harvested feed,Homegrown harvested feed,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2023,6.8,Base survey of 2021
+Milk,Operating costs,Homegrown harvested feed,Homegrown harvested feed,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2024,5.46,Base survey of 2021
+Milk,Operating costs,Homegrown harvested feed,Homegrown harvested feed,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2021,4.27,Base survey of 2021
+Milk,Operating costs,Homegrown harvested feed,Homegrown harvested feed,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2022,5.27,Base survey of 2021
+Milk,Operating costs,Homegrown harvested feed,Homegrown harvested feed,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2023,5.18,Base survey of 2021
+Milk,Operating costs,Homegrown harvested feed,Homegrown harvested feed,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2024,4.16,Base survey of 2021
+Milk,Operating costs,Homegrown harvested feed,Homegrown harvested feed,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2021,3.13,Base survey of 2021
+Milk,Operating costs,Homegrown harvested feed,Homegrown harvested feed,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2022,3.86,Base survey of 2021
+Milk,Operating costs,Homegrown harvested feed,Homegrown harvested feed,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2023,3.8,Base survey of 2021
+Milk,Operating costs,Homegrown harvested feed,Homegrown harvested feed,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2024,3.05,Base survey of 2021
+Milk,Operating costs,Homegrown harvested feed,Homegrown harvested feed,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2021,2.4,Base survey of 2021
+Milk,Operating costs,Homegrown harvested feed,Homegrown harvested feed,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2022,2.95,Base survey of 2021
+Milk,Operating costs,Homegrown harvested feed,Homegrown harvested feed,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2023,2.9,Base survey of 2021
+Milk,Operating costs,Homegrown harvested feed,Homegrown harvested feed,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2024,2.33,Base survey of 2021
+Milk,Operating costs,Homegrown harvested feed,Homegrown harvested feed,dollars per hundredweight sold,All sizes,U.S. total,United States,2021,3.91,Base survey of 2021
+Milk,Operating costs,Homegrown harvested feed,Homegrown harvested feed,dollars per hundredweight sold,All sizes,U.S. total,United States,2022,4.82,Base survey of 2021
+Milk,Operating costs,Homegrown harvested feed,Homegrown harvested feed,dollars per hundredweight sold,All sizes,U.S. total,United States,2023,4.74,Base survey of 2021
+Milk,Operating costs,Homegrown harvested feed,Homegrown harvested feed,dollars per hundredweight sold,All sizes,U.S. total,United States,2024,3.8,Base survey of 2021
+Milk,Operating costs,Grazed feed,Grazed feed,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2021,0.29,Base survey of 2021
+Milk,Operating costs,Grazed feed,Grazed feed,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2022,0.28,Base survey of 2021
+Milk,Operating costs,Grazed feed,Grazed feed,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2023,0.29,Base survey of 2021
+Milk,Operating costs,Grazed feed,Grazed feed,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2024,0.31,Base survey of 2021
+Milk,Operating costs,Grazed feed,Grazed feed,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2021,0.12,Base survey of 2021
+Milk,Operating costs,Grazed feed,Grazed feed,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2022,0.12,Base survey of 2021
+Milk,Operating costs,Grazed feed,Grazed feed,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2023,0.13,Base survey of 2021
+Milk,Operating costs,Grazed feed,Grazed feed,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2024,0.14,Base survey of 2021
+Milk,Operating costs,Grazed feed,Grazed feed,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2021,0.08,Base survey of 2021
+Milk,Operating costs,Grazed feed,Grazed feed,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2022,0.08,Base survey of 2021
+Milk,Operating costs,Grazed feed,Grazed feed,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2023,0.09,Base survey of 2021
+Milk,Operating costs,Grazed feed,Grazed feed,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2024,0.09,Base survey of 2021
+Milk,Operating costs,Grazed feed,Grazed feed,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2021,0.02,Base survey of 2021
+Milk,Operating costs,Grazed feed,Grazed feed,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2022,0.02,Base survey of 2021
+Milk,Operating costs,Grazed feed,Grazed feed,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2023,0.03,Base survey of 2021
+Milk,Operating costs,Grazed feed,Grazed feed,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2024,0.03,Base survey of 2021
+Milk,Operating costs,Grazed feed,Grazed feed,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2021,0.03,Base survey of 2021
+Milk,Operating costs,Grazed feed,Grazed feed,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2022,0.04,Base survey of 2021
+Milk,Operating costs,Grazed feed,Grazed feed,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2023,0.04,Base survey of 2021
+Milk,Operating costs,Grazed feed,Grazed feed,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2024,0.04,Base survey of 2021
+Milk,Operating costs,Grazed feed,Grazed feed,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2021,0.01,Base survey of 2021
+Milk,Operating costs,Grazed feed,Grazed feed,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2022,0.01,Base survey of 2021
+Milk,Operating costs,Grazed feed,Grazed feed,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2023,0.01,Base survey of 2021
+Milk,Operating costs,Grazed feed,Grazed feed,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2024,0.01,Base survey of 2021
+Milk,Operating costs,Grazed feed,Grazed feed,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2021,0,Base survey of 2021
+Milk,Operating costs,Grazed feed,Grazed feed,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2022,0,Base survey of 2021
+Milk,Operating costs,Grazed feed,Grazed feed,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2023,0,Base survey of 2021
+Milk,Operating costs,Grazed feed,Grazed feed,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2024,0,Base survey of 2021
+Milk,Operating costs,Grazed feed,Grazed feed,dollars per hundredweight sold,All sizes,U.S. total,United States,2021,0.03,Base survey of 2021
+Milk,Operating costs,Grazed feed,Grazed feed,dollars per hundredweight sold,All sizes,U.S. total,United States,2022,0.03,Base survey of 2021
+Milk,Operating costs,Grazed feed,Grazed feed,dollars per hundredweight sold,All sizes,U.S. total,United States,2023,0.03,Base survey of 2021
+Milk,Operating costs,Grazed feed,Grazed feed,dollars per hundredweight sold,All sizes,U.S. total,United States,2024,0.03,Base survey of 2021
+Milk,Operating costs,"Total, feed costs","Total, feed costs",dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2021,12.9,Base survey of 2021
+Milk,Operating costs,"Total, feed costs","Total, feed costs",dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2022,15.88,Base survey of 2021
+Milk,Operating costs,"Total, feed costs","Total, feed costs",dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2023,15,Base survey of 2021
+Milk,Operating costs,"Total, feed costs","Total, feed costs",dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2024,11.73,Base survey of 2021
+Milk,Operating costs,"Total, feed costs","Total, feed costs",dollars per hundredweight sold,50–99 cows,U.S. total,United States,2021,13.97,Base survey of 2021
+Milk,Operating costs,"Total, feed costs","Total, feed costs",dollars per hundredweight sold,50–99 cows,U.S. total,United States,2022,17.24,Base survey of 2021
+Milk,Operating costs,"Total, feed costs","Total, feed costs",dollars per hundredweight sold,50–99 cows,U.S. total,United States,2023,16.27,Base survey of 2021
+Milk,Operating costs,"Total, feed costs","Total, feed costs",dollars per hundredweight sold,50–99 cows,U.S. total,United States,2024,12.68,Base survey of 2021
+Milk,Operating costs,"Total, feed costs","Total, feed costs",dollars per hundredweight sold,100–199 cows,U.S. total,United States,2021,11.96,Base survey of 2021
+Milk,Operating costs,"Total, feed costs","Total, feed costs",dollars per hundredweight sold,100–199 cows,U.S. total,United States,2022,14.77,Base survey of 2021
+Milk,Operating costs,"Total, feed costs","Total, feed costs",dollars per hundredweight sold,100–199 cows,U.S. total,United States,2023,13.81,Base survey of 2021
+Milk,Operating costs,"Total, feed costs","Total, feed costs",dollars per hundredweight sold,100–199 cows,U.S. total,United States,2024,10.67,Base survey of 2021
+Milk,Operating costs,"Total, feed costs","Total, feed costs",dollars per hundredweight sold,200–499 cows,U.S. total,United States,2021,11.79,Base survey of 2021
+Milk,Operating costs,"Total, feed costs","Total, feed costs",dollars per hundredweight sold,200–499 cows,U.S. total,United States,2022,14.58,Base survey of 2021
+Milk,Operating costs,"Total, feed costs","Total, feed costs",dollars per hundredweight sold,200–499 cows,U.S. total,United States,2023,13.6,Base survey of 2021
+Milk,Operating costs,"Total, feed costs","Total, feed costs",dollars per hundredweight sold,200–499 cows,U.S. total,United States,2024,10.48,Base survey of 2021
+Milk,Operating costs,"Total, feed costs","Total, feed costs",dollars per hundredweight sold,500–999 cows,U.S. total,United States,2021,12.08,Base survey of 2021
+Milk,Operating costs,"Total, feed costs","Total, feed costs",dollars per hundredweight sold,500–999 cows,U.S. total,United States,2022,14.95,Base survey of 2021
+Milk,Operating costs,"Total, feed costs","Total, feed costs",dollars per hundredweight sold,500–999 cows,U.S. total,United States,2023,13.76,Base survey of 2021
+Milk,Operating costs,"Total, feed costs","Total, feed costs",dollars per hundredweight sold,500–999 cows,U.S. total,United States,2024,10.49,Base survey of 2021
+Milk,Operating costs,"Total, feed costs","Total, feed costs",dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2021,11.53,Base survey of 2021
+Milk,Operating costs,"Total, feed costs","Total, feed costs",dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2022,14.28,Base survey of 2021
+Milk,Operating costs,"Total, feed costs","Total, feed costs",dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2023,13.03,Base survey of 2021
+Milk,Operating costs,"Total, feed costs","Total, feed costs",dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2024,9.86,Base survey of 2021
+Milk,Operating costs,"Total, feed costs","Total, feed costs",dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2021,11.74,Base survey of 2021
+Milk,Operating costs,"Total, feed costs","Total, feed costs",dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2022,14.55,Base survey of 2021
+Milk,Operating costs,"Total, feed costs","Total, feed costs",dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2023,13.18,Base survey of 2021
+Milk,Operating costs,"Total, feed costs","Total, feed costs",dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2024,9.91,Base survey of 2021
+Milk,Operating costs,"Total, feed costs","Total, feed costs",dollars per hundredweight sold,All sizes,U.S. total,United States,2021,11.93,Base survey of 2021
+Milk,Operating costs,"Total, feed costs","Total, feed costs",dollars per hundredweight sold,All sizes,U.S. total,United States,2022,14.77,Base survey of 2021
+Milk,Operating costs,"Total, feed costs","Total, feed costs",dollars per hundredweight sold,All sizes,U.S. total,United States,2023,13.56,Base survey of 2021
+Milk,Operating costs,"Total, feed costs","Total, feed costs",dollars per hundredweight sold,All sizes,U.S. total,United States,2024,10.31,Base survey of 2021
+Milk,Operating costs,Veterinary and medicine,Veterinary and medicine,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2021,0.62,Base survey of 2021
+Milk,Operating costs,Veterinary and medicine,Veterinary and medicine,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2022,0.69,Base survey of 2021
+Milk,Operating costs,Veterinary and medicine,Veterinary and medicine,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2023,0.73,Base survey of 2021
+Milk,Operating costs,Veterinary and medicine,Veterinary and medicine,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2024,0.75,Base survey of 2021
+Milk,Operating costs,Veterinary and medicine,Veterinary and medicine,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2021,0.71,Base survey of 2021
+Milk,Operating costs,Veterinary and medicine,Veterinary and medicine,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2022,0.8,Base survey of 2021
+Milk,Operating costs,Veterinary and medicine,Veterinary and medicine,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2023,0.84,Base survey of 2021
+Milk,Operating costs,Veterinary and medicine,Veterinary and medicine,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2024,0.87,Base survey of 2021
+Milk,Operating costs,Veterinary and medicine,Veterinary and medicine,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2021,0.68,Base survey of 2021
+Milk,Operating costs,Veterinary and medicine,Veterinary and medicine,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2022,0.76,Base survey of 2021
+Milk,Operating costs,Veterinary and medicine,Veterinary and medicine,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2023,0.8,Base survey of 2021
+Milk,Operating costs,Veterinary and medicine,Veterinary and medicine,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2024,0.83,Base survey of 2021
+Milk,Operating costs,Veterinary and medicine,Veterinary and medicine,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2021,0.83,Base survey of 2021
+Milk,Operating costs,Veterinary and medicine,Veterinary and medicine,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2022,0.93,Base survey of 2021
+Milk,Operating costs,Veterinary and medicine,Veterinary and medicine,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2023,0.98,Base survey of 2021
+Milk,Operating costs,Veterinary and medicine,Veterinary and medicine,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2024,1.01,Base survey of 2021
+Milk,Operating costs,Veterinary and medicine,Veterinary and medicine,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2021,0.71,Base survey of 2021
+Milk,Operating costs,Veterinary and medicine,Veterinary and medicine,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2022,0.8,Base survey of 2021
+Milk,Operating costs,Veterinary and medicine,Veterinary and medicine,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2023,0.84,Base survey of 2021
+Milk,Operating costs,Veterinary and medicine,Veterinary and medicine,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2024,0.87,Base survey of 2021
+Milk,Operating costs,Veterinary and medicine,Veterinary and medicine,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2021,0.55,Base survey of 2021
+Milk,Operating costs,Veterinary and medicine,Veterinary and medicine,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2022,0.62,Base survey of 2021
+Milk,Operating costs,Veterinary and medicine,Veterinary and medicine,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2023,0.65,Base survey of 2021
+Milk,Operating costs,Veterinary and medicine,Veterinary and medicine,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2024,0.67,Base survey of 2021
+Milk,Operating costs,Veterinary and medicine,Veterinary and medicine,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2021,0.55,Base survey of 2021
+Milk,Operating costs,Veterinary and medicine,Veterinary and medicine,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2022,0.62,Base survey of 2021
+Milk,Operating costs,Veterinary and medicine,Veterinary and medicine,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2023,0.65,Base survey of 2021
+Milk,Operating costs,Veterinary and medicine,Veterinary and medicine,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2024,0.67,Base survey of 2021
+Milk,Operating costs,Veterinary and medicine,Veterinary and medicine,dollars per hundredweight sold,All sizes,U.S. total,United States,2021,0.62,Base survey of 2021
+Milk,Operating costs,Veterinary and medicine,Veterinary and medicine,dollars per hundredweight sold,All sizes,U.S. total,United States,2022,0.7,Base survey of 2021
+Milk,Operating costs,Veterinary and medicine,Veterinary and medicine,dollars per hundredweight sold,All sizes,U.S. total,United States,2023,0.74,Base survey of 2021
+Milk,Operating costs,Veterinary and medicine,Veterinary and medicine,dollars per hundredweight sold,All sizes,U.S. total,United States,2024,0.76,Base survey of 2021
+Milk,Operating costs,"Fuel, lube, and electricity","Fuel, lube, and electricity",dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2021,1.24,Base survey of 2021
+Milk,Operating costs,"Fuel, lube, and electricity","Fuel, lube, and electricity",dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2022,1.8,Base survey of 2021
+Milk,Operating costs,"Fuel, lube, and electricity","Fuel, lube, and electricity",dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2023,1.55,Base survey of 2021
+Milk,Operating costs,"Fuel, lube, and electricity","Fuel, lube, and electricity",dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2024,1.45,Base survey of 2021
+Milk,Operating costs,"Fuel, lube, and electricity","Fuel, lube, and electricity",dollars per hundredweight sold,50–99 cows,U.S. total,United States,2021,0.96,Base survey of 2021
+Milk,Operating costs,"Fuel, lube, and electricity","Fuel, lube, and electricity",dollars per hundredweight sold,50–99 cows,U.S. total,United States,2022,1.39,Base survey of 2021
+Milk,Operating costs,"Fuel, lube, and electricity","Fuel, lube, and electricity",dollars per hundredweight sold,50–99 cows,U.S. total,United States,2023,1.2,Base survey of 2021
+Milk,Operating costs,"Fuel, lube, and electricity","Fuel, lube, and electricity",dollars per hundredweight sold,50–99 cows,U.S. total,United States,2024,1.12,Base survey of 2021
+Milk,Operating costs,"Fuel, lube, and electricity","Fuel, lube, and electricity",dollars per hundredweight sold,100–199 cows,U.S. total,United States,2021,0.92,Base survey of 2021
+Milk,Operating costs,"Fuel, lube, and electricity","Fuel, lube, and electricity",dollars per hundredweight sold,100–199 cows,U.S. total,United States,2022,1.33,Base survey of 2021
+Milk,Operating costs,"Fuel, lube, and electricity","Fuel, lube, and electricity",dollars per hundredweight sold,100–199 cows,U.S. total,United States,2023,1.15,Base survey of 2021
+Milk,Operating costs,"Fuel, lube, and electricity","Fuel, lube, and electricity",dollars per hundredweight sold,100–199 cows,U.S. total,United States,2024,1.07,Base survey of 2021
+Milk,Operating costs,"Fuel, lube, and electricity","Fuel, lube, and electricity",dollars per hundredweight sold,200–499 cows,U.S. total,United States,2021,0.85,Base survey of 2021
+Milk,Operating costs,"Fuel, lube, and electricity","Fuel, lube, and electricity",dollars per hundredweight sold,200–499 cows,U.S. total,United States,2022,1.24,Base survey of 2021
+Milk,Operating costs,"Fuel, lube, and electricity","Fuel, lube, and electricity",dollars per hundredweight sold,200–499 cows,U.S. total,United States,2023,1.07,Base survey of 2021
+Milk,Operating costs,"Fuel, lube, and electricity","Fuel, lube, and electricity",dollars per hundredweight sold,200–499 cows,U.S. total,United States,2024,1,Base survey of 2021
+Milk,Operating costs,"Fuel, lube, and electricity","Fuel, lube, and electricity",dollars per hundredweight sold,500–999 cows,U.S. total,United States,2021,0.71,Base survey of 2021
+Milk,Operating costs,"Fuel, lube, and electricity","Fuel, lube, and electricity",dollars per hundredweight sold,500–999 cows,U.S. total,United States,2022,1.03,Base survey of 2021
+Milk,Operating costs,"Fuel, lube, and electricity","Fuel, lube, and electricity",dollars per hundredweight sold,500–999 cows,U.S. total,United States,2023,0.89,Base survey of 2021
+Milk,Operating costs,"Fuel, lube, and electricity","Fuel, lube, and electricity",dollars per hundredweight sold,500–999 cows,U.S. total,United States,2024,0.83,Base survey of 2021
+Milk,Operating costs,"Fuel, lube, and electricity","Fuel, lube, and electricity",dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2021,0.55,Base survey of 2021
+Milk,Operating costs,"Fuel, lube, and electricity","Fuel, lube, and electricity",dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2022,0.8,Base survey of 2021
+Milk,Operating costs,"Fuel, lube, and electricity","Fuel, lube, and electricity",dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2023,0.69,Base survey of 2021
+Milk,Operating costs,"Fuel, lube, and electricity","Fuel, lube, and electricity",dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2024,0.64,Base survey of 2021
+Milk,Operating costs,"Fuel, lube, and electricity","Fuel, lube, and electricity",dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2021,0.43,Base survey of 2021
+Milk,Operating costs,"Fuel, lube, and electricity","Fuel, lube, and electricity",dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2022,0.63,Base survey of 2021
+Milk,Operating costs,"Fuel, lube, and electricity","Fuel, lube, and electricity",dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2023,0.54,Base survey of 2021
+Milk,Operating costs,"Fuel, lube, and electricity","Fuel, lube, and electricity",dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2024,0.5,Base survey of 2021
+Milk,Operating costs,"Fuel, lube, and electricity","Fuel, lube, and electricity",dollars per hundredweight sold,All sizes,U.S. total,United States,2021,0.63,Base survey of 2021
+Milk,Operating costs,"Fuel, lube, and electricity","Fuel, lube, and electricity",dollars per hundredweight sold,All sizes,U.S. total,United States,2022,0.91,Base survey of 2021
+Milk,Operating costs,"Fuel, lube, and electricity","Fuel, lube, and electricity",dollars per hundredweight sold,All sizes,U.S. total,United States,2023,0.79,Base survey of 2021
+Milk,Operating costs,"Fuel, lube, and electricity","Fuel, lube, and electricity",dollars per hundredweight sold,All sizes,U.S. total,United States,2024,0.73,Base survey of 2021
+Milk,Operating costs,Repairs,Repairs,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2021,1.32,Base survey of 2021
+Milk,Operating costs,Repairs,Repairs,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2022,1.47,Base survey of 2021
+Milk,Operating costs,Repairs,Repairs,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2023,1.52,Base survey of 2021
+Milk,Operating costs,Repairs,Repairs,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2024,1.56,Base survey of 2021
+Milk,Operating costs,Repairs,Repairs,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2021,1,Base survey of 2021
+Milk,Operating costs,Repairs,Repairs,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2022,1.11,Base survey of 2021
+Milk,Operating costs,Repairs,Repairs,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2023,1.15,Base survey of 2021
+Milk,Operating costs,Repairs,Repairs,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2024,1.18,Base survey of 2021
+Milk,Operating costs,Repairs,Repairs,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2021,0.93,Base survey of 2021
+Milk,Operating costs,Repairs,Repairs,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2022,1.03,Base survey of 2021
+Milk,Operating costs,Repairs,Repairs,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2023,1.06,Base survey of 2021
+Milk,Operating costs,Repairs,Repairs,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2024,1.09,Base survey of 2021
+Milk,Operating costs,Repairs,Repairs,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2021,0.89,Base survey of 2021
+Milk,Operating costs,Repairs,Repairs,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2022,0.98,Base survey of 2021
+Milk,Operating costs,Repairs,Repairs,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2023,1.02,Base survey of 2021
+Milk,Operating costs,Repairs,Repairs,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2024,1.04,Base survey of 2021
+Milk,Operating costs,Repairs,Repairs,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2021,0.7,Base survey of 2021
+Milk,Operating costs,Repairs,Repairs,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2022,0.77,Base survey of 2021
+Milk,Operating costs,Repairs,Repairs,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2023,0.8,Base survey of 2021
+Milk,Operating costs,Repairs,Repairs,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2024,0.82,Base survey of 2021
+Milk,Operating costs,Repairs,Repairs,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2021,0.77,Base survey of 2021
+Milk,Operating costs,Repairs,Repairs,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2022,0.86,Base survey of 2021
+Milk,Operating costs,Repairs,Repairs,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2023,0.89,Base survey of 2021
+Milk,Operating costs,Repairs,Repairs,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2024,0.91,Base survey of 2021
+Milk,Operating costs,Repairs,Repairs,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2021,0.47,Base survey of 2021
+Milk,Operating costs,Repairs,Repairs,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2022,0.52,Base survey of 2021
+Milk,Operating costs,Repairs,Repairs,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2023,0.54,Base survey of 2021
+Milk,Operating costs,Repairs,Repairs,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2024,0.56,Base survey of 2021
+Milk,Operating costs,Repairs,Repairs,dollars per hundredweight sold,All sizes,U.S. total,United States,2021,0.7,Base survey of 2021
+Milk,Operating costs,Repairs,Repairs,dollars per hundredweight sold,All sizes,U.S. total,United States,2022,0.77,Base survey of 2021
+Milk,Operating costs,Repairs,Repairs,dollars per hundredweight sold,All sizes,U.S. total,United States,2023,0.8,Base survey of 2021
+Milk,Operating costs,Repairs,Repairs,dollars per hundredweight sold,All sizes,U.S. total,United States,2024,0.82,Base survey of 2021
+Milk,Operating costs,"Other, operating costs ² ","Other, operating costs ² ",dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2021,0.1,Base survey of 2021
+Milk,Operating costs,"Other, operating costs ² ","Other, operating costs ² ",dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2022,0.11,Base survey of 2021
+Milk,Operating costs,"Other, operating costs ² ","Other, operating costs ² ",dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2023,0.12,Base survey of 2021
+Milk,Operating costs,"Other, operating costs ² ","Other, operating costs ² ",dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2024,0.12,Base survey of 2021
+Milk,Operating costs,"Other, operating costs ² ","Other, operating costs ² ",dollars per hundredweight sold,50–99 cows,U.S. total,United States,2021,0.03,Base survey of 2021
+Milk,Operating costs,"Other, operating costs ² ","Other, operating costs ² ",dollars per hundredweight sold,50–99 cows,U.S. total,United States,2022,0.04,Base survey of 2021
+Milk,Operating costs,"Other, operating costs ² ","Other, operating costs ² ",dollars per hundredweight sold,50–99 cows,U.S. total,United States,2023,0.04,Base survey of 2021
+Milk,Operating costs,"Other, operating costs ² ","Other, operating costs ² ",dollars per hundredweight sold,50–99 cows,U.S. total,United States,2024,0.04,Base survey of 2021
+Milk,Operating costs,"Other, operating costs ² ","Other, operating costs ² ",dollars per hundredweight sold,100–199 cows,U.S. total,United States,2021,0.01,Base survey of 2021
+Milk,Operating costs,"Other, operating costs ² ","Other, operating costs ² ",dollars per hundredweight sold,100–199 cows,U.S. total,United States,2022,0.01,Base survey of 2021
+Milk,Operating costs,"Other, operating costs ² ","Other, operating costs ² ",dollars per hundredweight sold,100–199 cows,U.S. total,United States,2023,0.01,Base survey of 2021
+Milk,Operating costs,"Other, operating costs ² ","Other, operating costs ² ",dollars per hundredweight sold,100–199 cows,U.S. total,United States,2024,0.02,Base survey of 2021
+Milk,Operating costs,"Other, operating costs ² ","Other, operating costs ² ",dollars per hundredweight sold,200–499 cows,U.S. total,United States,2021,0,Base survey of 2021
+Milk,Operating costs,"Other, operating costs ² ","Other, operating costs ² ",dollars per hundredweight sold,200–499 cows,U.S. total,United States,2022,0,Base survey of 2021
+Milk,Operating costs,"Other, operating costs ² ","Other, operating costs ² ",dollars per hundredweight sold,200–499 cows,U.S. total,United States,2023,0,Base survey of 2021
+Milk,Operating costs,"Other, operating costs ² ","Other, operating costs ² ",dollars per hundredweight sold,200–499 cows,U.S. total,United States,2024,0,Base survey of 2021
+Milk,Operating costs,"Other, operating costs ² ","Other, operating costs ² ",dollars per hundredweight sold,500–999 cows,U.S. total,United States,2021,0,Base survey of 2021
+Milk,Operating costs,"Other, operating costs ² ","Other, operating costs ² ",dollars per hundredweight sold,500–999 cows,U.S. total,United States,2022,0,Base survey of 2021
+Milk,Operating costs,"Other, operating costs ² ","Other, operating costs ² ",dollars per hundredweight sold,500–999 cows,U.S. total,United States,2023,0,Base survey of 2021
+Milk,Operating costs,"Other, operating costs ² ","Other, operating costs ² ",dollars per hundredweight sold,500–999 cows,U.S. total,United States,2024,0,Base survey of 2021
+Milk,Operating costs,"Other, operating costs ² ","Other, operating costs ² ",dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2021,0,Base survey of 2021
+Milk,Operating costs,"Other, operating costs ² ","Other, operating costs ² ",dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2022,0,Base survey of 2021
+Milk,Operating costs,"Other, operating costs ² ","Other, operating costs ² ",dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2023,0,Base survey of 2021
+Milk,Operating costs,"Other, operating costs ² ","Other, operating costs ² ",dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2024,0,Base survey of 2021
+Milk,Operating costs,"Other, operating costs ² ","Other, operating costs ² ",dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2021,0,Base survey of 2021
+Milk,Operating costs,"Other, operating costs ² ","Other, operating costs ² ",dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2022,0,Base survey of 2021
+Milk,Operating costs,"Other, operating costs ² ","Other, operating costs ² ",dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2023,0,Base survey of 2021
+Milk,Operating costs,"Other, operating costs ² ","Other, operating costs ² ",dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2024,0,Base survey of 2021
+Milk,Operating costs,"Other, operating costs ² ","Other, operating costs ² ",dollars per hundredweight sold,All sizes,U.S. total,United States,2021,0.01,Base survey of 2021
+Milk,Operating costs,"Other, operating costs ² ","Other, operating costs ² ",dollars per hundredweight sold,All sizes,U.S. total,United States,2022,0.01,Base survey of 2021
+Milk,Operating costs,"Other, operating costs ² ","Other, operating costs ² ",dollars per hundredweight sold,All sizes,U.S. total,United States,2023,0.01,Base survey of 2021
+Milk,Operating costs,"Other, operating costs ² ","Other, operating costs ² ",dollars per hundredweight sold,All sizes,U.S. total,United States,2024,0.01,Base survey of 2021
+Milk,Operating costs,Interest on operating capital,Interest on operating capital,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2021,0.01,Base survey of 2021
+Milk,Operating costs,Interest on operating capital,Interest on operating capital,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2022,0.25,Base survey of 2021
+Milk,Operating costs,Interest on operating capital,Interest on operating capital,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2023,0.5,Base survey of 2021
+Milk,Operating costs,Interest on operating capital,Interest on operating capital,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2024,0.4,Base survey of 2021
+Milk,Operating costs,Interest on operating capital,Interest on operating capital,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2021,0.01,Base survey of 2021
+Milk,Operating costs,Interest on operating capital,Interest on operating capital,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2022,0.26,Base survey of 2021
+Milk,Operating costs,Interest on operating capital,Interest on operating capital,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2023,0.52,Base survey of 2021
+Milk,Operating costs,Interest on operating capital,Interest on operating capital,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2024,0.41,Base survey of 2021
+Milk,Operating costs,Interest on operating capital,Interest on operating capital,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2021,0,Base survey of 2021
+Milk,Operating costs,Interest on operating capital,Interest on operating capital,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2022,0.23,Base survey of 2021
+Milk,Operating costs,Interest on operating capital,Interest on operating capital,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2023,0.46,Base survey of 2021
+Milk,Operating costs,Interest on operating capital,Interest on operating capital,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2024,0.36,Base survey of 2021
+Milk,Operating costs,Interest on operating capital,Interest on operating capital,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2021,0,Base survey of 2021
+Milk,Operating costs,Interest on operating capital,Interest on operating capital,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2022,0.23,Base survey of 2021
+Milk,Operating costs,Interest on operating capital,Interest on operating capital,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2023,0.45,Base survey of 2021
+Milk,Operating costs,Interest on operating capital,Interest on operating capital,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2024,0.35,Base survey of 2021
+Milk,Operating costs,Interest on operating capital,Interest on operating capital,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2021,0,Base survey of 2021
+Milk,Operating costs,Interest on operating capital,Interest on operating capital,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2022,0.23,Base survey of 2021
+Milk,Operating costs,Interest on operating capital,Interest on operating capital,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2023,0.45,Base survey of 2021
+Milk,Operating costs,Interest on operating capital,Interest on operating capital,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2024,0.35,Base survey of 2021
+Milk,Operating costs,Interest on operating capital,Interest on operating capital,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2021,0,Base survey of 2021
+Milk,Operating costs,Interest on operating capital,Interest on operating capital,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2022,0.22,Base survey of 2021
+Milk,Operating costs,Interest on operating capital,Interest on operating capital,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2023,0.42,Base survey of 2021
+Milk,Operating costs,Interest on operating capital,Interest on operating capital,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2024,0.32,Base survey of 2021
+Milk,Operating costs,Interest on operating capital,Interest on operating capital,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2021,0,Base survey of 2021
+Milk,Operating costs,Interest on operating capital,Interest on operating capital,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2022,0.21,Base survey of 2021
+Milk,Operating costs,Interest on operating capital,Interest on operating capital,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2023,0.4,Base survey of 2021
+Milk,Operating costs,Interest on operating capital,Interest on operating capital,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2024,0.3,Base survey of 2021
+Milk,Operating costs,Interest on operating capital,Interest on operating capital,dollars per hundredweight sold,All sizes,U.S. total,United States,2021,0,Base survey of 2021
+Milk,Operating costs,Interest on operating capital,Interest on operating capital,dollars per hundredweight sold,All sizes,U.S. total,United States,2022,0.22,Base survey of 2021
+Milk,Operating costs,Interest on operating capital,Interest on operating capital,dollars per hundredweight sold,All sizes,U.S. total,United States,2023,0.43,Base survey of 2021
+Milk,Operating costs,Interest on operating capital,Interest on operating capital,dollars per hundredweight sold,All sizes,U.S. total,United States,2024,0.33,Base survey of 2021
+Milk,Operating costs,"Total, operating costs","Total, operating costs",dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2021,17.09,Base survey of 2021
+Milk,Operating costs,"Total, operating costs","Total, operating costs",dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2022,21.21,Base survey of 2021
+Milk,Operating costs,"Total, operating costs","Total, operating costs",dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2023,20.47,Base survey of 2021
+Milk,Operating costs,"Total, operating costs","Total, operating costs",dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2024,17.11,Base survey of 2021
+Milk,Operating costs,"Total, operating costs","Total, operating costs",dollars per hundredweight sold,50–99 cows,U.S. total,United States,2021,17.75,Base survey of 2021
+Milk,Operating costs,"Total, operating costs","Total, operating costs",dollars per hundredweight sold,50–99 cows,U.S. total,United States,2022,22.03,Base survey of 2021
+Milk,Operating costs,"Total, operating costs","Total, operating costs",dollars per hundredweight sold,50–99 cows,U.S. total,United States,2023,21.28,Base survey of 2021
+Milk,Operating costs,"Total, operating costs","Total, operating costs",dollars per hundredweight sold,50–99 cows,U.S. total,United States,2024,17.6,Base survey of 2021
+Milk,Operating costs,"Total, operating costs","Total, operating costs",dollars per hundredweight sold,100–199 cows,U.S. total,United States,2021,15.7,Base survey of 2021
+Milk,Operating costs,"Total, operating costs","Total, operating costs",dollars per hundredweight sold,100–199 cows,U.S. total,United States,2022,19.49,Base survey of 2021
+Milk,Operating costs,"Total, operating costs","Total, operating costs",dollars per hundredweight sold,100–199 cows,U.S. total,United States,2023,18.72,Base survey of 2021
+Milk,Operating costs,"Total, operating costs","Total, operating costs",dollars per hundredweight sold,100–199 cows,U.S. total,United States,2024,15.51,Base survey of 2021
+Milk,Operating costs,"Total, operating costs","Total, operating costs",dollars per hundredweight sold,200–499 cows,U.S. total,United States,2021,15.4,Base survey of 2021
+Milk,Operating costs,"Total, operating costs","Total, operating costs",dollars per hundredweight sold,200–499 cows,U.S. total,United States,2022,19.12,Base survey of 2021
+Milk,Operating costs,"Total, operating costs","Total, operating costs",dollars per hundredweight sold,200–499 cows,U.S. total,United States,2023,18.34,Base survey of 2021
+Milk,Operating costs,"Total, operating costs","Total, operating costs",dollars per hundredweight sold,200–499 cows,U.S. total,United States,2024,15.15,Base survey of 2021
+Milk,Operating costs,"Total, operating costs","Total, operating costs",dollars per hundredweight sold,500–999 cows,U.S. total,United States,2021,15.43,Base survey of 2021
+Milk,Operating costs,"Total, operating costs","Total, operating costs",dollars per hundredweight sold,500–999 cows,U.S. total,United States,2022,19.16,Base survey of 2021
+Milk,Operating costs,"Total, operating costs","Total, operating costs",dollars per hundredweight sold,500–999 cows,U.S. total,United States,2023,18.19,Base survey of 2021
+Milk,Operating costs,"Total, operating costs","Total, operating costs",dollars per hundredweight sold,500–999 cows,U.S. total,United States,2024,14.86,Base survey of 2021
+Milk,Operating costs,"Total, operating costs","Total, operating costs",dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2021,14.53,Base survey of 2021
+Milk,Operating costs,"Total, operating costs","Total, operating costs",dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2022,18.03,Base survey of 2021
+Milk,Operating costs,"Total, operating costs","Total, operating costs",dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2023,17,Base survey of 2021
+Milk,Operating costs,"Total, operating costs","Total, operating costs",dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2024,13.77,Base survey of 2021
+Milk,Operating costs,"Total, operating costs","Total, operating costs",dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2021,14.15,Base survey of 2021
+Milk,Operating costs,"Total, operating costs","Total, operating costs",dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2022,17.6,Base survey of 2021
+Milk,Operating costs,"Total, operating costs","Total, operating costs",dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2023,16.44,Base survey of 2021
+Milk,Operating costs,"Total, operating costs","Total, operating costs",dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2024,13.1,Base survey of 2021
+Milk,Operating costs,"Total, operating costs","Total, operating costs",dollars per hundredweight sold,All sizes,U.S. total,United States,2021,14.95,Base survey of 2021
+Milk,Operating costs,"Total, operating costs","Total, operating costs",dollars per hundredweight sold,All sizes,U.S. total,United States,2022,18.57,Base survey of 2021
+Milk,Operating costs,"Total, operating costs","Total, operating costs",dollars per hundredweight sold,All sizes,U.S. total,United States,2023,17.57,Base survey of 2021
+Milk,Operating costs,"Total, operating costs","Total, operating costs",dollars per hundredweight sold,All sizes,U.S. total,United States,2024,14.26,Base survey of 2021
+Milk,Allocated overhead,Hired labor,Hired labor,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2021,0.54,Base survey of 2021
+Milk,Allocated overhead,Hired labor,Hired labor,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2022,0.6,Base survey of 2021
+Milk,Allocated overhead,Hired labor,Hired labor,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2023,0.64,Base survey of 2021
+Milk,Allocated overhead,Hired labor,Hired labor,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2024,0.64,Base survey of 2021
+Milk,Allocated overhead,Hired labor,Hired labor,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2021,0.69,Base survey of 2021
+Milk,Allocated overhead,Hired labor,Hired labor,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2022,0.76,Base survey of 2021
+Milk,Allocated overhead,Hired labor,Hired labor,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2023,0.8,Base survey of 2021
+Milk,Allocated overhead,Hired labor,Hired labor,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2024,0.82,Base survey of 2021
+Milk,Allocated overhead,Hired labor,Hired labor,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2021,1.24,Base survey of 2021
+Milk,Allocated overhead,Hired labor,Hired labor,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2022,1.34,Base survey of 2021
+Milk,Allocated overhead,Hired labor,Hired labor,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2023,1.41,Base survey of 2021
+Milk,Allocated overhead,Hired labor,Hired labor,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2024,1.46,Base survey of 2021
+Milk,Allocated overhead,Hired labor,Hired labor,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2021,2.18,Base survey of 2021
+Milk,Allocated overhead,Hired labor,Hired labor,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2022,2.4,Base survey of 2021
+Milk,Allocated overhead,Hired labor,Hired labor,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2023,2.54,Base survey of 2021
+Milk,Allocated overhead,Hired labor,Hired labor,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2024,2.59,Base survey of 2021
+Milk,Allocated overhead,Hired labor,Hired labor,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2021,2.31,Base survey of 2021
+Milk,Allocated overhead,Hired labor,Hired labor,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2022,2.53,Base survey of 2021
+Milk,Allocated overhead,Hired labor,Hired labor,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2023,2.69,Base survey of 2021
+Milk,Allocated overhead,Hired labor,Hired labor,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2024,2.72,Base survey of 2021
+Milk,Allocated overhead,Hired labor,Hired labor,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2021,2.21,Base survey of 2021
+Milk,Allocated overhead,Hired labor,Hired labor,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2022,2.41,Base survey of 2021
+Milk,Allocated overhead,Hired labor,Hired labor,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2023,2.55,Base survey of 2021
+Milk,Allocated overhead,Hired labor,Hired labor,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2024,2.58,Base survey of 2021
+Milk,Allocated overhead,Hired labor,Hired labor,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2021,2.01,Base survey of 2021
+Milk,Allocated overhead,Hired labor,Hired labor,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2022,2.17,Base survey of 2021
+Milk,Allocated overhead,Hired labor,Hired labor,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2023,2.29,Base survey of 2021
+Milk,Allocated overhead,Hired labor,Hired labor,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2024,2.34,Base survey of 2021
+Milk,Allocated overhead,Hired labor,Hired labor,dollars per hundredweight sold,All sizes,U.S. total,United States,2021,1.94,Base survey of 2021
+Milk,Allocated overhead,Hired labor,Hired labor,dollars per hundredweight sold,All sizes,U.S. total,United States,2022,2.11,Base survey of 2021
+Milk,Allocated overhead,Hired labor,Hired labor,dollars per hundredweight sold,All sizes,U.S. total,United States,2023,2.23,Base survey of 2021
+Milk,Allocated overhead,Hired labor,Hired labor,dollars per hundredweight sold,All sizes,U.S. total,United States,2024,2.27,Base survey of 2021
+Milk,Allocated overhead,Opportunity cost of unpaid labor,Opportunity cost of unpaid labor,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2021,14.48,Base survey of 2021
+Milk,Allocated overhead,Opportunity cost of unpaid labor,Opportunity cost of unpaid labor,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2022,15.4,Base survey of 2021
+Milk,Allocated overhead,Opportunity cost of unpaid labor,Opportunity cost of unpaid labor,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2023,16.15,Base survey of 2021
+Milk,Allocated overhead,Opportunity cost of unpaid labor,Opportunity cost of unpaid labor,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2024,17.06,Base survey of 2021
+Milk,Allocated overhead,Opportunity cost of unpaid labor,Opportunity cost of unpaid labor,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2021,7.16,Base survey of 2021
+Milk,Allocated overhead,Opportunity cost of unpaid labor,Opportunity cost of unpaid labor,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2022,7.6,Base survey of 2021
+Milk,Allocated overhead,Opportunity cost of unpaid labor,Opportunity cost of unpaid labor,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2023,8.01,Base survey of 2021
+Milk,Allocated overhead,Opportunity cost of unpaid labor,Opportunity cost of unpaid labor,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2024,8.39,Base survey of 2021
+Milk,Allocated overhead,Opportunity cost of unpaid labor,Opportunity cost of unpaid labor,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2021,3.6,Base survey of 2021
+Milk,Allocated overhead,Opportunity cost of unpaid labor,Opportunity cost of unpaid labor,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2022,3.82,Base survey of 2021
+Milk,Allocated overhead,Opportunity cost of unpaid labor,Opportunity cost of unpaid labor,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2023,4.01,Base survey of 2021
+Milk,Allocated overhead,Opportunity cost of unpaid labor,Opportunity cost of unpaid labor,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2024,4.2,Base survey of 2021
+Milk,Allocated overhead,Opportunity cost of unpaid labor,Opportunity cost of unpaid labor,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2021,1.24,Base survey of 2021
+Milk,Allocated overhead,Opportunity cost of unpaid labor,Opportunity cost of unpaid labor,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2022,1.32,Base survey of 2021
+Milk,Allocated overhead,Opportunity cost of unpaid labor,Opportunity cost of unpaid labor,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2023,1.39,Base survey of 2021
+Milk,Allocated overhead,Opportunity cost of unpaid labor,Opportunity cost of unpaid labor,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2024,1.46,Base survey of 2021
+Milk,Allocated overhead,Opportunity cost of unpaid labor,Opportunity cost of unpaid labor,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2021,0.52,Base survey of 2021
+Milk,Allocated overhead,Opportunity cost of unpaid labor,Opportunity cost of unpaid labor,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2022,0.56,Base survey of 2021
+Milk,Allocated overhead,Opportunity cost of unpaid labor,Opportunity cost of unpaid labor,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2023,0.58,Base survey of 2021
+Milk,Allocated overhead,Opportunity cost of unpaid labor,Opportunity cost of unpaid labor,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2024,0.62,Base survey of 2021
+Milk,Allocated overhead,Opportunity cost of unpaid labor,Opportunity cost of unpaid labor,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2021,0.24,Base survey of 2021
+Milk,Allocated overhead,Opportunity cost of unpaid labor,Opportunity cost of unpaid labor,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2022,0.25,Base survey of 2021
+Milk,Allocated overhead,Opportunity cost of unpaid labor,Opportunity cost of unpaid labor,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2023,0.27,Base survey of 2021
+Milk,Allocated overhead,Opportunity cost of unpaid labor,Opportunity cost of unpaid labor,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2024,0.29,Base survey of 2021
+Milk,Allocated overhead,Opportunity cost of unpaid labor,Opportunity cost of unpaid labor,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2021,0.08,Base survey of 2021
+Milk,Allocated overhead,Opportunity cost of unpaid labor,Opportunity cost of unpaid labor,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2022,0.08,Base survey of 2021
+Milk,Allocated overhead,Opportunity cost of unpaid labor,Opportunity cost of unpaid labor,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2023,0.09,Base survey of 2021
+Milk,Allocated overhead,Opportunity cost of unpaid labor,Opportunity cost of unpaid labor,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2024,0.09,Base survey of 2021
+Milk,Allocated overhead,Opportunity cost of unpaid labor,Opportunity cost of unpaid labor,dollars per hundredweight sold,All sizes,U.S. total,United States,2021,1.34,Base survey of 2021
+Milk,Allocated overhead,Opportunity cost of unpaid labor,Opportunity cost of unpaid labor,dollars per hundredweight sold,All sizes,U.S. total,United States,2022,1.43,Base survey of 2021
+Milk,Allocated overhead,Opportunity cost of unpaid labor,Opportunity cost of unpaid labor,dollars per hundredweight sold,All sizes,U.S. total,United States,2023,1.5,Base survey of 2021
+Milk,Allocated overhead,Opportunity cost of unpaid labor,Opportunity cost of unpaid labor,dollars per hundredweight sold,All sizes,U.S. total,United States,2024,1.58,Base survey of 2021
+Milk,Allocated overhead,Capital recovery of machinery and equipment ³ ,Capital recovery of machinery and equipment ³ ,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2021,8.76,Base survey of 2021
+Milk,Allocated overhead,Capital recovery of machinery and equipment ³ ,Capital recovery of machinery and equipment ³ ,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2022,9.69,Base survey of 2021
+Milk,Allocated overhead,Capital recovery of machinery and equipment ³ ,Capital recovery of machinery and equipment ³ ,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2023,10.04,Base survey of 2021
+Milk,Allocated overhead,Capital recovery of machinery and equipment ³ ,Capital recovery of machinery and equipment ³ ,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2024,10.31,Base survey of 2021
+Milk,Allocated overhead,Capital recovery of machinery and equipment ³ ,Capital recovery of machinery and equipment ³ ,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2021,7.79,Base survey of 2021
+Milk,Allocated overhead,Capital recovery of machinery and equipment ³ ,Capital recovery of machinery and equipment ³ ,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2022,8.61,Base survey of 2021
+Milk,Allocated overhead,Capital recovery of machinery and equipment ³ ,Capital recovery of machinery and equipment ³ ,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2023,8.93,Base survey of 2021
+Milk,Allocated overhead,Capital recovery of machinery and equipment ³ ,Capital recovery of machinery and equipment ³ ,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2024,9.17,Base survey of 2021
+Milk,Allocated overhead,Capital recovery of machinery and equipment ³ ,Capital recovery of machinery and equipment ³ ,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2021,6.36,Base survey of 2021
+Milk,Allocated overhead,Capital recovery of machinery and equipment ³ ,Capital recovery of machinery and equipment ³ ,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2022,7.03,Base survey of 2021
+Milk,Allocated overhead,Capital recovery of machinery and equipment ³ ,Capital recovery of machinery and equipment ³ ,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2023,7.29,Base survey of 2021
+Milk,Allocated overhead,Capital recovery of machinery and equipment ³ ,Capital recovery of machinery and equipment ³ ,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2024,7.48,Base survey of 2021
+Milk,Allocated overhead,Capital recovery of machinery and equipment ³ ,Capital recovery of machinery and equipment ³ ,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2021,6.28,Base survey of 2021
+Milk,Allocated overhead,Capital recovery of machinery and equipment ³ ,Capital recovery of machinery and equipment ³ ,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2022,6.95,Base survey of 2021
+Milk,Allocated overhead,Capital recovery of machinery and equipment ³ ,Capital recovery of machinery and equipment ³ ,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2023,7.2,Base survey of 2021
+Milk,Allocated overhead,Capital recovery of machinery and equipment ³ ,Capital recovery of machinery and equipment ³ ,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2024,7.39,Base survey of 2021
+Milk,Allocated overhead,Capital recovery of machinery and equipment ³ ,Capital recovery of machinery and equipment ³ ,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2021,3.63,Base survey of 2021
+Milk,Allocated overhead,Capital recovery of machinery and equipment ³ ,Capital recovery of machinery and equipment ³ ,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2022,4.01,Base survey of 2021
+Milk,Allocated overhead,Capital recovery of machinery and equipment ³ ,Capital recovery of machinery and equipment ³ ,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2023,4.16,Base survey of 2021
+Milk,Allocated overhead,Capital recovery of machinery and equipment ³ ,Capital recovery of machinery and equipment ³ ,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2024,4.27,Base survey of 2021
+Milk,Allocated overhead,Capital recovery of machinery and equipment ³ ,Capital recovery of machinery and equipment ³ ,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2021,3.39,Base survey of 2021
+Milk,Allocated overhead,Capital recovery of machinery and equipment ³ ,Capital recovery of machinery and equipment ³ ,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2022,3.75,Base survey of 2021
+Milk,Allocated overhead,Capital recovery of machinery and equipment ³ ,Capital recovery of machinery and equipment ³ ,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2023,3.89,Base survey of 2021
+Milk,Allocated overhead,Capital recovery of machinery and equipment ³ ,Capital recovery of machinery and equipment ³ ,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2024,3.99,Base survey of 2021
+Milk,Allocated overhead,Capital recovery of machinery and equipment ³ ,Capital recovery of machinery and equipment ³ ,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2021,2.39,Base survey of 2021
+Milk,Allocated overhead,Capital recovery of machinery and equipment ³ ,Capital recovery of machinery and equipment ³ ,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2022,2.64,Base survey of 2021
+Milk,Allocated overhead,Capital recovery of machinery and equipment ³ ,Capital recovery of machinery and equipment ³ ,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2023,2.74,Base survey of 2021
+Milk,Allocated overhead,Capital recovery of machinery and equipment ³ ,Capital recovery of machinery and equipment ³ ,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2024,2.81,Base survey of 2021
+Milk,Allocated overhead,Capital recovery of machinery and equipment ³ ,Capital recovery of machinery and equipment ³ ,dollars per hundredweight sold,All sizes,U.S. total,United States,2021,4,Base survey of 2021
+Milk,Allocated overhead,Capital recovery of machinery and equipment ³ ,Capital recovery of machinery and equipment ³ ,dollars per hundredweight sold,All sizes,U.S. total,United States,2022,4.43,Base survey of 2021
+Milk,Allocated overhead,Capital recovery of machinery and equipment ³ ,Capital recovery of machinery and equipment ³ ,dollars per hundredweight sold,All sizes,U.S. total,United States,2023,4.59,Base survey of 2021
+Milk,Allocated overhead,Capital recovery of machinery and equipment ³ ,Capital recovery of machinery and equipment ³ ,dollars per hundredweight sold,All sizes,U.S. total,United States,2024,4.71,Base survey of 2021
+Milk,Allocated overhead,Opportunity cost of land,Opportunity cost of land,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2021,0.14,Base survey of 2021
+Milk,Allocated overhead,Opportunity cost of land,Opportunity cost of land,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2022,0.14,Base survey of 2021
+Milk,Allocated overhead,Opportunity cost of land,Opportunity cost of land,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2023,0.15,Base survey of 2021
+Milk,Allocated overhead,Opportunity cost of land,Opportunity cost of land,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2024,0.16,Base survey of 2021
+Milk,Allocated overhead,Opportunity cost of land,Opportunity cost of land,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2021,0.09,Base survey of 2021
+Milk,Allocated overhead,Opportunity cost of land,Opportunity cost of land,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2022,0.09,Base survey of 2021
+Milk,Allocated overhead,Opportunity cost of land,Opportunity cost of land,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2023,0.09,Base survey of 2021
+Milk,Allocated overhead,Opportunity cost of land,Opportunity cost of land,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2024,0.1,Base survey of 2021
+Milk,Allocated overhead,Opportunity cost of land,Opportunity cost of land,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2021,0.06,Base survey of 2021
+Milk,Allocated overhead,Opportunity cost of land,Opportunity cost of land,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2022,0.06,Base survey of 2021
+Milk,Allocated overhead,Opportunity cost of land,Opportunity cost of land,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2023,0.06,Base survey of 2021
+Milk,Allocated overhead,Opportunity cost of land,Opportunity cost of land,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2024,0.07,Base survey of 2021
+Milk,Allocated overhead,Opportunity cost of land,Opportunity cost of land,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2021,0.05,Base survey of 2021
+Milk,Allocated overhead,Opportunity cost of land,Opportunity cost of land,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2022,0.04,Base survey of 2021
+Milk,Allocated overhead,Opportunity cost of land,Opportunity cost of land,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2023,0.05,Base survey of 2021
+Milk,Allocated overhead,Opportunity cost of land,Opportunity cost of land,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2024,0.05,Base survey of 2021
+Milk,Allocated overhead,Opportunity cost of land,Opportunity cost of land,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2021,0.02,Base survey of 2021
+Milk,Allocated overhead,Opportunity cost of land,Opportunity cost of land,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2022,0.02,Base survey of 2021
+Milk,Allocated overhead,Opportunity cost of land,Opportunity cost of land,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2023,0.02,Base survey of 2021
+Milk,Allocated overhead,Opportunity cost of land,Opportunity cost of land,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2024,0.02,Base survey of 2021
+Milk,Allocated overhead,Opportunity cost of land,Opportunity cost of land,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2021,0.01,Base survey of 2021
+Milk,Allocated overhead,Opportunity cost of land,Opportunity cost of land,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2022,0.01,Base survey of 2021
+Milk,Allocated overhead,Opportunity cost of land,Opportunity cost of land,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2023,0.01,Base survey of 2021
+Milk,Allocated overhead,Opportunity cost of land,Opportunity cost of land,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2024,0.01,Base survey of 2021
+Milk,Allocated overhead,Opportunity cost of land,Opportunity cost of land,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2021,0,Base survey of 2021
+Milk,Allocated overhead,Opportunity cost of land,Opportunity cost of land,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2022,0,Base survey of 2021
+Milk,Allocated overhead,Opportunity cost of land,Opportunity cost of land,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2023,0,Base survey of 2021
+Milk,Allocated overhead,Opportunity cost of land,Opportunity cost of land,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2024,0,Base survey of 2021
+Milk,Allocated overhead,Opportunity cost of land,Opportunity cost of land,dollars per hundredweight sold,All sizes,U.S. total,United States,2021,0.02,Base survey of 2021
+Milk,Allocated overhead,Opportunity cost of land,Opportunity cost of land,dollars per hundredweight sold,All sizes,U.S. total,United States,2022,0.02,Base survey of 2021
+Milk,Allocated overhead,Opportunity cost of land,Opportunity cost of land,dollars per hundredweight sold,All sizes,U.S. total,United States,2023,0.03,Base survey of 2021
+Milk,Allocated overhead,Opportunity cost of land,Opportunity cost of land,dollars per hundredweight sold,All sizes,U.S. total,United States,2024,0.03,Base survey of 2021
+Milk,Allocated overhead,Taxes and insurance,Taxes and insurance,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2021,0.57,Base survey of 2021
+Milk,Allocated overhead,Taxes and insurance,Taxes and insurance,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2022,0.64,Base survey of 2021
+Milk,Allocated overhead,Taxes and insurance,Taxes and insurance,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2023,0.67,Base survey of 2021
+Milk,Allocated overhead,Taxes and insurance,Taxes and insurance,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2024,0.7,Base survey of 2021
+Milk,Allocated overhead,Taxes and insurance,Taxes and insurance,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2021,0.27,Base survey of 2021
+Milk,Allocated overhead,Taxes and insurance,Taxes and insurance,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2022,0.3,Base survey of 2021
+Milk,Allocated overhead,Taxes and insurance,Taxes and insurance,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2023,0.32,Base survey of 2021
+Milk,Allocated overhead,Taxes and insurance,Taxes and insurance,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2024,0.33,Base survey of 2021
+Milk,Allocated overhead,Taxes and insurance,Taxes and insurance,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2021,0.26,Base survey of 2021
+Milk,Allocated overhead,Taxes and insurance,Taxes and insurance,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2022,0.29,Base survey of 2021
+Milk,Allocated overhead,Taxes and insurance,Taxes and insurance,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2023,0.31,Base survey of 2021
+Milk,Allocated overhead,Taxes and insurance,Taxes and insurance,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2024,0.32,Base survey of 2021
+Milk,Allocated overhead,Taxes and insurance,Taxes and insurance,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2021,0.26,Base survey of 2021
+Milk,Allocated overhead,Taxes and insurance,Taxes and insurance,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2022,0.3,Base survey of 2021
+Milk,Allocated overhead,Taxes and insurance,Taxes and insurance,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2023,0.31,Base survey of 2021
+Milk,Allocated overhead,Taxes and insurance,Taxes and insurance,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2024,0.32,Base survey of 2021
+Milk,Allocated overhead,Taxes and insurance,Taxes and insurance,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2021,0.28,Base survey of 2021
+Milk,Allocated overhead,Taxes and insurance,Taxes and insurance,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2022,0.32,Base survey of 2021
+Milk,Allocated overhead,Taxes and insurance,Taxes and insurance,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2023,0.34,Base survey of 2021
+Milk,Allocated overhead,Taxes and insurance,Taxes and insurance,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2024,0.35,Base survey of 2021
+Milk,Allocated overhead,Taxes and insurance,Taxes and insurance,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2021,0.18,Base survey of 2021
+Milk,Allocated overhead,Taxes and insurance,Taxes and insurance,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2022,0.2,Base survey of 2021
+Milk,Allocated overhead,Taxes and insurance,Taxes and insurance,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2023,0.22,Base survey of 2021
+Milk,Allocated overhead,Taxes and insurance,Taxes and insurance,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2024,0.22,Base survey of 2021
+Milk,Allocated overhead,Taxes and insurance,Taxes and insurance,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2021,0.12,Base survey of 2021
+Milk,Allocated overhead,Taxes and insurance,Taxes and insurance,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2022,0.13,Base survey of 2021
+Milk,Allocated overhead,Taxes and insurance,Taxes and insurance,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2023,0.14,Base survey of 2021
+Milk,Allocated overhead,Taxes and insurance,Taxes and insurance,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2024,0.14,Base survey of 2021
+Milk,Allocated overhead,Taxes and insurance,Taxes and insurance,dollars per hundredweight sold,All sizes,U.S. total,United States,2021,0.2,Base survey of 2021
+Milk,Allocated overhead,Taxes and insurance,Taxes and insurance,dollars per hundredweight sold,All sizes,U.S. total,United States,2022,0.22,Base survey of 2021
+Milk,Allocated overhead,Taxes and insurance,Taxes and insurance,dollars per hundredweight sold,All sizes,U.S. total,United States,2023,0.24,Base survey of 2021
+Milk,Allocated overhead,Taxes and insurance,Taxes and insurance,dollars per hundredweight sold,All sizes,U.S. total,United States,2024,0.24,Base survey of 2021
+Milk,Allocated overhead,General farm overhead,General farm overhead,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2021,1.13,Base survey of 2021
+Milk,Allocated overhead,General farm overhead,General farm overhead,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2022,1.26,Base survey of 2021
+Milk,Allocated overhead,General farm overhead,General farm overhead,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2023,1.31,Base survey of 2021
+Milk,Allocated overhead,General farm overhead,General farm overhead,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2024,1.32,Base survey of 2021
+Milk,Allocated overhead,General farm overhead,General farm overhead,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2021,0.84,Base survey of 2021
+Milk,Allocated overhead,General farm overhead,General farm overhead,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2022,0.94,Base survey of 2021
+Milk,Allocated overhead,General farm overhead,General farm overhead,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2023,0.97,Base survey of 2021
+Milk,Allocated overhead,General farm overhead,General farm overhead,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2024,0.98,Base survey of 2021
+Milk,Allocated overhead,General farm overhead,General farm overhead,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2021,0.71,Base survey of 2021
+Milk,Allocated overhead,General farm overhead,General farm overhead,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2022,0.79,Base survey of 2021
+Milk,Allocated overhead,General farm overhead,General farm overhead,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2023,0.82,Base survey of 2021
+Milk,Allocated overhead,General farm overhead,General farm overhead,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2024,0.83,Base survey of 2021
+Milk,Allocated overhead,General farm overhead,General farm overhead,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2021,0.52,Base survey of 2021
+Milk,Allocated overhead,General farm overhead,General farm overhead,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2022,0.58,Base survey of 2021
+Milk,Allocated overhead,General farm overhead,General farm overhead,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2023,0.6,Base survey of 2021
+Milk,Allocated overhead,General farm overhead,General farm overhead,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2024,0.61,Base survey of 2021
+Milk,Allocated overhead,General farm overhead,General farm overhead,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2021,0.5,Base survey of 2021
+Milk,Allocated overhead,General farm overhead,General farm overhead,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2022,0.56,Base survey of 2021
+Milk,Allocated overhead,General farm overhead,General farm overhead,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2023,0.58,Base survey of 2021
+Milk,Allocated overhead,General farm overhead,General farm overhead,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2024,0.59,Base survey of 2021
+Milk,Allocated overhead,General farm overhead,General farm overhead,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2021,0.44,Base survey of 2021
+Milk,Allocated overhead,General farm overhead,General farm overhead,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2022,0.49,Base survey of 2021
+Milk,Allocated overhead,General farm overhead,General farm overhead,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2023,0.51,Base survey of 2021
+Milk,Allocated overhead,General farm overhead,General farm overhead,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2024,0.51,Base survey of 2021
+Milk,Allocated overhead,General farm overhead,General farm overhead,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2021,0.39,Base survey of 2021
+Milk,Allocated overhead,General farm overhead,General farm overhead,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2022,0.44,Base survey of 2021
+Milk,Allocated overhead,General farm overhead,General farm overhead,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2023,0.45,Base survey of 2021
+Milk,Allocated overhead,General farm overhead,General farm overhead,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2024,0.46,Base survey of 2021
+Milk,Allocated overhead,General farm overhead,General farm overhead,dollars per hundredweight sold,All sizes,U.S. total,United States,2021,0.5,Base survey of 2021
+Milk,Allocated overhead,General farm overhead,General farm overhead,dollars per hundredweight sold,All sizes,U.S. total,United States,2022,0.56,Base survey of 2021
+Milk,Allocated overhead,General farm overhead,General farm overhead,dollars per hundredweight sold,All sizes,U.S. total,United States,2023,0.58,Base survey of 2021
+Milk,Allocated overhead,General farm overhead,General farm overhead,dollars per hundredweight sold,All sizes,U.S. total,United States,2024,0.58,Base survey of 2021
+Milk,Allocated overhead,"Total, allocated overhead","Total, allocated overhead",dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2021,25.62,Base survey of 2021
+Milk,Allocated overhead,"Total, allocated overhead","Total, allocated overhead",dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2022,27.73,Base survey of 2021
+Milk,Allocated overhead,"Total, allocated overhead","Total, allocated overhead",dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2023,28.96,Base survey of 2021
+Milk,Allocated overhead,"Total, allocated overhead","Total, allocated overhead",dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2024,30.18,Base survey of 2021
+Milk,Allocated overhead,"Total, allocated overhead","Total, allocated overhead",dollars per hundredweight sold,50–99 cows,U.S. total,United States,2021,16.83,Base survey of 2021
+Milk,Allocated overhead,"Total, allocated overhead","Total, allocated overhead",dollars per hundredweight sold,50–99 cows,U.S. total,United States,2022,18.3,Base survey of 2021
+Milk,Allocated overhead,"Total, allocated overhead","Total, allocated overhead",dollars per hundredweight sold,50–99 cows,U.S. total,United States,2023,19.11,Base survey of 2021
+Milk,Allocated overhead,"Total, allocated overhead","Total, allocated overhead",dollars per hundredweight sold,50–99 cows,U.S. total,United States,2024,19.78,Base survey of 2021
+Milk,Allocated overhead,"Total, allocated overhead","Total, allocated overhead",dollars per hundredweight sold,100–199 cows,U.S. total,United States,2021,12.23,Base survey of 2021
+Milk,Allocated overhead,"Total, allocated overhead","Total, allocated overhead",dollars per hundredweight sold,100–199 cows,U.S. total,United States,2022,13.35,Base survey of 2021
+Milk,Allocated overhead,"Total, allocated overhead","Total, allocated overhead",dollars per hundredweight sold,100–199 cows,U.S. total,United States,2023,13.9,Base survey of 2021
+Milk,Allocated overhead,"Total, allocated overhead","Total, allocated overhead",dollars per hundredweight sold,100–199 cows,U.S. total,United States,2024,14.36,Base survey of 2021
+Milk,Allocated overhead,"Total, allocated overhead","Total, allocated overhead",dollars per hundredweight sold,200–499 cows,U.S. total,United States,2021,10.54,Base survey of 2021
+Milk,Allocated overhead,"Total, allocated overhead","Total, allocated overhead",dollars per hundredweight sold,200–499 cows,U.S. total,United States,2022,11.6,Base survey of 2021
+Milk,Allocated overhead,"Total, allocated overhead","Total, allocated overhead",dollars per hundredweight sold,200–499 cows,U.S. total,United States,2023,12.1,Base survey of 2021
+Milk,Allocated overhead,"Total, allocated overhead","Total, allocated overhead",dollars per hundredweight sold,200–499 cows,U.S. total,United States,2024,12.42,Base survey of 2021
+Milk,Allocated overhead,"Total, allocated overhead","Total, allocated overhead",dollars per hundredweight sold,500–999 cows,U.S. total,United States,2021,7.27,Base survey of 2021
+Milk,Allocated overhead,"Total, allocated overhead","Total, allocated overhead",dollars per hundredweight sold,500–999 cows,U.S. total,United States,2022,8,Base survey of 2021
+Milk,Allocated overhead,"Total, allocated overhead","Total, allocated overhead",dollars per hundredweight sold,500–999 cows,U.S. total,United States,2023,8.36,Base survey of 2021
+Milk,Allocated overhead,"Total, allocated overhead","Total, allocated overhead",dollars per hundredweight sold,500–999 cows,U.S. total,United States,2024,8.56,Base survey of 2021
+Milk,Allocated overhead,"Total, allocated overhead","Total, allocated overhead",dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2021,6.48,Base survey of 2021
+Milk,Allocated overhead,"Total, allocated overhead","Total, allocated overhead",dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2022,7.12,Base survey of 2021
+Milk,Allocated overhead,"Total, allocated overhead","Total, allocated overhead",dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2023,7.44,Base survey of 2021
+Milk,Allocated overhead,"Total, allocated overhead","Total, allocated overhead",dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2024,7.61,Base survey of 2021
+Milk,Allocated overhead,"Total, allocated overhead","Total, allocated overhead",dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2021,4.98,Base survey of 2021
+Milk,Allocated overhead,"Total, allocated overhead","Total, allocated overhead",dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2022,5.46,Base survey of 2021
+Milk,Allocated overhead,"Total, allocated overhead","Total, allocated overhead",dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2023,5.71,Base survey of 2021
+Milk,Allocated overhead,"Total, allocated overhead","Total, allocated overhead",dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2024,5.85,Base survey of 2021
+Milk,Allocated overhead,"Total, allocated overhead","Total, allocated overhead",dollars per hundredweight sold,All sizes,U.S. total,United States,2021,8.01,Base survey of 2021
+Milk,Allocated overhead,"Total, allocated overhead","Total, allocated overhead",dollars per hundredweight sold,All sizes,U.S. total,United States,2022,8.77,Base survey of 2021
+Milk,Allocated overhead,"Total, allocated overhead","Total, allocated overhead",dollars per hundredweight sold,All sizes,U.S. total,United States,2023,9.16,Base survey of 2021
+Milk,Allocated overhead,"Total, allocated overhead","Total, allocated overhead",dollars per hundredweight sold,All sizes,U.S. total,United States,2024,9.41,Base survey of 2021
+Milk,Costs listed,"Total, costs listed","Total, costs listed",dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2021,42.71,Base survey of 2021
+Milk,Costs listed,"Total, costs listed","Total, costs listed",dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2022,48.93,Base survey of 2021
+Milk,Costs listed,"Total, costs listed","Total, costs listed",dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2023,49.43,Base survey of 2021
+Milk,Costs listed,"Total, costs listed","Total, costs listed",dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2024,47.29,Base survey of 2021
+Milk,Costs listed,"Total, costs listed","Total, costs listed",dollars per hundredweight sold,50–99 cows,U.S. total,United States,2021,34.58,Base survey of 2021
+Milk,Costs listed,"Total, costs listed","Total, costs listed",dollars per hundredweight sold,50–99 cows,U.S. total,United States,2022,40.33,Base survey of 2021
+Milk,Costs listed,"Total, costs listed","Total, costs listed",dollars per hundredweight sold,50–99 cows,U.S. total,United States,2023,40.39,Base survey of 2021
+Milk,Costs listed,"Total, costs listed","Total, costs listed",dollars per hundredweight sold,50–99 cows,U.S. total,United States,2024,37.38,Base survey of 2021
+Milk,Costs listed,"Total, costs listed","Total, costs listed",dollars per hundredweight sold,100–199 cows,U.S. total,United States,2021,27.93,Base survey of 2021
+Milk,Costs listed,"Total, costs listed","Total, costs listed",dollars per hundredweight sold,100–199 cows,U.S. total,United States,2022,32.83,Base survey of 2021
+Milk,Costs listed,"Total, costs listed","Total, costs listed",dollars per hundredweight sold,100–199 cows,U.S. total,United States,2023,32.62,Base survey of 2021
+Milk,Costs listed,"Total, costs listed","Total, costs listed",dollars per hundredweight sold,100–199 cows,U.S. total,United States,2024,29.87,Base survey of 2021
+Milk,Costs listed,"Total, costs listed","Total, costs listed",dollars per hundredweight sold,200–499 cows,U.S. total,United States,2021,25.94,Base survey of 2021
+Milk,Costs listed,"Total, costs listed","Total, costs listed",dollars per hundredweight sold,200–499 cows,U.S. total,United States,2022,30.72,Base survey of 2021
+Milk,Costs listed,"Total, costs listed","Total, costs listed",dollars per hundredweight sold,200–499 cows,U.S. total,United States,2023,30.44,Base survey of 2021
+Milk,Costs listed,"Total, costs listed","Total, costs listed",dollars per hundredweight sold,200–499 cows,U.S. total,United States,2024,27.57,Base survey of 2021
+Milk,Costs listed,"Total, costs listed","Total, costs listed",dollars per hundredweight sold,500–999 cows,U.S. total,United States,2021,22.7,Base survey of 2021
+Milk,Costs listed,"Total, costs listed","Total, costs listed",dollars per hundredweight sold,500–999 cows,U.S. total,United States,2022,27.15,Base survey of 2021
+Milk,Costs listed,"Total, costs listed","Total, costs listed",dollars per hundredweight sold,500–999 cows,U.S. total,United States,2023,26.56,Base survey of 2021
+Milk,Costs listed,"Total, costs listed","Total, costs listed",dollars per hundredweight sold,500–999 cows,U.S. total,United States,2024,23.42,Base survey of 2021
+Milk,Costs listed,"Total, costs listed","Total, costs listed",dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2021,21.01,Base survey of 2021
+Milk,Costs listed,"Total, costs listed","Total, costs listed",dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2022,25.14,Base survey of 2021
+Milk,Costs listed,"Total, costs listed","Total, costs listed",dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2023,24.44,Base survey of 2021
+Milk,Costs listed,"Total, costs listed","Total, costs listed",dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2024,21.38,Base survey of 2021
+Milk,Costs listed,"Total, costs listed","Total, costs listed",dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2021,19.14,Base survey of 2021
+Milk,Costs listed,"Total, costs listed","Total, costs listed",dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2022,23.06,Base survey of 2021
+Milk,Costs listed,"Total, costs listed","Total, costs listed",dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2023,22.15,Base survey of 2021
+Milk,Costs listed,"Total, costs listed","Total, costs listed",dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2024,18.95,Base survey of 2021
+Milk,Costs listed,"Total, costs listed","Total, costs listed",dollars per hundredweight sold,All sizes,U.S. total,United States,2021,22.96,Base survey of 2021
+Milk,Costs listed,"Total, costs listed","Total, costs listed",dollars per hundredweight sold,All sizes,U.S. total,United States,2022,27.34,Base survey of 2021
+Milk,Costs listed,"Total, costs listed","Total, costs listed",dollars per hundredweight sold,All sizes,U.S. total,United States,2023,26.73,Base survey of 2021
+Milk,Costs listed,"Total, costs listed","Total, costs listed",dollars per hundredweight sold,All sizes,U.S. total,United States,2024,23.68,Base survey of 2021
+Milk,Supporting information,Output per cow,Output per cow (pounds),pounds,100–199 cows,U.S. total,United States,2023,19991,Base survey of 2021
+Milk,Supporting information,Output per cow,Output per cow (pounds),pounds,100–199 cows,U.S. total,United States,2024,19991,Base survey of 2021
+Milk,Supporting information,Output per cow,Output per cow (pounds),pounds,200–499 cows,U.S. total,United States,2021,23479,Base survey of 2021
+Milk,Supporting information,Output per cow,Output per cow (pounds),pounds,200–499 cows,U.S. total,United States,2022,23479,Base survey of 2021
+Milk,Supporting information,Output per cow,Output per cow (pounds),pounds,200–499 cows,U.S. total,United States,2023,23479,Base survey of 2021
+Milk,Supporting information,Output per cow,Output per cow (pounds),pounds,200–499 cows,U.S. total,United States,2024,23479,Base survey of 2021
+Milk,Supporting information,Output per cow,Output per cow (pounds),pounds,500–999 cows,U.S. total,United States,2021,24596,Base survey of 2021
+Milk,Supporting information,Output per cow,Output per cow (pounds),pounds,500–999 cows,U.S. total,United States,2022,24596,Base survey of 2021
+Milk,Supporting information,Output per cow,Output per cow (pounds),pounds,500–999 cows,U.S. total,United States,2023,24596,Base survey of 2021
+Milk,Supporting information,Output per cow,Output per cow (pounds),pounds,500–999 cows,U.S. total,United States,2024,24596,Base survey of 2021
+Milk,Supporting information,Output per cow,Output per cow (pounds),pounds,"1,000–1,999 cows",U.S. total,United States,2021,24895,Base survey of 2021
+Milk,Supporting information,Output per cow,Output per cow (pounds),pounds,"1,000–1,999 cows",U.S. total,United States,2022,24895,Base survey of 2021
+Milk,Supporting information,Output per cow,Output per cow (pounds),pounds,"1,000–1,999 cows",U.S. total,United States,2023,24895,Base survey of 2021
+Milk,Supporting information,Output per cow,Output per cow (pounds),pounds,"1,000–1,999 cows",U.S. total,United States,2024,24895,Base survey of 2021
+Milk,Supporting information,Output per cow,Output per cow (pounds),pounds,"2,000 cows or more",U.S. total,United States,2021,22978,Base survey of 2021
+Milk,Supporting information,Output per cow,Output per cow (pounds),pounds,"2,000 cows or more",U.S. total,United States,2022,22978,Base survey of 2021
+Milk,Supporting information,Output per cow,Output per cow (pounds),pounds,"2,000 cows or more",U.S. total,United States,2023,22978,Base survey of 2021
+Milk,Supporting information,Output per cow,Output per cow (pounds),pounds,"2,000 cows or more",U.S. total,United States,2024,22978,Base survey of 2021
+Milk,Supporting information,Output per cow,Output per cow (pounds),pounds,All sizes,U.S. total,United States,2021,22653,Base survey of 2021
+Milk,Supporting information,Output per cow,Output per cow (pounds),pounds,All sizes,U.S. total,United States,2022,22653,Base survey of 2021
+Milk,Supporting information,Output per cow,Output per cow (pounds),pounds,All sizes,U.S. total,United States,2023,22653,Base survey of 2021
+Milk,Supporting information,Output per cow,Output per cow (pounds),pounds,All sizes,U.S. total,United States,2024,22653,Base survey of 2021
+Milk,Allocated overhead,Capital recovery of machinery and equipment ³ ,Capital recovery of machinery and equipment ³ ,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2025,9.3,Base survey of 2021
+Milk,Operating costs,Homegrown harvested feed,Homegrown harvested feed,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2025,2.13,Base survey of 2021
+Milk,Supporting information,Output per cow,Output per cow (pounds),pounds,"2,000 cows or more",U.S. total,United States,2025,22978,Base survey of 2021
+Milk,Net value,Value of production less operating costs,Value of production less operating costs,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2025,10.78,Base survey of 2021
+Milk,Gross value of production,"Total, gross value of production","Total, gross value of production",dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2025,24.11,Base survey of 2021
+Milk,Gross value of production,Milk sold,Milk sold,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2025,21.74,Base survey of 2021
+Milk,Gross value of production,Other income ¹ ,Other income ¹ ,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2025,0.61,Base survey of 2021
+Milk,Net value,Value of production less total costs listed,Value of production less total costs listed,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2025,-19.54,Base survey of 2021
+Milk,Operating costs,Bedding and litter,Bedding and litter,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2025,0.36,Base survey of 2021
+Milk,Operating costs,"Fuel, lube, and electricity","Fuel, lube, and electricity",dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2025,1.4,Base survey of 2021
+Milk,Allocated overhead,Opportunity cost of land,Opportunity cost of land,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2025,0,Base survey of 2021
+Milk,Allocated overhead,General farm overhead,General farm overhead,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2025,1,Base survey of 2021
+Milk,Operating costs,Veterinary and medicine,Veterinary and medicine,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2025,0.69,Base survey of 2021
+Milk,Operating costs,Custom services,Custom services,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2025,0.91,Base survey of 2021
+Milk,Gross value of production,Cattle,Cattle,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2025,2.35,Base survey of 2021
+Milk,Operating costs,Marketing,Marketing,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2025,0.08,Base survey of 2021
+Milk,Costs listed,"Total, costs listed","Total, costs listed",dollars per hundredweight sold,All sizes,U.S. total,United States,2025,23.37,Base survey of 2021
+Milk,Operating costs,Grazed feed,Grazed feed,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2025,0.1,Base survey of 2021
+Milk,Allocated overhead,Capital recovery of machinery and equipment ³ ,Capital recovery of machinery and equipment ³ ,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2025,2.85,Base survey of 2021
+Milk,Operating costs,"Total, feed costs","Total, feed costs",dollars per hundredweight sold,100–199 cows,U.S. total,United States,2025,10.05,Base survey of 2021
+Milk,Supporting information,Output per cow,Output per cow (pounds),pounds,50–99 cows,U.S. total,United States,2025,17632,Base survey of 2021
+Milk,Net value,Value of production less total costs listed,Value of production less total costs listed,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2025,3.03,Base survey of 2021
+Milk,Operating costs,Bedding and litter,Bedding and litter,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2025,0.12,Base survey of 2021
+Milk,Operating costs,Repairs,Repairs,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2025,0.57,Base survey of 2021
+Milk,Gross value of production,"Total, gross value of production","Total, gross value of production",dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2025,27.79,Base survey of 2021
+Milk,Operating costs,"Total, operating costs","Total, operating costs",dollars per hundredweight sold,500–999 cows,U.S. total,United States,2025,14.33,Base survey of 2021
+Milk,Gross value of production,Other income ¹ ,Other income ¹ ,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2025,0.93,Base survey of 2021
+Milk,Supporting information,Milk cows,Milk cows (head per farm),head per farm,200–499 cows,U.S. total,United States,2025,304,Base survey of 2021
+Milk,Operating costs,Custom services,Custom services,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2025,0.82,Base survey of 2021
+Milk,Allocated overhead,Opportunity cost of land,Opportunity cost of land,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2025,0.1,Base survey of 2021
+Milk,Operating costs,Marketing,Marketing,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2025,0.25,Base survey of 2021
+Milk,Operating costs,Purchased feed,Purchased feed,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2025,6.13,Base survey of 2021
+Milk,Operating costs,Homegrown harvested feed,Homegrown harvested feed,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2025,7.25,Base survey of 2021
+Milk,Allocated overhead,"Total, allocated overhead","Total, allocated overhead",dollars per hundredweight sold,200–499 cows,U.S. total,United States,2025,12.68,Base survey of 2021
+Milk,Costs listed,"Total, costs listed","Total, costs listed",dollars per hundredweight sold,100–199 cows,U.S. total,United States,2025,29.56,Base survey of 2021
+Milk,Operating costs,Grazed feed,Grazed feed,dollars per hundredweight sold,All sizes,U.S. total,United States,2025,0.04,Base survey of 2021
+Milk,Allocated overhead,Taxes and insurance,Taxes and insurance,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2025,0.72,Base survey of 2021
+Milk,Supporting information,Output per cow,Output per cow (pounds),pounds,100–199 cows,U.S. total,United States,2025,19991,Base survey of 2021
+Milk,Net value,Value of production less total costs listed,Value of production less total costs listed,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2025,1.65,Base survey of 2021
+Milk,Operating costs,Repairs,Repairs,dollars per hundredweight sold,All sizes,U.S. total,United States,2025,0.83,Base survey of 2021
+Milk,Operating costs,Interest on operating capital,Interest on operating capital,dollars per hundredweight sold,All sizes,U.S. total,United States,2025,0.26,Base survey of 2021
+Milk,Allocated overhead,General farm overhead,General farm overhead,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2025,0.53,Base survey of 2021
+Milk,Operating costs,Veterinary and medicine,Veterinary and medicine,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2025,0.85,Base survey of 2021
+Milk,Operating costs,Custom services,Custom services,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2025,1.04,Base survey of 2021
+Milk,Allocated overhead,Hired labor,Hired labor,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2025,0.66,Base survey of 2021
+Milk,Operating costs,Purchased feed,Purchased feed,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2025,4.86,Base survey of 2021
+Milk,Allocated overhead,Taxes and insurance,Taxes and insurance,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2025,0.23,Base survey of 2021
+Milk,Allocated overhead,"Total, allocated overhead","Total, allocated overhead",dollars per hundredweight sold,100–199 cows,U.S. total,United States,2025,14.69,Base survey of 2021
+Milk,Allocated overhead,Opportunity cost of unpaid labor,Opportunity cost of unpaid labor,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2025,1.52,Base survey of 2021
+Milk,Operating costs,"Total, feed costs","Total, feed costs",dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2025,9.5,Base survey of 2021
+Milk,Net value,Value of production less operating costs,Value of production less operating costs,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2025,11.42,Base survey of 2021
+Milk,Gross value of production,"Total, gross value of production","Total, gross value of production",dollars per hundredweight sold,500–999 cows,U.S. total,United States,2025,24.72,Base survey of 2021
+Milk,Gross value of production,Other income ¹ ,Other income ¹ ,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2025,0.63,Base survey of 2021
+Milk,Operating costs,Repairs,Repairs,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2025,1.11,Base survey of 2021
+Milk,Operating costs,"Fuel, lube, and electricity","Fuel, lube, and electricity",dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2025,0.62,Base survey of 2021
+Milk,Operating costs,Interest on operating capital,Interest on operating capital,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2025,0.29,Base survey of 2021
+Milk,Allocated overhead,Opportunity cost of land,Opportunity cost of land,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2025,0.01,Base survey of 2021
+Milk,Operating costs,Veterinary and medicine,Veterinary and medicine,dollars per hundredweight sold,All sizes,U.S. total,United States,2025,0.79,Base survey of 2021
+Milk,Allocated overhead,"Total, allocated overhead","Total, allocated overhead",dollars per hundredweight sold,All sizes,U.S. total,United States,2025,9.62,Base survey of 2021
+Milk,Allocated overhead,Hired labor,Hired labor,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2025,2.64,Base survey of 2021
+Milk,Operating costs,"Other, operating costs ² ","Other, operating costs ² ",dollars per hundredweight sold,200–499 cows,U.S. total,United States,2025,0,Base survey of 2021
+Milk,Operating costs,Grazed feed,Grazed feed,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2025,0.03,Base survey of 2021
+Milk,Allocated overhead,Capital recovery of machinery and equipment ³ ,Capital recovery of machinery and equipment ³ ,dollars per hundredweight sold,All sizes,U.S. total,United States,2025,4.78,Base survey of 2021
+Milk,Operating costs,"Total, feed costs","Total, feed costs",dollars per hundredweight sold,200–499 cows,U.S. total,United States,2025,9.88,Base survey of 2021
+Milk,Allocated overhead,Opportunity cost of unpaid labor,Opportunity cost of unpaid labor,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2025,0.1,Base survey of 2021
+Milk,Supporting information,Output per cow,Output per cow (pounds),pounds,Fewer than 50 cows,U.S. total,United States,2025,15751,Base survey of 2021
+Milk,Operating costs,"Total, operating costs","Total, operating costs",dollars per hundredweight sold,All sizes,U.S. total,United States,2025,13.75,Base survey of 2021
+Milk,Operating costs,Bedding and litter,Bedding and litter,dollars per hundredweight sold,All sizes,U.S. total,United States,2025,0.22,Base survey of 2021
+Milk,Operating costs,Repairs,Repairs,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2025,0.92,Base survey of 2021
+Milk,Gross value of production,"Total, gross value of production","Total, gross value of production",dollars per hundredweight sold,50–99 cows,U.S. total,United States,2025,26.46,Base survey of 2021
+Milk,Gross value of production,Other income ¹ ,Other income ¹ ,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2025,0.82,Base survey of 2021
+Milk,Supporting information,Milk cows,Milk cows (head per farm),head per farm,100–199 cows,U.S. total,United States,2025,136,Base survey of 2021
+Milk,Allocated overhead,General farm overhead,General farm overhead,dollars per hundredweight sold,All sizes,U.S. total,United States,2025,0.6,Base survey of 2021
+Milk,Operating costs,Veterinary and medicine,Veterinary and medicine,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2025,0.78,Base survey of 2021
+Milk,Allocated overhead,Opportunity cost of land,Opportunity cost of land,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2025,0.17,Base survey of 2021
+Milk,Operating costs,Marketing,Marketing,dollars per hundredweight sold,All sizes,U.S. total,United States,2025,0.21,Base survey of 2021
+Milk,Operating costs,Purchased feed,Purchased feed,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2025,6.61,Base survey of 2021
+Milk,Operating costs,Homegrown harvested feed,Homegrown harvested feed,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2025,6.57,Base survey of 2021
+Milk,Allocated overhead,Taxes and insurance,Taxes and insurance,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2025,0.33,Base survey of 2021
+Milk,Costs listed,"Total, costs listed","Total, costs listed",dollars per hundredweight sold,50–99 cows,U.S. total,United States,2025,37.05,Base survey of 2021
+Milk,Operating costs,"Other, operating costs ² ","Other, operating costs ² ",dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2025,0.12,Base survey of 2021
+Milk,Operating costs,Grazed feed,Grazed feed,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2025,0,Base survey of 2021
+Milk,Operating costs,Homegrown harvested feed,Homegrown harvested feed,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2025,2.79,Base survey of 2021
+Milk,Supporting information,Output per cow,Output per cow (pounds),pounds,"1,000–1,999 cows",U.S. total,United States,2025,24895,Base survey of 2021
+Milk,Net value,Value of production less operating costs,Value of production less operating costs,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2025,10.39,Base survey of 2021
+Milk,Operating costs,Interest on operating capital,Interest on operating capital,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2025,0.24,Base survey of 2021
+Milk,Gross value of production,"Total, gross value of production","Total, gross value of production",dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2025,22.9,Base survey of 2021
+Milk,Gross value of production,Milk sold,Milk sold,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2025,20.94,Base survey of 2021
+Milk,Gross value of production,Other income ¹ ,Other income ¹ ,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2025,0.67,Base survey of 2021
+Milk,Operating costs,"Fuel, lube, and electricity","Fuel, lube, and electricity",dollars per hundredweight sold,200–499 cows,U.S. total,United States,2025,0.96,Base survey of 2021
+Milk,Supporting information,Milk cows,Milk cows (head per farm),head per farm,All sizes,U.S. total,United States,2025,283,Base survey of 2021
+Milk,Allocated overhead,General farm overhead,General farm overhead,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2025,0.85,Base survey of 2021
+Milk,Operating costs,Veterinary and medicine,Veterinary and medicine,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2025,0.69,Base survey of 2021
+Milk,Operating costs,Custom services,Custom services,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2025,0.69,Base survey of 2021
+Milk,Gross value of production,Cattle,Cattle,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2025,2.06,Base survey of 2021
+Milk,Operating costs,Purchased feed,Purchased feed,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2025,4.13,Base survey of 2021
+Milk,Allocated overhead,Hired labor,Hired labor,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2025,2.65,Base survey of 2021
+Milk,Costs listed,"Total, costs listed","Total, costs listed",dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2025,18.65,Base survey of 2021
+Milk,Operating costs,Grazed feed,Grazed feed,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2025,0.15,Base survey of 2021
+Milk,Allocated overhead,Opportunity cost of unpaid labor,Opportunity cost of unpaid labor,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2025,4.35,Base survey of 2021
+Milk,Operating costs,Homegrown harvested feed,Homegrown harvested feed,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2025,3.8,Base survey of 2021
+Milk,Operating costs,"Total, feed costs","Total, feed costs",dollars per hundredweight sold,All sizes,U.S. total,United States,2025,9.82,Base survey of 2021
+Milk,Gross value of production,Cattle,Cattle,dollars per hundredweight sold,All sizes,U.S. total,United States,2025,2.25,Base survey of 2021
+Milk,Gross value of production,Milk sold,Milk sold,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2025,21.55,Base survey of 2021
+Milk,Operating costs,"Total, operating costs","Total, operating costs",dollars per hundredweight sold,200–499 cows,U.S. total,United States,2025,14.53,Base survey of 2021
+Milk,Operating costs,Repairs,Repairs,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2025,1.2,Base survey of 2021
+Milk,Operating costs,"Fuel, lube, and electricity","Fuel, lube, and electricity",dollars per hundredweight sold,500–999 cows,U.S. total,United States,2025,0.8,Base survey of 2021
+Milk,Operating costs,Interest on operating capital,Interest on operating capital,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2025,0.32,Base survey of 2021
+Milk,Supporting information,Milk cows,Milk cows (head per farm),head per farm,"2,000 cows or more",U.S. total,United States,2025,4011,Base survey of 2021
+Milk,Allocated overhead,Opportunity cost of land,Opportunity cost of land,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2025,0.02,Base survey of 2021
+Milk,Gross value of production,Cattle,Cattle,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2025,2.33,Base survey of 2021
+Milk,Allocated overhead,"Total, allocated overhead","Total, allocated overhead",dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2025,5.96,Base survey of 2021
+Milk,Allocated overhead,Hired labor,Hired labor,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2025,2.78,Base survey of 2021
+Milk,Operating costs,"Other, operating costs ² ","Other, operating costs ² ",dollars per hundredweight sold,500–999 cows,U.S. total,United States,2025,0,Base survey of 2021
+Milk,Costs listed,"Total, costs listed","Total, costs listed",dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2025,21.08,Base survey of 2021
+Milk,Allocated overhead,Capital recovery of machinery and equipment ³ ,Capital recovery of machinery and equipment ³ ,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2025,7.6,Base survey of 2021
+Milk,Allocated overhead,Opportunity cost of unpaid labor,Opportunity cost of unpaid labor,dollars per hundredweight sold,All sizes,U.S. total,United States,2025,1.64,Base survey of 2021
+Milk,Gross value of production,Milk sold,Milk sold,dollars per hundredweight sold,All sizes,U.S. total,United States,2025,21,Base survey of 2021
+Milk,Net value,Value of production less total costs listed,Value of production less total costs listed,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2025,-3.59,Base survey of 2021
+Milk,Operating costs,Bedding and litter,Bedding and litter,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2025,0.38,Base survey of 2021
+Milk,Allocated overhead,General farm overhead,General farm overhead,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2025,0.47,Base survey of 2021
+Milk,Operating costs,Veterinary and medicine,Veterinary and medicine,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2025,0.9,Base survey of 2021
+Milk,Operating costs,Custom services,Custom services,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2025,1.01,Base survey of 2021
+Milk,Operating costs,Marketing,Marketing,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2025,0.12,Base survey of 2021
+Milk,Allocated overhead,Taxes and insurance,Taxes and insurance,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2025,0.36,Base survey of 2021
+Milk,Allocated overhead,"Total, allocated overhead","Total, allocated overhead",dollars per hundredweight sold,50–99 cows,U.S. total,United States,2025,20.28,Base survey of 2021
+Milk,Allocated overhead,Opportunity cost of unpaid labor,Opportunity cost of unpaid labor,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2025,17.6,Base survey of 2021
+Milk,Net value,Value of production less operating costs,Value of production less operating costs,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2025,9.1,Base survey of 2021
+Milk,Operating costs,Interest on operating capital,Interest on operating capital,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2025,0.26,Base survey of 2021
+Milk,Gross value of production,Other income ¹ ,Other income ¹ ,dollars per hundredweight sold,All sizes,U.S. total,United States,2025,0.67,Base survey of 2021
+Milk,Operating costs,"Fuel, lube, and electricity","Fuel, lube, and electricity",dollars per hundredweight sold,100–199 cows,U.S. total,United States,2025,1.04,Base survey of 2021
+Milk,Gross value of production,"Total, gross value of production","Total, gross value of production",dollars per hundredweight sold,All sizes,U.S. total,United States,2025,23.92,Base survey of 2021
+Milk,Allocated overhead,General farm overhead,General farm overhead,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2025,0.62,Base survey of 2021
+Milk,Operating costs,Veterinary and medicine,Veterinary and medicine,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2025,0.9,Base survey of 2021
+Milk,Operating costs,"Other, operating costs ² ","Other, operating costs ² ",dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2025,0,Base survey of 2021
+Milk,Allocated overhead,Hired labor,Hired labor,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2025,1.5,Base survey of 2021
+Milk,Allocated overhead,Taxes and insurance,Taxes and insurance,dollars per hundredweight sold,All sizes,U.S. total,United States,2025,0.25,Base survey of 2021
+Milk,Operating costs,Grazed feed,Grazed feed,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2025,0.35,Base survey of 2021
+Milk,Operating costs,"Total, feed costs","Total, feed costs",dollars per hundredweight sold,500–999 cows,U.S. total,United States,2025,9.97,Base survey of 2021
+Milk,Allocated overhead,Opportunity cost of unpaid labor,Opportunity cost of unpaid labor,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2025,0.3,Base survey of 2021
+Milk,Net value,Value of production less total costs listed,Value of production less total costs listed,dollars per hundredweight sold,All sizes,U.S. total,United States,2025,0.55,Base survey of 2021
+Milk,Operating costs,"Total, operating costs","Total, operating costs",dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2025,12.69,Base survey of 2021
+Milk,Operating costs,Repairs,Repairs,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2025,0.83,Base survey of 2021
+Milk,Operating costs,"Fuel, lube, and electricity","Fuel, lube, and electricity",dollars per hundredweight sold,All sizes,U.S. total,United States,2025,0.71,Base survey of 2021
+Milk,Supporting information,Milk cows,Milk cows (head per farm),head per farm,50–99 cows,U.S. total,United States,2025,71,Base survey of 2021
+Milk,Allocated overhead,"Total, allocated overhead","Total, allocated overhead",dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2025,7.76,Base survey of 2021
+Milk,Operating costs,Purchased feed,Purchased feed,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2025,7.37,Base survey of 2021
+Milk,Operating costs,"Other, operating costs ² ","Other, operating costs ² ",dollars per hundredweight sold,50–99 cows,U.S. total,United States,2025,0.04,Base survey of 2021
+Milk,Allocated overhead,Taxes and insurance,Taxes and insurance,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2025,0.33,Base survey of 2021
+Milk,Costs listed,"Total, costs listed","Total, costs listed",dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2025,47.33,Base survey of 2021
+Milk,Allocated overhead,Capital recovery of machinery and equipment ³ ,Capital recovery of machinery and equipment ³ ,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2025,7.51,Base survey of 2021
+Milk,Net value,Value of production less operating costs,Value of production less operating costs,dollars per hundredweight sold,All sizes,U.S. total,United States,2025,10.17,Base survey of 2021
+Milk,Supporting information,Output per cow,Output per cow (pounds),pounds,500–999 cows,U.S. total,United States,2025,24596,Base survey of 2021
+Milk,Gross value of production,Milk sold,Milk sold,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2025,20.26,Base survey of 2021
+Milk,Net value,Value of production less total costs listed,Value of production less total costs listed,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2025,-4.95,Base survey of 2021
+Milk,Operating costs,Bedding and litter,Bedding and litter,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2025,0.37,Base survey of 2021
+Milk,Supporting information,Milk cows,Milk cows (head per farm),head per farm,Fewer than 50 cows,U.S. total,United States,2025,33,Base survey of 2021
+Milk,Operating costs,Custom services,Custom services,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2025,0.78,Base survey of 2021
+Milk,Operating costs,Marketing,Marketing,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2025,0.16,Base survey of 2021
+Milk,Operating costs,Purchased feed,Purchased feed,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2025,4.49,Base survey of 2021
+Milk,Allocated overhead,"Total, allocated overhead","Total, allocated overhead",dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2025,30.96,Base survey of 2021
+Milk,Allocated overhead,Opportunity cost of unpaid labor,Opportunity cost of unpaid labor,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2025,8.7,Base survey of 2021
+Milk,Operating costs,Homegrown harvested feed,Homegrown harvested feed,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2025,4.99,Base survey of 2021
+Milk,Gross value of production,Cattle,Cattle,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2025,1.97,Base survey of 2021
+Milk,Gross value of production,"Total, gross value of production","Total, gross value of production",dollars per hundredweight sold,100–199 cows,U.S. total,United States,2025,24.61,Base survey of 2021
+Milk,Gross value of production,Milk sold,Milk sold,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2025,22.72,Base survey of 2021
+Milk,Gross value of production,Other income ¹ ,Other income ¹ ,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2025,0.73,Base survey of 2021
+Milk,Operating costs,"Total, operating costs","Total, operating costs",dollars per hundredweight sold,100–199 cows,U.S. total,United States,2025,14.87,Base survey of 2021
+Milk,Operating costs,Repairs,Repairs,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2025,1.58,Base survey of 2021
+Milk,Operating costs,Interest on operating capital,Interest on operating capital,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2025,0.31,Base survey of 2021
+Milk,Operating costs,Bedding and litter,Bedding and litter,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2021,0.32,Base survey of 2021
+Milk,Operating costs,Bedding and litter,Bedding and litter,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2022,0.35,Base survey of 2021
+Milk,Operating costs,Bedding and litter,Bedding and litter,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2023,0.37,Base survey of 2021
+Milk,Operating costs,Bedding and litter,Bedding and litter,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2024,0.39,Base survey of 2021
+Milk,Operating costs,Bedding and litter,Bedding and litter,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2021,0.29,Base survey of 2021
+Milk,Operating costs,Bedding and litter,Bedding and litter,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2022,0.32,Base survey of 2021
+Milk,Operating costs,Bedding and litter,Bedding and litter,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2023,0.34,Base survey of 2021
+Milk,Operating costs,Bedding and litter,Bedding and litter,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2024,0.35,Base survey of 2021
+Milk,Operating costs,Bedding and litter,Bedding and litter,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2021,0.3,Base survey of 2021
+Milk,Operating costs,Bedding and litter,Bedding and litter,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2022,0.34,Base survey of 2021
+Milk,Operating costs,Bedding and litter,Bedding and litter,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2023,0.35,Base survey of 2021
+Milk,Operating costs,Bedding and litter,Bedding and litter,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2024,0.37,Base survey of 2021
+Milk,Operating costs,Bedding and litter,Bedding and litter,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2021,0.29,Base survey of 2021
+Milk,Operating costs,Bedding and litter,Bedding and litter,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2022,0.33,Base survey of 2021
+Milk,Operating costs,Bedding and litter,Bedding and litter,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2023,0.35,Base survey of 2021
+Milk,Operating costs,Bedding and litter,Bedding and litter,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2024,0.36,Base survey of 2021
+Milk,Operating costs,Bedding and litter,Bedding and litter,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2021,0.24,Base survey of 2021
+Milk,Operating costs,Bedding and litter,Bedding and litter,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2022,0.27,Base survey of 2021
+Milk,Operating costs,Bedding and litter,Bedding and litter,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2023,0.29,Base survey of 2021
+Milk,Operating costs,Bedding and litter,Bedding and litter,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2024,0.3,Base survey of 2021
+Milk,Operating costs,Bedding and litter,Bedding and litter,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2021,0.12,Base survey of 2021
+Milk,Operating costs,Bedding and litter,Bedding and litter,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2022,0.13,Base survey of 2021
+Milk,Operating costs,Bedding and litter,Bedding and litter,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2023,0.14,Base survey of 2021
+Milk,Operating costs,Bedding and litter,Bedding and litter,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2024,0.14,Base survey of 2021
+Milk,Operating costs,Bedding and litter,Bedding and litter,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2021,0.1,Base survey of 2021
+Milk,Operating costs,Bedding and litter,Bedding and litter,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2022,0.11,Base survey of 2021
+Milk,Operating costs,Bedding and litter,Bedding and litter,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2023,0.12,Base survey of 2021
+Milk,Operating costs,Bedding and litter,Bedding and litter,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2024,0.12,Base survey of 2021
+Milk,Operating costs,Bedding and litter,Bedding and litter,dollars per hundredweight sold,All sizes,U.S. total,United States,2021,0.18,Base survey of 2021
+Milk,Operating costs,Bedding and litter,Bedding and litter,dollars per hundredweight sold,All sizes,U.S. total,United States,2022,0.2,Base survey of 2021
+Milk,Operating costs,Bedding and litter,Bedding and litter,dollars per hundredweight sold,All sizes,U.S. total,United States,2023,0.21,Base survey of 2021
+Milk,Operating costs,Bedding and litter,Bedding and litter,dollars per hundredweight sold,All sizes,U.S. total,United States,2024,0.21,Base survey of 2021
+Milk,Operating costs,Marketing,Marketing,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2021,0.04,Base survey of 2021
+Milk,Operating costs,Marketing,Marketing,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2022,0.04,Base survey of 2021
+Milk,Operating costs,Marketing,Marketing,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2023,0.04,Base survey of 2021
+Milk,Operating costs,Marketing,Marketing,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2024,0.04,Base survey of 2021
+Milk,Operating costs,Marketing,Marketing,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2021,0.06,Base survey of 2021
+Milk,Operating costs,Marketing,Marketing,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2022,0.07,Base survey of 2021
+Milk,Operating costs,Marketing,Marketing,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2023,0.07,Base survey of 2021
+Milk,Operating costs,Marketing,Marketing,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2024,0.08,Base survey of 2021
+Milk,Operating costs,Marketing,Marketing,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2021,0.1,Base survey of 2021
+Milk,Operating costs,Marketing,Marketing,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2022,0.11,Base survey of 2021
+Milk,Operating costs,Marketing,Marketing,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2023,0.12,Base survey of 2021
+Milk,Operating costs,Marketing,Marketing,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2024,0.12,Base survey of 2021
+Milk,Operating costs,Marketing,Marketing,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2021,0.13,Base survey of 2021
+Milk,Operating costs,Marketing,Marketing,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2022,0.14,Base survey of 2021
+Milk,Operating costs,Marketing,Marketing,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2023,0.15,Base survey of 2021
+Milk,Operating costs,Marketing,Marketing,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2024,0.16,Base survey of 2021
+Milk,Operating costs,Marketing,Marketing,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2021,0.18,Base survey of 2021
+Milk,Operating costs,Marketing,Marketing,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2022,0.2,Base survey of 2021
+Milk,Operating costs,Marketing,Marketing,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2023,0.21,Base survey of 2021
+Milk,Operating costs,Marketing,Marketing,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2024,0.22,Base survey of 2021
+Milk,Operating costs,Marketing,Marketing,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2021,0.18,Base survey of 2021
+Milk,Operating costs,Marketing,Marketing,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2022,0.2,Base survey of 2021
+Milk,Operating costs,Marketing,Marketing,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2023,0.21,Base survey of 2021
+Milk,Operating costs,Marketing,Marketing,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2024,0.22,Base survey of 2021
+Milk,Operating costs,Marketing,Marketing,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2021,0.2,Base survey of 2021
+Milk,Operating costs,Marketing,Marketing,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2022,0.22,Base survey of 2021
+Milk,Operating costs,Marketing,Marketing,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2023,0.23,Base survey of 2021
+Milk,Operating costs,Marketing,Marketing,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2024,0.24,Base survey of 2021
+Milk,Operating costs,Marketing,Marketing,dollars per hundredweight sold,All sizes,U.S. total,United States,2021,0.16,Base survey of 2021
+Milk,Operating costs,Marketing,Marketing,dollars per hundredweight sold,All sizes,U.S. total,United States,2022,0.18,Base survey of 2021
+Milk,Operating costs,Marketing,Marketing,dollars per hundredweight sold,All sizes,U.S. total,United States,2023,0.19,Base survey of 2021
+Milk,Operating costs,Marketing,Marketing,dollars per hundredweight sold,All sizes,U.S. total,United States,2024,0.2,Base survey of 2021
+Milk,Operating costs,Custom services,Custom services,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2021,0.55,Base survey of 2021
+Milk,Operating costs,Custom services,Custom services,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2022,0.61,Base survey of 2021
+Milk,Operating costs,Custom services,Custom services,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2023,0.65,Base survey of 2021
+Milk,Operating costs,Custom services,Custom services,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2024,0.67,Base survey of 2021
+Milk,Operating costs,Custom services,Custom services,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2021,0.72,Base survey of 2021
+Milk,Operating costs,Custom services,Custom services,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2022,0.81,Base survey of 2021
+Milk,Operating costs,Custom services,Custom services,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2023,0.85,Base survey of 2021
+Milk,Operating costs,Custom services,Custom services,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2024,0.88,Base survey of 2021
+Milk,Operating costs,Custom services,Custom services,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2021,0.8,Base survey of 2021
+Milk,Operating costs,Custom services,Custom services,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2022,0.9,Base survey of 2021
+Milk,Operating costs,Custom services,Custom services,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2023,0.95,Base survey of 2021
+Milk,Operating costs,Custom services,Custom services,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2024,0.98,Base survey of 2021
+Milk,Operating costs,Custom services,Custom services,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2021,0.61,Base survey of 2021
+Milk,Operating costs,Custom services,Custom services,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2022,0.69,Base survey of 2021
+Milk,Operating costs,Custom services,Custom services,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2023,0.73,Base survey of 2021
+Milk,Operating costs,Custom services,Custom services,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2024,0.75,Base survey of 2021
+Milk,Operating costs,Custom services,Custom services,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2021,0.8,Base survey of 2021
+Milk,Operating costs,Custom services,Custom services,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2022,0.9,Base survey of 2021
+Milk,Operating costs,Custom services,Custom services,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2023,0.95,Base survey of 2021
+Milk,Operating costs,Custom services,Custom services,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2024,0.98,Base survey of 2021
+Milk,Operating costs,Custom services,Custom services,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2021,0.83,Base survey of 2021
+Milk,Operating costs,Custom services,Custom services,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2022,0.93,Base survey of 2021
+Milk,Operating costs,Custom services,Custom services,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2023,0.98,Base survey of 2021
+Milk,Operating costs,Custom services,Custom services,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2024,1.01,Base survey of 2021
+Milk,Operating costs,Custom services,Custom services,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2021,0.65,Base survey of 2021
+Milk,Operating costs,Custom services,Custom services,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2022,0.73,Base survey of 2021
+Milk,Operating costs,Custom services,Custom services,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2023,0.77,Base survey of 2021
+Milk,Operating costs,Custom services,Custom services,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2024,0.8,Base survey of 2021
+Milk,Operating costs,Custom services,Custom services,dollars per hundredweight sold,All sizes,U.S. total,United States,2021,0.71,Base survey of 2021
+Milk,Operating costs,Custom services,Custom services,dollars per hundredweight sold,All sizes,U.S. total,United States,2022,0.8,Base survey of 2021
+Milk,Operating costs,Custom services,Custom services,dollars per hundredweight sold,All sizes,U.S. total,United States,2023,0.84,Base survey of 2021
+Milk,Operating costs,Custom services,Custom services,dollars per hundredweight sold,All sizes,U.S. total,United States,2024,0.87,Base survey of 2021
+Milk,Net value,Value of production less total costs listed,Value of production less total costs listed,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2021,-19.95,Base survey of 2021
+Milk,Net value,Value of production less total costs listed,Value of production less total costs listed,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2022,-18.11,Base survey of 2021
+Milk,Net value,Value of production less total costs listed,Value of production less total costs listed,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2023,-23.57,Base survey of 2021
+Milk,Net value,Value of production less total costs listed,Value of production less total costs listed,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2024,-18.63,Base survey of 2021
+Milk,Net value,Value of production less total costs listed,Value of production less total costs listed,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2021,-12.6,Base survey of 2021
+Milk,Net value,Value of production less total costs listed,Value of production less total costs listed,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2022,-10.55,Base survey of 2021
+Milk,Net value,Value of production less total costs listed,Value of production less total costs listed,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2023,-15.63,Base survey of 2021
+Milk,Net value,Value of production less total costs listed,Value of production less total costs listed,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2024,-9.87,Base survey of 2021
+Milk,Net value,Value of production less total costs listed,Value of production less total costs listed,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2021,-7.32,Base survey of 2021
+Milk,Net value,Value of production less total costs listed,Value of production less total costs listed,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2022,-4.91,Base survey of 2021
+Milk,Net value,Value of production less total costs listed,Value of production less total costs listed,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2023,-9.52,Base survey of 2021
+Milk,Net value,Value of production less total costs listed,Value of production less total costs listed,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2024,-4.19,Base survey of 2021
+Milk,Net value,Value of production less total costs listed,Value of production less total costs listed,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2021,-6.18,Base survey of 2021
+Milk,Net value,Value of production less total costs listed,Value of production less total costs listed,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2022,-3.94,Base survey of 2021
+Milk,Net value,Value of production less total costs listed,Value of production less total costs listed,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2023,-8.3,Base survey of 2021
+Milk,Net value,Value of production less total costs listed,Value of production less total costs listed,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2024,-2.95,Base survey of 2021
+Milk,Net value,Value of production less total costs listed,Value of production less total costs listed,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2021,-1.91,Base survey of 2021
+Milk,Net value,Value of production less total costs listed,Value of production less total costs listed,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2022,0.92,Base survey of 2021
+Milk,Net value,Value of production less total costs listed,Value of production less total costs listed,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2023,-3.4,Base survey of 2021
+Milk,Net value,Value of production less total costs listed,Value of production less total costs listed,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2024,2.19,Base survey of 2021
+Milk,Net value,Value of production less total costs listed,Value of production less total costs listed,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2021,-0.8,Base survey of 2021
+Milk,Net value,Value of production less total costs listed,Value of production less total costs listed,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2022,2.41,Base survey of 2021
+Milk,Net value,Value of production less total costs listed,Value of production less total costs listed,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2023,-1.7,Base survey of 2021
+Milk,Net value,Value of production less total costs listed,Value of production less total costs listed,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2024,3.74,Base survey of 2021
+Milk,Net value,Value of production less total costs listed,Value of production less total costs listed,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2021,0.12,Base survey of 2021
+Milk,Net value,Value of production less total costs listed,Value of production less total costs listed,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2022,3.44,Base survey of 2021
+Milk,Net value,Value of production less total costs listed,Value of production less total costs listed,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2023,-0.52,Base survey of 2021
+Milk,Net value,Value of production less total costs listed,Value of production less total costs listed,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2024,5.01,Base survey of 2021
+Milk,Net value,Value of production less total costs listed,Value of production less total costs listed,dollars per hundredweight sold,All sizes,U.S. total,United States,2021,-2.91,Base survey of 2021
+Milk,Net value,Value of production less total costs listed,Value of production less total costs listed,dollars per hundredweight sold,All sizes,U.S. total,United States,2022,0.01,Base survey of 2021
+Milk,Net value,Value of production less total costs listed,Value of production less total costs listed,dollars per hundredweight sold,All sizes,U.S. total,United States,2023,-4.23,Base survey of 2021
+Milk,Net value,Value of production less total costs listed,Value of production less total costs listed,dollars per hundredweight sold,All sizes,U.S. total,United States,2024,1.26,Base survey of 2021
+Milk,Net value,Value of production less operating costs,Value of production less operating costs,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2021,5.67,Base survey of 2021
+Milk,Net value,Value of production less operating costs,Value of production less operating costs,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2022,9.62,Base survey of 2021
+Milk,Net value,Value of production less operating costs,Value of production less operating costs,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2023,5.39,Base survey of 2021
+Milk,Net value,Value of production less operating costs,Value of production less operating costs,dollars per hundredweight sold,Fewer than 50 cows,U.S. total,United States,2024,11.56,Base survey of 2021
+Milk,Net value,Value of production less operating costs,Value of production less operating costs,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2021,4.23,Base survey of 2021
+Milk,Net value,Value of production less operating costs,Value of production less operating costs,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2022,7.75,Base survey of 2021
+Milk,Net value,Value of production less operating costs,Value of production less operating costs,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2023,3.48,Base survey of 2021
+Milk,Net value,Value of production less operating costs,Value of production less operating costs,dollars per hundredweight sold,50–99 cows,U.S. total,United States,2024,9.91,Base survey of 2021
+Milk,Net value,Value of production less operating costs,Value of production less operating costs,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2021,4.91,Base survey of 2021
+Milk,Net value,Value of production less operating costs,Value of production less operating costs,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2022,8.44,Base survey of 2021
+Milk,Net value,Value of production less operating costs,Value of production less operating costs,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2023,4.39,Base survey of 2021
+Milk,Net value,Value of production less operating costs,Value of production less operating costs,dollars per hundredweight sold,100–199 cows,U.S. total,United States,2024,10.17,Base survey of 2021
+Milk,Net value,Value of production less operating costs,Value of production less operating costs,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2021,4.36,Base survey of 2021
+Milk,Net value,Value of production less operating costs,Value of production less operating costs,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2022,7.66,Base survey of 2021
+Milk,Net value,Value of production less operating costs,Value of production less operating costs,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2023,3.8,Base survey of 2021
+Milk,Net value,Value of production less operating costs,Value of production less operating costs,dollars per hundredweight sold,200–499 cows,U.S. total,United States,2024,9.47,Base survey of 2021
+Milk,Net value,Value of production less operating costs,Value of production less operating costs,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2021,5.36,Base survey of 2021
+Milk,Net value,Value of production less operating costs,Value of production less operating costs,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2022,8.91,Base survey of 2021
+Milk,Net value,Value of production less operating costs,Value of production less operating costs,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2023,4.96,Base survey of 2021
+Milk,Net value,Value of production less operating costs,Value of production less operating costs,dollars per hundredweight sold,500–999 cows,U.S. total,United States,2024,10.75,Base survey of 2021
+Milk,Net value,Value of production less operating costs,Value of production less operating costs,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2021,5.68,Base survey of 2021
+Milk,Net value,Value of production less operating costs,Value of production less operating costs,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2022,9.53,Base survey of 2021
+Milk,Net value,Value of production less operating costs,Value of production less operating costs,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2023,5.74,Base survey of 2021
+Milk,Net value,Value of production less operating costs,Value of production less operating costs,dollars per hundredweight sold,"1,000–1,999 cows",U.S. total,United States,2024,11.35,Base survey of 2021
+Milk,Net value,Value of production less operating costs,Value of production less operating costs,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2021,5.1,Base survey of 2021
+Milk,Net value,Value of production less operating costs,Value of production less operating costs,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2022,8.9,Base survey of 2021
+Milk,Net value,Value of production less operating costs,Value of production less operating costs,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2023,5.19,Base survey of 2021
+Milk,Net value,Value of production less operating costs,Value of production less operating costs,dollars per hundredweight sold,"2,000 cows or more",U.S. total,United States,2024,10.86,Base survey of 2021
+Milk,Net value,Value of production less operating costs,Value of production less operating costs,dollars per hundredweight sold,All sizes,U.S. total,United States,2021,5.1,Base survey of 2021
+Milk,Net value,Value of production less operating costs,Value of production less operating costs,dollars per hundredweight sold,All sizes,U.S. total,United States,2022,8.78,Base survey of 2021
+Milk,Net value,Value of production less operating costs,Value of production less operating costs,dollars per hundredweight sold,All sizes,U.S. total,United States,2023,4.93,Base survey of 2021
+Milk,Net value,Value of production less operating costs,Value of production less operating costs,dollars per hundredweight sold,All sizes,U.S. total,United States,2024,10.68,Base survey of 2021
+Milk,Supporting information,Milk cows,Milk cows (head per farm),head per farm,Fewer than 50 cows,U.S. total,United States,2021,33,Base survey of 2021
+Milk,Supporting information,Milk cows,Milk cows (head per farm),head per farm,Fewer than 50 cows,U.S. total,United States,2022,33,Base survey of 2021
+Milk,Supporting information,Milk cows,Milk cows (head per farm),head per farm,Fewer than 50 cows,U.S. total,United States,2023,33,Base survey of 2021
+Milk,Supporting information,Milk cows,Milk cows (head per farm),head per farm,Fewer than 50 cows,U.S. total,United States,2024,33,Base survey of 2021
+Milk,Supporting information,Milk cows,Milk cows (head per farm),head per farm,50–99 cows,U.S. total,United States,2021,71,Base survey of 2021
+Milk,Supporting information,Milk cows,Milk cows (head per farm),head per farm,50–99 cows,U.S. total,United States,2022,71,Base survey of 2021
+Milk,Supporting information,Milk cows,Milk cows (head per farm),head per farm,50–99 cows,U.S. total,United States,2023,71,Base survey of 2021
+Milk,Supporting information,Milk cows,Milk cows (head per farm),head per farm,50–99 cows,U.S. total,United States,2024,71,Base survey of 2021
+Milk,Supporting information,Milk cows,Milk cows (head per farm),head per farm,100–199 cows,U.S. total,United States,2021,136,Base survey of 2021
+Milk,Supporting information,Milk cows,Milk cows (head per farm),head per farm,100–199 cows,U.S. total,United States,2022,136,Base survey of 2021
+Milk,Supporting information,Milk cows,Milk cows (head per farm),head per farm,100–199 cows,U.S. total,United States,2023,136,Base survey of 2021
+Milk,Supporting information,Milk cows,Milk cows (head per farm),head per farm,100–199 cows,U.S. total,United States,2024,136,Base survey of 2021
+Milk,Supporting information,Milk cows,Milk cows (head per farm),head per farm,200–499 cows,U.S. total,United States,2021,304,Base survey of 2021
+Milk,Supporting information,Milk cows,Milk cows (head per farm),head per farm,200–499 cows,U.S. total,United States,2022,304,Base survey of 2021
+Milk,Supporting information,Milk cows,Milk cows (head per farm),head per farm,200–499 cows,U.S. total,United States,2023,304,Base survey of 2021
+Milk,Supporting information,Milk cows,Milk cows (head per farm),head per farm,200–499 cows,U.S. total,United States,2024,304,Base survey of 2021
+Milk,Supporting information,Milk cows,Milk cows (head per farm),head per farm,500–999 cows,U.S. total,United States,2021,680,Base survey of 2021
+Milk,Supporting information,Milk cows,Milk cows (head per farm),head per farm,500–999 cows,U.S. total,United States,2022,680,Base survey of 2021
+Milk,Supporting information,Milk cows,Milk cows (head per farm),head per farm,500–999 cows,U.S. total,United States,2023,680,Base survey of 2021
+Milk,Supporting information,Milk cows,Milk cows (head per farm),head per farm,500–999 cows,U.S. total,United States,2024,680,Base survey of 2021
+Milk,Supporting information,Milk cows,Milk cows (head per farm),head per farm,"1,000–1,999 cows",U.S. total,United States,2021,1411,Base survey of 2021
+Milk,Supporting information,Milk cows,Milk cows (head per farm),head per farm,"1,000–1,999 cows",U.S. total,United States,2022,1411,Base survey of 2021
+Milk,Supporting information,Milk cows,Milk cows (head per farm),head per farm,"1,000–1,999 cows",U.S. total,United States,2023,1411,Base survey of 2021
+Milk,Supporting information,Milk cows,Milk cows (head per farm),head per farm,"1,000–1,999 cows",U.S. total,United States,2024,1411,Base survey of 2021
+Milk,Supporting information,Milk cows,Milk cows (head per farm),head per farm,"2,000 cows or more",U.S. total,United States,2021,4011,Base survey of 2021
+Milk,Supporting information,Milk cows,Milk cows (head per farm),head per farm,"2,000 cows or more",U.S. total,United States,2022,4011,Base survey of 2021
+Milk,Supporting information,Milk cows,Milk cows (head per farm),head per farm,"2,000 cows or more",U.S. total,United States,2023,4011,Base survey of 2021
+Milk,Supporting information,Milk cows,Milk cows (head per farm),head per farm,"2,000 cows or more",U.S. total,United States,2024,4011,Base survey of 2021
+Milk,Supporting information,Milk cows,Milk cows (head per farm),head per farm,All sizes,U.S. total,United States,2021,283,Base survey of 2021
+Milk,Supporting information,Milk cows,Milk cows (head per farm),head per farm,All sizes,U.S. total,United States,2022,283,Base survey of 2021
+Milk,Supporting information,Milk cows,Milk cows (head per farm),head per farm,All sizes,U.S. total,United States,2023,283,Base survey of 2021
+Milk,Supporting information,Milk cows,Milk cows (head per farm),head per farm,All sizes,U.S. total,United States,2024,283,Base survey of 2021
+Milk,Supporting information,Output per cow,Output per cow (pounds),pounds,Fewer than 50 cows,U.S. total,United States,2021,15751,Base survey of 2021
+Milk,Supporting information,Output per cow,Output per cow (pounds),pounds,Fewer than 50 cows,U.S. total,United States,2022,15751,Base survey of 2021
+Milk,Supporting information,Output per cow,Output per cow (pounds),pounds,Fewer than 50 cows,U.S. total,United States,2023,15751,Base survey of 2021
+Milk,Supporting information,Output per cow,Output per cow (pounds),pounds,Fewer than 50 cows,U.S. total,United States,2024,15751,Base survey of 2021
+Milk,Supporting information,Output per cow,Output per cow (pounds),pounds,50–99 cows,U.S. total,United States,2021,17632,Base survey of 2021
+Milk,Supporting information,Output per cow,Output per cow (pounds),pounds,50–99 cows,U.S. total,United States,2022,17632,Base survey of 2021
+Milk,Supporting information,Output per cow,Output per cow (pounds),pounds,50–99 cows,U.S. total,United States,2023,17632,Base survey of 2021
+Milk,Supporting information,Output per cow,Output per cow (pounds),pounds,50–99 cows,U.S. total,United States,2024,17632,Base survey of 2021
+Milk,Supporting information,Output per cow,Output per cow (pounds),pounds,100–199 cows,U.S. total,United States,2021,19991,Base survey of 2021
+Milk,Supporting information,Output per cow,Output per cow (pounds),pounds,100–199 cows,U.S. total,United States,2022,19991,Base survey of 2021

@@ -1,0 +1,84 @@
+version: 1
+phase: "3"
+schema: "suru_karar"
+target_table: "feat_inek_aylik_snapshot"
+
+snapshot:
+  grain: "animal_month_end"
+  reference_date: "month_end"
+  start_rule: "first_observed_event_month"
+  stop_rule: "do_not_create_snapshots_after_first_cull_date"
+  leakage_rule: "features_use_events_on_or_before_reference_date_only"
+
+observation:
+  dry_run_observation_end: "max_observed_event_date_per_animal"
+  no_cull_default: "unknown_when_horizon_not_observed"
+  canonical_animal_id_format: "{source_code}:{external_animal_id}"
+
+features:
+  laktasyon_no:
+    type: integer
+    source: "latest event_dogurma.laktasyon_no on or before referans_tarih"
+  parite:
+    type: integer
+    source: "latest event_dogurma.parite on or before referans_tarih"
+  dim:
+    type: integer
+    source: "days between referans_tarih and latest calving date"
+  yas_gun:
+    type: integer
+    source: "reliable birth date only; null in dry-run when no reliable cow birth date exists"
+  gebe_mi:
+    type: boolean
+    source: "true after latest positive pregnancy diagnosis unless calving/loss occurs afterwards"
+  servis_sayisi:
+    type: integer
+    source: "insemination count after latest calving and on or before referans_tarih"
+  son_servis_gun:
+    type: integer
+    source: "days since latest insemination"
+  gebelik_kaybi_flag:
+    type: boolean
+    window_days: 365
+    source: "pregnancy_loss event in trailing 365 days"
+  son30_saglik_olay_sayisi:
+    type: integer
+    window_days: 30
+    source: "event_health count in trailing 30 days"
+  mastitis_flag:
+    type: boolean
+    window_days: 30
+    source: "mastitis health event in trailing 30 days"
+  lameness_flag:
+    type: boolean
+    window_days: 30
+    source: "lameness health event in trailing 30 days"
+  son30_ortalama_sut:
+    type: float
+    window_days: 30
+    source: "average milk kg in trailing 30 days"
+  sut_trend_7g:
+    type: float
+    source: "average milk kg in trailing 7 days minus previous 7 days"
+
+labels:
+  horizons_days:
+    - 30
+    - 60
+    - 90
+  positive_rule: "referans_tarih < culling_date <= referans_tarih + horizon"
+  negative_rule: "no culling in horizon and animal observation_end >= referans_tarih + horizon"
+  unknown_rule: "observation horizon not covered"
+  dry_run_columns:
+    30: "cull_within_30d"
+    60: "cull_within_60d"
+    90: "cull_within_90d"
+  db_columns:
+    30: "cull_30g"
+    60: "cull_60g"
+    90: "cull_90g"
+
+split:
+  method: "time_based"
+  train_fraction: 0.8
+  split_source: "model_ready rows sorted by referans_tarih"

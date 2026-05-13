@@ -21,7 +21,7 @@ insert into suru_karar.feat_reward_parametre (
 )
 select
     $$baseline_external_pending$$,
-    date $$2026-01-01$$,
+    date '2026-01-01',
     null,
     null,
     null,
@@ -35,5 +35,5 @@ where not exists (
     select 1
     from suru_karar.feat_reward_parametre
     where senaryo_kodu = $$baseline_external_pending$$
-      and gecerlilik_baslangic = date $$2026-01-01$$
+      and gecerlilik_baslangic = date '2026-01-01'
 );

@@ -1,0 +1,567 @@
+version: 1
+phase: "2.1"
+schema: "suru_karar"
+notes: >
+  Source-specific column meaning, raw placement, and canonical event rules for
+  the dry-run normalization layer. Rules are intentionally conservative:
+  columns without observed schema or clear event dates stay as TODO/manual
+  inspection required.
+
+canonical_id:
+  format: "{source_code}:{external_animal_id}"
+  rationale: "Prevents collisions across independent public datasets."
+
+event_type_dictionary:
+  - calving
+  - insemination
+  - pregnancy_diagnosis_positive
+  - pregnancy_loss
+  - dryoff
+  - cull
+  - milk_measurement
+  - health_lameness
+  - group_change
+  - entry
+  - birth
+  - other
+
+manual_inspection_sources:
+  - source_code: scc_grazing_cows
+    reason: "ZIP contains RAR; tabular schema cannot be inspected in this phase."
+  - source_code: organic_scm
+    reason: "ZIP contains DOCX supplemental material; tabular schema cannot be inspected safely."
+  - source_code: calving_afc_culling
+    reason: "ZIP contains PDF supplemental material; table extraction requires manual inspection."
+  - source_code: usda_ams_cull_cow
+    reason: "PDF report; economic cull value extraction requires manual unit/date review."
+  - source_code: iowa_state_heifer_cost
+    reason: "PDF report; heifer cost extraction requires manual unit/date review."
+
+sources:
+  embryo_losses_mendeley:
+    role: "main_backbone_candidate"
+    load_decision: "load_tabular_dry_run"
+    file_pattern: "EmbryoLosses/CorvaSG et al.xlsx"
+    sheets:
+      Hoja1:
+        row_action: "load_all_rows_to_raw_repro_loss"
+        heuristic_policy: "rules_only"
+        raw_tables:
+          - raw_repro_loss
+        event_outputs:
+          - event_dogurma
+          - event_dollenme
+          - event_normalized
+        required_columns:
+          - id
+        skip_reason: ""
+        columns:
+          id:
+            semantic: "external animal id"
+            target_table: map_external_inek
+            target_column: external_animal_id
+            confidence: 0.95
+            notes: "Use canonical master ID format source_code:id."
+          fparto:
+            semantic: "cow calving date"
+            target_table: event_dogurma
+            target_column: dogurma_tarihi
+            event_type: calving
+            confidence: 0.95
+            notes: "Observed date column; also retained in raw_repro_loss."
+          nparto:
+            semantic: "parity / calving number"
+            target_table: event_dogurma
+            target_column: parite
+            confidence: 0.85
+            notes: "Payload and event parity candidate."
+          nlact:
+            semantic: "lactation number"
+            target_table: event_dogurma
+            target_column: laktasyon_no
+            confidence: 0.85
+            notes: "Payload and event lactation candidate."
+          nrosf:
+            semantic: "service number"
+            target_table: event_dollenme
+            target_column: dollenme_sayisi
+            confidence: 0.75
+            notes: "Used as service count only when fechasf is present."
+          fechasf:
+            semantic: "service / insemination date"
+            target_table: event_dollenme
+            target_column: dollenme_tarihi
+            event_type: insemination
+            confidence: 0.95
+            notes: "Observed date column; also retained in raw_repro_loss."
+          fechaperd:
+            semantic: "pregnancy loss date"
+            target_table: event_normalized
+            target_column: event_date
+            event_type: pregnancy_loss
+            confidence: 0.90
+            notes: "Emit only where perdida=1."
+          npre:
+            semantic: "pregnancy/loss payload field"
+            target_table: raw_repro_loss
+            target_column: npre
+            confidence: 0.75
+            notes: "No standalone canonical event emitted."
+          perdida:
+            semantic: "pregnancy loss flag"
+            target_table: event_normalized
+            target_column: event_type
+            event_type: pregnancy_loss
+            confidence: 0.90
+            notes: "Emit pregnancy_loss only when value is 1 and fechaperd is a valid date."
+          tperd:
+            semantic: "pregnancy loss timing/type payload"
+            target_table: raw_repro_loss
+            target_column: tperd
+            confidence: 0.85
+            notes: "Not protein. Retain as reproduction payload."
+          codigo_tperd:
+            semantic: "pregnancy loss code payload"
+            target_table: raw_repro_loss
+            target_column: codigo_tperd
+            confidence: 0.85
+            notes: "Not protein. Retain as reproduction payload."
+          estsf:
+            semantic: "service/pregnancy status payload"
+            target_table: raw_repro_loss
+            target_column: estsf
+            confidence: 0.70
+            notes: "No standalone canonical event emitted in v1."
+          dgp:
+            semantic: "gestation/pregnancy payload"
+            target_table: raw_repro_loss
+            target_column: dgp
+            confidence: 0.70
+            notes: "Retain as payload/raw value."
+          delp:
+            semantic: "reproduction payload"
+            target_table: raw_repro_loss
+            target_column: delp
+            confidence: 0.65
+            notes: "Retain as payload/raw value."
+          sana_ribeiro:
+            semantic: "health/status payload from source"
+            target_table: raw_repro_loss
+            target_column: sana_ribeiro
+            confidence: 0.60
+            notes: "No direct health event emitted without source definition."
+          cl100:
+            semantic: "pregnancy/lactation payload"
+            target_table: raw_repro_loss
+            target_column: cl100
+            confidence: 0.60
+            notes: "No direct milk event emitted."
+          cl150:
+            semantic: "pregnancy/lactation payload"
+            target_table: raw_repro_loss
+            target_column: cl150
+            confidence: 0.60
+            notes: "No direct milk event emitted."
+          clsf:
+            semantic: "pregnancy/lactation payload"
+            target_table: raw_repro_loss
+            target_column: clsf
+            confidence: 0.60
+            notes: "No direct milk event emitted."
+          cltacto:
+            semantic: "pregnancy/lactation payload"
+            target_table: raw_repro_loss
+            target_column: cltacto
+            confidence: 0.60
+            notes: "No direct milk event emitted."
+
+  primiparous_social_env:
+    role: "main_backbone_etl_design_candidate"
+    load_decision: "load_tabular_dry_run"
+    file_pattern: "j42n4x723g-2/data in Brief publish.xlsx"
+    sheets:
+      Daily data:
+        row_action: "load_milk_measurements"
+        heuristic_policy: "rules_only"
+        raw_tables:
+          - raw_milk
+        event_outputs:
+          - event_sut_olcum
+          - event_normalized
+        required_columns:
+          - CowID
+          - Date
+          - Yield(gr)
+        unit_conversions:
+          "Yield(gr)": "divide_by_1000_to_kg"
+        columns:
+          CowID:
+            semantic: "external animal id"
+            target_table: map_external_inek
+            target_column: external_animal_id
+            confidence: 0.95
+            notes: "Use canonical master ID format source_code:CowID."
+          Group:
+            semantic: "management/social group payload"
+            target_table: raw_milk
+            target_column: raw_payload
+            confidence: 0.70
+            notes: "Payload only in milk rows."
+          Date:
+            semantic: "milk measurement date"
+            target_table: event_sut_olcum
+            target_column: sagim_tarihi
+            event_type: milk_measurement
+            confidence: 0.95
+            notes: "Required for raw_milk and event_sut_olcum."
+          Days_in_Milk:
+            semantic: "days in milk payload"
+            target_table: raw_milk
+            target_column: raw_payload
+            confidence: 0.90
+            notes: "Not milk amount. Retained as payload."
+          Lactation_Number:
+            semantic: "lactation number payload"
+            target_table: raw_milk
+            target_column: raw_payload
+            confidence: 0.75
+            notes: "No direct canonical event emitted."
+          Yield(gr):
+            semantic: "milk yield in grams"
+            target_table: raw_milk
+            target_column: sut_miktar_kg
+            event_type: milk_measurement
+            confidence: 0.95
+            notes: "Convert grams to kg by dividing by 1000."
+          Conductivity:
+            semantic: "milk conductivity"
+            target_table: raw_milk
+            target_column: conductivity
+            confidence: 0.90
+            notes: "Retained in raw_milk and event_sut_olcum."
+          Milking_Time(Sec):
+            semantic: "milking duration payload"
+            target_table: raw_milk
+            target_column: raw_payload
+            confidence: 0.70
+            notes: "No target column in current DDL."
+          Weight(kg):
+            semantic: "cow body weight payload"
+            target_table: raw_milk
+            target_column: raw_payload
+            confidence: 0.70
+            notes: "Payload only; not an event in v1."
+          Activity(steps/hour):
+            semantic: "activity payload"
+            target_table: raw_milk
+            target_column: raw_payload
+            confidence: 0.70
+            notes: "Payload only; not an event in v1."
+      events:
+        row_action: "route_by_event_name"
+        heuristic_policy: "rules_only"
+        raw_tables:
+          - raw_repro_loss
+          - raw_culling
+          - raw_health
+        event_outputs:
+          - event_dogurma
+          - event_dollenme
+          - event_kuru
+          - event_suruden_cikarma
+          - event_normalized
+        required_columns:
+          - CowID
+          - Date
+          - Event
+        columns:
+          CowID:
+            semantic: "external animal id"
+            target_table: map_external_inek
+            target_column: external_animal_id
+            confidence: 0.95
+            notes: "Use canonical master ID format source_code:CowID."
+          Date:
+            semantic: "event date"
+            target_table: event_normalized
+            target_column: event_date
+            confidence: 0.90
+            notes: "Event target determined by Event value."
+          Event:
+            semantic: "event type label"
+            target_table: event_normalized
+            target_column: event_type
+            confidence: 0.90
+            notes: "Calving/Insemination/Dry/Exit map to specialized event tables."
+          Status:
+            semantic: "event status payload"
+            target_table: event_normalized
+            target_column: text_value
+            confidence: 0.70
+            notes: "Preserve as text_value/payload."
+          Group:
+            semantic: "group payload"
+            target_table: event_normalized
+            target_column: payload
+            confidence: 0.65
+            notes: "Used for group_change text/payload."
+      survival:
+        row_action: "skip_summary_sheet"
+        heuristic_policy: "rules_only"
+        raw_tables: []
+        event_outputs: []
+        required_columns: []
+        skip_reason: "Summary/survival sheet is not canonical event input in v1."
+      service period:
+        row_action: "skip_summary_sheet"
+        heuristic_policy: "rules_only"
+        raw_tables: []
+        event_outputs: []
+        required_columns: []
+        skip_reason: "Service period summary lacks one event per row semantics for v1."
+      calfweight:
+        row_action: "skip_summary_sheet"
+        heuristic_policy: "rules_only"
+        raw_tables: []
+        event_outputs: []
+        required_columns: []
+        skip_reason: "Calf weight is out of current cow keep/cull canonical event scope."
+
+  marcenat_inrae:
+    role: "culling_health_feeding_support"
+    load_decision: "partial_event_dry_run"
+    file_pattern: "MarcenatINRAE.zip"
+    sheets:
+      Feuil1:
+        row_action: "extract_clear_date_events"
+        heuristic_policy: "rules_only"
+        raw_tables:
+          - raw_culling
+        event_outputs:
+          - event_dogurma
+          - event_kuru
+          - event_suruden_cikarma
+          - event_normalized
+        required_columns:
+          - Animal ID
+        columns:
+          Animal ID:
+            semantic: "external animal id"
+            target_table: map_external_inek
+            target_column: external_animal_id
+            confidence: 0.90
+            notes: "Use canonical master ID format source_code:Animal ID."
+          Date 1 er Mise Bas:
+            semantic: "first calving date"
+            target_table: event_dogurma
+            target_column: dogurma_tarihi
+            event_type: calving
+            confidence: 0.85
+            notes: "Extract when date is present."
+          Date Mise-bas:
+            semantic: "calving date"
+            target_table: event_dogurma
+            target_column: dogurma_tarihi
+            event_type: calving
+            confidence: 0.85
+            notes: "Extract when date is present; duplicate header variants handled by script."
+          Date tarrissement:
+            semantic: "dry-off date"
+            target_table: event_kuru
+            target_column: kuru_baslangic_tarihi
+            event_type: dryoff
+            confidence: 0.85
+            notes: "Extract when date is present."
+          Start of dry period:
+            semantic: "dry-off start date"
+            target_table: event_kuru
+            target_column: kuru_baslangic_tarihi
+            event_type: dryoff
+            confidence: 0.85
+            notes: "Extract when date is present."
+          Date Reforme:
+            semantic: "culling/removal date"
+            target_table: raw_culling
+            target_column: cikarilma_tarihi
+            event_type: cull
+            confidence: 0.90
+            notes: "Extract raw_culling and event_suruden_cikarma when date is present."
+          Causes tarissement:
+            semantic: "dry-off reason payload"
+            target_table: event_kuru
+            target_column: source_row_id
+            confidence: 0.55
+            notes: "Preserve in payload; not a standalone event."
+      all lactations:
+        row_action: "skip_summary_sheet"
+        heuristic_policy: "rules_only"
+        raw_tables: []
+        event_outputs: []
+        required_columns: []
+        skip_reason: "All-lactations file includes production/function summaries; clear row-level event semantics require manual review."
+      JDD_DIB.csv:
+        row_action: "skip_no_event_date"
+        heuristic_policy: "rules_only"
+        raw_tables: []
+        event_outputs: []
+        required_columns: []
+        skip_reason: "Culling reason metadata lacks row-level event date; keep as TODO/payload reference."
+
+  chiozza_lameness:
+    role: "health_support"
+    load_decision: "load_tabular_dry_run"
+    file_pattern: "ChiozzaLogroñoJ_SupplementaryData.xlsx"
+    sheets:
+      Hoja1:
+        row_action: "extract_lameness_repro_cull_events"
+        heuristic_policy: "rules_only"
+        raw_tables:
+          - raw_health
+          - raw_culling
+        event_outputs:
+          - event_dogurma
+          - event_dollenme
+          - event_kuru
+          - event_health
+          - event_suruden_cikarma
+          - event_normalized
+        required_columns:
+          - ID_ECLO_TAMBO_VACA
+        columns:
+          ID_ECLO_TAMBO_VACA:
+            semantic: "external animal id"
+            target_table: map_external_inek
+            target_column: external_animal_id
+            confidence: 0.95
+            notes: "Use canonical master ID format source_code:ID_ECLO_TAMBO_VACA."
+          FECHA:
+            semantic: "calving/lactation start date candidate"
+            target_table: event_dogurma
+            target_column: dogurma_tarihi
+            event_type: calving
+            confidence: 0.70
+            notes: "Observed source date; treat as calving candidate in v1."
+          primer_servicio:
+            semantic: "first service date"
+            target_table: event_dollenme
+            target_column: dollenme_tarihi
+            event_type: insemination
+            confidence: 0.85
+            notes: "Extract when date is present."
+          ult_servicio:
+            semantic: "last service date"
+            target_table: event_dollenme
+            target_column: dollenme_tarihi
+            event_type: insemination
+            confidence: 0.80
+            notes: "Extract when date is present."
+          tacto_preniez:
+            semantic: "pregnancy diagnosis date"
+            target_table: event_normalized
+            target_column: event_date
+            event_type: pregnancy_diagnosis_positive
+            confidence: 0.65
+            notes: "Emit positive diagnosis when preniada indicates positive."
+          preniada:
+            semantic: "pregnancy diagnosis result"
+            target_table: event_normalized
+            target_column: text_value
+            confidence: 0.65
+            notes: "Used with tacto_preniez."
+          fecha_renguera:
+            semantic: "lameness event date"
+            target_table: raw_health
+            target_column: olay_tarihi
+            event_type: health_lameness
+            confidence: 0.90
+            notes: "Extract raw_health and event_health when date is present."
+          evento:
+            semantic: "lameness/event subtype payload"
+            target_table: raw_health
+            target_column: alt_tip
+            confidence: 0.75
+            notes: "Preserve in raw_health/event_health payload."
+          renguera:
+            semantic: "lameness flag"
+            target_table: raw_health
+            target_column: olay_tipi
+            event_type: health_lameness
+            confidence: 0.90
+            notes: "Use as lameness indicator."
+          secado:
+            semantic: "dry-off date"
+            target_table: event_kuru
+            target_column: kuru_baslangic_tarihi
+            event_type: dryoff
+            confidence: 0.85
+            notes: "Extract when date is present."
+          baja:
+            semantic: "culling/removal date candidate"
+            target_table: raw_culling
+            target_column: cikarilma_tarihi
+            event_type: cull
+            confidence: 0.75
+            notes: "Load only if value is a valid date; otherwise skip."
+          leche_150d:
+            semantic: "150-day milk summary"
+            target_table: raw_milk
+            target_column: raw_payload
+            confidence: 0.75
+            notes: "Summary value, not event_sut_olcum."
+          leche_305d:
+            semantic: "305-day milk summary"
+            target_table: raw_milk
+            target_column: raw_payload
+            confidence: 0.75
+            notes: "Summary value, not event_sut_olcum."
+          leche_total:
+            semantic: "total lactation milk summary"
+            target_table: raw_milk
+            target_column: raw_payload
+            confidence: 0.75
+            notes: "Summary value, not event_sut_olcum."
+      Hoja2:
+        row_action: "skip_empty_or_unreadable"
+        heuristic_policy: "rules_only"
+        raw_tables: []
+        event_outputs: []
+        required_columns: []
+        skip_reason: "No columns detected in inspection."
+      Hoja3:
+        row_action: "skip_empty_or_unreadable"
+        heuristic_policy: "rules_only"
+        raw_tables: []
+        event_outputs: []
+        required_columns: []
+        skip_reason: "No columns detected in inspection."
+
+  usda_nass_milk_price:
+    role: "economic_reward_parameter_source"
+    load_decision: "reward_candidates_only"
+    file_pattern: "USDA NASS.xlsx"
+    sheets:
+      Sheet1:
+        row_action: "reward_candidate_only"
+        heuristic_policy: "allow_economic_heuristics"
+        raw_tables: []
+        event_outputs: []
+        required_columns:
+          - Year
+          - Period
+          - Value
+        skip_reason: "No animal-level canonical event; reviewed by reward candidate script."
+
+  usda_ers_milk_cost:
+    role: "economic_reward_parameter_source"
+    load_decision: "reward_candidates_only"
+    file_pattern: "MilkState2021base.csv and MilkSize2021base.csv"
+    sheets:
+      "":
+        row_action: "reward_candidate_only"
+        heuristic_policy: "allow_economic_heuristics"
+        raw_tables: []
+        event_outputs: []
+        required_columns:
+          - Year
+          - Value
+        skip_reason: "No animal-level canonical event; reviewed by reward candidate script."
