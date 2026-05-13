@@ -1,6 +1,6 @@
 # Economic Reward Parameter Review
 
-This report lists candidate economic values only. No value is approved for direct insertion into `feat_reward_parametre` until unit conversion and scenario policy are reviewed.
+This report lists source-level candidate economic values. Candidate rows are not inserted directly into `feat_reward_parametre`; the reviewed prototype baseline is generated separately by `scripts/11_build_reward_baseline.py` after unit conversion and scenario assumptions are documented.
 
 ## Summary
 

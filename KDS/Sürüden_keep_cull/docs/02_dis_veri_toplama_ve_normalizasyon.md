@@ -42,7 +42,12 @@ Bu fazdaki ETL, klasik tek adımlı yükleme değildir. Ham dış verinin yapıs
 - `usda_ers_milk_cost`: Bakım/üretim maliyeti için aday.
 - `iowa_state_heifer_cost`: Replacement/heifer raising maliyeti için aday.
 
-Bu kaynaklardan kesin değer yazılmayacak. Birim, tarih, bölge ve kur uyarlaması manuel olarak onaylanmadan `feat_reward_parametre` içinde değerler `NULL` kalır.
+İlk güvenli DB senaryosu `baseline_us_2025_mixed_source_v1` olarak üretildi.
+Bu senaryoda `sut_fiyati` USDA NASS 2025 US TOTAL süt fiyatından, `gunluk_bakim_maliyeti`
+USDA ERS 2025 U.S. total operating cost verisinden birim dönüşümüyle türetilir.
+Replacement, cull satış, tedavi ve başarısız tohumlama kalemleri ise indirilen
+dosyalardan güvenilir tablo olarak çıkarılamadığı için açıkça sentetik prototip
+varsayımıdır. Detay rapor: `reports/reward_baseline_us_2025_review.md`.
 
 ## Kaynak - Raw Tablo İlişkisi
 
@@ -84,7 +89,8 @@ Bu yaklaşım RL mantığını korur, ancak veri gerçekliğine daha uygundur: �
 
 - `config/data_sources.yaml`: Kaynak kataloğu.
 - `sql/01_seed_meta_veri_kaynagi.sql`: Kaynak metadata seed'i.
-- `sql/02_seed_reward_parametre_baseline.sql`: Değerleri bilinçli olarak `NULL` bırakılmış baseline reward senaryosu.
+- `sql/02_seed_reward_parametre_baseline.sql`: İlk placeholder reward senaryosu.
+- `sql/08_seed_reward_parametre_us_2025.sql`: Kaynak türetilmiş + sentetik varsayım ayrımı yapılmış US 2025 reward baseline seed'i.
 - `reports/dataset_mapping_table.md`: Kaynak-raw-event uygunluk tablosu.
 - `scripts/00_check_environment.py` - `scripts/05_generate_column_mapping_template.py`: İndirme, inceleme ve mapping iskeleti.
 

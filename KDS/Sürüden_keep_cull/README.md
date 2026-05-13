@@ -75,9 +75,22 @@ Her indirilen dosya kolonu için `reports/column_mapping_template.csv` üretilir
 
 ```bash
 python scripts/06_extract_reward_parameter_candidates.py
+python scripts/11_build_reward_baseline.py
 ```
 
-USDA NASS ve USDA ERS dosyalarından `feat_reward_parametre` için aday ekonomik değerleri çıkarır. Bu çıktı doğrudan seed değildir; birim dönüşümü ve senaryo onayı gerekir.
+İlk komut USDA NASS ve USDA ERS dosyalarından `feat_reward_parametre` için aday ekonomik değerleri çıkarır. İkinci komut kaynak değerlerinden `baseline_us_2025_mixed_source_v1` senaryosunu üretir:
+
+- `data/processed/reward_baseline_us_2025.csv`
+- `reports/reward_baseline_us_2025_review.md`
+- `sql/08_seed_reward_parametre_us_2025.sql`
+
+Bu baseline içinde `sut_fiyati` ve `gunluk_bakim_maliyeti` kaynak veriden türetilir; replacement, cull satış, tedavi ve tohumlama maliyetleri açıkça sentetik prototip varsayımı olarak işaretlenir.
+
+PostgreSQL'e yazmak için:
+
+```bash
+psql -d laktasens -f sql/08_seed_reward_parametre_us_2025.sql
+```
 
 ## 9. Kolon Anlamı ve Raw Yerleşim Raporları
 
@@ -109,6 +122,12 @@ python scripts/09_load_canonical_to_postgres.py
 
 `.env` yoksa hata vermeden DB yüklemeyi atlar. `.env` varsa candidate CSV'leri `suru_karar` şemasına kaynak bazlı replace mantığıyla yüklemeye çalışır.
 
+Alternatif olarak candidate CSV'leri doğrudan PostgreSQL'e yüklemek için:
+
+```bash
+psql -d laktasens -f sql/06_load_raw_event_candidates_from_csv.sql
+```
+
 ## 12. Eğitim Veri Seti Snapshot Üretimi
 
 ```bash
@@ -126,8 +145,20 @@ Candidate event CSV'lerinden aylık hayvan snapshot veri setini üretir:
 PostgreSQL karşılığı için:
 
 ```bash
-psql -d laktasens_poc -f sql/03_build_feat_inek_aylik_snapshot.sql
-psql -d laktasens_poc -f sql/04_select_training_dataset_with_split.sql
+psql -d laktasens -f sql/03_build_feat_inek_aylik_snapshot.sql
+psql -d laktasens -f sql/04_select_training_dataset_with_split.sql
+```
+
+Dry-run CSV çıktısını doğrudan PostgreSQL tablosuna yüklemek için:
+
+```bash
+psql -d laktasens -f sql/05_load_training_snapshot_from_csv.sql
+```
+
+Prototip UI/DB smoke-test için RL tablolarını açıkça sentetik olarak doldurmak için:
+
+```bash
+psql -d laktasens -f sql/07_seed_synthetic_smoke_test_records.sql
 ```
 
 ## 13. Ortam Kontrolü

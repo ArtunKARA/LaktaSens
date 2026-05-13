@@ -53,9 +53,13 @@ ise kaynak içindeki ham dış ID'yi tutar.
 Birim dönüşümleri v1:
 
 - Primiparous `Yield(gr)` -> `sut_miktar_kg = Yield(gr) / 1000`
-- USDA NASS ve ERS ekonomik değerleri seed edilmez; `$ / CWT` ve yıllık maliyet
-  gibi birimler önce `reports/economic_reward_parameter_review.md` içinde
-  incelenir.
+- USDA NASS ve ERS ekonomik değerleri önce `reports/economic_reward_parameter_review.md`
+  içinde aday olarak incelenir. Onaylı v1 prototip senaryosu için
+  `scripts/11_build_reward_baseline.py`, NASS `$ / CWT` değerini USD/kg'a ve
+  ERS operating cost değerini USD/cow/day değerine çevirir. Kaynakta güvenilir
+  tablo olarak görülmeyen replacement/cull/treatment/tohumlama kalemleri
+  `reports/reward_baseline_us_2025_review.md` içinde sentetik varsayım olarak
+  işaretlenir.
 
 Özet kolonlar event yapılmaz:
 

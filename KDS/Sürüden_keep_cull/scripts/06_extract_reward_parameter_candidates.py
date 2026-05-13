@@ -49,30 +49,48 @@ def clean_text(value: Any) -> str:
 def read_ers_candidates() -> list[dict[str, str]]:
     rows: list[dict[str, str]] = []
     for path in sorted(ERS_DIR.glob("*.csv")):
-        with path.open("r", encoding="utf-8", errors="replace", newline="") as file:
-            reader = csv.DictReader(file)
-            for row in reader:
-                item = clean_text(row.get("Item"))
-                candidate_param = ERS_CANDIDATE_ITEMS.get(item)
-                if not candidate_param:
-                    continue
-                rows.append(
-                    {
-                        "source_code": "usda_ers_milk_cost",
-                        "source_file": str(path.relative_to(PROJECT_ROOT)),
-                        "candidate_param": candidate_param,
-                        "year": clean_text(row.get("Year")),
-                        "period": "YEAR",
-                        "geography": clean_text(row.get("Region")),
-                        "size": clean_text(row.get("Size")),
-                        "category": clean_text(row.get("Category")),
-                        "item": item,
-                        "units": clean_text(row.get("Units")),
-                        "value_raw": clean_text(row.get("Value")),
-                        "value_status": "ok_from_csv",
-                        "notes": "Candidate only. Convert units and choose accounting convention before inserting into feat_reward_parametre.",
-                    }
-                )
+        for encoding in ("utf-8-sig", "cp1252", "latin-1"):
+            try:
+                with path.open("r", encoding=encoding, newline="") as file:
+                    reader = csv.DictReader(file)
+                    for row in reader:
+                        item = clean_text(row.get("Item"))
+                        candidate_param = ERS_CANDIDATE_ITEMS.get(item)
+                        if not candidate_param:
+                            continue
+                        rows.append(
+                            {
+                                "source_code": "usda_ers_milk_cost",
+                                "source_file": str(path.relative_to(PROJECT_ROOT)),
+                                "candidate_param": candidate_param,
+                                "year": clean_text(row.get("Year")),
+                                "period": "YEAR",
+                                "geography": clean_text(row.get("Region")),
+                                "size": clean_text(row.get("Size")),
+                                "category": clean_text(row.get("Category")),
+                                "item": item,
+                                "units": clean_text(row.get("Units")),
+                                "value_raw": clean_text(row.get("Value")),
+                                "value_status": "ok_from_csv",
+                                "notes": "Candidate only. Convert units and choose accounting convention before inserting into feat_reward_parametre.",
+                            }
+                        )
+                break
+            except UnicodeDecodeError:
+                rows = [
+                    row
+                    for row in rows
+                    if row["source_file"] != str(path.relative_to(PROJECT_ROOT))
+                ]
+                continue
+        else:
+            raise UnicodeDecodeError(
+                "csv",
+                b"",
+                0,
+                1,
+                f"Could not decode {path} with supported encodings.",
+            )
     return rows
 
 
@@ -157,7 +175,7 @@ def write_markdown(rows: list[dict[str, str]]) -> None:
     lines = [
         "# Economic Reward Parameter Review",
         "",
-        "This report lists candidate economic values only. No value is approved for direct insertion into `feat_reward_parametre` until unit conversion and scenario policy are reviewed.",
+        "This report lists source-level candidate economic values. Candidate rows are not inserted directly into `feat_reward_parametre`; the reviewed prototype baseline is generated separately by `scripts/11_build_reward_baseline.py` after unit conversion and scenario assumptions are documented.",
         "",
         "## Summary",
         "",

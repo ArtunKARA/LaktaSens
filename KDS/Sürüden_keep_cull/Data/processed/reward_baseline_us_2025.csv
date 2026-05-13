@@ -1,0 +1,10 @@
+parameter,value,unit,value_source,source_file,formula,notes
+sut_fiyati,0.4668,USD/kg,source_derived,data/external/usda_nass_milk_price/USDA NASS.xlsx,avg(2025 monthly US TOTAL NASS milk price USD/cwt) / 45.359237 kg/cwt,NASS month count=12; avg=21.175 USD/cwt.
+gunluk_bakim_maliyeti,8.5337,USD/cow/day,source_derived,data/external/usda_ers_milk_cost/MilkState2021base.csv,ERS operating cost USD/cwt * ERS output per cow cwt/year / 365,"Uses operating costs, not total listed costs, to avoid double counting overhead in the first prototype."
+reference_total_costs_listed_daily,14.5041,USD/cow/day,source_derived_reference_only,data/external/usda_ers_milk_cost/MilkState2021base.csv,ERS total costs listed USD/cwt * ERS output per cow cwt/year / 365,Reference value only; not inserted as gunluk_bakim_maliyeti.
+reference_feed_cost_daily,6.0946,USD/cow/day,source_derived_reference_only,data/external/usda_ers_milk_cost/MilkState2021base.csv,ERS feed cost USD/cwt * ERS output per cow cwt/year / 365,Reference value only.
+replacement_maliyeti,2500.00,USD/head,synthetic_assumption,,fixed prototype assumption,Downloaded Iowa State PDF was not parsed into a reliable table in this phase.
+cull_satis_degeri,1200.00,USD/head,synthetic_assumption,,fixed prototype assumption,Downloaded AMS PDF was not parsed into a reliable market-class table in this phase.
+tedavi_maliyeti,150.00,USD/event,synthetic_assumption,,fixed prototype assumption,Health treatment cost is farm/protocol-specific.
+basarisiz_tohumlama_maliyeti,35.00,USD/service,synthetic_assumption,,fixed prototype assumption,Insemination cost is farm/protocol-specific.
+dusuk_verim_cezasi,2.33,USD/day,mixed_source_and_synthetic,data/external/usda_nass_milk_price/USDA NASS.xlsx,NASS milk price USD/kg * synthetic 5 kg/day low-yield gap,Penalty scale should be tuned with farm policy.
