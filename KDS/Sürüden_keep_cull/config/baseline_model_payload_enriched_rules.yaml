@@ -1,0 +1,236 @@
+phase: "04_2_payload_enriched_baseline_risk_model"
+schema: "suru_karar"
+
+input:
+  model_ready_csv: "data/processed/training/inek_aylik_snapshot_culling_observable_payload_enriched_model_ready.csv"
+  split_csv: "data/processed/training/train_test_split_culling_observable_payload_enriched.csv"
+
+output:
+  metrics_csv: "data/processed/models/payload_enriched/baseline_model_metrics.csv"
+  risk_scores_csv: "data/processed/models/payload_enriched/baseline_risk_scores.csv"
+  feature_importance_csv: "data/processed/models/payload_enriched/baseline_feature_importance.csv"
+  best_model_metadata_json: "data/processed/models/payload_enriched/baseline_best_model_metadata.json"
+  robustness_metrics_csv: "data/processed/models/payload_enriched/baseline_robustness_metrics.csv"
+  robustness_feature_importance_csv: "data/processed/models/payload_enriched/baseline_no_source_feature_importance.csv"
+  robustness_metadata_json: "data/processed/models/payload_enriched/baseline_robustness_metadata.json"
+  calibrated_metrics_csv: "data/processed/models/payload_enriched/calibrated_model_metrics.csv"
+  calibrated_risk_scores_csv: "data/processed/models/payload_enriched/calibrated_risk_scores.csv"
+  calibrated_metadata_json: "data/processed/models/payload_enriched/calibrated_best_model_metadata.json"
+  model_artifact_dir: "Model/baseline_risk/payload_enriched"
+  report_md: "reports/baseline_model_payload_enriched_report.md"
+  feature_importance_md: "reports/baseline_feature_importance_payload_enriched.md"
+  robustness_report_md: "reports/baseline_robustness_payload_enriched_report.md"
+  calibrated_report_md: "reports/baseline_calibration_payload_enriched_report.md"
+
+targets:
+  primary_target: "cull_within_90d"
+  horizons:
+    - label: "cull_within_30d"
+      db_label: "cull_30g"
+      horizon_days: 30
+    - label: "cull_within_60d"
+      db_label: "cull_60g"
+      horizon_days: 60
+    - label: "cull_within_90d"
+      db_label: "cull_90g"
+      horizon_days: 90
+
+split:
+  column: "split"
+  train_value: "train"
+  test_value: "test"
+  policy: "time_based_culling_observable_payload_enriched"
+  fallback_policy: "positive_aware_time_split"
+  fallback_positive_train_fraction: 0.8
+  fallback_min_test_positives: 10
+
+features:
+  variants:
+    with_source_code:
+      categorical:
+        - "source_code"
+        - "laktasyon_evresi"
+        - "parite_grup"
+        - "marcenat_breed"
+    no_source_code:
+      categorical:
+        - "laktasyon_evresi"
+        - "parite_grup"
+        - "marcenat_breed"
+  categorical:
+    - "source_code"
+    - "laktasyon_evresi"
+    - "parite_grup"
+    - "marcenat_breed"
+  numeric:
+    - "laktasyon_no"
+    - "parite"
+    - "dim"
+    - "yas_gun"
+    - "gebe_mi"
+    - "servis_sayisi"
+    - "son_servis_gun"
+    - "gebelik_kaybi_flag"
+    - "son30_saglik_olay_sayisi"
+    - "mastitis_flag"
+    - "lameness_flag"
+    - "son30_ortalama_sut"
+    - "sut_trend_7g"
+    - "dim_month"
+    - "months_observed"
+    - "laktasyon_no_missing_flag"
+    - "parite_missing_flag"
+    - "dim_missing_flag"
+    - "yas_gun_missing_flag"
+    - "gebe_mi_missing_flag"
+    - "son_servis_gun_missing_flag"
+    - "son30_ortalama_sut_missing_flag"
+    - "sut_trend_7g_missing_flag"
+    - "calving_count_to_date"
+    - "service_count_90"
+    - "service_count_180"
+    - "health_count_60"
+    - "health_count_90"
+    - "days_since_last_calving_event"
+    - "days_since_last_service_event"
+    - "days_since_last_health_event"
+    - "has_service_observation_180"
+    - "has_health_observation_365"
+    - "milk_obs_count_30"
+    - "milk_obs_count_60"
+    - "milk_obs_count_90"
+    - "milk_avg_60"
+    - "milk_avg_90"
+    - "milk_trend_30_vs_prev30"
+    - "milk_last_obs_gun"
+    - "has_milk_observation_90"
+    - "sensor_weight_avg_30"
+    - "sensor_weight_avg_90"
+    - "sensor_weight_trend_30"
+    - "sensor_activity_avg_30"
+    - "sensor_activity_avg_90"
+    - "sensor_activity_trend_30"
+    - "sensor_conductivity_avg_30"
+    - "sensor_conductivity_avg_90"
+    - "sensor_conductivity_trend_30"
+    - "sensor_milking_time_avg_30"
+    - "sensor_milking_time_avg_90"
+    - "sensor_daily_dim_last"
+    - "sensor_lactation_number_last"
+    - "sensor_group_current"
+    - "sensor_group_change_count_180"
+    - "sensor_days_since_group_change"
+    - "sensor_payload_obs_90"
+    - "has_sensor_payload_90"
+    - "marcenat_age_days_payload"
+    - "marcenat_age_first_calving_months"
+    - "marcenat_months_since_first_lactation"
+    - "has_marcenat_static_payload"
+    - "marcenat_calving_difficulty_latest"
+    - "marcenat_calf_weight_latest"
+    - "marcenat_num_lactation_payload_latest"
+    - "marcenat_gestation_duration_latest"
+    - "marcenat_bw_at_calving"
+    - "marcenat_bcs_at_calving"
+    - "marcenat_my_4w"
+    - "marcenat_cum_my_4w"
+    - "marcenat_my_3mo"
+    - "marcenat_cum_my_12w"
+    - "marcenat_bw_3mo"
+    - "marcenat_bcs_3mo"
+    - "marcenat_my_6mo"
+    - "marcenat_cum_my_24w"
+    - "marcenat_my_305d"
+    - "marcenat_cum_my_305d"
+    - "marcenat_my_peak"
+    - "marcenat_time_peak_week"
+    - "has_marcenat_lactation_payload"
+    - "dryoff_count_to_date"
+    - "days_since_last_dryoff"
+    - "has_dryoff_before_ref"
+  excluded:
+    - "snapshot_id"
+    - "external_animal_id"
+    - "canonical_animal_id"
+    - "referans_tarih"
+    - "observation_start"
+    - "observation_end"
+    - "first_cull_date"
+    - "cull_30g"
+    - "cull_60g"
+    - "cull_90g"
+    - "cull_within_30d"
+    - "cull_within_60d"
+    - "cull_within_90d"
+    - "label_30d_observed"
+    - "label_60d_observed"
+    - "label_90d_observed"
+    - "culling_observable_source"
+    - "culling_label_status"
+    - "split"
+
+models:
+  logistic_regression:
+    enabled: true
+    class_weight: "balanced"
+    max_iter: 1000
+  random_forest:
+    enabled: true
+    class_weight: "balanced_subsample"
+    n_estimators: 200
+    min_samples_leaf: 20
+    random_state: 42
+  xgboost:
+    enabled: true
+    optional_dependency: true
+    n_estimators: 300
+    max_depth: 4
+    learning_rate: 0.05
+    subsample: 0.8
+    colsample_bytree: 0.8
+    random_state: 42
+  lightgbm:
+    enabled: true
+    optional_dependency: true
+    n_estimators: 300
+    learning_rate: 0.05
+    num_leaves: 31
+    random_state: 42
+
+evaluation:
+  selection_metric: "pr_auc"
+  threshold_policy: "max_f1_on_train_precision_recall_curve"
+  calibration_bins: 10
+  metrics:
+    - "roc_auc"
+    - "pr_auc"
+    - "f1"
+    - "recall"
+    - "precision"
+    - "brier_score"
+    - "expected_calibration_error"
+
+calibration:
+  report_title: "Payload-Enriched Baseline Calibration Report"
+
+strict_validation:
+  target: "cull_within_90d"
+  models:
+    - "logistic_regression"
+    - "lightgbm"
+  animal_hash_test_pct: 20
+  cohort_test_pct: 20
+
+survival_baseline:
+  hazard_target: "cull_within_30d"
+  evaluation_target: "cull_within_90d"
+  models:
+    - "logistic_regression"
+    - "lightgbm"
+  max_cindex_rows: 2500
+
+notes:
+  - "Adds source payload features with explicit leakage guards."
+  - "Primiparous sensor payload is windowed by reference date."
+  - "Marcenat lactation summary fields are exposed only after their biological observation window has elapsed."
+  - "Culling/date reform and completed future lactation summaries are intentionally excluded."

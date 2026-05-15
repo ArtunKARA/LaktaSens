@@ -161,7 +161,75 @@ Prototip UI/DB smoke-test için RL tablolarını açıkça sentetik olarak doldu
 psql -d laktasens -f sql/07_seed_synthetic_smoke_test_records.sql
 ```
 
-## 13. Ortam Kontrolü
+## 13. Baseline Risk Modeli
+
+```bash
+python scripts/12_train_baseline_risk_models.py
+python scripts/13_validate_baseline_robustness.py
+python scripts/14_build_culling_observable_training_set.py
+python scripts/12_train_baseline_risk_models.py --rules config/baseline_model_culling_observable_rules.yaml
+python scripts/13_validate_baseline_robustness.py --rules config/baseline_model_culling_observable_rules.yaml
+python scripts/15_engineer_culling_observable_features.py
+python scripts/12_train_baseline_risk_models.py --rules config/baseline_model_engineered_rules.yaml
+python scripts/13_validate_baseline_robustness.py --rules config/baseline_model_engineered_rules.yaml
+python scripts/16_train_calibrated_engineered_baseline.py
+python scripts/17_engineer_payload_enriched_features.py
+python scripts/12_train_baseline_risk_models.py --rules config/baseline_model_payload_enriched_rules.yaml
+python scripts/13_validate_baseline_robustness.py --rules config/baseline_model_payload_enriched_rules.yaml
+python scripts/16_train_calibrated_engineered_baseline.py --rules config/baseline_model_payload_enriched_rules.yaml
+python scripts/18_build_data_coverage_audit.py
+python scripts/19_enrich_culling_reason_labels.py
+python scripts/20_validate_strict_splits.py --rules config/baseline_model_payload_enriched_rules.yaml
+python scripts/21_train_survival_time_to_event_baseline.py --rules config/baseline_model_payload_enriched_rules.yaml
+python scripts/22_build_risk_band_calibration_report.py
+```
+
+Bu komut Logistic Regression, Random Forest ve kuruluysa XGBoost/LightGBM
+baseline modellerini `cull_within_30d`, `cull_within_60d`, `cull_within_90d`
+hedefleri için dener. Ana seçim metriği PR-AUC'tur. İkinci komut `source_code`
+shortcut riskini ölçmek için no-source ve source-holdout validasyon yapar.
+Sonraki üç komut culling label gözlenebilirliği düzeltmesini uygular ve aynı
+baseline/robustluk testlerini culling-observable eğitim setinde tekrarlar.
+Son dört komut rolling/missingness feature engineering ve calibrated baseline
+çalıştırır. Payload-enriched komutları ise mevcut raw/event payload alanlarından
+sensör, dry-off ve leakage-safe Marcenat laktasyon feature'ları çıkarıp aynı
+model/robustluk/kalibrasyon kontrollerini tekrarlar. Son beş komut MDP öncesi
+sağlamlaştırma adımıdır: veri coverage audit, culling reason audit etiketi,
+animal/cohort/source holdout validasyon, survival-style hazard baseline ve risk
+band kalibrasyon raporu üretir.
+
+Çıktılar:
+
+- `data/processed/models/baseline_model_metrics.csv`
+- `data/processed/models/baseline_risk_scores.csv` seçilen en iyi primary modelin test risk skorlarıdır
+- `data/processed/models/baseline_feature_importance.csv`
+- `data/processed/models/baseline_best_model_metadata.json`
+- `Model/baseline_risk/*.joblib`
+- `reports/baseline_model_report.md`
+- `reports/baseline_feature_importance.md`
+- `reports/baseline_robustness_report.md`
+- `reports/culling_label_quality_audit.md`
+- `reports/baseline_model_culling_observable_report.md`
+- `reports/baseline_robustness_culling_observable_report.md`
+- `reports/baseline_culling_observable_comparison.md`
+- `reports/engineered_feature_review.md`
+- `reports/baseline_model_engineered_report.md`
+- `reports/baseline_robustness_engineered_report.md`
+- `reports/baseline_calibration_engineered_report.md`
+- `reports/phase_4_1_engineered_baseline_summary.md`
+- `reports/payload_enriched_feature_review.md`
+- `reports/baseline_model_payload_enriched_report.md`
+- `reports/baseline_robustness_payload_enriched_report.md`
+- `reports/baseline_calibration_payload_enriched_report.md`
+- `reports/phase_4_2_payload_enriched_summary.md`
+- `reports/data_coverage_audit.md`
+- `reports/culling_reason_enrichment_report.md`
+- `reports/strict_validation_payload_enriched_report.md`
+- `reports/survival_time_to_event_baseline_report.md`
+- `reports/risk_band_calibration_payload_enriched_report.md`
+- `reports/phase_4_3_pre_mdp_readiness_summary.md`
+
+## 14. Ortam Kontrolü
 
 ```bash
 python scripts/00_check_environment.py
@@ -171,4 +239,6 @@ Python sürümü, paketler, klasörler, `.env` varlığı ve opsiyonel PostgreSQ
 
 ## Sonraki Adım
 
-Faz 3 sonunda aylık eğitim snapshot'ı ve zaman bazlı train/test split hazır olur. Sonraki fazda supervised baseline risk modeli veya MDP geçiş veri seti üretimine geçilecek.
+Faz 4 sonunda ilk supervised culling risk skoru modeli, performans raporu ve
+feature importance analizi hazır olur. Sonraki fazda model-based MDP reward/geçiş
+simülasyonuna geçilecek.

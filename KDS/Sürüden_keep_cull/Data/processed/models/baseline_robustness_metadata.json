@@ -1,0 +1,47 @@
+{
+  "generated_at": "2026-05-14T09:43:20",
+  "best_no_source_model": {
+    "feature_variant": "no_source_code",
+    "horizon_label": "cull_within_90d",
+    "horizon_days": 90,
+    "model_name": "logistic_regression",
+    "validation_policy": "positive_aware_time_split",
+    "split_cutoff_date": "2011-09-30",
+    "train_rows": 52271,
+    "test_rows": 219279,
+    "train_positive": 780,
+    "test_positive": 180,
+    "train_positive_rate": 0.014922232212890513,
+    "test_positive_rate": 0.0008208720397302067,
+    "threshold": 0.5990199736219118,
+    "train_best_f1": 0.12286212914485165,
+    "roc_auc": 0.9708214221780007,
+    "pr_auc": 0.21610047391878834,
+    "f1": 0.01567513062608855,
+    "recall": 0.95,
+    "precision": 0.007902763656530178,
+    "brier_score": 0.12916447195796601,
+    "expected_calibration_error": 0.2695709513711698
+  },
+  "artifact_path": "Model/baseline_risk/logistic_regression_no_source_cull_within_90d.joblib",
+  "feature_variant": "no_source_code",
+  "feature_columns": {
+    "numeric": [
+      "laktasyon_no",
+      "parite",
+      "dim",
+      "yas_gun",
+      "gebe_mi",
+      "servis_sayisi",
+      "son_servis_gun",
+      "gebelik_kaybi_flag",
+      "son30_saglik_olay_sayisi",
+      "mastitis_flag",
+      "lameness_flag",
+      "son30_ortalama_sut",
+      "sut_trend_7g"
+    ],
+    "categorical": []
+  },
+  "rules_path": "config/baseline_model_rules.yaml"
+}

@@ -23,6 +23,10 @@ REQUIRED_PACKAGES = {
     "python-dotenv": "dotenv",
     "sqlalchemy": "sqlalchemy",
     "psycopg2-binary": "psycopg2",
+    "scikit-learn": "sklearn",
+    "joblib": "joblib",
+    "xgboost": "xgboost",
+    "lightgbm": "lightgbm",
 }
 
 REQUIRED_DIRS = [

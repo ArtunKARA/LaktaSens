@@ -1,0 +1,129 @@
+phase: "04_baseline_risk_model"
+schema: "suru_karar"
+
+input:
+  model_ready_csv: "data/processed/training/inek_aylik_snapshot_model_ready.csv"
+  split_csv: "data/processed/training/train_test_split.csv"
+
+output:
+  metrics_csv: "data/processed/models/baseline_model_metrics.csv"
+  risk_scores_csv: "data/processed/models/baseline_risk_scores.csv"
+  feature_importance_csv: "data/processed/models/baseline_feature_importance.csv"
+  best_model_metadata_json: "data/processed/models/baseline_best_model_metadata.json"
+  robustness_metrics_csv: "data/processed/models/baseline_robustness_metrics.csv"
+  robustness_feature_importance_csv: "data/processed/models/baseline_no_source_feature_importance.csv"
+  robustness_metadata_json: "data/processed/models/baseline_robustness_metadata.json"
+  model_artifact_dir: "Model/baseline_risk"
+  report_md: "reports/baseline_model_report.md"
+  feature_importance_md: "reports/baseline_feature_importance.md"
+  robustness_report_md: "reports/baseline_robustness_report.md"
+
+targets:
+  primary_target: "cull_within_90d"
+  horizons:
+    - label: "cull_within_30d"
+      db_label: "cull_30g"
+      horizon_days: 30
+    - label: "cull_within_60d"
+      db_label: "cull_60g"
+      horizon_days: 60
+    - label: "cull_within_90d"
+      db_label: "cull_90g"
+      horizon_days: 90
+
+split:
+  column: "split"
+  train_value: "train"
+  test_value: "test"
+  policy: "time_based_from_phase_3"
+  fallback_policy: "positive_aware_time_split"
+  fallback_positive_train_fraction: 0.8
+  fallback_min_test_positives: 10
+
+features:
+  variants:
+    with_source_code:
+      categorical:
+        - "source_code"
+    no_source_code:
+      categorical: []
+  categorical:
+    - "source_code"
+  numeric:
+    - "laktasyon_no"
+    - "parite"
+    - "dim"
+    - "yas_gun"
+    - "gebe_mi"
+    - "servis_sayisi"
+    - "son_servis_gun"
+    - "gebelik_kaybi_flag"
+    - "son30_saglik_olay_sayisi"
+    - "mastitis_flag"
+    - "lameness_flag"
+    - "son30_ortalama_sut"
+    - "sut_trend_7g"
+  excluded:
+    - "snapshot_id"
+    - "external_animal_id"
+    - "canonical_animal_id"
+    - "referans_tarih"
+    - "observation_start"
+    - "observation_end"
+    - "first_cull_date"
+    - "cull_30g"
+    - "cull_60g"
+    - "cull_90g"
+    - "cull_within_30d"
+    - "cull_within_60d"
+    - "cull_within_90d"
+    - "label_30d_observed"
+    - "label_60d_observed"
+    - "label_90d_observed"
+    - "split"
+
+models:
+  logistic_regression:
+    enabled: true
+    class_weight: "balanced"
+    max_iter: 1000
+  random_forest:
+    enabled: true
+    class_weight: "balanced_subsample"
+    n_estimators: 200
+    min_samples_leaf: 20
+    random_state: 42
+  xgboost:
+    enabled: true
+    optional_dependency: true
+    n_estimators: 300
+    max_depth: 4
+    learning_rate: 0.05
+    subsample: 0.8
+    colsample_bytree: 0.8
+    random_state: 42
+  lightgbm:
+    enabled: true
+    optional_dependency: true
+    n_estimators: 300
+    learning_rate: 0.05
+    num_leaves: 31
+    random_state: 42
+
+evaluation:
+  selection_metric: "pr_auc"
+  threshold_policy: "max_f1_on_train_precision_recall_curve"
+  calibration_bins: 10
+  metrics:
+    - "roc_auc"
+    - "pr_auc"
+    - "f1"
+    - "recall"
+    - "precision"
+    - "brier_score"
+    - "expected_calibration_error"
+
+notes:
+  - "Model egitimi hayvan-level policy degil; supervised culling risk skoru baseline'idir."
+  - "Feature tarafinda referans_tarih sonrasi bilgi kullanilmaz."
+  - "Class imbalance nedeniyle en iyi model secimi PR-AUC uzerinden yapilir."

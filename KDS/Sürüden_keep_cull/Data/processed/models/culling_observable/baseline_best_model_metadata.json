@@ -1,0 +1,47 @@
+{
+  "generated_at": "2026-05-14T13:49:55",
+  "best_model": {
+    "horizon_label": "cull_within_90d",
+    "horizon_days": 90,
+    "model_name": "logistic_regression",
+    "train_rows": 11256,
+    "test_rows": 2814,
+    "train_positive": 651,
+    "test_positive": 309,
+    "train_positive_rate": 0.05783582089552239,
+    "test_positive_rate": 0.10980810234541578,
+    "split_policy_used": "phase_3_split",
+    "split_cutoff_date": "",
+    "threshold": 0.48045154695639664,
+    "train_best_f1": 0.15930169121658483,
+    "roc_auc": 0.5989432138958329,
+    "pr_auc": 0.18885420744889875,
+    "f1": 0.210412147505423,
+    "recall": 0.941747572815534,
+    "precision": 0.11843711843711843,
+    "brier_score": 0.5416381594264916,
+    "expected_calibration_error": 0.643400236713974
+  },
+  "artifact_path": "Model/baseline_risk/culling_observable/logistic_regression_cull_within_90d.joblib",
+  "feature_columns": {
+    "numeric": [
+      "laktasyon_no",
+      "parite",
+      "dim",
+      "yas_gun",
+      "gebe_mi",
+      "servis_sayisi",
+      "son_servis_gun",
+      "gebelik_kaybi_flag",
+      "son30_saglik_olay_sayisi",
+      "mastitis_flag",
+      "lameness_flag",
+      "son30_ortalama_sut",
+      "sut_trend_7g"
+    ],
+    "categorical": [
+      "source_code"
+    ]
+  },
+  "rules_path": "config/baseline_model_culling_observable_rules.yaml"
+}
