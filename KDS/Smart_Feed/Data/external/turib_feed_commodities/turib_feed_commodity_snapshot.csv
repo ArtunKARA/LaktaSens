@@ -1,0 +1,5 @@
+source_code,product_group,product_label,snapshot_as_of,price_try_per_kg,change_percent,unit,source_url,fetched_at_utc
+turib_feed_commodities,Buğday Ekmeklik,Buğday Ekmeklik,2026-05-18T13:26:31+00:00,14.61,3.06,TRY/kg,https://www.turib.com.tr/arpa-fiyatlari/,2026-05-18T15:24:54+00:00
+turib_feed_commodities,Buğday Makarnalık,Buğday Makarnalık,2026-05-18T13:26:31+00:00,14.0,-7.77,TRY/kg,https://www.turib.com.tr/arpa-fiyatlari/,2026-05-18T15:24:54+00:00
+turib_feed_commodities,Mısır,Mısır,2026-05-18T13:26:31+00:00,13.2,3.35,TRY/kg,https://www.turib.com.tr/arpa-fiyatlari/,2026-05-18T15:24:54+00:00
+turib_feed_commodities,Arpa,Arpa,2026-05-18T13:26:31+00:00,14.5,0.02,TRY/kg,https://www.turib.com.tr/arpa-fiyatlari/,2026-05-18T15:24:54+00:00

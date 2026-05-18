@@ -13,8 +13,8 @@ czech_production_repro,manual_pending,Data/external/czech_production_repro/,http
 ns_dairy_cattle,manual_pending,Data/external/ns_dairy_cattle/,https://data.mendeley.com/datasets/hvc7smjjb7/4,Spreadsheet/workbook,Manual download and formula/table inspection required.
 nasem_2021_ncbi,parser_pending,Data/external/nasem_2021_ncbi/,https://www.ncbi.nlm.nih.gov/books/NBK600601/,HTML/PDF tables,Parser and reuse-term review required.
 feedipedia,parser_pending,Data/external/feedipedia/,https://www.feedipedia.org/content/feed-databases,HTML/feed tables,Per-database license and unit review required.
-nasa_power_environment,api_pending,API output,https://power.larc.nasa.gov/docs/services/api/temporal/daily/,CSV/JSON,Requires farm latitude/longitude and date range.
-usda_ams_dairy,api_or_pdf_pending,API/PDF output,https://www.ams.usda.gov/market-news/dairy,JSON/PDF,Use API if possible; PDF parser as fallback.
-eu_agri_food_milk,api_pending,API output,https://agridata.ec.europa.eu/extensions/API_Documentation/milk.html,JSON/Excel,Raw milk and dairy price endpoints.
-ulusal_sut_konseyi,html_pending,HTML parser output,https://ulusalsutkonseyi.org.tr/yillara-gore-cig-sut-fiyatlari-2194/,HTML table,Turkey raw milk recommended price table.
-turib_feed_commodities,html_pending,HTML parser output,https://www.turib.com.tr/,HTML market snapshot,Turkey feed commodity price proxy.
+nasa_power_environment,api_downloaded,Data/external/nasa_power_environment/nasa_power_environment_ankara_daily_2025_2026.csv,https://power.larc.nasa.gov/docs/services/api/temporal/daily/,CSV,Sample Ankara coordinate 2025-01-01..2026-05-16 with THI.
+usda_ams_dairy,public_api_index_downloaded,Data/external/usda_ams_dairy/usda_ams_dairy_public_report_index_latest.csv,https://marsapi.ams.usda.gov/services/v1.1/public/listPublishedReports/all,CSV,Dairy report index from public endpoint. Detailed MARS rows require API key.
+eu_agri_food_milk,api_downloaded,Data/external/eu_agri_food_milk/,https://www.ec.europa.eu/agrifood/api/rawMilk/prices,CSV,Raw milk plus butter and SMP price API outputs for 2025-2026.
+ulusal_sut_konseyi,html_parsed,Data/external/ulusal_sut_konseyi/ulusal_sut_konseyi_raw_milk_prices_2011_2026.csv,https://ulusalsutkonseyi.org.tr/yillara-gore-cig-sut-fiyatlari-2194/,CSV,Historical Turkey raw milk recommendation prices parsed from HTML table.
+turib_feed_commodities,html_api_parsed,Data/external/turib_feed_commodities/,https://www.turib.com.tr/tarihsel-veri/,CSV,Historical chartData price series plus current feed commodity snapshot.
