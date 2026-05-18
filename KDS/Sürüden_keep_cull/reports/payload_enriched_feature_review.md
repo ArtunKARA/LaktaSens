@@ -19,8 +19,12 @@ The following payload fields were intentionally not used because they are known 
 - `End of lactation`
 - `Start of dry period`
 - `Jour Lactation`
+- `1st lactation survival`
+- `exit age`
 
 Marcenat production payload values are only exposed after their biological observation window has passed, e.g. 4-week milk after 28 days, 3-month values after 84 days, and 305-day values after 305 days.
+
+Primiparous survival sheet outcome fields `1st lactation survival` and `exit age` are written only to `data/processed/primiparous_survival_labels.csv` for audit. They are not included in model features.
 
 ## New Numeric Features
 
@@ -42,6 +46,8 @@ Marcenat production payload values are only exposed after their biological obser
 - `sensor_days_since_group_change`
 - `sensor_payload_obs_90`
 - `has_sensor_payload_90`
+- `has_primiparous_survival_record`
+- `primiparous_mother_code`
 - `marcenat_age_days_payload`
 - `marcenat_age_first_calving_months`
 - `marcenat_months_since_first_lactation`
@@ -72,3 +78,5 @@ Marcenat production payload values are only exposed after their biological obser
 ## New Categorical Features
 
 - `marcenat_breed`
+- `primiparous_housing`
+- `primiparous_breed`

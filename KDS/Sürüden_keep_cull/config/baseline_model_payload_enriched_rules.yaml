@@ -52,16 +52,22 @@ features:
         - "laktasyon_evresi"
         - "parite_grup"
         - "marcenat_breed"
+        - "primiparous_housing"
+        - "primiparous_breed"
     no_source_code:
       categorical:
         - "laktasyon_evresi"
         - "parite_grup"
         - "marcenat_breed"
+        - "primiparous_housing"
+        - "primiparous_breed"
   categorical:
     - "source_code"
     - "laktasyon_evresi"
     - "parite_grup"
     - "marcenat_breed"
+    - "primiparous_housing"
+    - "primiparous_breed"
   numeric:
     - "laktasyon_no"
     - "parite"
@@ -122,6 +128,8 @@ features:
     - "sensor_days_since_group_change"
     - "sensor_payload_obs_90"
     - "has_sensor_payload_90"
+    - "has_primiparous_survival_record"
+    - "primiparous_mother_code"
     - "marcenat_age_days_payload"
     - "marcenat_age_first_calving_months"
     - "marcenat_months_since_first_lactation"
@@ -148,6 +156,25 @@ features:
     - "dryoff_count_to_date"
     - "days_since_last_dryoff"
     - "has_dryoff_before_ref"
+    - "has_marcenat_prev_health_summary"
+    - "marcenat_prev_lact_mastitis_count"
+    - "marcenat_prev_lact_lameness_count"
+    - "marcenat_prev_lact_other_health_count"
+    - "marcenat_prev_lact_health_total_count"
+    - "marcenat_prev_lact_cell_total"
+    - "marcenat_prev_lact_cell_total_source_p75_flag"
+    - "marcenat_prev_lact_tb_tp"
+    - "marcenat_prev_lact_tb_tp_less_pct"
+    - "marcenat_prev_lact_tb_tp_more_pct"
+    - "marcenat_prev_lact_completed_dim"
+    - "marcenat_prev_lact_days_since_dryoff"
+    - "marcenat_prev_lact_mastitis_any"
+    - "marcenat_prev_lact_lameness_any"
+    - "sensor_conductivity_available_30"
+    - "sensor_conductivity_available_90"
+    - "sensor_conductivity_high_30_train_p75_flag"
+    - "sensor_conductivity_high_90_train_p75_flag"
+    - "sensor_conductivity_rise_flag"
   excluded:
     - "snapshot_id"
     - "external_animal_id"
@@ -196,6 +223,14 @@ models:
     learning_rate: 0.05
     num_leaves: 31
     random_state: 42
+  catboost:
+    enabled: true
+    optional_dependency: true
+    iterations: 300
+    depth: 5
+    learning_rate: 0.05
+    auto_class_weights: "Balanced"
+    random_state: 42
 
 evaluation:
   selection_metric: "pr_auc"
@@ -218,6 +253,7 @@ strict_validation:
   models:
     - "logistic_regression"
     - "lightgbm"
+    - "catboost"
   animal_hash_test_pct: 20
   cohort_test_pct: 20
 
@@ -227,10 +263,12 @@ survival_baseline:
   models:
     - "logistic_regression"
     - "lightgbm"
+    - "catboost"
   max_cindex_rows: 2500
 
 notes:
   - "Adds source payload features with explicit leakage guards."
   - "Primiparous sensor payload is windowed by reference date."
+  - "Primiparous survival sheet static housing/breed/mother fields are used; survival outcome and exit age are audit-only leakage fields."
   - "Marcenat lactation summary fields are exposed only after their biological observation window has elapsed."
   - "Culling/date reform and completed future lactation summaries are intentionally excluded."

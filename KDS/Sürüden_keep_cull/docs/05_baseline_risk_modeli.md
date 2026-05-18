@@ -213,6 +213,81 @@ holdout validasyon, survival-style hazard baseline ve risk band kalibrasyonunu
 tamamlar. Özet rapor `reports/phase_4_3_pre_mdp_readiness_summary.md`, ayrıntılı
 doküman `docs/06_mdp_oncesi_risk_model_saglamlastirma.md` içindedir.
 
+## Faz 4.4: Primiparous Survival, CatBoost ve Reason Audit
+
+`scripts/17_engineer_payload_enriched_features.py` artık Primiparous `survival`
+sheet içinden leakage-safe statik alanları da çıkarır:
+
+- `has_primiparous_survival_record`
+- `primiparous_mother_code`
+- `primiparous_housing`
+- `primiparous_breed`
+
+`1st lactation survival` ve `exit age` outcome alanları model feature'ı değildir;
+yalnızca `data/processed/primiparous_survival_labels.csv` audit dosyasına yazılır.
+
+`scripts/12_train_baseline_risk_models.py` CatBoost'u opsiyonel model olarak
+destekler. `config/baseline_model_payload_enriched_rules.yaml` içinde CatBoost
+aktif edilmiştir.
+
+Yeni audit:
+
+- `scripts/23_build_reason_specific_audit.py`
+- `reports/reason_specific_audit_payload_enriched_report.md`
+- `reports/phase_4_4_survival_catboost_reason_summary.md`
+
+Sonuç: CatBoost 90 günlük ana time-split modelde PR-AUC'yi `0.3768` -> `0.3786`
+seviyesine çıkardı. Bu küçük bir iyileşmedir. Reason audit modelin reproductive
+ve unknown/status culling olaylarını health culling olaylarından daha iyi
+yakaladığını gösterir.
+
+## Faz 4.5: SCC / Organic SCM / Lameness Tabularizasyonu
+
+Bu adımda sağlık yardımcı kaynakları tabular hale getirildi:
+
+- SCC grazing cows RAR: `milk_yield.csv`, `conception.csv`,
+  `insemination_rate.csv`
+- Organic SCM DOCX: aggregate supplemental tablo
+- Chiozza lameness XLSX: raw Hoja1 ve normalize lameness CSV
+
+Çıktılar:
+
+- `data/processed/tabular_health_sources/health_auxiliary_file_index.csv`
+- `reports/health_auxiliary_tabularization_report.md`
+- `data/processed/training/health_auxiliary_feature_coverage.csv`
+- `reports/health_auxiliary_feature_enrichment_report.md`
+- `reports/phase_4_5_health_auxiliary_improvement_summary.md`
+
+Karar: SCC ve Chiozza hayvan bazlı sağlık sinyali taşır, fakat mevcut eğitim
+setiyle güvenilir culling label/ID örtüşmesi sağlamaz. Organic SCM tablo
+farm-level aggregate olduğu için hayvan bazlı train satırı değildir. Bu nedenle
+bu kaynaklar negatif culling örneği olarak kullanılmadı. Model tarafına yalnız
+Marcenat önceki tamamlanmış laktasyon sağlık özetleri ve Primiparous conductivity
+proxy feature'ları eklendi.
+
+Sonuç karışıktır: source-including ana time split PR-AUC düştü, fakat no-source
+strict validation politikalarında ve health reason recall tarafında iyileşme
+görüldü. Bu katman ana risk modelinin zorunlu yerine geçeni değil, MDP öncesi
+ablation/candidate feature katmanı olarak tutulmalıdır.
+
+## Faz 4.6: Source-Agnostic Health Feature Ablation
+
+`scripts/27_select_health_feature_ablation.py` sağlık feature gruplarını
+source-code kullanmadan karşılaştırır. Hedef yalnız `cull_within_90d` için MDP
+smoke-test'e daha taşınabilir bir risk skoru adayı seçmektir.
+
+Çıktılar:
+
+- `data/processed/models/payload_enriched/health_feature_ablation/health_feature_ablation_metrics.csv`
+- `data/processed/models/payload_enriched/health_feature_ablation/selected_source_agnostic_risk_scores.csv`
+- `data/processed/models/payload_enriched/health_feature_ablation/selected_source_agnostic_model_metadata.json`
+- `Model/baseline_risk/payload_enriched_health_ablation/all_health_aux_catboost_cull_within_90d.joblib`
+- `reports/phase_4_6_health_feature_ablation_report.md`
+
+Seçilen aday: `all_health_aux` + CatBoost, `source_code` olmadan 90 günlük
+PR-AUC `0.379632`. Bu değer pre-health source-including CatBoost
+`0.378601` sonucunu az farkla geçer ve source shortcut riskini azaltır.
+
 ## Yorumlama
 
 Bu fazdaki iyi sonuç, culling sinyalinin supervised olarak öğrenilebilir olduğunu

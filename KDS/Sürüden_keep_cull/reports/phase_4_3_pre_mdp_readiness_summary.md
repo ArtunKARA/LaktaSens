@@ -1,5 +1,9 @@
 # Faz 4.3 - MDP Oncesi Risk Modeli Saglamlastirma Ozeti
 
+Note: This report is preserved as the Faz 4.3 checkpoint. The later CatBoost,
+Primiparous survival and reason-specific audit update is summarized in
+`reports/phase_4_4_survival_catboost_reason_summary.md`.
+
 ## Kapsam
 
 Bu paket MDP gecis/reward simulasyonuna baglamadan once risk modelini veri,

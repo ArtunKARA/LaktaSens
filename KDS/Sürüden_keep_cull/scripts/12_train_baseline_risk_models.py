@@ -61,6 +61,13 @@ def optional_model_imports() -> dict[str, Any]:
         imports["lightgbm"] = LGBMClassifier
     except Exception as exc:  # pragma: no cover - depends on local env
         imports["lightgbm_error"] = str(exc)
+
+    try:
+        from catboost import CatBoostClassifier  # type: ignore
+
+        imports["catboost"] = CatBoostClassifier
+    except Exception as exc:  # pragma: no cover - depends on local env
+        imports["catboost_error"] = str(exc)
     return imports
 
 
@@ -175,6 +182,27 @@ def make_model_specs(rules: dict[str, Any], y_train: pd.Series) -> list[dict[str
                     random_state=int(lgbm_rules.get("random_state", 42)),
                     n_jobs=-1,
                     verbosity=-1,
+                ),
+                "scale_numeric": False,
+            }
+        )
+
+    if model_rules.get("catboost", {}).get("enabled", False) and "catboost" in optional_imports:
+        cat_rules = model_rules["catboost"]
+        specs.append(
+            {
+                "model_name": "catboost",
+                "estimator": optional_imports["catboost"](
+                    iterations=int(cat_rules.get("iterations", 300)),
+                    depth=int(cat_rules.get("depth", 5)),
+                    learning_rate=float(cat_rules.get("learning_rate", 0.05)),
+                    loss_function="Logloss",
+                    eval_metric="AUC",
+                    auto_class_weights=cat_rules.get("auto_class_weights", "Balanced"),
+                    random_seed=int(cat_rules.get("random_state", 42)),
+                    verbose=False,
+                    allow_writing_files=False,
+                    thread_count=-1,
                 ),
                 "scale_numeric": False,
             }
@@ -472,7 +500,7 @@ def main() -> int:
         specs = make_model_specs(rules, y_train)
 
         enabled_names = {spec["model_name"] for spec in specs}
-        for optional_name in ("xgboost", "lightgbm"):
+        for optional_name in ("xgboost", "lightgbm", "catboost"):
             if rules["models"].get(optional_name, {}).get("enabled", False) and optional_name not in enabled_names:
                 skipped_models.append(
                     {

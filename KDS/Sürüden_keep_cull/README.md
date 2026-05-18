@@ -173,7 +173,9 @@ python scripts/15_engineer_culling_observable_features.py
 python scripts/12_train_baseline_risk_models.py --rules config/baseline_model_engineered_rules.yaml
 python scripts/13_validate_baseline_robustness.py --rules config/baseline_model_engineered_rules.yaml
 python scripts/16_train_calibrated_engineered_baseline.py
+python scripts/24_tabularize_health_auxiliary_sources.py
 python scripts/17_engineer_payload_enriched_features.py
+python scripts/25_engineer_health_auxiliary_features.py
 python scripts/12_train_baseline_risk_models.py --rules config/baseline_model_payload_enriched_rules.yaml
 python scripts/13_validate_baseline_robustness.py --rules config/baseline_model_payload_enriched_rules.yaml
 python scripts/16_train_calibrated_engineered_baseline.py --rules config/baseline_model_payload_enriched_rules.yaml
@@ -182,6 +184,9 @@ python scripts/19_enrich_culling_reason_labels.py
 python scripts/20_validate_strict_splits.py --rules config/baseline_model_payload_enriched_rules.yaml
 python scripts/21_train_survival_time_to_event_baseline.py --rules config/baseline_model_payload_enriched_rules.yaml
 python scripts/22_build_risk_band_calibration_report.py
+python scripts/23_build_reason_specific_audit.py
+python scripts/26_build_health_auxiliary_improvement_report.py
+python scripts/27_select_health_feature_ablation.py
 ```
 
 Bu komut Logistic Regression, Random Forest ve kuruluysa XGBoost/LightGBM
@@ -197,6 +202,15 @@ model/robustluk/kalibrasyon kontrollerini tekrarlar. Son beş komut MDP öncesi
 sağlamlaştırma adımıdır: veri coverage audit, culling reason audit etiketi,
 animal/cohort/source holdout validasyon, survival-style hazard baseline ve risk
 band kalibrasyon raporu üretir.
+Son komut Primiparous survival sheet, CatBoost ve culling reason segmentleri
+sonrası iyileşmeyi özetler.
+Health auxiliary komutları ise SCC RAR, organic SCM DOCX ve Chiozza lameness
+XLSX kaynaklarını tabular hale getirir; culling label taşımayan kaynakları
+negatif örnek gibi kullanmadan Marcenat/Primiparous tarafındaki leakage-safe
+sağlık feature ablation katmanını ve etki raporunu üretir.
+Son ablation komutu source-code kullanmayan 90 günlük risk adayı seçer; amaç
+source shortcut riskini azaltıp MDP smoke-test için daha taşınabilir skor
+üretmektir.
 
 Çıktılar:
 
@@ -228,6 +242,12 @@ band kalibrasyon raporu üretir.
 - `reports/survival_time_to_event_baseline_report.md`
 - `reports/risk_band_calibration_payload_enriched_report.md`
 - `reports/phase_4_3_pre_mdp_readiness_summary.md`
+- `reports/reason_specific_audit_payload_enriched_report.md`
+- `reports/phase_4_4_survival_catboost_reason_summary.md`
+- `reports/health_auxiliary_tabularization_report.md`
+- `reports/health_auxiliary_feature_enrichment_report.md`
+- `reports/phase_4_5_health_auxiliary_improvement_summary.md`
+- `reports/phase_4_6_health_feature_ablation_report.md`
 
 ## 14. Ortam Kontrolü
 

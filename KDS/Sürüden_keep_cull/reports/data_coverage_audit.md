@@ -1,6 +1,6 @@
 # Data Coverage Audit
 
-- Generated at: `2026-05-15T10:56:21`
+- Generated at: `2026-05-15T15:32:43`
 - Purpose: decide what can still improve the culling risk model before MDP/reward simulation.
 
 ## Source Coverage
@@ -28,8 +28,8 @@
 
 ## Feature Coverage Highlights
 
-- Total source-feature pairs checked: `176`
-- Pairs under 20% coverage: `64`
+- Total source-feature pairs checked: `184`
+- Pairs under 20% coverage: `65`
 
 | Source | Feature | Coverage | Status |
 |---|---|---:|---|
@@ -42,6 +42,7 @@
 | `marcenat_inrae` | `milk_last_obs_gun` | 0.00% | `all_null` |
 | `marcenat_inrae` | `milk_trend_30_vs_prev30` | 0.00% | `all_null` |
 | `marcenat_inrae` | `parite` | 0.00% | `all_null` |
+| `marcenat_inrae` | `primiparous_mother_code` | 0.00% | `all_null` |
 | `marcenat_inrae` | `sensor_activity_avg_30` | 0.00% | `all_null` |
 | `marcenat_inrae` | `sensor_activity_avg_90` | 0.00% | `all_null` |
 | `marcenat_inrae` | `sensor_activity_trend_30` | 0.00% | `all_null` |
@@ -72,7 +73,6 @@
 | `primiparous_social_env` | `marcenat_calf_weight_latest` | 0.00% | `all_null` |
 | `primiparous_social_env` | `marcenat_calving_difficulty_latest` | 0.00% | `all_null` |
 | `primiparous_social_env` | `marcenat_cum_my_12w` | 0.00% | `all_null` |
-| `primiparous_social_env` | `marcenat_cum_my_24w` | 0.00% | `all_null` |
 
 ## Decision
 

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import zipfile
 from bisect import bisect_right
 from dataclasses import dataclass
 from datetime import timedelta
@@ -26,6 +27,9 @@ RAW_MILK = RAW_DIR / "raw_milk.csv"
 RAW_CULLING = RAW_DIR / "raw_culling.csv"
 EVENT_DOGURMA = EVENT_DIR / "event_dogurma.csv"
 EVENT_KURU = EVENT_DIR / "event_kuru.csv"
+PRIMIPAROUS_ZIP = PROJECT_ROOT / "data" / "external" / "primiparous_social_env" / "primiparous social environment.zip"
+PRIMIPAROUS_WORKBOOK = "j42n4x723g-2/data in Brief publish.xlsx"
+PRIMIPAROUS_SURVIVAL_LABELS = PROCESSED_DIR / "primiparous_survival_labels.csv"
 
 
 LEAKAGE_BLACKLIST = [
@@ -41,6 +45,8 @@ LEAKAGE_BLACKLIST = [
     "End of lactation",
     "Start of dry period",
     "Jour Lactation",
+    "1st lactation survival",
+    "exit age",
 ]
 
 
@@ -133,6 +139,78 @@ def load_primiparous_daily() -> dict[str, pd.DataFrame]:
     out = pd.DataFrame(rows)
     out = out[out["date"].notna()].copy()
     return {str(canonical_id): group.sort_values("date").copy() for canonical_id, group in out.groupby("canonical_animal_id")}
+
+
+def load_primiparous_survival() -> dict[str, dict[str, Any]]:
+    if not PRIMIPAROUS_ZIP.exists():
+        return {}
+    try:
+        with zipfile.ZipFile(PRIMIPAROUS_ZIP) as zip_file:
+            with zip_file.open(PRIMIPAROUS_WORKBOOK) as workbook:
+                survival = pd.read_excel(workbook, sheet_name="survival")
+    except Exception:
+        return {}
+
+    records: dict[str, dict[str, Any]] = {}
+    label_rows: list[dict[str, Any]] = []
+    for _, row in survival.iterrows():
+        cow_id = row.get("CowID")
+        if pd.isna(cow_id):
+            continue
+        external_id = str(int(cow_id)) if isinstance(cow_id, float) and cow_id.is_integer() else str(cow_id).strip()
+        canonical_id = f"primiparous_social_env:{external_id}"
+        records[canonical_id] = {
+            "mother": numeric_or_nan(row.get("Mother")),
+            "housing": text_or_unknown(row.get("Housing")),
+            "breed": text_or_unknown(row.get("Breed")),
+        }
+        label_rows.append(
+            {
+                "source_code": "primiparous_social_env",
+                "external_animal_id": external_id,
+                "canonical_animal_id": canonical_id,
+                "first_lactation_survival": text_or_unknown(row.get("1st lactation survival")),
+                "exit_age": numeric_or_nan(row.get("exit age")),
+                "notes": "Outcome fields from survival sheet; used for audit only, not model features.",
+            }
+        )
+
+    if label_rows:
+        PRIMIPAROUS_SURVIVAL_LABELS.parent.mkdir(parents=True, exist_ok=True)
+        pd.DataFrame(label_rows).to_csv(PRIMIPAROUS_SURVIVAL_LABELS, index=False)
+    return records
+
+
+def numeric_or_nan(value: Any) -> float:
+    if value is None or pd.isna(value) or value == "":
+        return np.nan
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return np.nan
+
+
+def text_or_unknown(value: Any) -> str:
+    if value is None or pd.isna(value) or value == "":
+        return "unknown"
+    text = str(value).strip()
+    return text if text else "unknown"
+
+
+def primiparous_survival_features(static: dict[str, Any] | None) -> dict[str, Any]:
+    result: dict[str, Any] = {
+        "has_primiparous_survival_record": 0,
+        "primiparous_mother_code": np.nan,
+        "primiparous_housing": "unknown",
+        "primiparous_breed": "unknown",
+    }
+    if not static:
+        return result
+    result["has_primiparous_survival_record"] = 1
+    result["primiparous_mother_code"] = static.get("mother", np.nan)
+    result["primiparous_housing"] = static.get("housing") or "unknown"
+    result["primiparous_breed"] = static.get("breed") or "unknown"
+    return result
 
 
 def mean_in_window(group: pd.DataFrame, ref_date: pd.Timestamp, column: str, window_days: int) -> float:
@@ -338,6 +416,7 @@ def main() -> int:
     snapshots["referans_tarih"] = pd.to_datetime(snapshots["referans_tarih"], errors="coerce")
 
     primiparous_daily = load_primiparous_daily()
+    primiparous_survival = load_primiparous_survival()
     marcenat_static = load_marcenat_static()
     dogurma = pd.read_csv(EVENT_DOGURMA, low_memory=False)
     marcenat_dogurma = dogurma[dogurma["source_code"].eq("marcenat_inrae")].copy()
@@ -352,6 +431,7 @@ def main() -> int:
         ref_date = row.referans_tarih
         features: dict[str, Any] = {}
         features.update(primiparous_payload_features(primiparous_daily.get(canonical_id), ref_date))
+        features.update(primiparous_survival_features(primiparous_survival.get(canonical_id)))
         features.update(marcenat_static_features(marcenat_static.get(canonical_id), ref_date))
         features.update(marcenat_latest_calving_features(latest_payload(marcenat_calving.get(canonical_id, []), ref_date), ref_date))
         features.update(dryoff_features(dryoff.get(canonical_id, []), ref_date))
@@ -363,8 +443,12 @@ def main() -> int:
     enriched.to_csv(OUTPUT_MODEL_READY, index=False)
     enriched[["snapshot_id", "source_code", "canonical_animal_id", "referans_tarih", "split"]].to_csv(OUTPUT_SPLIT, index=False)
 
-    numeric_features = [col for col in payload_features.columns if col != "marcenat_breed"]
-    categorical_features = ["marcenat_breed"]
+    numeric_features = [
+        col
+        for col in payload_features.columns
+        if col not in {"marcenat_breed", "primiparous_housing", "primiparous_breed"}
+    ]
+    categorical_features = ["marcenat_breed", "primiparous_housing", "primiparous_breed"]
     lines = [
         "# Payload-Enriched Feature Review",
         "",
@@ -378,6 +462,8 @@ def main() -> int:
         *[f"- `{field}`" for field in LEAKAGE_BLACKLIST],
         "",
         "Marcenat production payload values are only exposed after their biological observation window has passed, e.g. 4-week milk after 28 days, 3-month values after 84 days, and 305-day values after 305 days.",
+        "",
+        "Primiparous survival sheet outcome fields `1st lactation survival` and `exit age` are written only to `data/processed/primiparous_survival_labels.csv` for audit. They are not included in model features.",
         "",
         "## New Numeric Features",
         "",

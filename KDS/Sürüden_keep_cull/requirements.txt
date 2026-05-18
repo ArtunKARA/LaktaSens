@@ -1,5 +1,5 @@
 pandas
-openpyxl
+openpyxl>=3.1.5
 pyyaml
 requests
 python-dotenv
@@ -9,3 +9,4 @@ scikit-learn
 joblib
 xgboost
 lightgbm
+catboost

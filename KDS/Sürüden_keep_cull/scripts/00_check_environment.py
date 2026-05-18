@@ -27,6 +27,7 @@ REQUIRED_PACKAGES = {
     "joblib": "joblib",
     "xgboost": "xgboost",
     "lightgbm": "lightgbm",
+    "catboost": "catboost",
 }
 
 REQUIRED_DIRS = [
