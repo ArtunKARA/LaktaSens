@@ -1,0 +1,455 @@
+sources:
+  - source_code: mmcows_multimodal
+    source_name: "MmCows: A Multimodal Dataset for Dairy Cattle Monitoring"
+    role: ana_omurga_cow_day_multimodal
+    priority: A1
+    urls:
+      landing: "https://github.com/neis-lab/mmcows"
+      primary_download: "https://huggingface.co/datasets/neis-lab/mmcows"
+      kaggle_mirror: "https://www.kaggle.com/datasets/hienvuvg/mmcows"
+    license: "Dataset mirrors list CC BY-NC-SA 4.0; GitHub code is MIT. Verify before production use."
+    expected_format: "Large ZIP files; sensor_data.zip, visual_data.zip, optional image/video bundles"
+    manual_download_required: true
+    download_note: "Large files: sensor_data.zip is about 18 GB, visual_data.zip is about 20 GB; do not auto-download into git workspace."
+    target_raw_tables:
+      - raw_cow
+      - raw_milk
+      - raw_sensor
+      - raw_environment
+      - raw_health
+    target_norm_tables:
+      - norm_cow_profile
+      - norm_milk_daily
+      - norm_sensor_daily
+      - norm_environment_daily
+      - norm_health_event
+    target_feature_tables:
+      - feat_cow_day_snapshot
+      - feat_milk_trend
+      - feat_health_risk_label
+    target_opt_tables: []
+    target_sim_tables:
+      - sim_state
+    has_animal_id: true
+    has_date: true
+    has_milk: true
+    has_feed: false
+    has_feed_ingredient: false
+    has_sensor: true
+    has_environment: true
+    has_health: true
+    has_economic_parameter: false
+    record_kind: "cow-day / high-frequency sensor snapshot"
+    notes: "Birincil cow-day omurga adayıdır. Aynı zaman penceresinde sensör, süt, çevre ve sınırlı sağlık kayıtlarını bağlar."
+
+  - source_code: transition_cow_part2
+    source_name: "Transition cow nutrition and management strategies of dairy herds in the northeastern United States: Part II"
+    role: ana_omurga_saglik_metabolik_label
+    priority: A2
+    urls:
+      landing: "https://data.mendeley.com/datasets/n9r22yzj5d/2"
+      doi: "https://doi.org/10.17632/n9r22yzj5d.2"
+    license: "CC BY 4.0"
+    expected_format: "Mendeley Data files; exact file names must be confirmed after download"
+    manual_download_required: true
+    download_note: "Mendeley landing page is public; file-level schema must be inspected after manual/API download."
+    target_raw_tables:
+      - raw_cow
+      - raw_lactation
+      - raw_health
+      - raw_milk
+    target_norm_tables:
+      - norm_cow_profile
+      - norm_lactation_daily
+      - norm_health_event
+      - norm_milk_daily
+    target_feature_tables:
+      - feat_health_risk_label
+      - feat_cow_day_snapshot
+      - feat_feeding_need_label
+    target_opt_tables: []
+    target_sim_tables:
+      - sim_state
+    has_animal_id: true
+    has_date: true
+    has_milk: true
+    has_feed: false
+    has_feed_ingredient: false
+    has_sensor: false
+    has_environment: false
+    has_health: true
+    has_economic_parameter: false
+    record_kind: "cow-level cohort, health/reproduction/milk outcome"
+    notes: "CK, DA, NEFA, BHB, Hp, ME305 ve reproduction outcome gibi sağlık-metabolik label üretiminde ana kaynaktır."
+
+  - source_code: czech_production_repro
+    source_name: "Association between production and reproduction parameters based on parity and breed of dairy cows in the Czech Republic"
+    role: yardimci_laktasyon_ureme_sut_verisi
+    priority: B1
+    urls:
+      landing: "https://data.mendeley.com/datasets/6vy2tvv7jn/1"
+      article_assets: "https://aab.copernicus.org/articles/67/197/2024/aab-67-197-2024-assets.html"
+      doi: "https://doi.org/10.17632/6vy2tvv7jn.1"
+    license: "CC BY 4.0 for article/assets; verify dataset page terms before production use."
+    expected_format: "Mendeley dataset files; likely tabular production/reproduction records"
+    manual_download_required: true
+    download_note: "Exact columns and file formats must be confirmed after download."
+    target_raw_tables:
+      - raw_cow
+      - raw_lactation
+      - raw_milk
+    target_norm_tables:
+      - norm_cow_profile
+      - norm_lactation_daily
+      - norm_milk_daily
+    target_feature_tables:
+      - feat_cow_day_snapshot
+      - feat_milk_trend
+    target_opt_tables: []
+    target_sim_tables: []
+    has_animal_id: true
+    has_date: true
+    has_milk: true
+    has_feed: false
+    has_feed_ingredient: false
+    has_sensor: false
+    has_environment: false
+    has_health: false
+    has_economic_parameter: false
+    record_kind: "cow/lactation result or test-day style record"
+    notes: "Breed, parity, milk traits and reproduction outcomes ile laktasyon-süt-üreme ilişkisini destekler."
+
+  - source_code: plos_rumiwatch_calving
+    source_name: "Assessment of feeding, ruminating and locomotion behaviors in dairy cows around calving"
+    role: yardimci_saglik_davranis_risk_verisi
+    priority: B2
+    urls:
+      article: "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0264834"
+      s1_ration_table: "https://doi.org/10.1371/journal.pone.0264834.s001"
+      s2_activity_definitions: "https://doi.org/10.1371/journal.pone.0264834.s002"
+      s3_diagnosis_criteria: "https://doi.org/10.1371/journal.pone.0264834.s003"
+      s1_raw_data: "https://doi.org/10.1371/journal.pone.0264834.s004"
+    license: "PLOS ONE article is CC BY; verify supplementary file reuse terms before production use."
+    expected_format: "XLSX + DOCX supplementary files"
+    manual_download_required: false
+    local_files:
+      - "Data/external/plos_rumiwatch_calving/s1_raw_data.xlsx"
+      - "Data/external/plos_rumiwatch_calving/s1_ration_table.docx"
+      - "Data/external/plos_rumiwatch_calving/s2_activity_definitions.docx"
+      - "Data/external/plos_rumiwatch_calving/s3_diagnosis_criteria.docx"
+    target_raw_tables:
+      - raw_sensor
+      - raw_health
+      - raw_feed
+    target_norm_tables:
+      - norm_sensor_daily
+      - norm_health_event
+      - norm_feeding_daily
+    target_feature_tables:
+      - feat_health_risk_label
+      - feat_feeding_need_label
+    target_opt_tables:
+      - opt_ration_constraint
+    target_sim_tables:
+      - sim_reward_parameter
+    has_animal_id: false
+    has_date: false
+    has_milk: false
+    has_feed: true
+    has_feed_ingredient: false
+    has_sensor: true
+    has_environment: false
+    has_health: true
+    has_economic_parameter: false
+    record_kind: "group-level result / relative-event window"
+    notes: "İndirilen S1 raw data bireysel cow-day değil; grup bazlı mean/SD sonuç yapısında. Risk pencere ve diagnosis kriteri için yardımcı kaynak olarak kullanılmalı."
+
+  - source_code: agroscope_activity_zenodo
+    source_name: "Time Series of Dairy Cow Activity and Barn Area Use"
+    role: yardimci_sensor_davranis_verisi
+    priority: B3
+    urls:
+      landing: "https://zenodo.org/records/15005885"
+      documentation: "https://zenodo.org/records/15005885/files/data_documentation.md?download=1"
+      activity_csv: "https://zenodo.org/records/15005885/files/activity_all_cows_sampled_1_min.csv?download=1"
+      location_csv: "https://zenodo.org/records/15005885/files/location_all_cows_sampled_1_min.csv?download=1"
+      location_3lyingareas_csv: "https://zenodo.org/records/15005885/files/location_all_cows_sampled_1_min_3lyingareas.csv?download=1"
+    license: "CC BY 4.0"
+    expected_format: "CSV + Markdown documentation"
+    manual_download_required: false
+    local_files:
+      - "Data/external/agroscope_activity_zenodo/data_documentation.md"
+      - "Data/external/agroscope_activity_zenodo/activity_all_cows_sample_probe.csv"
+    target_raw_tables:
+      - raw_sensor
+    target_norm_tables:
+      - norm_sensor_daily
+    target_feature_tables:
+      - feat_cow_day_snapshot
+    target_opt_tables: []
+    target_sim_tables:
+      - sim_state
+    has_animal_id: true
+    has_date: true
+    has_milk: false
+    has_feed: false
+    has_feed_ingredient: false
+    has_sensor: true
+    has_environment: false
+    has_health: false
+    has_economic_parameter: false
+    record_kind: "1-minute sensor snapshot"
+    notes: "time_stamp/timestamp + cow_name anahtarlarıyla aktivite ve alan kullanım serileri günlük sensör özetine dönüştürülür."
+
+  - source_code: ns_dairy_cattle
+    source_name: "The Nutrition System for Dairy Cattle (NS Dairy Cattle)"
+    role: besin_ihtiyac_kisit_parametre
+    priority: C1
+    urls:
+      landing: "https://data.mendeley.com/datasets/hvc7smjjb7/4"
+      doi: "https://doi.org/10.17632/hvc7smjjb7.4"
+    license: "MIT"
+    expected_format: "Spreadsheet / model workbook"
+    manual_download_required: true
+    target_raw_tables:
+      - raw_feed
+      - raw_feed_ingredient
+    target_norm_tables:
+      - norm_feeding_daily
+    target_feature_tables:
+      - feat_feeding_need_label
+    target_opt_tables:
+      - opt_feed_ingredient
+      - opt_feed_nutrient_value
+      - opt_ration_constraint
+    target_sim_tables:
+      - sim_reward_parameter
+    has_animal_id: false
+    has_date: false
+    has_milk: false
+    has_feed: true
+    has_feed_ingredient: true
+    has_sensor: false
+    has_environment: false
+    has_health: false
+    has_economic_parameter: false
+    record_kind: "reference/model parameter"
+    notes: "DMI, enerji ve besin ihtiyacı hesapları için kural motoru/referans parametre kaynağıdır."
+
+  - source_code: nasem_2021_ncbi
+    source_name: "NASEM 2021 Nutrient Requirements of Dairy Cattle + NCBI feed composition chapter"
+    role: besin_degeri_referans_parametre
+    priority: C2
+    urls:
+      national_academies: "https://nap.nationalacademies.org/catalog/25806/nutrient-requirements-of-dairy-cattle-eighth-revised-edition"
+      ncbi_feed_composition: "https://www.ncbi.nlm.nih.gov/books/NBK600601/"
+      doi: "https://doi.org/10.17226/25806"
+    license: "National Academies / NCBI Bookshelf terms; verify reuse before production use."
+    expected_format: "HTML/PDF tables; ETL parser required"
+    manual_download_required: true
+    target_raw_tables:
+      - raw_feed_ingredient
+    target_norm_tables: []
+    target_feature_tables:
+      - feat_feeding_need_label
+    target_opt_tables:
+      - opt_feed_ingredient
+      - opt_feed_nutrient_value
+      - opt_ration_constraint
+    target_sim_tables:
+      - sim_reward_parameter
+    has_animal_id: false
+    has_date: false
+    has_milk: false
+    has_feed: false
+    has_feed_ingredient: true
+    has_sensor: false
+    has_environment: false
+    has_health: false
+    has_economic_parameter: false
+    record_kind: "reference table"
+    notes: "Yem besin kompozisyonu ve biyolojik rasyon sınırları için ana referans katmandır."
+
+  - source_code: feedipedia
+    source_name: "Feedipedia feed databases"
+    role: besin_degeri_yardimci_parametre
+    priority: C3
+    urls:
+      landing: "https://feedipedia.org/"
+      feed_databases: "https://www.feedipedia.org/content/feed-databases"
+    license: "Verify individual feed table/database terms before production use."
+    expected_format: "HTML pages and linked feed tables; structured export not uniform"
+    manual_download_required: true
+    target_raw_tables:
+      - raw_feed_ingredient
+    target_norm_tables: []
+    target_feature_tables: []
+    target_opt_tables:
+      - opt_feed_ingredient
+      - opt_feed_nutrient_value
+    target_sim_tables: []
+    has_animal_id: false
+    has_date: false
+    has_milk: false
+    has_feed: false
+    has_feed_ingredient: true
+    has_sensor: false
+    has_environment: false
+    has_health: false
+    has_economic_parameter: false
+    record_kind: "reference table"
+    notes: "Yerel yem adlarını canonical feed_code ile eşlemek ve eksik besin değerlerini tamamlamak için kullanılır."
+
+  - source_code: nasa_power_environment
+    source_name: "NASA POWER Daily API"
+    role: cevre_parametre_verisi
+    priority: D1
+    urls:
+      daily_api_docs: "https://power.larc.nasa.gov/docs/services/api/temporal/daily/"
+      api_pages: "https://power.larc.nasa.gov/api/pages/"
+    license: "NASA POWER public data; verify terms before production use."
+    expected_format: "API JSON/CSV/ASCII/NetCDF"
+    manual_download_required: false
+    target_raw_tables:
+      - raw_environment
+    target_norm_tables:
+      - norm_environment_daily
+    target_feature_tables:
+      - feat_cow_day_snapshot
+    target_opt_tables: []
+    target_sim_tables:
+      - sim_state
+    has_animal_id: false
+    has_date: true
+    has_milk: false
+    has_feed: false
+    has_feed_ingredient: false
+    has_sensor: false
+    has_environment: true
+    has_health: false
+    has_economic_parameter: false
+    record_kind: "daily location-level parameter"
+    notes: "Çiftlik koordinatına göre T2M/RH2M vb. günlük seri alınır, THI türetilir."
+
+  - source_code: usda_ams_dairy
+    source_name: "USDA AMS Dairy Market News"
+    role: ekonomik_reward_parametre
+    priority: E1
+    urls:
+      landing: "https://www.ams.usda.gov/market-news/dairy"
+      api_faq: "https://mymarketnews.ams.usda.gov/mymarketnews-api/faqs"
+      weekly_pdf: "https://www.ams.usda.gov/mnreports/dywweeklyreport.pdf"
+    license: "Official public USDA data; verify API/report terms before production use."
+    expected_format: "PDF reports and MyMarketNews API JSON"
+    manual_download_required: false
+    target_raw_tables:
+      - raw_economic_parameter
+    target_norm_tables: []
+    target_feature_tables: []
+    target_opt_tables:
+      - opt_feed_price
+      - opt_milk_price
+    target_sim_tables:
+      - sim_reward_parameter
+    has_animal_id: false
+    has_date: true
+    has_milk: false
+    has_feed: false
+    has_feed_ingredient: false
+    has_sensor: false
+    has_environment: false
+    has_health: false
+    has_economic_parameter: true
+    record_kind: "economic time series / market report"
+    notes: "ABD süt/fiyat, yem-fiyat oranı ve feedstuff proxy değerleri için kullanılabilir."
+
+  - source_code: eu_agri_food_milk
+    source_name: "European Commission Agri-food Data Portal - Milk and dairy products"
+    role: ekonomik_reward_parametre
+    priority: E2
+    urls:
+      portal: "https://agridata.ec.europa.eu/extensions/DataPortal/milk.html"
+      api_docs: "https://agridata.ec.europa.eu/extensions/API_Documentation/milk.html"
+      raw_milk_dashboard: "https://agridata.ec.europa.eu/extensions/DashboardRawMilk/RawMilkPrices-m.html"
+    license: "European Commission data portal terms; verify before production use."
+    expected_format: "API JSON and downloadable Excel from dashboard"
+    manual_download_required: false
+    target_raw_tables:
+      - raw_economic_parameter
+    target_norm_tables: []
+    target_feature_tables: []
+    target_opt_tables:
+      - opt_milk_price
+    target_sim_tables:
+      - sim_reward_parameter
+    has_animal_id: false
+    has_date: true
+    has_milk: false
+    has_feed: false
+    has_feed_ingredient: false
+    has_sensor: false
+    has_environment: false
+    has_health: false
+    has_economic_parameter: true
+    record_kind: "economic time series"
+    notes: "AB çiğ süt ve dairy commodity fiyatları için bölgesel reward senaryosu sağlar."
+
+  - source_code: ulusal_sut_konseyi
+    source_name: "Ulusal Süt Konseyi çiğ süt tavsiye fiyatları"
+    role: ekonomik_reward_parametre_tr
+    priority: E3
+    urls:
+      announcements: "https://ulusalsutkonseyi.org.tr/duyuru/"
+      historical_prices: "https://ulusalsutkonseyi.org.tr/yillara-gore-cig-sut-fiyatlari-2194/"
+    license: "Verify site terms before production use."
+    expected_format: "HTML table / announcements"
+    manual_download_required: false
+    target_raw_tables:
+      - raw_economic_parameter
+    target_norm_tables: []
+    target_feature_tables: []
+    target_opt_tables:
+      - opt_milk_price
+    target_sim_tables:
+      - sim_reward_parameter
+    has_animal_id: false
+    has_date: true
+    has_milk: false
+    has_feed: false
+    has_feed_ingredient: false
+    has_sensor: false
+    has_environment: false
+    has_health: false
+    has_economic_parameter: true
+    record_kind: "economic time series"
+    notes: "Türkiye çiğ süt fiyatı için ana yerel parametre kaynağıdır."
+
+  - source_code: turib_feed_commodities
+    source_name: "TÜRİB ELÜS hububat fiyatları"
+    role: ekonomik_yem_fiyat_parametre_tr
+    priority: E4
+    urls:
+      landing: "https://www.turib.com.tr/"
+      barley_page: "https://www.turib.com.tr/arpa-fiyatlari/"
+    license: "Verify TÜRİB site/data terms before production use."
+    expected_format: "HTML dashboard/table; export availability must be checked"
+    manual_download_required: false
+    target_raw_tables:
+      - raw_economic_parameter
+    target_norm_tables: []
+    target_feature_tables: []
+    target_opt_tables:
+      - opt_feed_price
+    target_sim_tables:
+      - sim_reward_parameter
+    has_animal_id: false
+    has_date: true
+    has_milk: false
+    has_feed: false
+    has_feed_ingredient: false
+    has_sensor: false
+    has_environment: false
+    has_health: false
+    has_economic_parameter: true
+    record_kind: "economic time series / market snapshot"
+    notes: "Arpa, mısır ve buğday gibi yem hammaddeleri için Türkiye fiyat proxy katmanıdır."

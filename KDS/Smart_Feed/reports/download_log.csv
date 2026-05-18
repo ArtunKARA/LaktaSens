@@ -1,0 +1,20 @@
+source_code,status,local_path_or_target,url,expected_files,notes
+agroscope_activity_zenodo,partial_downloaded,Data/external/agroscope_activity_zenodo/data_documentation.md,https://zenodo.org/records/15005885/files/data_documentation.md?download=1,data_documentation.md,Documentation downloaded for column inspection.
+agroscope_activity_zenodo,probe_downloaded,Data/external/agroscope_activity_zenodo/activity_all_cows_sample_probe.csv,https://zenodo.org/records/15005885/files/activity_all_cows_sampled_1_min.csv?download=1,activity_all_cows_sampled_1_min.csv,Only first bytes were downloaded as a probe; full CSV is about 37.8 MB.
+agroscope_activity_zenodo,planned,Data/external/agroscope_activity_zenodo/,https://zenodo.org/records/15005885/files/location_all_cows_sampled_1_min.csv?download=1,location_all_cows_sampled_1_min.csv,Full file planned for raw_sensor load.
+agroscope_activity_zenodo,planned,Data/external/agroscope_activity_zenodo/,https://zenodo.org/records/15005885/files/location_all_cows_sampled_1_min_3lyingareas.csv?download=1,location_all_cows_sampled_1_min_3lyingareas.csv,Full file planned for barn area use features.
+plos_rumiwatch_calving,downloaded,Data/external/plos_rumiwatch_calving/s1_raw_data.xlsx,https://doi.org/10.1371/journal.pone.0264834.s004,S1 Raw data XLSX,Downloaded; observed as group-level summary not individual cow-day.
+plos_rumiwatch_calving,downloaded,Data/external/plos_rumiwatch_calving/s1_ration_table.docx,https://doi.org/10.1371/journal.pone.0264834.s001,S1 Table DOCX,Ration table for close-up and fresh dairy cows.
+plos_rumiwatch_calving,downloaded,Data/external/plos_rumiwatch_calving/s2_activity_definitions.docx,https://doi.org/10.1371/journal.pone.0264834.s002,S2 Table DOCX,RumiWatch activity definitions.
+plos_rumiwatch_calving,downloaded,Data/external/plos_rumiwatch_calving/s3_diagnosis_criteria.docx,https://doi.org/10.1371/journal.pone.0264834.s003,S3 Table DOCX,Disease diagnosis criteria.
+mmcows_multimodal,manual_pending,Data/external/mmcows_multimodal/,https://huggingface.co/datasets/neis-lab/mmcows,"sensor_data.zip; optional visual_data.zip",Large files; manual download only.
+transition_cow_part2,manual_pending,Data/external/transition_cow_part2/,https://data.mendeley.com/datasets/n9r22yzj5d/2,Mendeley tabular files,Manual or API download; schema inspection required.
+czech_production_repro,manual_pending,Data/external/czech_production_repro/,https://data.mendeley.com/datasets/6vy2tvv7jn/1,Mendeley tabular files,Manual or API download; schema inspection required.
+ns_dairy_cattle,manual_pending,Data/external/ns_dairy_cattle/,https://data.mendeley.com/datasets/hvc7smjjb7/4,Spreadsheet/workbook,Manual download and formula/table inspection required.
+nasem_2021_ncbi,parser_pending,Data/external/nasem_2021_ncbi/,https://www.ncbi.nlm.nih.gov/books/NBK600601/,HTML/PDF tables,Parser and reuse-term review required.
+feedipedia,parser_pending,Data/external/feedipedia/,https://www.feedipedia.org/content/feed-databases,HTML/feed tables,Per-database license and unit review required.
+nasa_power_environment,api_pending,API output,https://power.larc.nasa.gov/docs/services/api/temporal/daily/,CSV/JSON,Requires farm latitude/longitude and date range.
+usda_ams_dairy,api_or_pdf_pending,API/PDF output,https://www.ams.usda.gov/market-news/dairy,JSON/PDF,Use API if possible; PDF parser as fallback.
+eu_agri_food_milk,api_pending,API output,https://agridata.ec.europa.eu/extensions/API_Documentation/milk.html,JSON/Excel,Raw milk and dairy price endpoints.
+ulusal_sut_konseyi,html_pending,HTML parser output,https://ulusalsutkonseyi.org.tr/yillara-gore-cig-sut-fiyatlari-2194/,HTML table,Turkey raw milk recommended price table.
+turib_feed_commodities,html_pending,HTML parser output,https://www.turib.com.tr/,HTML market snapshot,Turkey feed commodity price proxy.
