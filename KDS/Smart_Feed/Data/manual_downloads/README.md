@@ -11,10 +11,48 @@ veriler için takip alanıdır.
 - Landing: https://github.com/neis-lab/mmcows
 - Primary download: https://huggingface.co/datasets/neis-lab/mmcows
 - Kaggle mirror: https://www.kaggle.com/datasets/hienvuvg/mmcows
-- Beklenen dosyalar:
+- İlk ETL için indirilecek minimum dosya:
   - `sensor_data.zip`
-  - İkinci fazda gerekirse `visual_data.zip`
-  - Görsel/video dosyaları ilk ETL kapsamı dışındadır.
+- `sensor_data.zip` içinden gerekli veri aileleri:
+  - `main_data/uwb`
+  - `main_data/immu`
+  - `main_data/pressure`
+  - `main_data/cbt`
+  - `main_data/ankle`
+  - `main_data/thi`
+  - `main_data/weather`
+  - `main_data/milk`
+  - `sub_data/health_records`
+  - Not: Mevcut çıkarılmış kopyada health kayıtları kökte `health_records/`
+    klasörü olarak duruyor; bu da kabul edilen yerleşimdir.
+  - Gerekirse ikinci adımda `sub_data/uwb_distance`, `sub_data/head_direction`,
+    `sub_data/ankle_accel`
+- Şimdilik indirilmemesi gerekenler:
+  - `visual_data.zip`
+  - `uwb_synced_images/`
+  - `1s_interval_images/`
+  - `1s_interval_images_3hr/`
+  - `cow_gallery.zip`
+  - `cropped_bboxes.zip`
+  - `sensor_model_weights.zip`
+  - `trained_models.zip`
+- HuggingFace dosya bazlı indirme:
+  Komutlar repo kökünden çalıştırılacak şekilde yazılmıştır.
+
+```powershell
+cd KDS/Smart_Feed
+pip install huggingface_hub
+huggingface-cli download neis-lab/mmcows sensor_data.zip --repo-type dataset --local-dir Data/external/mmcows_multimodal
+```
+
+- Kaggle ile dosya bazlı indirme (Kaggle API token gerekir):
+
+```powershell
+cd KDS/Smart_Feed
+pip install kaggle
+kaggle datasets download -d hienvuvg/mmcows -f sensor_data.zip -p Data/external/mmcows_multimodal
+```
+
 - Not: `sensor_data.zip` yaklaşık 18 GB, `visual_data.zip` yaklaşık 20 GB
   olarak listeleniyor. Bu dosyalar git'e eklenmemeli.
 - Yerleşim önerisi: `Data/external/mmcows_multimodal/`

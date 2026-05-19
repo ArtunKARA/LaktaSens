@@ -7,7 +7,7 @@ plos_rumiwatch_calving,downloaded,Data/external/plos_rumiwatch_calving/s1_raw_da
 plos_rumiwatch_calving,downloaded,Data/external/plos_rumiwatch_calving/s1_ration_table.docx,https://doi.org/10.1371/journal.pone.0264834.s001,S1 Table DOCX,Ration table for close-up and fresh dairy cows.
 plos_rumiwatch_calving,downloaded,Data/external/plos_rumiwatch_calving/s2_activity_definitions.docx,https://doi.org/10.1371/journal.pone.0264834.s002,S2 Table DOCX,RumiWatch activity definitions.
 plos_rumiwatch_calving,downloaded,Data/external/plos_rumiwatch_calving/s3_diagnosis_criteria.docx,https://doi.org/10.1371/journal.pone.0264834.s003,S3 Table DOCX,Disease diagnosis criteria.
-mmcows_multimodal,manual_pending,Data/external/mmcows_multimodal/,https://huggingface.co/datasets/neis-lab/mmcows,"sensor_data.zip; optional visual_data.zip",Large files; manual download only.
+mmcows_multimodal,extracted_filtered,Data/external/mmcows_multimodal/,https://huggingface.co/datasets/neis-lab/mmcows,"main_data/*; health_records/*","sensor_data.zip contents extracted; visual/model/image extras excluded; weather map/doc removed."
 transition_cow_part2,manual_pending,Data/external/transition_cow_part2/,https://data.mendeley.com/datasets/n9r22yzj5d/2,Mendeley tabular files,Manual or API download; schema inspection required.
 czech_production_repro,manual_pending,Data/external/czech_production_repro/,https://data.mendeley.com/datasets/6vy2tvv7jn/1,Mendeley tabular files,Manual or API download; schema inspection required.
 ns_dairy_cattle,manual_pending,Data/external/ns_dairy_cattle/,https://data.mendeley.com/datasets/hvc7smjjb7/4,Spreadsheet/workbook,Manual download and formula/table inspection required.
