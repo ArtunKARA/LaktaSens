@@ -1,0 +1,5 @@
+action_name,terminal_reason,rows,terminal_rate,observed_cull_terminal_rows
+cull,agent_cull,14070,1.0,0
+keep,end_of_observation,12,1.0,0
+keep,non_terminal,13737,0.0,0
+keep,observed_cull_within_30d,321,1.0,321

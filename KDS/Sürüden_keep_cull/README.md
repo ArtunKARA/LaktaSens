@@ -257,8 +257,109 @@ python scripts/00_check_environment.py
 
 Python sürümü, paketler, klasörler, `.env` varlığı ve opsiyonel PostgreSQL bağlantısı kontrol edilir.
 
+## 15. RL / MDP Cevre Spesifikasyonu
+
+Faz 5'in ilk çıktısı environment sözleşmesidir:
+
+- `docs/07_rl_cevresi_cow_replacement_env_spec.md`
+- `config/rl_env_rules.yaml`
+- `scripts/28_build_mdp_transition_dataset.py`
+- `scripts/29_build_empirical_transition_model.py`
+- `scripts/30_simulate_cow_replacement_env.py`
+
+Bu doküman `CowReplacementEnv` için state/action/reward/transition sınırlarını,
+terminal durumları, reward bileşenlerini, empirical transition V1 mantığını ve
+baseline policy smoke-test gerekliliğini tanımlar. Transition dataset üretmek
+için:
+
+```bash
+python scripts/28_build_mdp_transition_dataset.py
+python scripts/29_build_empirical_transition_model.py
+python scripts/30_simulate_cow_replacement_env.py
+```
+
+Çıktılar:
+
+- `data/processed/rl/mdp_state_table.csv`
+- `data/processed/rl/mdp_transition_dataset.csv`
+- `data/processed/rl/mdp_transition_summary.csv`
+- `data/processed/rl/mdp_state_bucket_summary.csv`
+- `reports/mdp_transition_dataset_review.md`
+- `data/processed/rl/empirical_transition_model.csv`
+- `data/processed/rl/transition_fallback_model.csv`
+- `reports/empirical_transition_model_review.md`
+- `data/processed/rl/policy_simulation_results.csv`
+- `data/processed/rl/policy_simulation_trace.csv`
+- `reports/cow_replacement_env_smoke_test_report.md`
+
+Bu adımda RL eğitimi yapılmaz; state bucket, observed keep transition,
+empirical transition probability model ve baseline policy smoke-test üretilir.
+
+## 16. Ana RL Çözümü: Model-Based MDP
+
+Faz 6 çıktısı value iteration ile çözülen ilk model-based MDP policy
+prototipidir:
+
+- `docs/08_ana_rl_cozumu_mdp.md`
+- `scripts/31_build_mdp_reward_table.py`
+- `scripts/32_solve_mdp_value_iteration.py`
+- `scripts/33_analyze_mdp_policy_scenarios.py`
+
+Çalıştırma sırası:
+
+```bash
+python scripts/31_build_mdp_reward_table.py
+python scripts/32_solve_mdp_value_iteration.py
+python scripts/33_analyze_mdp_policy_scenarios.py
+```
+
+Çıktılar:
+
+- `data/processed/rl/mdp_reward_table.csv`
+- `data/processed/rl/mdp_value_iteration_result.csv`
+- `data/processed/rl/optimal_policy_table.csv`
+- `data/processed/rl/mdp_scenario_results.csv`
+- `data/processed/rl/mdp_scenario_policy_comparison.csv`
+- `reports/mdp_reward_table_review.md`
+- `reports/mdp_policy_decision_report.md`
+- `reports/mdp_scenario_analysis_report.md`
+
+Baseline çözüm mevcut prototip ekonomisiyle `144` state için `keep`, `18` state
+için `cull` üretir. Senaryo analizinde düşük süt fiyatı, düşük replacement
+maliyeti veya yüksek cull satış değeri bazı ek state'leri `cull` aksiyonuna
+çevirir. Bu sonuç production policy olarak değil, reward kalibrasyonu gerektiren
+ilk MDP çekirdeği olarak yorumlanmalıdır.
+
+## 17. Karşılaştırmalı RL Deneyleri
+
+Faz 7 çıktısı, MDP referans çözümünü heuristic ve simulator RL benchmark'larıyla
+karşılaştırır:
+
+- `docs/09_karsilastirmali_rl_deneyleri.md`
+- `scripts/34_audit_rl_algorithm_readiness.py`
+- `scripts/35_compare_rl_algorithms.py`
+
+Çalıştırma sırası:
+
+```bash
+python scripts/34_audit_rl_algorithm_readiness.py
+python scripts/35_compare_rl_algorithms.py
+```
+
+Çıktılar:
+
+- `data/processed/rl/rl_algorithm_readiness.csv`
+- `data/processed/rl/rl_algorithm_comparison_results.csv`
+- `data/processed/rl/rl_algorithm_policy_table.csv`
+- `reports/rl_algorithm_readiness_report.md`
+- `reports/rl_algorithm_comparison_report.md`
+
+Bu fazda CQL/IQL/BCQ çalıştırılmaz; gerçek logged keep/cull action verisi
+olmadığı için eligibility-only olarak raporlanır. PPO/DQN tarafı ise production
+RL sonucu değil, empirical simulator üzerinde smoke benchmark olarak ele alınır.
+
 ## Sonraki Adım
 
-Faz 4 sonunda ilk supervised culling risk skoru modeli, performans raporu ve
-feature importance analizi hazır olur. Sonraki fazda model-based MDP reward/geçiş
-simülasyonuna geçilecek.
+Faz 7 sonunda model-based MDP hala ana referanstır. Sonraki mantıklı adım reward
+parametrelerini çiftlik/ülke ekonomisine göre kalibre etmek, ardından daha
+stabil Gymnasium wrapper veya learned transition model denemesine geçmektir.
