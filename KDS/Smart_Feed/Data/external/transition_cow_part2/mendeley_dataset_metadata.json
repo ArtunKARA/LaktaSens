@@ -1,0 +1,131 @@
+{
+  "id": "n9r22yzj5d",
+  "doi": {
+    "id": "10.17632/n9r22yzj5d.2",
+    "status": "allocated",
+    "prefix": "10.17632"
+  },
+  "name": "Transition cow nutrition and management strategies of dairy herds in the northeastern United States: Part II—Associations of metabolic and inflammation-related analytes with health, milk yield, and reproduction",
+  "description": "The objectives were: 1) establish cow-level thresholds for prepartum nonesterified fatty acids (NEFA) and postpartum NEFA, β-hydroxybutyrate (BHB), and haptoglobin (Hp) concentrations associated with negative health events; 2) evaluate cow-level associations between biomarkers and 305-d mature equivalent milk at the 4th test day (ME305) and reproductive performance; and 3) identify herd-alarm levels (proportion of cows sampled above the critical threshold) for biomarkers that are associated with herd-level changes in disorder incidence [displaced abomasum (DA) and clinical ketosis (CK)], reproductive performance, and ME305. In a prospective cohort study, 1,473 cows from 72 farms were enrolled from Northeastern United States. At the cow-level and herd-level, elevated biomarker concentrations were associated with an increased disorder risk and varied performance responses.",
+  "version": 2,
+  "contributors": [
+    {
+      "institution": {
+        "name": "Cornell University College of Agriculture and Life Sciences"
+      },
+      "profile_id": "6765af26-3c1b-3329-8fdb-873cbebc39cc",
+      "first_name": "Allison",
+      "last_name": "Kerwin"
+    },
+    {
+      "first_name": "Buzz",
+      "last_name": "Burhans"
+    },
+    {
+      "first_name": "Sabine",
+      "last_name": "Mann"
+    },
+    {
+      "profile_id": "7f107d2c-df6b-3a39-9326-7f2694b38ac8",
+      "first_name": "Daryl",
+      "last_name": "Nydam"
+    },
+    {
+      "first_name": "Samantha",
+      "last_name": "Wall-Villez"
+    },
+    {
+      "first_name": "Katie",
+      "last_name": "Schoenberg"
+    },
+    {
+      "first_name": "Kelly",
+      "last_name": "Perfield"
+    },
+    {
+      "first_name": "Thomas",
+      "last_name": "Overton"
+    }
+  ],
+  "files": [
+    {
+      "filename": "Supplemental Table S1.pdf",
+      "id": "912e963d-8d2d-4766-b9ca-fe0012d8c5d0",
+      "content_details": {
+        "id": "38d87085-5488-44cc-82d5-de0b61609176",
+        "sha256_hash": "bd609c8835eec8e9059d5b8731d5a4a054598e77c991938f31cd593801e8348c",
+        "content_type": "application/pdf",
+        "size": 85553,
+        "created_date": "2022-01-31T19:05:14.367Z",
+        "download_url": "https://data.mendeley.com/public-files/datasets/n9r22yzj5d/files/912e963d-8d2d-4766-b9ca-fe0012d8c5d0/file_downloaded",
+        "view_url": "https://data.mendeley.com/public-files/datasets/n9r22yzj5d/files/912e963d-8d2d-4766-b9ca-fe0012d8c5d0/file_viewed",
+        "download_expiry_time": "2126-05-20T11:43:34.111979907Z"
+      },
+      "metrics": {
+        "downloads": 0,
+        "previews": 0
+      },
+      "size": 85553,
+      "status": "COMPLETED"
+    }
+  ],
+  "versions": [
+    {
+      "version": 2,
+      "available": true,
+      "publish_date": "2022-02-01T22:31:19.293Z"
+    },
+    {
+      "version": 1,
+      "available": true,
+      "publish_date": "2022-01-31T17:55:52.461Z"
+    }
+  ],
+  "articles": [],
+  "categories": [
+    {
+      "id": "data.elsevier.com/vocabulary/OmniScience/Concept-252737338",
+      "label": "Dairy Cattle"
+    }
+  ],
+  "institutions": [],
+  "metrics": {
+    "views": 0,
+    "file_downloads": 0,
+    "file_previews": 0
+  },
+  "available": true,
+  "size": 85553,
+  "owner": {
+    "institution": {
+      "name": "Cornell University College of Agriculture and Life Sciences"
+    },
+    "profile_id": "6765af26-3c1b-3329-8fdb-873cbebc39cc",
+    "first_name": "Allison",
+    "last_name": "Kerwin"
+  },
+  "channel": "WEB",
+  "owner_id": "6765af26-3c1b-3329-8fdb-873cbebc39cc",
+  "publish_date": "2022-02-01T22:31:19.293Z",
+  "data_licence": {
+    "id": "01d9c749-3c4d-4431-9df3-620b2dcfe144",
+    "description": "You can share, copy and modify this dataset so long as you give appropriate credit, provide a link to the CC BY license, and indicate if changes were made, but you may not do so in a way that suggests the rights holder has endorsed you or your use of the dataset. Note that further permission may be required for any content within the dataset that is identified as belonging to a third party.",
+    "url": "http://creativecommons.org/licenses/by/4.0",
+    "category": "Creative",
+    "short_name": "CC BY 4.0",
+    "full_name": "Creative Commons Attribution 4.0 International"
+  },
+  "related_links": [],
+  "funders": [],
+  "customer_id": "7377952c-6404-4428-bbfc-77242cfc301e",
+  "modified_on": "2022-01-31T19:05:49.124Z",
+  "created_on": "2022-01-30T16:38:10.51Z",
+  "confidential": false,
+  "links": {
+    "view": "https://data.mendeley.com/datasets/n9r22yzj5d"
+  },
+  "repository": {
+    "id": "MENDELEY_DATA",
+    "name": "Mendeley Data"
+  }
+}

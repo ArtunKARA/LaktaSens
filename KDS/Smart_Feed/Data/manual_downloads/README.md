@@ -57,10 +57,16 @@ kaggle datasets download -d hienvuvg/mmcows -f sensor_data.zip -p Data/external/
   olarak listeleniyor. Bu dosyalar git'e eklenmemeli.
 - Yerleşim önerisi: `Data/external/mmcows_multimodal/`
 
-### `transition_cow_part2`
+### `transition_cow_part2`done
 
 - Landing: https://data.mendeley.com/datasets/n9r22yzj5d/2
 - DOI: https://doi.org/10.17632/n9r22yzj5d.2
+- İndirilen dosyalar:
+  - `Data/external/transition_cow_part2/supplemental_table_s1.pdf`
+  - `Data/external/transition_cow_part2/transition_cow_part2_supplemental_table_s1.csv`
+  - `Data/external/transition_cow_part2/mendeley_dataset_metadata.json`
+- Not: Mendeley v2 public dosya listesinde tek dosya `Supplemental Table S1.pdf`
+  olarak göründü; PDF tablo CSV'ye 15 outcome/model satırı olarak çıkarıldı.
 - Beklenen içerik:
   - Cow/herd level tabular dosyalar
   - Biomarker, health disorder, milk yield, reproduction outcome alanları
@@ -92,17 +98,36 @@ kaggle datasets download -d hienvuvg/mmcows -f sensor_data.zip -p Data/external/
 - Yerleşim önerisi: `Data/external/ns_dairy_cattle/`
 - Not: Formül hücreleri ve referans tabloları ayrı çıkarılmalı.
 
-### `nasem_2021_ncbi`ilk link kitap ikinci linkte ilgili bölümü site içinde tablo olarak var alınacak
+### `nasem_2021_ncbi`done
 
 - National Academies: https://nap.nationalacademies.org/catalog/25806/nutrient-requirements-of-dairy-cattle-eighth-revised-edition
 - NCBI feed composition chapter: https://www.ncbi.nlm.nih.gov/books/NBK600601/
 - DOI: https://doi.org/10.17226/25806
+- CSV çıktıları:
+  - `Data/external/nasem_2021_ncbi/nasem_2021_table_19_1_feed_nutrient_composition_long.csv`
+  - `Data/external/nasem_2021_ncbi/nasem_2021_table_19_2_feed_aa_fa_composition_long.csv`
+  - `Data/external/nasem_2021_ncbi/nasem_2021_table_19_3_mineral_sources_long.csv`
+  - Aynı tablolar için raw CSV kopyaları da aynı klasörde tutulur.
 - Beklenen içerik:
   - Feed composition tables
   - Requirement constraints
 - Yerleşim önerisi:
   - Parser çıktısı: `Data/external/nasem_2021_ncbi/`
   - Ham PDF/HTML kopyaları lisans kontrolünden sonra alınmalı.
+
+### `voederbomen_nutritionalvalues`done
+
+- Landing: https://www.voederbomen.nl/nutritionalvalues/
+- Beklenen içerik:
+  - Fodder tree / shrub nutritional values
+  - General analysis, fibre fractions, macro/micro elements and source references
+- Yerleşim önerisi: `Data/external/voederbomen_nutritionalvalues/`
+- CSV çıktıları:
+  - `Data/external/voederbomen_nutritionalvalues/voederbomen_nutritionalvalues_detail_rows.csv`
+  - `Data/external/voederbomen_nutritionalvalues/voederbomen_nutritionalvalues_average_rows.csv`
+- Not: Site varsayılan görünümde ilk 100 girdiyi gösterdiği için 92
+  group/genus filtresi dolaşıldı; tekrar eden `''` alanları önceki group/species/tree
+  part değeriyle dolduruldu.
 
 ### `feedipedia`boş sanırım
 
