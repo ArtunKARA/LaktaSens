@@ -23,6 +23,8 @@ Calistirilan/raporlanan yontemler:
 - Tabular Q-learning simulator benchmark
 - Tabular PPO-style smoke benchmark
 - DQN-style fitted Q iteration with sklearn MLP
+- Stable-Baselines3 PPO/DQN real train/eval loop Faz 7.1 olarak ayrica
+  eklendi
 - CQL/IQL/BCQ eligibility-only
 - TD3/SAC not applicable
 
@@ -33,6 +35,7 @@ Calistirilan/raporlanan yontemler:
 - `data/processed/rl/rl_algorithm_comparison_results.csv`
 - `data/processed/rl/rl_algorithm_policy_table.csv`
 - `reports/rl_algorithm_comparison_report.md`
+- `reports/sb3_ppo_dqn_training_report.md`
 
 ## Calistirma Sirasi
 
@@ -61,6 +64,8 @@ Karsilastirma sonucunda:
   cull state'ini kacirdi.
 - Tabular Q-learning ve PPO-style smoke test calisir, ancak simulator benchmark
   olarak yorumlanmalidir.
+- Stable-Baselines3 PPO/DQN egitimi `docs/10_gymnasium_sb3_ppo_dqn_egitimi.md`
+  altinda gercek Gymnasium wrapper ile calisir hale getirildi.
 - CQL/IQL/BCQ calistirilmadi; gercek logged action yok.
 - TD3/SAC calistirilmadi; aksiyon uzayi discrete keep/cull.
 

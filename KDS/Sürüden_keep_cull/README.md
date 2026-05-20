@@ -358,8 +358,86 @@ Bu fazda CQL/IQL/BCQ çalıştırılmaz; gerçek logged keep/cull action verisi
 olmadığı için eligibility-only olarak raporlanır. PPO/DQN tarafı ise production
 RL sonucu değil, empirical simulator üzerinde smoke benchmark olarak ele alınır.
 
+## 18. Gymnasium + Stable-Baselines3 PPO/DQN
+
+Gerçek Gymnasium wrapper ve Stable-Baselines3 train/eval loop Faz 7.1 olarak
+eklendi:
+
+- `docs/10_gymnasium_sb3_ppo_dqn_egitimi.md`
+- `scripts/cow_replacement_gym_env.py`
+- `scripts/36_train_sb3_ppo_dqn.py`
+- `requirements-rl.txt`
+
+Opsiyonel RL paketleri ana `requirements.txt` dosyasından ayrı tutulur. Linux
+CPU-only kurulum için:
+
+```bash
+python -m venv /tmp/laktasens-rl-venv
+/tmp/laktasens-rl-venv/bin/python -m pip install --upgrade pip wheel
+/tmp/laktasens-rl-venv/bin/python -m pip install -r requirements-rl.txt
+```
+
+Çalıştırma:
+
+```bash
+/tmp/laktasens-rl-venv/bin/python scripts/36_train_sb3_ppo_dqn.py
+```
+
+Çıktılar:
+
+- `data/processed/rl/sb3_training_results.csv`
+- `data/processed/rl/sb3_policy_table.csv`
+- `data/processed/rl/sb3_eval_episodes.csv`
+- `reports/sb3_ppo_dqn_training_report.md`
+- `Model/rl/sb3/`
+
+Bu script dependency eksikse hata vermez; `missing_dependency` raporu üretir.
+Paketler kurulduğunda PPO ve DQN modellerini eğitir, kaydeder ve MDP policy ile
+karşılaştırır.
+
+İlk CPU prototip çalışmasında PPO ve DQN `5000` timestep ile eğitildi:
+
+- `Model/rl/sb3/ppo_cow_replacement.zip`
+- `Model/rl/sb3/dqn_cow_replacement.zip`
+
+Sonuçlar `reports/sb3_ppo_dqn_training_report.md` içinde tutulur. Daha uzun
+eğitim için `config/rl_env_rules.yaml` altındaki
+`stable_baselines3.algorithms.*.total_timesteps` değerleri artırılabilir.
+
+## 19. RL Deney Notebook ve Model Code Runner
+
+RL deneylerini parametre değiştirerek notebook veya terminalden çalıştırmak için
+ayrı bir code runner katmanı eklendi:
+
+- `Model/rl/code/README.md`
+- `Model/rl/code/experiment_parameters.yaml`
+- `Model/rl/code/experiment_runner.py`
+- `Model/rl/code/run_all_experiments.py`
+- `notebooks/rl_experiment_runner.ipynb`
+
+Notebook üzerinden:
+
+1. `notebooks/rl_experiment_runner.ipynb` dosyasını aç.
+2. Parametre hücresinde MDP, tabular RL ve SB3 timestep/eval değerlerini değiştir.
+3. İlgili hücreleri çalıştır.
+
+Terminalden:
+
+```bash
+python Model/rl/code/run_all_experiments.py --mode mdp
+python Model/rl/code/run_all_experiments.py --mode compare
+python Model/rl/code/run_all_experiments.py --mode sb3 --sb3-python /tmp/laktasens-rl-venv/bin/python
+```
+
+Tüm pipeline:
+
+```bash
+python Model/rl/code/run_all_experiments.py --mode all
+```
+
 ## Sonraki Adım
 
-Faz 7 sonunda model-based MDP hala ana referanstır. Sonraki mantıklı adım reward
-parametrelerini çiftlik/ülke ekonomisine göre kalibre etmek, ardından daha
-stabil Gymnasium wrapper veya learned transition model denemesine geçmektir.
+Faz 7.1 sonunda model-based MDP hala ana referanstır. Sonraki mantıklı adım
+opsiyonel RL ortamında SB3 eğitimini çalıştırmak, reward parametrelerini
+çiftlik/ülke ekonomisine göre kalibre etmek ve ardından learned transition model
+denemesine geçmektir.

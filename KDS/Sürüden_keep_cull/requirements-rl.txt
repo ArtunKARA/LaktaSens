@@ -1,0 +1,10 @@
+# Optional heavy dependencies for real Gymnasium + Stable-Baselines3 PPO/DQN training.
+# The extra index lets pip resolve the CPU-only PyTorch wheel instead of CUDA wheels.
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch==2.12.0+cpu
+numpy
+pandas
+pyyaml
+gymnasium
+matplotlib
+stable-baselines3
