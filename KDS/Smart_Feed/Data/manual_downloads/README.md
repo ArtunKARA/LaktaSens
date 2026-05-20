@@ -6,20 +6,58 @@ veriler için takip alanıdır.
 
 ## Manuel veya Büyük İndirme Gerektiren Kaynaklar
 
-### `mmcows_multimodal`
+### `mmcows_multimodal`done
 
 - Landing: https://github.com/neis-lab/mmcows
 - Primary download: https://huggingface.co/datasets/neis-lab/mmcows
 - Kaggle mirror: https://www.kaggle.com/datasets/hienvuvg/mmcows
-- Beklenen dosyalar:
+- İlk ETL için indirilecek minimum dosya:
   - `sensor_data.zip`
-  - İkinci fazda gerekirse `visual_data.zip`
-  - Görsel/video dosyaları ilk ETL kapsamı dışındadır.
+- `sensor_data.zip` içinden gerekli veri aileleri:
+  - `main_data/uwb`
+  - `main_data/immu`
+  - `main_data/pressure`
+  - `main_data/cbt`
+  - `main_data/ankle`
+  - `main_data/thi`
+  - `main_data/weather`
+  - `main_data/milk`
+  - `sub_data/health_records`
+  - Not: Mevcut çıkarılmış kopyada health kayıtları kökte `health_records/`
+    klasörü olarak duruyor; bu da kabul edilen yerleşimdir.
+  - Gerekirse ikinci adımda `sub_data/uwb_distance`, `sub_data/head_direction`,
+    `sub_data/ankle_accel`
+- Şimdilik indirilmemesi gerekenler:
+  - `visual_data.zip`
+  - `uwb_synced_images/`
+  - `1s_interval_images/`
+  - `1s_interval_images_3hr/`
+  - `cow_gallery.zip`
+  - `cropped_bboxes.zip`
+  - `sensor_model_weights.zip`
+  - `trained_models.zip`
+- HuggingFace dosya bazlı indirme:
+  Komutlar repo kökünden çalıştırılacak şekilde yazılmıştır.
+
+```powershell
+cd KDS/Smart_Feed
+pip install huggingface_hub
+huggingface-cli download neis-lab/mmcows sensor_data.zip --repo-type dataset --local-dir Data/external/mmcows_multimodal
+```
+
+- Kaggle ile dosya bazlı indirme (Kaggle API token gerekir):
+
+```powershell
+cd KDS/Smart_Feed
+pip install kaggle
+kaggle datasets download -d hienvuvg/mmcows -f sensor_data.zip -p Data/external/mmcows_multimodal
+```
+
 - Not: `sensor_data.zip` yaklaşık 18 GB, `visual_data.zip` yaklaşık 20 GB
   olarak listeleniyor. Bu dosyalar git'e eklenmemeli.
 - Yerleşim önerisi: `Data/external/mmcows_multimodal/`
 
-### `transition_cow_part2`
+### `transition_cow_part2`done
 
 - Landing: https://data.mendeley.com/datasets/n9r22yzj5d/2
 - DOI: https://doi.org/10.17632/n9r22yzj5d.2
@@ -54,7 +92,7 @@ veriler için takip alanıdır.
 - Yerleşim önerisi: `Data/external/ns_dairy_cattle/`
 - Not: Formül hücreleri ve referans tabloları ayrı çıkarılmalı.
 
-### `nasem_2021_ncbi`ilk link kitap ikinci linkte ilgili bölümü site içinde tablo olarak var alınacak
+### `nasem_2021_ncbi`done
 
 - National Academies: https://nap.nationalacademies.org/catalog/25806/nutrient-requirements-of-dairy-cattle-eighth-revised-edition
 - NCBI feed composition chapter: https://www.ncbi.nlm.nih.gov/books/NBK600601/
@@ -66,7 +104,7 @@ veriler için takip alanıdır.
   - Parser çıktısı: `Data/external/nasem_2021_ncbi/`
   - Ham PDF/HTML kopyaları lisans kontrolünden sonra alınmalı.
 
-### `feedipedia`boş sanırım
+### `feedipedia`done
 
 - Landing: https://feedipedia.org/
 - Feed databases: https://www.feedipedia.org/content/feed-databases
@@ -89,14 +127,14 @@ veriler için takip alanıdır.
 https://power.larc.nasa.gov/api/temporal/daily/point?parameters=T2M,RH2M,T2M_MAX,T2M_MIN&community=AG&longitude={lon}&latitude={lat}&start={yyyymmdd}&end={yyyymmdd}&format=CSV&time-standard=UTC
 ```
 
-### `usda_ams_dairy`
+### `usda_ams_dairy`done
 
 - Landing: https://www.ams.usda.gov/market-news/dairy
 - API FAQ: https://mymarketnews.ams.usda.gov/mymarketnews-api/faqs
 - Weekly PDF: https://www.ams.usda.gov/mnreports/dywweeklyreport.pdf
 - Not: PDF raporları ayrı parser ister; API varsa önce API kullanılmalı.
 
-### `eu_agri_food_milk` grafik var nasıl alırız bilmiyorum
+### `eu_agri_food_milk` done
 
 - Portal: https://agridata.ec.europa.eu/extensions/DataPortal/milk.html
 - API docs: https://agridata.ec.europa.eu/extensions/API_Documentation/milk.html
