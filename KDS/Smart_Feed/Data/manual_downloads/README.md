@@ -6,7 +6,7 @@ veriler için takip alanıdır.
 
 ## Manuel veya Büyük İndirme Gerektiren Kaynaklar
 
-### `mmcows_multimodal`
+### `mmcows_multimodal`done
 
 - Landing: https://github.com/neis-lab/mmcows
 - Primary download: https://huggingface.co/datasets/neis-lab/mmcows
@@ -61,12 +61,6 @@ kaggle datasets download -d hienvuvg/mmcows -f sensor_data.zip -p Data/external/
 
 - Landing: https://data.mendeley.com/datasets/n9r22yzj5d/2
 - DOI: https://doi.org/10.17632/n9r22yzj5d.2
-- İndirilen dosyalar:
-  - `Data/external/transition_cow_part2/supplemental_table_s1.pdf`
-  - `Data/external/transition_cow_part2/transition_cow_part2_supplemental_table_s1.csv`
-  - `Data/external/transition_cow_part2/mendeley_dataset_metadata.json`
-- Not: Mendeley v2 public dosya listesinde tek dosya `Supplemental Table S1.pdf`
-  olarak göründü; PDF tablo CSV'ye 15 outcome/model satırı olarak çıkarıldı.
 - Beklenen içerik:
   - Cow/herd level tabular dosyalar
   - Biomarker, health disorder, milk yield, reproduction outcome alanları
@@ -103,11 +97,6 @@ kaggle datasets download -d hienvuvg/mmcows -f sensor_data.zip -p Data/external/
 - National Academies: https://nap.nationalacademies.org/catalog/25806/nutrient-requirements-of-dairy-cattle-eighth-revised-edition
 - NCBI feed composition chapter: https://www.ncbi.nlm.nih.gov/books/NBK600601/
 - DOI: https://doi.org/10.17226/25806
-- CSV çıktıları:
-  - `Data/external/nasem_2021_ncbi/nasem_2021_table_19_1_feed_nutrient_composition_long.csv`
-  - `Data/external/nasem_2021_ncbi/nasem_2021_table_19_2_feed_aa_fa_composition_long.csv`
-  - `Data/external/nasem_2021_ncbi/nasem_2021_table_19_3_mineral_sources_long.csv`
-  - Aynı tablolar için raw CSV kopyaları da aynı klasörde tutulur.
 - Beklenen içerik:
   - Feed composition tables
   - Requirement constraints
@@ -115,21 +104,7 @@ kaggle datasets download -d hienvuvg/mmcows -f sensor_data.zip -p Data/external/
   - Parser çıktısı: `Data/external/nasem_2021_ncbi/`
   - Ham PDF/HTML kopyaları lisans kontrolünden sonra alınmalı.
 
-### `voederbomen_nutritionalvalues`done
-
-- Landing: https://www.voederbomen.nl/nutritionalvalues/
-- Beklenen içerik:
-  - Fodder tree / shrub nutritional values
-  - General analysis, fibre fractions, macro/micro elements and source references
-- Yerleşim önerisi: `Data/external/voederbomen_nutritionalvalues/`
-- CSV çıktıları:
-  - `Data/external/voederbomen_nutritionalvalues/voederbomen_nutritionalvalues_detail_rows.csv`
-  - `Data/external/voederbomen_nutritionalvalues/voederbomen_nutritionalvalues_average_rows.csv`
-- Not: Site varsayılan görünümde ilk 100 girdiyi gösterdiği için 92
-  group/genus filtresi dolaşıldı; tekrar eden `''` alanları önceki group/species/tree
-  part değeriyle dolduruldu.
-
-### `feedipedia`boş sanırım
+### `feedipedia`done
 
 - Landing: https://feedipedia.org/
 - Feed databases: https://www.feedipedia.org/content/feed-databases
@@ -152,14 +127,14 @@ kaggle datasets download -d hienvuvg/mmcows -f sensor_data.zip -p Data/external/
 https://power.larc.nasa.gov/api/temporal/daily/point?parameters=T2M,RH2M,T2M_MAX,T2M_MIN&community=AG&longitude={lon}&latitude={lat}&start={yyyymmdd}&end={yyyymmdd}&format=CSV&time-standard=UTC
 ```
 
-### `usda_ams_dairy`
+### `usda_ams_dairy`done
 
 - Landing: https://www.ams.usda.gov/market-news/dairy
 - API FAQ: https://mymarketnews.ams.usda.gov/mymarketnews-api/faqs
 - Weekly PDF: https://www.ams.usda.gov/mnreports/dywweeklyreport.pdf
 - Not: PDF raporları ayrı parser ister; API varsa önce API kullanılmalı.
 
-### `eu_agri_food_milk` grafik var nasıl alırız bilmiyorum
+### `eu_agri_food_milk` done
 
 - Portal: https://agridata.ec.europa.eu/extensions/DataPortal/milk.html
 - API docs: https://agridata.ec.europa.eu/extensions/API_Documentation/milk.html
