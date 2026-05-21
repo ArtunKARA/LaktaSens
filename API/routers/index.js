@@ -1,6 +1,7 @@
 const express = require("express");
 const options = require("./options.js");
 const login = require("./login.js");
+const mobile = require("./mobile.js");
 const genelTakip = require("./çiftçi/genel-takip.js");
 const kullanıcı = require("./kullanıcı.js");
 const sağım = require("./çiftçi/sağım.js");
@@ -35,6 +36,7 @@ router.get("/", (req, res) => {
 // Router definition
 router.use("/api/options", options);
 router.use("/api/login", login);
+router.use("/api/mobile", mobile);
 router.use("/api/genelTakip",genelTakip);
 router.use("/api/kullanıcı",kullanıcı);
 router.use("/api/sagim",sağım);
