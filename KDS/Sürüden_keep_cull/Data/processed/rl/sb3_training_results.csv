@@ -1,0 +1,3 @@
+algorithm,run_status,total_timesteps,eval_episodes,mean_total_reward,median_total_reward,mean_steps,policy_cull_state_rate,changed_states_vs_mdp_value_iteration,notes
+PPO,completed,5000,100,-145.57828754731662,-438.4501795661788,32.02,0.14814814814814814,28,Saved model: Model/rl/sb3/ppo_cow_replacement.zip
+DQN,completed,5000,100,-401.86259151376987,-248.33670360600564,33.48,0.0,18,Saved model: Model/rl/sb3/dqn_cow_replacement.zip

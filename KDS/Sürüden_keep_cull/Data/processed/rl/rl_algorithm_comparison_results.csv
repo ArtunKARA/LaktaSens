@@ -1,0 +1,15 @@
+algorithm,experiment_type,run_status,states,mean_state_value,mean_initial_state_value,median_state_value,cull_state_rate,changed_states_vs_mdp_value_iteration,changed_state_rate_vs_mdp_value_iteration,policy_eval_iterations,policy_eval_converged,notes
+model_based_mdp_value_iteration,model_based_exact,completed,162,-550.68247148474,-30.295915325732096,-644.0648376787351,0.1111111111111111,0.0,0.0,211.0,True,Reference policy from value iteration.
+keep_all,heuristic,completed,162,-618.0012384954306,-70.99140952432299,-706.7362335474902,0.0,18.0,0.1111111111111111,223.0,True,Deterministic heuristic baseline.
+dqn_style_fqi_mlp,simulator_rl_approximate,completed,162,-618.0012384954306,-70.99140952432299,-706.7362335474902,0.0,18.0,0.1111111111111111,223.0,True,"DQN-style fitted Q iteration with sklearn MLP; fitted_iterations=10, hidden=(32,)."
+milk_margin_threshold,heuristic,completed,162,-624.2988906472167,-74.67196005914109,-718.5870680307293,0.12345679012345678,20.0,0.12345679012345678,218.0,True,Deterministic heuristic baseline.
+tabular_q_learning,simulator_rl,completed,162,-739.2369615270085,-93.10144348564552,-847.6696938472359,0.16049382716049382,36.0,0.2222222222222222,197.0,True,"Tabular Q-learning on empirical simulator; episodes=4000, final_epsilon=0.0300."
+risk_threshold,heuristic,completed,162,-732.5476647170625,-164.89663508802806,-891.8306003642605,0.2345679012345679,36.0,0.2222222222222222,186.0,True,Deterministic heuristic baseline.
+random_policy,heuristic_stochastic,completed,162,-909.7924106429826,-622.0178385555599,-976.0800545915699,0.049999999999999996,18.0,0.1111111111111111,131.0,True,Stochastic baseline with fixed cull probability.
+tabular_ppo_smoke,simulator_rl,completed,162,-1195.4496139295316,-1052.9499005274613,-1278.1283719682137,0.4905379219446216,47.0,0.29012345679012347,168.0,True,Tabular PPO-style smoke test on empirical simulator; iterations=140.
+cull_all_now,heuristic,completed,162,-1300.0,-1300.0000000000002,-1300.0,1.0,144.0,0.8888888888888888,2.0,True,Deterministic heuristic baseline.
+cql,offline_rl,not_run,0,,,,,,,,False,not eligible until real logged keep/cull actions and behavior-policy support exist
+iql,offline_rl,not_run,0,,,,,,,,False,not eligible until real logged keep/cull actions and behavior-policy support exist
+bcq,offline_rl,not_run,0,,,,,,,,False,not eligible until real logged keep/cull actions and behavior-policy support exist
+td3,continuous_action_rl,not_run,0,,,,,,,,False,current action space is discrete keep/cull
+sac,continuous_action_rl,not_run,0,,,,,,,,False,current action space is discrete keep/cull

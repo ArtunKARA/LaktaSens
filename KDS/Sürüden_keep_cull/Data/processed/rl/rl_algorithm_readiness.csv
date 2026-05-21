@@ -1,0 +1,11 @@
+algorithm,family,eligible_now,run_status,production_valid,reason,recommended_use
+model_based_mdp_value_iteration,model_based_mdp,True,ready,False,Empirical transition model and reward table exist; output remains prototype policy.,Primary current benchmark.
+tabular_q_learning,online_rl_on_simulator,True,ready,False,"Can train on the empirical simulator; useful as sanity benchmark, not as farm policy.",Simulator benchmark.
+tabular_ppo_smoke,policy_gradient_on_simulator,True,ready,False,Can run a tabular PPO-style smoke test on the simulator without external RL dependencies.,Simulator benchmark only.
+dqn_style_fitted_q_mlp,value_rl_on_simulator,True,ready,False,Uses sklearn MLP fitted Q-iteration as a DQN-style approximation; not a full replay-buffer DQN.,Approximate simulator benchmark.
+ppo_stable_baselines,policy_gradient_on_simulator,False,deferred,False,Needs a stable Gymnasium wrapper and dependency decision; current tabular PPO smoke covers this phase.,"Later, after simulator API stabilizes."
+cql,offline_rl,False,not_eligible,False,Real logged keep/cull actions and behavior-policy support are missing; generated cull rows are not logged actions.,Eligibility-only until logged action data exists.
+iql,offline_rl,False,not_eligible,False,Offline trajectory data with real actions is missing.,Eligibility-only until logged action data exists.
+bcq,offline_rl,False,not_eligible,False,Behavior policy/action support cannot be estimated without real logged actions.,Eligibility-only until logged action data exists.
+td3,continuous_action_rl,False,not_applicable,False,"Current action space is discrete: 0=keep, 1=cull.",Only relevant if future action space becomes continuous.
+sac,continuous_action_rl,False,not_applicable,False,"Current action space is discrete: 0=keep, 1=cull.",Only relevant if future action space becomes continuous.

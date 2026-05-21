@@ -1,0 +1,24 @@
+# Notebook/CLI tarafindan kolay degistirilecek RL deney parametreleri.
+# Degerler config/rl_env_rules.yaml icine yazilir, sonra ilgili scriptler calistirilir.
+
+run:
+  rebuild_mdp: true
+  run_comparative_rl: true
+  run_sb3_training: true
+
+python:
+  default: "python3"
+  # Stable-Baselines3 paketleri agir oldugu icin ayri venv kullanmak daha pratik.
+  sb3: "/tmp/laktasens-rl-venv/bin/python"
+
+overrides:
+  mdp.discount_factor: 0.97
+  mdp.convergence_tolerance: 0.0001
+  mdp.max_iterations: 1000
+  rl_experiments.algorithms.tabular_q_learning.episodes: 4000
+  rl_experiments.algorithms.tabular_ppo_smoke.iterations: 140
+  rl_experiments.algorithms.dqn_style_fqi_mlp.fitted_iterations: 10
+  stable_baselines3.eval_episodes: 100
+  stable_baselines3.algorithms.PPO.total_timesteps: 5000
+  stable_baselines3.algorithms.DQN.total_timesteps: 5000
+

@@ -1,0 +1,4 @@
+bucket_column,unique_buckets,max_rows_per_bucket,median_rows_per_bucket,singleton_buckets
+state_bucket_exact,162,1385,7.5,38
+state_bucket_no_risk,53,3476,4.0,13
+state_bucket_stage_parity,4,7130,3069.0,0

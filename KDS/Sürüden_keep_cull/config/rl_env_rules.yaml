@@ -1,0 +1,432 @@
+version: 1
+phase: "05_06_07_rl_environment_mdp_and_comparative_experiments"
+environment_name: "CowReplacementEnv"
+schema: "suru_karar"
+
+input:
+  snapshot_csv: "data/processed/training/inek_aylik_snapshot_culling_observable_payload_enriched_model_ready.csv"
+  selected_risk_model_metadata_json: "data/processed/models/payload_enriched/health_feature_ablation/selected_source_agnostic_model_metadata.json"
+  selected_risk_scores_csv: "data/processed/models/payload_enriched/health_feature_ablation/selected_source_agnostic_risk_scores.csv"
+  reward_baseline_csv: "data/processed/reward_baseline_us_2025.csv"
+
+output:
+  rl_processed_dir: "data/processed/rl"
+  mdp_state_table_csv: "data/processed/rl/mdp_state_table.csv"
+  mdp_transition_dataset_csv: "data/processed/rl/mdp_transition_dataset.csv"
+  mdp_transition_summary_csv: "data/processed/rl/mdp_transition_summary.csv"
+  mdp_state_bucket_summary_csv: "data/processed/rl/mdp_state_bucket_summary.csv"
+  report_md: "reports/mdp_transition_dataset_review.md"
+  empirical_transition_model_csv: "data/processed/rl/empirical_transition_model.csv"
+  transition_fallback_model_csv: "data/processed/rl/transition_fallback_model.csv"
+  empirical_transition_report_md: "reports/empirical_transition_model_review.md"
+  policy_simulation_results_csv: "data/processed/rl/policy_simulation_results.csv"
+  policy_simulation_trace_csv: "data/processed/rl/policy_simulation_trace.csv"
+  cow_replacement_env_report_md: "reports/cow_replacement_env_smoke_test_report.md"
+  mdp_reward_table_csv: "data/processed/rl/mdp_reward_table.csv"
+  mdp_reward_report_md: "reports/mdp_reward_table_review.md"
+  mdp_value_iteration_result_csv: "data/processed/rl/mdp_value_iteration_result.csv"
+  optimal_policy_table_csv: "data/processed/rl/optimal_policy_table.csv"
+  mdp_policy_report_md: "reports/mdp_policy_decision_report.md"
+  mdp_scenario_results_csv: "data/processed/rl/mdp_scenario_results.csv"
+  mdp_scenario_policy_comparison_csv: "data/processed/rl/mdp_scenario_policy_comparison.csv"
+  mdp_scenario_report_md: "reports/mdp_scenario_analysis_report.md"
+  rl_algorithm_readiness_csv: "data/processed/rl/rl_algorithm_readiness.csv"
+  rl_algorithm_readiness_report_md: "reports/rl_algorithm_readiness_report.md"
+  rl_algorithm_comparison_csv: "data/processed/rl/rl_algorithm_comparison_results.csv"
+  rl_algorithm_policy_table_csv: "data/processed/rl/rl_algorithm_policy_table.csv"
+  rl_algorithm_comparison_report_md: "reports/rl_algorithm_comparison_report.md"
+  sb3_training_results_csv: "data/processed/rl/sb3_training_results.csv"
+  sb3_policy_table_csv: "data/processed/rl/sb3_policy_table.csv"
+  sb3_eval_episodes_csv: "data/processed/rl/sb3_eval_episodes.csv"
+  sb3_training_report_md: "reports/sb3_ppo_dqn_training_report.md"
+  sb3_model_dir: "Model/rl/sb3"
+
+time:
+  step: "1_month"
+  nominal_step_days: 30
+  min_next_snapshot_gap_days: 20
+  max_next_snapshot_gap_days: 45
+  max_episode_months: 120
+
+actions:
+  keep:
+    id: 0
+    terminal: false
+  cull:
+    id: 1
+    terminal: true
+    terminal_reason: "agent_cull"
+
+state:
+  numeric_columns:
+    - "laktasyon_no"
+    - "parite"
+    - "dim"
+    - "dim_month"
+    - "yas_gun"
+    - "gebe_mi"
+    - "servis_sayisi"
+    - "son_servis_gun"
+    - "daily_milk_kg"
+    - "milk_trend"
+    - "health_count_90"
+    - "mastitis_flag"
+    - "lameness_flag"
+    - "cell_risk_flag"
+    - "cull_risk_90d"
+    - "cull_risk_30d"
+  categorical_columns:
+    - "laktasyon_evresi"
+    - "parite_grup"
+    - "dim_band"
+    - "milk_level_band"
+    - "milk_trend_band"
+    - "health_risk_band"
+    - "risk_band"
+  metadata_columns:
+    - "snapshot_id"
+    - "source_code"
+    - "external_animal_id"
+    - "canonical_animal_id"
+    - "referans_tarih"
+    - "observation_start"
+    - "observation_end"
+    - "first_cull_date"
+    - "split"
+  leakage_excluded_columns:
+    - "first_cull_date"
+    - "cull_30g"
+    - "cull_60g"
+    - "cull_90g"
+    - "cull_within_30d"
+    - "cull_within_60d"
+    - "cull_within_90d"
+    - "label_30d_observed"
+    - "label_60d_observed"
+    - "label_90d_observed"
+    - "culling_reason_group"
+    - "primary_culling_reason"
+
+milk:
+  daily_milk_priority:
+    - "son30_ortalama_sut"
+    - "milk_avg_60"
+    - "milk_avg_90"
+  trend_priority:
+    - "sut_trend_7g"
+    - "milk_trend_30_vs_prev30"
+  imputation_group_columns:
+    - "source_code"
+    - "laktasyon_evresi"
+
+risk_score:
+  source: "selected_source_agnostic_catboost"
+  target: "cull_within_90d"
+  monthly_conversion: "p30 = 1 - (1 - p90) ** (1 / 3)"
+  use_model_artifact_for_full_snapshot_scoring: true
+
+discretization:
+  dim_band:
+    bins: [-1, 60, 150, 305, 100000]
+    labels: ["fresh_0_60", "mid_61_150", "late_151_305", "extended_306_plus"]
+  milk_level_band:
+    bins: [-100000, 15, 25, 35, 100000]
+    labels: ["low", "medium", "high", "very_high"]
+  milk_trend_band:
+    bins: [-100000, -2, 2, 100000]
+    labels: ["declining", "stable", "rising"]
+  health_risk_band:
+    bins: [-1, 0.5, 2.5, 100000]
+    labels: ["none", "moderate", "high"]
+  risk_band:
+    bins: [0, 0.05, 0.10, 0.20, 0.35, 0.50, 1.000001]
+    labels: ["0_5", "5_10", "10_20", "20_35", "35_50", "50_100"]
+
+transition:
+  observed_keep_action_only: true
+  include_deterministic_cull_action_rows: true
+  cull_terminal_label_column: "cull_within_30d"
+  cull_terminal_observed_column: "label_30d_observed"
+  state_bucket_columns:
+    exact:
+      - "laktasyon_evresi"
+      - "parite_grup"
+      - "dim_band"
+      - "milk_level_band"
+      - "milk_trend_band"
+      - "health_risk_band"
+      - "risk_band"
+    no_risk:
+      - "laktasyon_evresi"
+      - "parite_grup"
+      - "dim_band"
+      - "milk_level_band"
+      - "milk_trend_band"
+      - "health_risk_band"
+    stage_parity:
+      - "laktasyon_evresi"
+      - "parite_grup"
+  fallback_order:
+    - "state_bucket_exact"
+    - "state_bucket_no_risk"
+    - "state_bucket_stage_parity"
+    - "global"
+
+reward:
+  scenario_code: "baseline_us_2025_mixed_source_v1"
+  parameter_file: "data/processed/reward_baseline_us_2025.csv"
+  days_in_month: 30.4375
+  keep_formula: "milk_revenue_month - maintenance_cost_month - health_risk_cost_month - reproduction_risk_cost_month - expected_culling_risk_cost_month"
+  cull_formula: "cull_sale_value - replacement_cost - disposal_or_transaction_cost"
+  disposal_or_transaction_cost: 0.0
+  coefficients:
+    health_event_monthly_fraction: 0.333333
+    mastitis_flag_cost_fraction: 0.25
+    lameness_flag_cost_fraction: 0.25
+    cell_risk_flag_cost_fraction: 0.15
+    extra_service_threshold: 2
+    open_cow_dim_threshold: 150
+    open_cow_penalty_service_equivalent: 1.0
+    expected_culling_risk_cost_fraction: 0.25
+  notes: "Reward values are not hard-coded in transition dataset; this config only records the scenario contract."
+
+simulation:
+  random_seed: 42
+  initial_state_rule: "first_snapshot_per_animal"
+  max_episodes: 332
+  policies:
+    keep_all:
+      enabled: true
+    cull_all_now:
+      enabled: true
+    risk_threshold:
+      enabled: true
+      risk_column: "cull_risk_90d"
+      threshold: 0.35
+    milk_margin_threshold:
+      enabled: true
+      min_monthly_margin: 0.0
+    random_policy:
+      enabled: true
+      cull_probability: 0.05
+
+mdp:
+  state_column: "state_bucket_exact"
+  actions:
+    - "keep"
+    - "cull"
+  discount_factor: 0.97
+  convergence_tolerance: 0.0001
+  max_iterations: 1000
+  min_transition_support_for_exact: 5
+  terminal_value: 0.0
+  tie_break_action: "keep"
+  scenario_analysis:
+    enabled: true
+    scenarios:
+      baseline:
+        description: "Base reward parameters from reward_baseline_us_2025.csv"
+        milk_price_multiplier: 1.0
+        maintenance_cost_multiplier: 1.0
+        replacement_cost_multiplier: 1.0
+        cull_sale_value_multiplier: 1.0
+        treatment_cost_multiplier: 1.0
+        insemination_cost_multiplier: 1.0
+        discount_factor: 0.97
+      high_milk_price:
+        description: "Milk price +20%"
+        milk_price_multiplier: 1.2
+        maintenance_cost_multiplier: 1.0
+        replacement_cost_multiplier: 1.0
+        cull_sale_value_multiplier: 1.0
+        treatment_cost_multiplier: 1.0
+        insemination_cost_multiplier: 1.0
+        discount_factor: 0.97
+      low_milk_price:
+        description: "Milk price -20%"
+        milk_price_multiplier: 0.8
+        maintenance_cost_multiplier: 1.0
+        replacement_cost_multiplier: 1.0
+        cull_sale_value_multiplier: 1.0
+        treatment_cost_multiplier: 1.0
+        insemination_cost_multiplier: 1.0
+        discount_factor: 0.97
+      high_replacement_cost:
+        description: "Replacement cost +20%"
+        milk_price_multiplier: 1.0
+        maintenance_cost_multiplier: 1.0
+        replacement_cost_multiplier: 1.2
+        cull_sale_value_multiplier: 1.0
+        treatment_cost_multiplier: 1.0
+        insemination_cost_multiplier: 1.0
+        discount_factor: 0.97
+      low_replacement_cost:
+        description: "Replacement cost -20%"
+        milk_price_multiplier: 1.0
+        maintenance_cost_multiplier: 1.0
+        replacement_cost_multiplier: 0.8
+        cull_sale_value_multiplier: 1.0
+        treatment_cost_multiplier: 1.0
+        insemination_cost_multiplier: 1.0
+        discount_factor: 0.97
+      high_cull_sale_value:
+        description: "Cull sale value +20%"
+        milk_price_multiplier: 1.0
+        maintenance_cost_multiplier: 1.0
+        replacement_cost_multiplier: 1.0
+        cull_sale_value_multiplier: 1.2
+        treatment_cost_multiplier: 1.0
+        insemination_cost_multiplier: 1.0
+        discount_factor: 0.97
+      low_cull_sale_value:
+        description: "Cull sale value -20%"
+        milk_price_multiplier: 1.0
+        maintenance_cost_multiplier: 1.0
+        replacement_cost_multiplier: 1.0
+        cull_sale_value_multiplier: 0.8
+        treatment_cost_multiplier: 1.0
+        insemination_cost_multiplier: 1.0
+        discount_factor: 0.97
+      lower_discount:
+        description: "Lower long-term value weight"
+        milk_price_multiplier: 1.0
+        maintenance_cost_multiplier: 1.0
+        replacement_cost_multiplier: 1.0
+        cull_sale_value_multiplier: 1.0
+        treatment_cost_multiplier: 1.0
+        insemination_cost_multiplier: 1.0
+        discount_factor: 0.90
+      higher_discount:
+        description: "Higher long-term value weight"
+        milk_price_multiplier: 1.0
+        maintenance_cost_multiplier: 1.0
+        replacement_cost_multiplier: 1.0
+        cull_sale_value_multiplier: 1.0
+        treatment_cost_multiplier: 1.0
+        insemination_cost_multiplier: 1.0
+        discount_factor: 0.99
+
+rl_experiments:
+  random_seed: 42
+  offline_rl:
+    logged_action_required: true
+    require_real_behavior_policy: true
+    generated_cull_rows_are_not_logged_actions: true
+  evaluation:
+    initial_state_weighting: "first_snapshot_per_animal"
+    policy_value_tolerance: 0.0001
+    policy_value_max_iterations: 1000
+  algorithms:
+    mdp_value_iteration:
+      enabled: true
+      experiment_type: "model_based_exact"
+    keep_all:
+      enabled: true
+      experiment_type: "heuristic"
+    cull_all_now:
+      enabled: true
+      experiment_type: "heuristic"
+    risk_threshold:
+      enabled: true
+      experiment_type: "heuristic"
+      risk_column: "mean_cull_risk_90d"
+      threshold: 0.35
+    milk_margin_threshold:
+      enabled: true
+      experiment_type: "heuristic"
+      min_monthly_margin: 0.0
+    random_policy:
+      enabled: true
+      experiment_type: "heuristic_stochastic"
+      cull_probability: 0.05
+    tabular_q_learning:
+      enabled: true
+      experiment_type: "simulator_rl"
+      episodes: 4000
+      max_steps: 60
+      alpha: 0.18
+      epsilon_start: 0.35
+      epsilon_end: 0.03
+      epsilon_decay: 0.999
+    tabular_ppo_smoke:
+      enabled: true
+      experiment_type: "simulator_rl"
+      iterations: 140
+      episodes_per_iteration: 24
+      max_steps: 48
+      learning_rate: 0.015
+      value_learning_rate: 0.08
+      clip_ratio: 0.2
+      entropy_bonus: 0.002
+    dqn_style_fqi_mlp:
+      enabled: true
+      experiment_type: "simulator_rl_approximate"
+      fitted_iterations: 10
+      hidden_layer_sizes: [32]
+      max_iter: 250
+    cql:
+      enabled: false
+      experiment_type: "offline_rl"
+      disabled_reason: "not eligible until real logged keep/cull actions and behavior-policy support exist"
+    iql:
+      enabled: false
+      experiment_type: "offline_rl"
+      disabled_reason: "not eligible until real logged keep/cull actions and behavior-policy support exist"
+    bcq:
+      enabled: false
+      experiment_type: "offline_rl"
+      disabled_reason: "not eligible until real logged keep/cull actions and behavior-policy support exist"
+    td3:
+      enabled: false
+      experiment_type: "continuous_action_rl"
+      disabled_reason: "current action space is discrete keep/cull"
+    sac:
+      enabled: false
+      experiment_type: "continuous_action_rl"
+      disabled_reason: "current action space is discrete keep/cull"
+
+stable_baselines3:
+  enabled: true
+  random_seed: 42
+  max_episode_steps: 60
+  eval_episodes: 100
+  observation:
+    numeric_columns:
+      - "mean_daily_milk_kg"
+      - "mean_cull_risk_90d"
+      - "mean_cull_risk_30d"
+      - "mean_health_risk_score"
+      - "mean_dim"
+      - "state_support"
+      - "reward_keep"
+      - "reward_cull"
+    categorical_columns:
+      - "laktasyon_evresi"
+      - "parite_grup"
+      - "dim_band"
+      - "milk_level_band"
+      - "milk_trend_band"
+      - "health_risk_band"
+      - "risk_band"
+  algorithms:
+    PPO:
+      enabled: true
+      total_timesteps: 5000
+      learning_rate: 0.0003
+      n_steps: 128
+      batch_size: 32
+      n_epochs: 10
+      ent_coef: 0.001
+      net_arch: [64, 64]
+    DQN:
+      enabled: true
+      total_timesteps: 5000
+      learning_rate: 0.0005
+      buffer_size: 20000
+      learning_starts: 500
+      batch_size: 32
+      train_freq: 4
+      target_update_interval: 500
+      exploration_fraction: 0.25
+      exploration_final_eps: 0.05
+      net_arch: [64, 64]
