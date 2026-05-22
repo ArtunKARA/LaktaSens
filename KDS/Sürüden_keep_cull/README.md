@@ -407,19 +407,33 @@ eğitim için `config/rl_env_rules.yaml` altındaki
 ## 19. RL Deney Notebook ve Model Code Runner
 
 RL deneylerini parametre değiştirerek notebook veya terminalden çalıştırmak için
-ayrı bir code runner katmanı eklendi:
+ayrı bir code runner katmanı eklendi. `--mode model` ile çalışan modeller
+artık eski `scripts/` dosyalarına paslamaz; algoritma kodu doğrudan
+`Model/rl/code/models/*.py` içinde durur.
 
 - `Model/rl/code/README.md`
 - `Model/rl/code/experiment_parameters.yaml`
+- `Model/rl/code/training_environment.py`
+- `Model/rl/code/models/common.py`
+- `Model/rl/code/model_registry.py`
 - `Model/rl/code/experiment_runner.py`
 - `Model/rl/code/run_all_experiments.py`
+- `Model/rl/code/models/`
 - `notebooks/rl_experiment_runner.ipynb`
+
+Model kodlari `models/` altinda ailelere ayrildi:
+
+- `models/model_based/`: MDP/value iteration
+- `models/tabular/`: tabular Q-learning ve PPO-style smoke
+- `models/approximate/`: fitted Q / MLP yaklasimlari
+- `models/stable_baselines/`: SB3 PPO/DQN modelleri
+- `models/offline/`: CQL/IQL/BCQ uygunluk placeholder'lari
 
 Notebook üzerinden:
 
 1. `notebooks/rl_experiment_runner.ipynb` dosyasını aç.
 2. Parametre hücresinde MDP, tabular RL ve SB3 timestep/eval değerlerini değiştir.
-3. İlgili hücreleri çalıştır.
+3. İlgili hücreleri çalıştır veya model registry hücresinden tek model seç.
 
 Terminalden:
 
@@ -427,6 +441,14 @@ Terminalden:
 python Model/rl/code/run_all_experiments.py --mode mdp
 python Model/rl/code/run_all_experiments.py --mode compare
 python Model/rl/code/run_all_experiments.py --mode sb3 --sb3-python /tmp/laktasens-rl-venv/bin/python
+```
+
+Tek model:
+
+```bash
+python Model/rl/code/run_all_experiments.py --mode list-models
+python Model/rl/code/run_all_experiments.py --mode model --model mdp_value_iteration
+python Model/rl/code/run_all_experiments.py --mode model --model sb3_ppo --sb3-python /tmp/laktasens-rl-venv/bin/python
 ```
 
 Tüm pipeline:

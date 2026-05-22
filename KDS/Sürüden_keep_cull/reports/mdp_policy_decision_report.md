@@ -1,6 +1,6 @@
 # MDP Policy Decision Report
 
-- Generated at: `2026-05-21T00:31:12`
+- Generated at: `2026-05-21T14:22:25`
 - Method: `value_iteration`
 - Discount factor: `0.97`
 - Iterations: `214`
@@ -57,6 +57,4 @@
 
 ## Notes
 
-- Terminal value is zero; cull reward is immediate sale value minus replacement cost.
 - Keep action future value uses empirical transition probabilities and configured fallback.
-- This is a model-based MDP solution over discretized state buckets, not a production policy.
