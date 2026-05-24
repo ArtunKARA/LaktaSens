@@ -98,7 +98,20 @@ apiClient.interceptors.request.use((config) => {
 
 export function getApiMessage(error: unknown) {
   if (axios.isAxiosError(error)) {
-    const responseMessage = error.response?.data?.message || error.response?.data?.error;
+    const responseData = error.response?.data;
+    const responseMessage =
+      typeof responseData === 'string' ? responseData : responseData?.message || responseData?.error;
+
+    if (error.response?.status === 404) {
+      const messageText = responseMessage ? String(responseMessage) : '';
+
+      if (messageText.includes('Cannot GET') || messageText.includes('<!DOCTYPE html>')) {
+        return 'Bu API adresi calisan sunucuda yok. API sunucusunu yeniden baslatip tekrar deneyin.';
+      }
+
+      return 'API adresi bulunamadi. Sunucuyu yeniden baslatip tekrar deneyin.';
+    }
+
     if (responseMessage) {
       return String(responseMessage);
     }
@@ -110,6 +123,8 @@ export function getApiMessage(error: unknown) {
     if (!error.response) {
       return 'API sunucusuna ulasilamadi.';
     }
+
+    return `API hatasi: ${error.response.status}`;
   }
 
   return 'Beklenmeyen bir hata olustu.';

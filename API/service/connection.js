@@ -1,4 +1,8 @@
 const sql = require("mssql");
+const path = require("path");
+
+require("dotenv").config({ path: path.resolve(__dirname, "../.env") });
+require("dotenv").config({ path: path.resolve(__dirname, "../../.env") });
 
 function optionalNumber(value) {
   const numberValue = Number(value);
@@ -13,11 +17,23 @@ function optionalBoolean(value, fallback) {
   return String(value).toLowerCase() === "true";
 }
 
+function requiredConfigValue(...names) {
+  for (const name of names) {
+    const value = process.env[name];
+
+    if (value !== undefined && value !== null && value !== "") {
+      return value;
+    }
+  }
+
+  throw new Error(`Eksik veritabani env degiskeni: ${names.join(" veya ")}`);
+}
+
 const config = {
-  user: process.env.MSSQL_USER || process.env.DB_USER || "laktasensAPI",
-  password: process.env.MSSQL_PASSWORD || process.env.DB_PASSWORD || "laktasensAPI",
-  server: process.env.MSSQL_SERVER || process.env.DB_SERVER || "localhost",
-  database: process.env.MSSQL_DATABASE || process.env.DB_DATABASE || "laktasens",
+  user: requiredConfigValue("MSSQL_USER", "DB_USER"),
+  password: requiredConfigValue("MSSQL_PASSWORD", "DB_PASSWORD"),
+  server: requiredConfigValue("MSSQL_SERVER", "DB_SERVER"),
+  database: requiredConfigValue("MSSQL_DATABASE", "DB_DATABASE"),
   options: {
     encrypt: optionalBoolean(process.env.MSSQL_ENCRYPT || process.env.DB_ENCRYPT, false),
     trustServerCertificate: optionalBoolean(

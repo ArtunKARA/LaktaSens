@@ -52,6 +52,13 @@ export interface MilkValues {
   qualitySource?: string;
 }
 
+export interface MilkRecord {
+  id: number;
+  liters: number;
+  timestamp: string;
+  machineId?: number | null;
+}
+
 export interface CowSummary {
   id: number;
   qr: string;
@@ -82,6 +89,70 @@ export interface ShipmentSummary {
   expectedDeliveryAt?: string;
   farmerCompanyName?: string;
   supplierCompanyName?: string;
+}
+
+export type AdminApplicationType = 'company' | 'feed';
+export type WorkflowDecision = 'approve' | 'reject';
+
+export interface AdminApplication {
+  id: string;
+  type: AdminApplicationType;
+  targetId: number;
+  title: string;
+  subtitle?: string;
+  status?: string;
+  statusName?: string;
+  companyTypeName?: string;
+  phone?: string;
+  email?: string;
+  address?: string;
+  city?: string;
+  district?: string;
+  companyName?: string;
+  isCustomFeed?: boolean;
+  unitPrice?: number | null;
+  minOrderKg?: number | null;
+  maxOrderKg?: number | null;
+  description?: string;
+  rejectedBefore?: number;
+  rejectedReason?: string;
+}
+
+export interface SupplierOrder {
+  id: number;
+  offerId?: number;
+  title: string;
+  farmerCompanyName?: string;
+  feedName?: string;
+  amountKg: number;
+  unitPrice: number;
+  totalAmount: number;
+  date?: string;
+  status?: string;
+  statusName?: string;
+  sourceType?: string;
+  canApprove?: boolean;
+  canReject?: boolean;
+}
+
+export interface SupplierOffer {
+  id: number;
+  auctionId?: number;
+  title: string;
+  feedName?: string;
+  amountKg: number;
+  unitPrice: number;
+  totalAmount: number;
+  date?: string;
+  status?: string;
+  statusName?: string;
+  auctionStatus?: string;
+  auctionStatusName?: string;
+  auctionStartsAt?: string;
+  auctionEndsAt?: string;
+  requestedKg?: number;
+  remainingKg?: number;
+  canWithdraw?: boolean;
 }
 
 export interface Suggestion {

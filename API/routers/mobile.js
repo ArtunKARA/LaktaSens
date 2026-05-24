@@ -1,5 +1,7 @@
 const express = require("express");
 const {
+  adminApplicationAction,
+  adminApplications,
   authRequired,
   aiSuggestions,
   cowDetail,
@@ -14,6 +16,10 @@ const {
   scanQr,
   shipmentDetail,
   shipments,
+  supplierOfferAction,
+  supplierOffers,
+  supplierOrderAction,
+  supplierOrders,
 } = require("../controllers/mobile-controller.js");
 
 const router = express.Router();
@@ -31,5 +37,11 @@ router.get("/cows/:cowId/ai-suggestions", authRequired, aiSuggestions);
 router.get("/feed-stocks", authRequired, feedStocks);
 router.get("/shipments", authRequired, shipments);
 router.get("/shipments/:shipmentId", authRequired, shipmentDetail);
+router.get("/admin/applications", authRequired, adminApplications);
+router.post("/admin/applications/:type/:id/action", authRequired, adminApplicationAction);
+router.get("/supplier/orders", authRequired, supplierOrders);
+router.post("/supplier/orders/:orderId/action", authRequired, supplierOrderAction);
+router.get("/supplier/offers", authRequired, supplierOffers);
+router.post("/supplier/offers/:offerId/action", authRequired, supplierOfferAction);
 
 module.exports = router;

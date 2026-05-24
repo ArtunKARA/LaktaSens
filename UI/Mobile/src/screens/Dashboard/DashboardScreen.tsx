@@ -185,6 +185,8 @@ export function DashboardScreen({ navigation }: MainScreenProps<'Dashboard'>) {
         ) : role === 't' ? (
           <>
             <AppButton label="Teslimat QR" icon="qr-code-outline" onPress={() => navigation.navigate('QRScanner')} />
+            <AppButton label="Siparisler" icon="cart-outline" variant="secondary" onPress={() => navigation.navigate('SupplierOrders')} />
+            <AppButton label="Teklifler" icon="pricetag-outline" variant="secondary" onPress={() => navigation.navigate('SupplierOffers')} />
             <AppButton
               label="Operasyon Onerileri"
               icon="bar-chart-outline"
@@ -194,6 +196,7 @@ export function DashboardScreen({ navigation }: MainScreenProps<'Dashboard'>) {
           </>
         ) : (
           <>
+            <AppButton label="Basvurular" icon="clipboard-outline" onPress={() => navigation.navigate('AdminApplications')} />
             <AppButton label="Yonetim Onerileri" icon="document-text-outline" onPress={() => navigation.navigate('AISuggestions', { cowId: 'ADMIN' })} />
             <AppButton label="QR Kontrol" icon="qr-code-outline" variant="secondary" onPress={() => navigation.navigate('QRScanner')} />
           </>

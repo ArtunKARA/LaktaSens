@@ -67,6 +67,70 @@ function companyTypeName(type) {
   return "Ciftlik";
 }
 
+function orderStatusName(status) {
+  if (status === "b") {
+    return "Beklemede";
+  }
+
+  if (status === "o") {
+    return "Onaylandi";
+  }
+
+  if (status === "i") {
+    return "Iptal";
+  }
+
+  if (status === "r") {
+    return "Reddedildi";
+  }
+
+  if (status === "t") {
+    return "Tamamlandi";
+  }
+
+  return "Bilinmiyor";
+}
+
+function offerStatusName(status) {
+  if (status === "b") {
+    return "Beklemede";
+  }
+
+  if (status === "s") {
+    return "Secildi";
+  }
+
+  if (status === "r") {
+    return "Reddedildi";
+  }
+
+  if (status === "c") {
+    return "Geri cekildi";
+  }
+
+  return "Bilinmiyor";
+}
+
+function auctionStatusName(status) {
+  if (status === "a") {
+    return "Acik";
+  }
+
+  if (status === "k") {
+    return "Kapali";
+  }
+
+  if (status === "t") {
+    return "Tamamlandi";
+  }
+
+  if (status === "i") {
+    return "Iptal";
+  }
+
+  return "Bilinmiyor";
+}
+
 function authorityName(authority) {
   if (authority === "a") {
     return "Firma yetkilisi";
@@ -236,6 +300,20 @@ function isAfter(left, right) {
 function serverError(res, error, context) {
   console.error(context, error);
   return res.status(500).json({ error: "Internal server error" });
+}
+
+function roleForbidden(res, expectedRole) {
+  const label = expectedRole === ROLE_ADMIN ? "Admin" : expectedRole === ROLE_SUPPLIER ? "Tedarikci" : "Ciftci";
+  return res.status(403).json({ error: `${label} yetkisi gerekli.` });
+}
+
+function ensureRole(req, res, expectedRole) {
+  if (req.mobileUser?.role !== expectedRole) {
+    roleForbidden(res, expectedRole);
+    return false;
+  }
+
+  return true;
 }
 
 function dashboardMetric(label, value, icon) {
@@ -1502,5 +1580,614 @@ exports.shipmentDetail = async (req, res) => {
     });
   } catch (error) {
     return serverError(res, error, "Mobile shipment detail failed:");
+  }
+};
+
+exports.adminApplications = async (req, res) => {
+  if (!ensureRole(req, res, ROLE_ADMIN)) {
+    return undefined;
+  }
+
+  const limit = Math.min(Math.max(toInteger(req.query.limit, 80), 1), 200);
+
+  try {
+    const pool = await poolPromise;
+    const [companyResult, feedResult] = await Promise.all([
+      pool.request().query(`
+        SELECT TOP (${limit})
+          F.firmaID,
+          F.firmaAdi,
+          F.firmaTur,
+          F.telefonNo,
+          F.firmaMail,
+          F.firmaAdresi,
+          F.hesapDurumu,
+          S.SehirIlceMahalleAdi AS sehirAdi,
+          I.SehirIlceMahalleAdi AS ilceAdi,
+          COUNT(R.redEdilenBaşvurularID) AS redSayisi,
+          (
+            SELECT TOP 1 R2.redNedeni
+            FROM [RedEdilenBaşvurularFirmalar] AS R2
+            WHERE R2.firmaID = F.firmaID
+            ORDER BY R2.redTarihi DESC, R2.redEdilenBaşvurularID DESC
+          ) AS sonRedNedeni
+        FROM firmalar AS F
+        LEFT JOIN [RedEdilenBaşvurularFirmalar] AS R ON F.firmaID = R.firmaID
+        LEFT JOIN bolgeler AS S ON F.sehirID = S.ID
+        LEFT JOIN bolgeler AS I ON F.ilceID = I.ID
+        WHERE F.hesapDurumu = 'b'
+          AND F.firmaTur IN ('c', 't')
+        GROUP BY
+          F.firmaID, F.firmaAdi, F.firmaTur, F.telefonNo, F.firmaMail,
+          F.firmaAdresi, F.hesapDurumu, S.SehirIlceMahalleAdi, I.SehirIlceMahalleAdi
+        ORDER BY F.firmaID DESC
+      `),
+      pool.request().query(`
+        SELECT TOP (${limit})
+          Y.yemID,
+          Y.yemAdi,
+          Y.ozelYem,
+          Y.durum,
+          Y.yemFirmaID,
+          Y.birimFiyat,
+          Y.minSiparisKg,
+          Y.maxSiparisKg,
+          Y.aciklama,
+          F.firmaAdi,
+          COUNT(R.redEdilenBaşvurularID) AS redSayisi,
+          (
+            SELECT TOP 1 R2.redNedeni
+            FROM [RedEdilenBaşvurularYem] AS R2
+            WHERE R2.yemID = Y.yemID
+            ORDER BY R2.redTarihi DESC, R2.redEdilenBaşvurularID DESC
+          ) AS sonRedNedeni
+        FROM YemMaddeleri AS Y
+        LEFT JOIN firmalar AS F ON Y.yemFirmaID = F.firmaID
+        LEFT JOIN [RedEdilenBaşvurularYem] AS R ON Y.yemID = R.yemID
+        WHERE Y.durum = 'b'
+        GROUP BY
+          Y.yemID, Y.yemAdi, Y.ozelYem, Y.durum, Y.yemFirmaID,
+          Y.birimFiyat, Y.minSiparisKg, Y.maxSiparisKg, Y.aciklama, F.firmaAdi
+        ORDER BY Y.yemID DESC
+      `),
+    ]);
+
+    const companyItems = companyResult.recordset.map((row) => ({
+      id: `company-${row.firmaID}`,
+      type: "company",
+      targetId: Number(row.firmaID),
+      title: row.firmaAdi,
+      subtitle: companyTypeName(row.firmaTur),
+      status: row.hesapDurumu,
+      statusName: statusName(row.hesapDurumu),
+      companyType: row.firmaTur,
+      companyTypeName: companyTypeName(row.firmaTur),
+      phone: row.telefonNo || undefined,
+      email: row.firmaMail || undefined,
+      address: row.firmaAdresi || undefined,
+      city: row.sehirAdi || undefined,
+      district: row.ilceAdi || undefined,
+      rejectedBefore: toInteger(row.redSayisi, 0),
+      rejectedReason: row.sonRedNedeni || undefined,
+    }));
+
+    const feedItems = feedResult.recordset.map((row) => ({
+      id: `feed-${row.yemID}`,
+      type: "feed",
+      targetId: Number(row.yemID),
+      title: row.yemAdi,
+      subtitle: row.firmaAdi || (row.ozelYem ? "Ozel yem" : "Standart yem"),
+      status: row.durum,
+      statusName: statusName(row.durum),
+      companyId: row.yemFirmaID ? Number(row.yemFirmaID) : undefined,
+      companyName: row.firmaAdi || undefined,
+      isCustomFeed: Boolean(row.ozelYem),
+      unitPrice: toNumber(row.birimFiyat, null),
+      minOrderKg: toNumber(row.minSiparisKg, null),
+      maxOrderKg: toNumber(row.maxSiparisKg, null),
+      description: row.aciklama || undefined,
+      rejectedBefore: toInteger(row.redSayisi, 0),
+      rejectedReason: row.sonRedNedeni || undefined,
+    }));
+
+    return res.json({
+      items: [...companyItems, ...feedItems],
+    });
+  } catch (error) {
+    return serverError(res, error, "Mobile admin applications failed:");
+  }
+};
+
+exports.adminApplicationAction = async (req, res) => {
+  if (!ensureRole(req, res, ROLE_ADMIN)) {
+    return undefined;
+  }
+
+  const type = cleanString(req.params.type).toLowerCase();
+  const targetId = toInteger(req.params.id, 0);
+  const action = cleanString(req.body?.action).toLowerCase();
+  const reason = cleanString(req.body?.reason) || "Mobil uygulama uzerinden reddedildi.";
+
+  if (!["company", "feed"].includes(type) || !targetId) {
+    return res.status(400).json({ error: "Basvuru tipi veya kodu gecersiz." });
+  }
+
+  if (!["approve", "reject"].includes(action)) {
+    return res.status(400).json({ error: "Aksiyon approve veya reject olmali." });
+  }
+
+  let transaction;
+
+  try {
+    const pool = await poolPromise;
+    transaction = new sql.Transaction(pool);
+    await transaction.begin();
+
+    if (type === "company") {
+      if (action === "approve") {
+        const updateResult = await transaction
+          .request()
+          .input("targetId", sql.Int, targetId)
+          .query(`
+            UPDATE firmalar
+            SET hesapDurumu = 'a'
+            WHERE firmaID = @targetId AND hesapDurumu = 'b';
+
+            UPDATE kullanicilar
+            SET hesapDurumu = 'a'
+            WHERE firmaID = @targetId AND hesapFirmaYetkisi = 'a';
+          `);
+
+        if (updateResult.rowsAffected[0] === 0) {
+          await transaction.rollback();
+          return res.status(404).json({ error: "Onaylanacak firma basvurusu bulunamadi." });
+        }
+      } else {
+        const updateResult = await transaction
+          .request()
+          .input("targetId", sql.Int, targetId)
+          .input("userId", sql.Int, Number(req.mobileUser.id))
+          .input("reason", sql.NVarChar(300), reason)
+          .query(`
+            UPDATE firmalar
+            SET hesapDurumu = 'p'
+            WHERE firmaID = @targetId AND hesapDurumu = 'b';
+
+            INSERT INTO [RedEdilenBaşvurularFirmalar] (firmaID, kullaniciID, redNedeni, redTarihi)
+            VALUES (@targetId, @userId, @reason, CAST(GETDATE() AS DATE));
+
+            UPDATE kullanicilar
+            SET hesapDurumu = 'p'
+            WHERE firmaID = @targetId;
+          `);
+
+        if (updateResult.rowsAffected[0] === 0) {
+          await transaction.rollback();
+          return res.status(404).json({ error: "Reddedilecek firma basvurusu bulunamadi." });
+        }
+      }
+    } else if (action === "approve") {
+      const updateResult = await transaction
+        .request()
+        .input("targetId", sql.Int, targetId)
+        .query(`
+          UPDATE YemMaddeleri
+          SET durum = 'a'
+          WHERE yemID = @targetId AND durum = 'b';
+        `);
+
+      if (updateResult.rowsAffected[0] === 0) {
+        await transaction.rollback();
+        return res.status(404).json({ error: "Onaylanacak yem basvurusu bulunamadi." });
+      }
+    } else {
+      const updateResult = await transaction
+        .request()
+        .input("targetId", sql.Int, targetId)
+        .input("userId", sql.Int, Number(req.mobileUser.id))
+        .input("reason", sql.NVarChar(300), reason)
+        .query(`
+          UPDATE YemMaddeleri
+          SET durum = 'p'
+          WHERE yemID = @targetId AND durum = 'b';
+
+          INSERT INTO [RedEdilenBaşvurularYem] (yemID, kullaniciID, redNedeni, redTarihi)
+          VALUES (@targetId, @userId, @reason, CAST(GETDATE() AS DATE));
+        `);
+
+      if (updateResult.rowsAffected[0] === 0) {
+        await transaction.rollback();
+        return res.status(404).json({ error: "Reddedilecek yem basvurusu bulunamadi." });
+      }
+    }
+
+    await transaction.commit();
+
+    return res.json({
+      message: action === "approve" ? "Basvuru onaylandi." : "Basvuru reddedildi.",
+    });
+  } catch (error) {
+    if (transaction) {
+      try {
+        await transaction.rollback();
+      } catch {
+        // Transaction may already be closed.
+      }
+    }
+
+    return serverError(res, error, "Mobile admin application action failed:");
+  }
+};
+
+exports.supplierOrders = async (req, res) => {
+  if (!ensureRole(req, res, ROLE_SUPPLIER)) {
+    return undefined;
+  }
+
+  const limit = Math.min(Math.max(toInteger(req.query.limit, 80), 1), 200);
+  const companyId = toInteger(req.mobileUser.companyId, 0);
+
+  if (!companyId) {
+    return res.status(400).json({ error: "Tedarikci firma bilgisi bulunamadi." });
+  }
+
+  try {
+    const pool = await poolPromise;
+    const result = await pool
+      .request()
+      .input("firmaID", sql.Int, companyId)
+      .query(`
+        SELECT TOP (${limit})
+          S.siparisID,
+          S.teklifID,
+          S.tedarikciID AS siparisTedarikciID,
+          S.olusturanFirmaID,
+          S.siparisTarihi,
+          S.toplamTutar,
+          S.kaynakTipi,
+          S.durum,
+          COALESCE(S.tedarikciID, T.tedarikciID) AS tedarikciID,
+          CF.firmaAdi AS ciftciFirmaAdi,
+          SK.yemID,
+          Y.yemAdi,
+          SK.miktarKg,
+          SK.birimFiyat
+        FROM Siparisler AS S
+        LEFT JOIN Teklifler AS T ON S.teklifID = T.teklifID
+        INNER JOIN firmalar AS CF ON S.olusturanFirmaID = CF.firmaID
+        INNER JOIN SiparisKalemleri AS SK ON S.siparisID = SK.siparisID
+        INNER JOIN YemMaddeleri AS Y ON SK.yemID = Y.yemID
+        WHERE COALESCE(S.tedarikciID, T.tedarikciID) = @firmaID
+        ORDER BY S.siparisTarihi DESC, S.siparisID DESC
+      `);
+
+    return res.json({
+      items: result.recordset.map((row) => ({
+        id: Number(row.siparisID),
+        offerId: row.teklifID ? Number(row.teklifID) : undefined,
+        title: row.yemAdi,
+        farmerCompanyName: row.ciftciFirmaAdi,
+        feedId: Number(row.yemID),
+        feedName: row.yemAdi,
+        amountKg: toNumber(row.miktarKg, 0),
+        unitPrice: toNumber(row.birimFiyat, 0),
+        totalAmount: toNumber(row.toplamTutar, 0),
+        date: isoDate(row.siparisTarihi),
+        status: row.durum,
+        statusName: orderStatusName(row.durum),
+        sourceType: row.kaynakTipi || undefined,
+        canApprove: row.durum === "b",
+        canReject: row.durum === "b",
+      })),
+    });
+  } catch (error) {
+    return serverError(res, error, "Mobile supplier orders failed:");
+  }
+};
+
+exports.supplierOrderAction = async (req, res) => {
+  if (!ensureRole(req, res, ROLE_SUPPLIER)) {
+    return undefined;
+  }
+
+  const orderId = toInteger(req.params.orderId, 0);
+  const companyId = toInteger(req.mobileUser.companyId, 0);
+  const userId = toInteger(req.mobileUser.id, 0);
+  const action = cleanString(req.body?.action).toLowerCase();
+
+  if (!orderId || !companyId || !userId) {
+    return res.status(400).json({ error: "Siparis veya tedarikci bilgisi gecersiz." });
+  }
+
+  if (!["approve", "reject"].includes(action)) {
+    return res.status(400).json({ error: "Aksiyon approve veya reject olmali." });
+  }
+
+  let transaction;
+
+  try {
+    const pool = await poolPromise;
+
+    if (action === "approve") {
+      const orderResult = await pool
+        .request()
+        .input("orderId", sql.Int, orderId)
+        .input("firmaID", sql.Int, companyId)
+        .query(`
+          SELECT S.siparisID, S.durum
+          FROM Siparisler AS S
+          LEFT JOIN Teklifler AS T ON S.teklifID = T.teklifID
+          WHERE S.siparisID = @orderId
+            AND COALESCE(S.tedarikciID, T.tedarikciID) = @firmaID
+        `);
+
+      const order = orderResult.recordset[0];
+
+      if (!order) {
+        return res.status(404).json({ error: "Siparis bulunamadi." });
+      }
+
+      if (order.durum !== "b") {
+        return res.status(400).json({ error: "Siparis onaylanabilir durumda degil." });
+      }
+
+      await pool
+        .request()
+        .input("siparisID", sql.Int, orderId)
+        .input("yeniDurum", sql.Char(1), "o")
+        .input("yapanKullaniciID", sql.Int, userId)
+        .execute("sp_SiparisDurumGuncelle");
+
+      return res.json({ message: "Siparis onaylandi." });
+    }
+
+    transaction = new sql.Transaction(pool);
+    await transaction.begin();
+
+    const orderResult = await transaction
+      .request()
+      .input("orderId", sql.Int, orderId)
+      .input("firmaID", sql.Int, companyId)
+      .query(`
+        SELECT
+          S.siparisID,
+          S.durum AS siparisDurum,
+          S.teklifID,
+          T.teklifMiktarKg,
+          T.ihaleID,
+          I.durum AS ihaleDurum,
+          I.ihaleBitisTarihi
+        FROM Siparisler AS S
+        LEFT JOIN Teklifler AS T ON S.teklifID = T.teklifID
+        LEFT JOIN Ihaleler AS I ON T.ihaleID = I.ihaleID
+        WHERE S.siparisID = @orderId
+          AND COALESCE(S.tedarikciID, T.tedarikciID) = @firmaID
+      `);
+
+    const order = orderResult.recordset[0];
+
+    if (!order) {
+      await transaction.rollback();
+      return res.status(404).json({ error: "Siparis bulunamadi." });
+    }
+
+    if (order.siparisDurum !== "b") {
+      await transaction.rollback();
+      return res.status(400).json({ error: "Siparis reddedilebilir durumda degil." });
+    }
+
+    await transaction
+      .request()
+      .input("siparisID", sql.Int, orderId)
+      .input("yeniDurum", sql.Char(1), "r")
+      .input("yapanKullaniciID", sql.Int, userId)
+      .execute("sp_SiparisDurumGuncelle");
+
+    if (order.teklifID) {
+      await transaction
+        .request()
+        .input("offerId", sql.Int, order.teklifID)
+        .query(`
+          UPDATE Teklifler
+          SET durum = 'r'
+          WHERE teklifID = @offerId
+        `);
+
+      await transaction
+        .request()
+        .input("auctionId", sql.Int, order.ihaleID)
+        .input("amountKg", sql.Decimal(12, 2), order.teklifMiktarKg)
+        .query(`
+          UPDATE IhaleKalemleri
+          SET kalanMiktarKg = kalanMiktarKg + @amountKg
+          WHERE ihaleID = @auctionId
+        `);
+
+      if (order.ihaleDurum === "t" && order.ihaleBitisTarihi && new Date(order.ihaleBitisTarihi).getTime() >= Date.now()) {
+        await transaction
+          .request()
+          .input("auctionId", sql.Int, order.ihaleID)
+          .query(`
+            UPDATE Ihaleler
+            SET durum = 'a'
+            WHERE ihaleID = @auctionId
+          `);
+      }
+    }
+
+    await transaction.commit();
+    return res.json({ message: "Siparis reddedildi." });
+  } catch (error) {
+    if (transaction) {
+      try {
+        await transaction.rollback();
+      } catch {
+        // Transaction may already be closed.
+      }
+    }
+
+    return serverError(res, error, "Mobile supplier order action failed:");
+  }
+};
+
+exports.supplierOffers = async (req, res) => {
+  if (!ensureRole(req, res, ROLE_SUPPLIER)) {
+    return undefined;
+  }
+
+  const limit = Math.min(Math.max(toInteger(req.query.limit, 80), 1), 200);
+  const companyId = toInteger(req.mobileUser.companyId, 0);
+
+  if (!companyId) {
+    return res.status(400).json({ error: "Tedarikci firma bilgisi bulunamadi." });
+  }
+
+  try {
+    const pool = await poolPromise;
+    const result = await pool
+      .request()
+      .input("firmaID", sql.Int, companyId)
+      .query(`
+        SELECT TOP (${limit})
+          T.teklifID,
+          T.ihaleID,
+          T.tedarikciID,
+          T.teklifMiktarKg,
+          T.birimFiyat,
+          T.toplamTutar,
+          T.teklifTarihi,
+          T.durum,
+          I.ihaleAdi,
+          I.ihaleBaslangicTarihi,
+          I.ihaleBitisTarihi,
+          I.durum AS ihaleDurum,
+          K.yemID,
+          Y.yemAdi,
+          K.talepMiktarKg,
+          K.kalanMiktarKg
+        FROM Teklifler AS T
+        INNER JOIN Ihaleler AS I ON T.ihaleID = I.ihaleID
+        INNER JOIN IhaleKalemleri AS K ON I.ihaleID = K.ihaleID
+        INNER JOIN YemMaddeleri AS Y ON K.yemID = Y.yemID
+        WHERE T.tedarikciID = @firmaID
+        ORDER BY T.teklifTarihi DESC, T.teklifID DESC
+      `);
+
+    return res.json({
+      items: result.recordset.map((row) => ({
+        id: Number(row.teklifID),
+        auctionId: Number(row.ihaleID),
+        title: row.ihaleAdi,
+        feedId: Number(row.yemID),
+        feedName: row.yemAdi,
+        amountKg: toNumber(row.teklifMiktarKg, 0),
+        unitPrice: toNumber(row.birimFiyat, 0),
+        totalAmount: toNumber(row.toplamTutar, 0),
+        date: isoDate(row.teklifTarihi),
+        status: row.durum,
+        statusName: offerStatusName(row.durum),
+        auctionStatus: row.ihaleDurum,
+        auctionStatusName: auctionStatusName(row.ihaleDurum),
+        auctionStartsAt: isoDate(row.ihaleBaslangicTarihi),
+        auctionEndsAt: isoDate(row.ihaleBitisTarihi),
+        requestedKg: toNumber(row.talepMiktarKg, 0),
+        remainingKg: toNumber(row.kalanMiktarKg, 0),
+        canWithdraw: row.durum === "b",
+      })),
+    });
+  } catch (error) {
+    return serverError(res, error, "Mobile supplier offers failed:");
+  }
+};
+
+exports.supplierOfferAction = async (req, res) => {
+  if (!ensureRole(req, res, ROLE_SUPPLIER)) {
+    return undefined;
+  }
+
+  const offerId = toInteger(req.params.offerId, 0);
+  const companyId = toInteger(req.mobileUser.companyId, 0);
+  const userId = toInteger(req.mobileUser.id, 0);
+  const action = cleanString(req.body?.action).toLowerCase();
+
+  if (!offerId || !companyId) {
+    return res.status(400).json({ error: "Teklif veya tedarikci bilgisi gecersiz." });
+  }
+
+  if (action !== "withdraw") {
+    return res.status(400).json({ error: "Teklif icin gecerli aksiyon withdraw." });
+  }
+
+  let transaction;
+
+  try {
+    const pool = await poolPromise;
+    transaction = new sql.Transaction(pool);
+    await transaction.begin();
+
+    const offerResult = await transaction
+      .request()
+      .input("offerId", sql.Int, offerId)
+      .input("firmaID", sql.Int, companyId)
+      .query(`
+        SELECT teklifID, ihaleID, tedarikciID, teklifMiktarKg, birimFiyat, toplamTutar, durum
+        FROM Teklifler
+        WHERE teklifID = @offerId AND tedarikciID = @firmaID
+      `);
+
+    const offer = offerResult.recordset[0];
+
+    if (!offer) {
+      await transaction.rollback();
+      return res.status(404).json({ error: "Teklif bulunamadi." });
+    }
+
+    if (offer.durum !== "b") {
+      await transaction.rollback();
+      return res.status(400).json({ error: "Teklif geri cekilebilir durumda degil." });
+    }
+
+    await transaction
+      .request()
+      .input("offerId", sql.Int, offerId)
+      .query(`
+        UPDATE Teklifler
+        SET durum = 'c'
+        WHERE teklifID = @offerId
+      `);
+
+    await transaction
+      .request()
+      .input("offerId", sql.Int, offerId)
+      .input("auctionId", sql.Int, offer.ihaleID)
+      .input("firmaID", sql.Int, offer.tedarikciID)
+      .input("oldStatus", sql.Char(1), offer.durum)
+      .input("userId", sql.Int, userId || null)
+      .input("amountKg", sql.Decimal(12, 2), offer.teklifMiktarKg)
+      .input("unitPrice", sql.Decimal(10, 2), offer.birimFiyat)
+      .input("totalAmount", sql.Decimal(14, 2), offer.toplamTutar)
+      .query(`
+        INSERT INTO TeklifAksiyonLog (
+          teklifID, ihaleID, tedarikciID, aksiyonTipi, eskiDurum, yeniDurum,
+          teklifMiktarKg, birimFiyat, toplamTutar, yapanKullaniciID, aciklama
+        )
+        VALUES (
+          @offerId, @auctionId, @firmaID, N'cek', @oldStatus, 'c',
+          @amountKg, @unitPrice, @totalAmount, @userId, N'Teklif geri cekildi'
+        )
+      `);
+
+    await transaction.commit();
+    return res.json({ message: "Teklif geri cekildi." });
+  } catch (error) {
+    if (transaction) {
+      try {
+        await transaction.rollback();
+      } catch {
+        // Transaction may already be closed.
+      }
+    }
+
+    return serverError(res, error, "Mobile supplier offer action failed:");
   }
 };

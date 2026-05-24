@@ -1,5 +1,5 @@
 import { apiClient } from './client';
-import { CowSummary, MilkValues } from '../types/domain';
+import { CowSummary, MilkRecord, MilkValues } from '../types/domain';
 
 function toNumber(value: unknown, fallback: number) {
   const numberValue = Number(value);
@@ -42,9 +42,29 @@ function normalizeMilkValues(data: Record<string, unknown>, cowId: string): Milk
   };
 }
 
+function normalizeMilkRecord(data: Record<string, unknown>): MilkRecord {
+  const machineId = optionalNumber(data.machineId ?? data.makineID);
+
+  return {
+    id: toNumber(data.id ?? data.olcumID, 0),
+    liters: toNumber(data.liters ?? data.sutMiktar, 0),
+    timestamp: String(data.timestamp ?? data.sagimTarihi ?? ''),
+    machineId: machineId ?? null,
+  };
+}
+
 export async function getMilkValues(cowId: string): Promise<MilkValues> {
   const response = await apiClient.get(`/api/mobile/cows/${encodeURIComponent(cowId)}/milk-values`);
   return normalizeMilkValues(response.data ?? {}, cowId);
+}
+
+export async function getMilkHistory(cowId: string, limit = 12): Promise<MilkRecord[]> {
+  const response = await apiClient.get(`/api/mobile/cows/${encodeURIComponent(cowId)}/milk-history`, {
+    params: { limit },
+  });
+  const items: unknown[] = Array.isArray(response.data?.items) ? response.data.items : [];
+
+  return items.map((item) => normalizeMilkRecord((item ?? {}) as Record<string, unknown>));
 }
 
 export async function getCowList(limit = 20): Promise<CowSummary[]> {

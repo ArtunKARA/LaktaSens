@@ -1,9 +1,12 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { AdminApplicationsScreen } from '../screens/Admin/AdminApplicationsScreen';
 import { DashboardScreen } from '../screens/Dashboard/DashboardScreen';
 import { MilkResultScreen } from '../screens/Milk/MilkResultScreen';
 import { ProfileScreen } from '../screens/Profile/ProfileScreen';
 import { QRScannerScreen } from '../screens/QR/QRScannerScreen';
 import { AISuggestionsScreen } from '../screens/Suggestions/AISuggestionsScreen';
+import { SupplierOffersScreen } from '../screens/Supplier/SupplierOffersScreen';
+import { SupplierOrdersScreen } from '../screens/Supplier/SupplierOrdersScreen';
 import { MainStackParamList } from './types';
 
 const Stack = createNativeStackNavigator<MainStackParamList>();
@@ -16,6 +19,9 @@ export function MainNavigator() {
       <Stack.Screen name="MilkResult" component={MilkResultScreen} />
       <Stack.Screen name="AISuggestions" component={AISuggestionsScreen} />
       <Stack.Screen name="Profile" component={ProfileScreen} />
+      <Stack.Screen name="AdminApplications" component={AdminApplicationsScreen} />
+      <Stack.Screen name="SupplierOrders" component={SupplierOrdersScreen} />
+      <Stack.Screen name="SupplierOffers" component={SupplierOffersScreen} />
     </Stack.Navigator>
   );
 }

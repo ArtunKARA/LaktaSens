@@ -10,6 +10,9 @@ export type MainStackParamList = {
   MilkResult: { cowId?: string } | undefined;
   AISuggestions: { cowId?: string } | undefined;
   Profile: undefined;
+  AdminApplications: undefined;
+  SupplierOrders: undefined;
+  SupplierOffers: undefined;
 };
 
 export type MainScreenProps<T extends keyof MainStackParamList> = NativeStackScreenProps<MainStackParamList, T>;
