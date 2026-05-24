@@ -1,22 +1,62 @@
 import axios from 'axios';
 import { NativeModules, Platform } from 'react-native';
 
-function getDevServerHost() {
-  const sourceCode = NativeModules.SourceCode as { scriptURL?: string } | undefined;
-  const scriptURL = sourceCode?.scriptURL;
-  const match = scriptURL?.match(/\/\/([^/:]+):\d+\//);
-  const host = match?.[1];
+function isLocalHost(host?: string) {
+  return !host || host === 'localhost' || host === '127.0.0.1' || host === '0.0.0.0' || host === '::1';
+}
 
-  if (!host || host === 'localhost' || host === '127.0.0.1') {
+function extractHost(value: unknown) {
+  if (!value) {
+    return undefined;
+  }
+
+  const text = String(value);
+  const urlMatch = text.match(/^[a-z]+:\/\/(?:[^@/]+@)?\[?([^/:\\\]]+)\]?:\d+/i);
+  const hostPortMatch = text.match(/^([^/:\\\]]+):\d+$/);
+  const host = urlMatch?.[1] || hostPortMatch?.[1];
+
+  if (isLocalHost(host)) {
     return undefined;
   }
 
   return host;
 }
 
+function getWebHost() {
+  const location = (globalThis as { location?: { hostname?: string } }).location;
+  const host = location?.hostname;
+
+  return isLocalHost(host) ? undefined : host;
+}
+
+function getDevServerHost() {
+  const nativeModules = NativeModules as {
+    SourceCode?: { scriptURL?: string; bundleURL?: string };
+    PlatformConstants?: { ServerHost?: string };
+    DevSettings?: { settings?: { host?: string } };
+  };
+
+  const candidates = [
+    nativeModules.SourceCode?.scriptURL,
+    nativeModules.SourceCode?.bundleURL,
+    nativeModules.PlatformConstants?.ServerHost,
+    nativeModules.DevSettings?.settings?.host,
+  ];
+
+  for (const candidate of candidates) {
+    const host = extractHost(candidate);
+    if (host) {
+      return host;
+    }
+  }
+
+  return undefined;
+}
+
 function getFallbackUrl() {
   if (Platform.OS === 'web') {
-    return 'http://localhost:3030';
+    const webHost = getWebHost();
+    return `http://${webHost ?? 'localhost'}:3030`;
   }
 
   const devHost = getDevServerHost();
