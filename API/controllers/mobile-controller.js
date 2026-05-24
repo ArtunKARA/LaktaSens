@@ -39,6 +39,56 @@ function roleName(role) {
   return "farmer";
 }
 
+function statusName(status) {
+  if (status === "a") {
+    return "Aktif";
+  }
+
+  if (status === "p") {
+    return "Pasif";
+  }
+
+  if (status === "b") {
+    return "Beklemede";
+  }
+
+  return "Bilinmiyor";
+}
+
+function companyTypeName(type) {
+  if (type === "a") {
+    return "LaktaSens";
+  }
+
+  if (type === "t") {
+    return "Tedarikci";
+  }
+
+  return "Ciftlik";
+}
+
+function authorityName(authority) {
+  if (authority === "a") {
+    return "Firma yetkilisi";
+  }
+
+  if (authority === "k") {
+    return "Kullanici";
+  }
+
+  return "Bilinmiyor";
+}
+
+function maskNationalId(value) {
+  const digits = cleanString(value).replace(/\D/g, "");
+
+  if (!digits) {
+    return undefined;
+  }
+
+  return `*******${digits.slice(-4)}`;
+}
+
 function normalizeUser(row) {
   const role = normalizeRole(row.kullaniciTuru);
   const firstName = cleanString(row.isim);
@@ -51,12 +101,26 @@ function normalizeUser(row) {
     email: row.eposta || "",
     role,
     roleName: roleName(role),
+    firstName: firstName || undefined,
+    lastName: lastName || undefined,
+    nationalIdMasked: maskNationalId(row.tcNo),
     companyId: row.firmaID ? Number(row.firmaID) : undefined,
     farm: row.firmaAdi || undefined,
     phone: row.telefonNo || undefined,
     accountStatus: row.hesapDurumu,
+    accountStatusName: statusName(row.hesapDurumu),
     companyStatus: row.firmaHesapDurumu,
+    companyStatusName: statusName(row.firmaHesapDurumu),
     companyRole: row.hesapFirmaYetkisi,
+    companyRoleName: authorityName(row.hesapFirmaYetkisi),
+    companyType: row.firmaTur || undefined,
+    companyTypeName: companyTypeName(row.firmaTur),
+    companyPhone: row.firmaTelefonNo || undefined,
+    companyEmail: row.firmaMail || undefined,
+    companyAddress: row.firmaAdresi || undefined,
+    cityName: row.sehirAdi || undefined,
+    districtName: row.ilceAdi || undefined,
+    region: row.bolge || undefined,
   };
 }
 
@@ -200,9 +264,18 @@ async function loadUserById(kullaniciID) {
         K.tcNo,
         K.firmaID,
         F.firmaAdi,
-        F.hesapDurumu AS firmaHesapDurumu
+        F.firmaTur,
+        F.telefonNo AS firmaTelefonNo,
+        F.firmaMail,
+        F.firmaAdresi,
+        F.bolge,
+        F.hesapDurumu AS firmaHesapDurumu,
+        Sehir.SehirIlceMahalleAdi AS sehirAdi,
+        Ilce.SehirIlceMahalleAdi AS ilceAdi
       FROM kullanicilar AS K
       INNER JOIN firmalar AS F ON K.firmaID = F.firmaID
+      LEFT JOIN bolgeler AS Sehir ON F.sehirID = Sehir.ID
+      LEFT JOIN bolgeler AS Ilce ON F.ilceID = Ilce.ID
       WHERE K.kullaniciID = @kullaniciID
     `);
 
@@ -982,9 +1055,18 @@ exports.login = async (req, res) => {
           K.tcNo,
           K.firmaID,
           F.firmaAdi,
-          F.hesapDurumu AS firmaHesapDurumu
+          F.firmaTur,
+          F.telefonNo AS firmaTelefonNo,
+          F.firmaMail,
+          F.firmaAdresi,
+          F.bolge,
+          F.hesapDurumu AS firmaHesapDurumu,
+          Sehir.SehirIlceMahalleAdi AS sehirAdi,
+          Ilce.SehirIlceMahalleAdi AS ilceAdi
         FROM kullanicilar AS K
         INNER JOIN firmalar AS F ON K.firmaID = F.firmaID
+        LEFT JOIN bolgeler AS Sehir ON F.sehirID = Sehir.ID
+        LEFT JOIN bolgeler AS Ilce ON F.ilceID = Ilce.ID
         WHERE LOWER(K.eposta) = @eposta AND K.parola = @sifre
       `);
 

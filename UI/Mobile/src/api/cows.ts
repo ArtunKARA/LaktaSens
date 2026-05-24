@@ -1,9 +1,31 @@
 import { apiClient } from './client';
-import { MilkValues } from '../types/domain';
+import { CowSummary, MilkValues } from '../types/domain';
 
 function toNumber(value: unknown, fallback: number) {
   const numberValue = Number(value);
   return Number.isFinite(numberValue) ? numberValue : fallback;
+}
+
+function optionalNumber(value: unknown) {
+  const numberValue = Number(value);
+  return Number.isFinite(numberValue) ? numberValue : undefined;
+}
+
+function normalizeCowSummary(data: Record<string, unknown>): CowSummary {
+  const qr = String(data.qr ?? data.inekQR ?? data.cowId ?? data.id ?? '');
+
+  return {
+    id: toNumber(data.id ?? data.inekID, 0),
+    qr,
+    displayName: String(data.displayName ?? data.cowName ?? data.ad ?? `Inek ${qr}`),
+    breed: data.breed || data.irk ? String(data.breed ?? data.irk) : undefined,
+    lifecycle: data.lifecycle ? String(data.lifecycle) : undefined,
+    reproductionStatus: data.reproductionStatus ? String(data.reproductionStatus) : undefined,
+    latestMilkLiters: optionalNumber(data.latestMilkLiters ?? data.liters),
+    latestMilkAt: data.latestMilkAt ? String(data.latestMilkAt) : undefined,
+    milkAverage7: optionalNumber(data.milkAverage7 ?? data.average7Liters),
+    companyName: data.companyName ? String(data.companyName) : undefined,
+  };
 }
 
 function normalizeMilkValues(data: Record<string, unknown>, cowId: string): MilkValues {
@@ -23,4 +45,13 @@ function normalizeMilkValues(data: Record<string, unknown>, cowId: string): Milk
 export async function getMilkValues(cowId: string): Promise<MilkValues> {
   const response = await apiClient.get(`/api/mobile/cows/${encodeURIComponent(cowId)}/milk-values`);
   return normalizeMilkValues(response.data ?? {}, cowId);
+}
+
+export async function getCowList(limit = 20): Promise<CowSummary[]> {
+  const response = await apiClient.get('/api/mobile/cows', {
+    params: { limit },
+  });
+  const items: unknown[] = Array.isArray(response.data?.items) ? response.data.items : [];
+
+  return items.map((item) => normalizeCowSummary((item ?? {}) as Record<string, unknown>));
 }

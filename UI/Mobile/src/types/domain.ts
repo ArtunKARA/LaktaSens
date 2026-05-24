@@ -8,9 +8,22 @@ export interface User {
   email: string;
   role: RoleCode;
   roleName: RoleName;
+  firstName?: string;
+  lastName?: string;
+  nationalIdMasked?: string;
   companyId?: number;
   farm?: string;
   phone?: string;
+  accountStatusName?: string;
+  companyStatusName?: string;
+  companyRoleName?: string;
+  companyTypeName?: string;
+  companyPhone?: string;
+  companyEmail?: string;
+  companyAddress?: string;
+  cityName?: string;
+  districtName?: string;
+  region?: string;
   raw?: unknown;
 }
 
@@ -37,6 +50,38 @@ export interface MilkValues {
   temperature: number;
   timestamp: string;
   qualitySource?: string;
+}
+
+export interface CowSummary {
+  id: number;
+  qr: string;
+  displayName: string;
+  breed?: string;
+  lifecycle?: string;
+  reproductionStatus?: string;
+  latestMilkLiters?: number;
+  latestMilkAt?: string;
+  milkAverage7?: number;
+  companyName?: string;
+}
+
+export interface FeedStock {
+  id: number;
+  feedName: string;
+  amountKg: number;
+  isLow: boolean;
+  updatedAt?: string;
+  companyName?: string;
+}
+
+export interface ShipmentSummary {
+  id: number;
+  code: string;
+  status?: string;
+  totalKg: number;
+  expectedDeliveryAt?: string;
+  farmerCompanyName?: string;
+  supplierCompanyName?: string;
 }
 
 export interface Suggestion {
