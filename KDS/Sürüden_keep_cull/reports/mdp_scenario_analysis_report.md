@@ -1,6 +1,6 @@
 # MDP Scenario Analysis Report
 
-- Generated at: `2026-05-21T00:32:12`
+- Generated at: `2026-05-21T14:24:32`
 - Scenario results: `data/processed/rl/mdp_scenario_results.csv`
 - Policy comparison: `data/processed/rl/mdp_scenario_policy_comparison.csv`
 
@@ -34,5 +34,3 @@
 ## Notes
 
 - Scenarios use the same empirical transition model; only reward parameters and discount factor change.
-- Policy sensitivity is a sanity check for reward assumptions, not final farm economics.
-- Large policy changes under price/cost perturbations mean reward calibration needs farm-specific review before real use.
