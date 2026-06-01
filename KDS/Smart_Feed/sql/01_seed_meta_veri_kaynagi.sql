@@ -77,6 +77,14 @@ values
         true
     ),
     (
+        $$voederbomen_nutritionalvalues$$,
+        $$Voederbomen nutritional values$$,
+        $$scraped_csv$$,
+        $$voederbomen_nutritionalvalues_detail_rows.csv; voederbomen_nutritionalvalues_average_rows.csv$$,
+        $$role=besin_degeri_yardimci_parametre; url=https://www.voederbomen.nl/nutritionalvalues/; targets=raw_feed_ingredient,opt_feed_nutrient_value; forage/tree leaf nutrient reference data.$$,
+        true
+    ),
+    (
         $$nasa_power_environment$$,
         $$NASA POWER Daily API$$,
         $$api_csv_json$$,

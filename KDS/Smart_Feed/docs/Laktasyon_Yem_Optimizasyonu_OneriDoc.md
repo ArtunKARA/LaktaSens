@@ -24,6 +24,26 @@ Bu ortamda `ml_smart_feed` benzeri ayrı bir schema altında ham dış veri, nor
 
 Bu yapıda Proje A, çevrenin state kısmını güçlü hale getirecek; Proje B ise bu state’e göre rasyon aksiyonu üretecek.
 
+#### PostgreSQL dış veri yükleme SQL'leri
+
+`KDS/Smart_Feed/Data/external` altındaki hazır dış veri dosyalarını PostgreSQL'e almak için SQL'ler Proje A ve Proje B olarak ayrıldı:
+
+- **Proje A SQL:** `KDS/Smart_Feed/sql/02_load_external_project_a.sql`
+  - Hayvan kimliği, süt verimi, laktasyon/DIM bağlamı, sağlık olayları, sensör verisi ve çevre/THI verisini `raw_cow`, `raw_milk`, `raw_lactation`, `raw_health`, `raw_sensor`, `raw_environment` ve gerektiğinde `raw_external_reference` tablolarına yükler.
+- **Proje B SQL:** `KDS/Smart_Feed/sql/03_load_external_project_b.sql`
+  - Yem hammaddesi besin değerleri, NASEM/Voederbomen referansları, süt fiyatı, yem fiyatı ve ekonomik parametreleri `raw_feed_ingredient`, `raw_economic_parameter`, `opt_feed_ingredient`, `opt_feed_nutrient_value`, `opt_feed_price`, `opt_milk_price` ve `raw_external_reference` tablolarına yükler.
+
+Çalıştırma sırası:
+
+```bash
+psql -d <db_name> -f KDS/Smart_Feed/sql/ml_smart_feed_create.sql
+psql -d <db_name> -f KDS/Smart_Feed/sql/01_seed_meta_veri_kaynagi.sql
+psql -d <db_name> -f KDS/Smart_Feed/sql/02_load_external_project_a.sql
+psql -d <db_name> -f KDS/Smart_Feed/sql/03_load_external_project_b.sql
+```
+
+Not: `mmcows_multimodal` içindeki IMMU ve pressure yüksek frekans CSV'leri yaklaşık 11 GB olduğu için Proje A scriptinde varsayılan olarak yüklenmez; önce özetleme/partition kararı verildikten sonra ayrı bir high-frequency ETL ile alınmalıdır. Excel, PDF ve DOCX dosyaları da doğrudan PostgreSQL `COPY` ile okunamadığı için önce CSV'ye parse edilmelidir.
+
 #### Sisteme girecek temel veriler
 
 ##### Giriş 1: Hayvan durumu
