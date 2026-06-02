@@ -48,7 +48,7 @@ create unlogged table ml_smart_feed.stg_agroscope_activity (
     steps text
 );
 
-\copy ml_smart_feed.stg_agroscope_activity (timestamp_text, cow_name, mi, steps) FROM 'KDS/Smart_Feed/Data/external/agroscope_activity_zenodo/activity_all_cows_sample_probe.csv' WITH (FORMAT csv, HEADER true)
+\copy ml_smart_feed.stg_agroscope_activity (timestamp_text, cow_name, mi, steps) FROM 'KDS/Smart_Feed/Data/generated/postgres_import/agroscope_activity_zenodo/activity_all_cows_sample_probe.csv' WITH (FORMAT csv, HEADER true)
 
 drop table if exists ml_smart_feed.stg_mmcows_milk;
 create unlogged table ml_smart_feed.stg_mmcows_milk (
@@ -118,54 +118,54 @@ create unlogged table ml_smart_feed.stg_mmcows_health (
     description text
 );
 
-alter table ml_smart_feed.stg_mmcows_health alter column source_file set default 'KDS/Smart_Feed/Data/external/mmcows_multimodal/health_records/C01.csv';
+alter table ml_smart_feed.stg_mmcows_health alter column source_file set default 'KDS/Smart_Feed/Data/generated/postgres_import/mmcows_multimodal/health_records/C01.csv';
 alter table ml_smart_feed.stg_mmcows_health alter column external_cow_id set default 'C01';
-\copy ml_smart_feed.stg_mmcows_health (event_date_text, event_name, specific_event, description) FROM 'KDS/Smart_Feed/Data/external/mmcows_multimodal/health_records/C01.csv' WITH (FORMAT csv, HEADER true)
-alter table ml_smart_feed.stg_mmcows_health alter column source_file set default 'KDS/Smart_Feed/Data/external/mmcows_multimodal/health_records/C02.csv';
+\copy ml_smart_feed.stg_mmcows_health (event_date_text, event_name, specific_event, description) FROM 'KDS/Smart_Feed/Data/generated/postgres_import/mmcows_multimodal/health_records/C01.csv' WITH (FORMAT csv, HEADER true)
+alter table ml_smart_feed.stg_mmcows_health alter column source_file set default 'KDS/Smart_Feed/Data/generated/postgres_import/mmcows_multimodal/health_records/C02.csv';
 alter table ml_smart_feed.stg_mmcows_health alter column external_cow_id set default 'C02';
-\copy ml_smart_feed.stg_mmcows_health (event_date_text, event_name, specific_event, description) FROM 'KDS/Smart_Feed/Data/external/mmcows_multimodal/health_records/C02.csv' WITH (FORMAT csv, HEADER true)
-alter table ml_smart_feed.stg_mmcows_health alter column source_file set default 'KDS/Smart_Feed/Data/external/mmcows_multimodal/health_records/C03.csv';
+\copy ml_smart_feed.stg_mmcows_health (event_date_text, event_name, specific_event, description) FROM 'KDS/Smart_Feed/Data/generated/postgres_import/mmcows_multimodal/health_records/C02.csv' WITH (FORMAT csv, HEADER true)
+alter table ml_smart_feed.stg_mmcows_health alter column source_file set default 'KDS/Smart_Feed/Data/generated/postgres_import/mmcows_multimodal/health_records/C03.csv';
 alter table ml_smart_feed.stg_mmcows_health alter column external_cow_id set default 'C03';
-\copy ml_smart_feed.stg_mmcows_health (event_date_text, event_name, specific_event, description) FROM 'KDS/Smart_Feed/Data/external/mmcows_multimodal/health_records/C03.csv' WITH (FORMAT csv, HEADER true)
-alter table ml_smart_feed.stg_mmcows_health alter column source_file set default 'KDS/Smart_Feed/Data/external/mmcows_multimodal/health_records/C04.csv';
+\copy ml_smart_feed.stg_mmcows_health (event_date_text, event_name, specific_event, description) FROM 'KDS/Smart_Feed/Data/generated/postgres_import/mmcows_multimodal/health_records/C03.csv' WITH (FORMAT csv, HEADER true)
+alter table ml_smart_feed.stg_mmcows_health alter column source_file set default 'KDS/Smart_Feed/Data/generated/postgres_import/mmcows_multimodal/health_records/C04.csv';
 alter table ml_smart_feed.stg_mmcows_health alter column external_cow_id set default 'C04';
-\copy ml_smart_feed.stg_mmcows_health (event_date_text, event_name, specific_event, description) FROM 'KDS/Smart_Feed/Data/external/mmcows_multimodal/health_records/C04.csv' WITH (FORMAT csv, HEADER true)
-alter table ml_smart_feed.stg_mmcows_health alter column source_file set default 'KDS/Smart_Feed/Data/external/mmcows_multimodal/health_records/C05.csv';
+\copy ml_smart_feed.stg_mmcows_health (event_date_text, event_name, specific_event, description) FROM 'KDS/Smart_Feed/Data/generated/postgres_import/mmcows_multimodal/health_records/C04.csv' WITH (FORMAT csv, HEADER true)
+alter table ml_smart_feed.stg_mmcows_health alter column source_file set default 'KDS/Smart_Feed/Data/generated/postgres_import/mmcows_multimodal/health_records/C05.csv';
 alter table ml_smart_feed.stg_mmcows_health alter column external_cow_id set default 'C05';
-\copy ml_smart_feed.stg_mmcows_health (event_date_text, event_name, specific_event, description) FROM 'KDS/Smart_Feed/Data/external/mmcows_multimodal/health_records/C05.csv' WITH (FORMAT csv, HEADER true)
-alter table ml_smart_feed.stg_mmcows_health alter column source_file set default 'KDS/Smart_Feed/Data/external/mmcows_multimodal/health_records/C06.csv';
+\copy ml_smart_feed.stg_mmcows_health (event_date_text, event_name, specific_event, description) FROM 'KDS/Smart_Feed/Data/generated/postgres_import/mmcows_multimodal/health_records/C05.csv' WITH (FORMAT csv, HEADER true)
+alter table ml_smart_feed.stg_mmcows_health alter column source_file set default 'KDS/Smart_Feed/Data/generated/postgres_import/mmcows_multimodal/health_records/C06.csv';
 alter table ml_smart_feed.stg_mmcows_health alter column external_cow_id set default 'C06';
-\copy ml_smart_feed.stg_mmcows_health (event_date_text, event_name, specific_event, description) FROM 'KDS/Smart_Feed/Data/external/mmcows_multimodal/health_records/C06.csv' WITH (FORMAT csv, HEADER true)
-alter table ml_smart_feed.stg_mmcows_health alter column source_file set default 'KDS/Smart_Feed/Data/external/mmcows_multimodal/health_records/C07.csv';
+\copy ml_smart_feed.stg_mmcows_health (event_date_text, event_name, specific_event, description) FROM 'KDS/Smart_Feed/Data/generated/postgres_import/mmcows_multimodal/health_records/C06.csv' WITH (FORMAT csv, HEADER true)
+alter table ml_smart_feed.stg_mmcows_health alter column source_file set default 'KDS/Smart_Feed/Data/generated/postgres_import/mmcows_multimodal/health_records/C07.csv';
 alter table ml_smart_feed.stg_mmcows_health alter column external_cow_id set default 'C07';
-\copy ml_smart_feed.stg_mmcows_health (event_date_text, event_name, specific_event, description) FROM 'KDS/Smart_Feed/Data/external/mmcows_multimodal/health_records/C07.csv' WITH (FORMAT csv, HEADER true)
-alter table ml_smart_feed.stg_mmcows_health alter column source_file set default 'KDS/Smart_Feed/Data/external/mmcows_multimodal/health_records/C08.csv';
+\copy ml_smart_feed.stg_mmcows_health (event_date_text, event_name, specific_event, description) FROM 'KDS/Smart_Feed/Data/generated/postgres_import/mmcows_multimodal/health_records/C07.csv' WITH (FORMAT csv, HEADER true)
+alter table ml_smart_feed.stg_mmcows_health alter column source_file set default 'KDS/Smart_Feed/Data/generated/postgres_import/mmcows_multimodal/health_records/C08.csv';
 alter table ml_smart_feed.stg_mmcows_health alter column external_cow_id set default 'C08';
-\copy ml_smart_feed.stg_mmcows_health (event_date_text, event_name, specific_event, description) FROM 'KDS/Smart_Feed/Data/external/mmcows_multimodal/health_records/C08.csv' WITH (FORMAT csv, HEADER true)
-alter table ml_smart_feed.stg_mmcows_health alter column source_file set default 'KDS/Smart_Feed/Data/external/mmcows_multimodal/health_records/C09.csv';
+\copy ml_smart_feed.stg_mmcows_health (event_date_text, event_name, specific_event, description) FROM 'KDS/Smart_Feed/Data/generated/postgres_import/mmcows_multimodal/health_records/C08.csv' WITH (FORMAT csv, HEADER true)
+alter table ml_smart_feed.stg_mmcows_health alter column source_file set default 'KDS/Smart_Feed/Data/generated/postgres_import/mmcows_multimodal/health_records/C09.csv';
 alter table ml_smart_feed.stg_mmcows_health alter column external_cow_id set default 'C09';
-\copy ml_smart_feed.stg_mmcows_health (event_date_text, event_name, specific_event, description) FROM 'KDS/Smart_Feed/Data/external/mmcows_multimodal/health_records/C09.csv' WITH (FORMAT csv, HEADER true)
-alter table ml_smart_feed.stg_mmcows_health alter column source_file set default 'KDS/Smart_Feed/Data/external/mmcows_multimodal/health_records/C10.csv';
+\copy ml_smart_feed.stg_mmcows_health (event_date_text, event_name, specific_event, description) FROM 'KDS/Smart_Feed/Data/generated/postgres_import/mmcows_multimodal/health_records/C09.csv' WITH (FORMAT csv, HEADER true)
+alter table ml_smart_feed.stg_mmcows_health alter column source_file set default 'KDS/Smart_Feed/Data/generated/postgres_import/mmcows_multimodal/health_records/C10.csv';
 alter table ml_smart_feed.stg_mmcows_health alter column external_cow_id set default 'C10';
-\copy ml_smart_feed.stg_mmcows_health (event_date_text, event_name, specific_event, description) FROM 'KDS/Smart_Feed/Data/external/mmcows_multimodal/health_records/C10.csv' WITH (FORMAT csv, HEADER true)
-alter table ml_smart_feed.stg_mmcows_health alter column source_file set default 'KDS/Smart_Feed/Data/external/mmcows_multimodal/health_records/C11.csv';
+\copy ml_smart_feed.stg_mmcows_health (event_date_text, event_name, specific_event, description) FROM 'KDS/Smart_Feed/Data/generated/postgres_import/mmcows_multimodal/health_records/C10.csv' WITH (FORMAT csv, HEADER true)
+alter table ml_smart_feed.stg_mmcows_health alter column source_file set default 'KDS/Smart_Feed/Data/generated/postgres_import/mmcows_multimodal/health_records/C11.csv';
 alter table ml_smart_feed.stg_mmcows_health alter column external_cow_id set default 'C11';
-\copy ml_smart_feed.stg_mmcows_health (event_date_text, event_name, specific_event, description) FROM 'KDS/Smart_Feed/Data/external/mmcows_multimodal/health_records/C11.csv' WITH (FORMAT csv, HEADER true)
-alter table ml_smart_feed.stg_mmcows_health alter column source_file set default 'KDS/Smart_Feed/Data/external/mmcows_multimodal/health_records/C12.csv';
+\copy ml_smart_feed.stg_mmcows_health (event_date_text, event_name, specific_event, description) FROM 'KDS/Smart_Feed/Data/generated/postgres_import/mmcows_multimodal/health_records/C11.csv' WITH (FORMAT csv, HEADER true)
+alter table ml_smart_feed.stg_mmcows_health alter column source_file set default 'KDS/Smart_Feed/Data/generated/postgres_import/mmcows_multimodal/health_records/C12.csv';
 alter table ml_smart_feed.stg_mmcows_health alter column external_cow_id set default 'C12';
-\copy ml_smart_feed.stg_mmcows_health (event_date_text, event_name, specific_event, description) FROM 'KDS/Smart_Feed/Data/external/mmcows_multimodal/health_records/C12.csv' WITH (FORMAT csv, HEADER true)
-alter table ml_smart_feed.stg_mmcows_health alter column source_file set default 'KDS/Smart_Feed/Data/external/mmcows_multimodal/health_records/C13.csv';
+\copy ml_smart_feed.stg_mmcows_health (event_date_text, event_name, specific_event, description) FROM 'KDS/Smart_Feed/Data/generated/postgres_import/mmcows_multimodal/health_records/C12.csv' WITH (FORMAT csv, HEADER true)
+alter table ml_smart_feed.stg_mmcows_health alter column source_file set default 'KDS/Smart_Feed/Data/generated/postgres_import/mmcows_multimodal/health_records/C13.csv';
 alter table ml_smart_feed.stg_mmcows_health alter column external_cow_id set default 'C13';
-\copy ml_smart_feed.stg_mmcows_health (event_date_text, event_name, specific_event, description) FROM 'KDS/Smart_Feed/Data/external/mmcows_multimodal/health_records/C13.csv' WITH (FORMAT csv, HEADER true)
-alter table ml_smart_feed.stg_mmcows_health alter column source_file set default 'KDS/Smart_Feed/Data/external/mmcows_multimodal/health_records/C14.csv';
+\copy ml_smart_feed.stg_mmcows_health (event_date_text, event_name, specific_event, description) FROM 'KDS/Smart_Feed/Data/generated/postgres_import/mmcows_multimodal/health_records/C13.csv' WITH (FORMAT csv, HEADER true)
+alter table ml_smart_feed.stg_mmcows_health alter column source_file set default 'KDS/Smart_Feed/Data/generated/postgres_import/mmcows_multimodal/health_records/C14.csv';
 alter table ml_smart_feed.stg_mmcows_health alter column external_cow_id set default 'C14';
-\copy ml_smart_feed.stg_mmcows_health (event_date_text, event_name, specific_event, description) FROM 'KDS/Smart_Feed/Data/external/mmcows_multimodal/health_records/C14.csv' WITH (FORMAT csv, HEADER true)
-alter table ml_smart_feed.stg_mmcows_health alter column source_file set default 'KDS/Smart_Feed/Data/external/mmcows_multimodal/health_records/C15.csv';
+\copy ml_smart_feed.stg_mmcows_health (event_date_text, event_name, specific_event, description) FROM 'KDS/Smart_Feed/Data/generated/postgres_import/mmcows_multimodal/health_records/C14.csv' WITH (FORMAT csv, HEADER true)
+alter table ml_smart_feed.stg_mmcows_health alter column source_file set default 'KDS/Smart_Feed/Data/generated/postgres_import/mmcows_multimodal/health_records/C15.csv';
 alter table ml_smart_feed.stg_mmcows_health alter column external_cow_id set default 'C15';
-\copy ml_smart_feed.stg_mmcows_health (event_date_text, event_name, specific_event, description) FROM 'KDS/Smart_Feed/Data/external/mmcows_multimodal/health_records/C15.csv' WITH (FORMAT csv, HEADER true)
-alter table ml_smart_feed.stg_mmcows_health alter column source_file set default 'KDS/Smart_Feed/Data/external/mmcows_multimodal/health_records/C16.csv';
+\copy ml_smart_feed.stg_mmcows_health (event_date_text, event_name, specific_event, description) FROM 'KDS/Smart_Feed/Data/generated/postgres_import/mmcows_multimodal/health_records/C15.csv' WITH (FORMAT csv, HEADER true)
+alter table ml_smart_feed.stg_mmcows_health alter column source_file set default 'KDS/Smart_Feed/Data/generated/postgres_import/mmcows_multimodal/health_records/C16.csv';
 alter table ml_smart_feed.stg_mmcows_health alter column external_cow_id set default 'C16';
-\copy ml_smart_feed.stg_mmcows_health (event_date_text, event_name, specific_event, description) FROM 'KDS/Smart_Feed/Data/external/mmcows_multimodal/health_records/C16.csv' WITH (FORMAT csv, HEADER true)
+\copy ml_smart_feed.stg_mmcows_health (event_date_text, event_name, specific_event, description) FROM 'KDS/Smart_Feed/Data/generated/postgres_import/mmcows_multimodal/health_records/C16.csv' WITH (FORMAT csv, HEADER true)
 
 drop table if exists ml_smart_feed.stg_mmcows_cbt;
 create unlogged table ml_smart_feed.stg_mmcows_cbt (
@@ -428,7 +428,7 @@ insert into ml_smart_feed.raw_lactation (
 select
     k.kaynak_id,
     m.external_cow_id,
-    nullif(m.dim, '')::integer,
+    round(nullif(m.dim, '')::numeric)::integer,
     jsonb_build_object(
         'source_file', m.source_file,
         'timestamp_epoch', m.timestamp_epoch,

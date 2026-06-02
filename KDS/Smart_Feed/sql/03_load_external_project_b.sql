@@ -534,16 +534,16 @@ with mineral_pivot as (
         mineral_source_id,
         max(source_category) as source_category,
         max(source_url) as source_url,
-        max(nullif(percent_dm, '')::double precision) filter (where mineral = 'Ca') as ca_percent_dm,
-        max(nullif(percent_dm, '')::double precision) filter (where mineral = 'P') as p_percent_dm,
-        max(nullif(percent_dm, '')::double precision) filter (where mineral = 'Mg') as mg_percent_dm,
-        max(nullif(percent_dm, '')::double precision) filter (where mineral = 'K') as k_percent_dm,
-        max(nullif(percent_dm, '')::double precision) filter (where mineral = 'Na') as na_percent_dm,
+        max(nullif(regexp_replace(percent_dm, '[^0-9.+-]', '', 'g'), '')::double precision) filter (where mineral = 'Ca') as ca_percent_dm,
+        max(nullif(regexp_replace(percent_dm, '[^0-9.+-]', '', 'g'), '')::double precision) filter (where mineral = 'P') as p_percent_dm,
+        max(nullif(regexp_replace(percent_dm, '[^0-9.+-]', '', 'g'), '')::double precision) filter (where mineral = 'Mg') as mg_percent_dm,
+        max(nullif(regexp_replace(percent_dm, '[^0-9.+-]', '', 'g'), '')::double precision) filter (where mineral = 'K') as k_percent_dm,
+        max(nullif(regexp_replace(percent_dm, '[^0-9.+-]', '', 'g'), '')::double precision) filter (where mineral = 'Na') as na_percent_dm,
         jsonb_agg(
             jsonb_build_object(
                 'mineral_role', mineral_role,
                 'mineral', mineral,
-                'percent_dm', nullif(percent_dm, '')::double precision,
+                'percent_dm', nullif(regexp_replace(percent_dm, '[^0-9.+-]', '', 'g'), '')::double precision,
                 'absorption_coefficient', nullif(absorption_coefficient, '')::double precision
             )
             order by mineral_role
@@ -791,11 +791,11 @@ set
 with mineral_pivot as (
     select
         mineral_source_id,
-        max(nullif(percent_dm, '')::double precision) filter (where mineral = 'Ca') as ca_percent_dm,
-        max(nullif(percent_dm, '')::double precision) filter (where mineral = 'P') as p_percent_dm,
-        max(nullif(percent_dm, '')::double precision) filter (where mineral = 'Mg') as mg_percent_dm,
-        max(nullif(percent_dm, '')::double precision) filter (where mineral = 'K') as k_percent_dm,
-        max(nullif(percent_dm, '')::double precision) filter (where mineral = 'Na') as na_percent_dm
+        max(nullif(regexp_replace(percent_dm, '[^0-9.+-]', '', 'g'), '')::double precision) filter (where mineral = 'Ca') as ca_percent_dm,
+        max(nullif(regexp_replace(percent_dm, '[^0-9.+-]', '', 'g'), '')::double precision) filter (where mineral = 'P') as p_percent_dm,
+        max(nullif(regexp_replace(percent_dm, '[^0-9.+-]', '', 'g'), '')::double precision) filter (where mineral = 'Mg') as mg_percent_dm,
+        max(nullif(regexp_replace(percent_dm, '[^0-9.+-]', '', 'g'), '')::double precision) filter (where mineral = 'K') as k_percent_dm,
+        max(nullif(regexp_replace(percent_dm, '[^0-9.+-]', '', 'g'), '')::double precision) filter (where mineral = 'Na') as na_percent_dm
     from ml_smart_feed.stg_nasem_19_3_long
     group by mineral_source_id
 )

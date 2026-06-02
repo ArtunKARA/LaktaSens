@@ -1,0 +1,380 @@
+[
+  {
+    "check_group": "THI",
+    "item": "average.csv",
+    "metric": "MAE reported THI vs Celsius formula",
+    "value": 0.09853205416923023,
+    "threshold": "<= 0.35",
+    "status": "OK",
+    "note": "Checks whether THI matches temperature/humidity physics."
+  },
+  {
+    "check_group": "THI",
+    "item": "average.csv",
+    "metric": "Header unit vs regression-inferred unit",
+    "value": "F->C",
+    "threshold": "same unit",
+    "status": "WARNING",
+    "note": "A mismatch means the header is misleading even if values are usable."
+  },
+  {
+    "check_group": "THI",
+    "item": "S01.csv",
+    "metric": "MAE reported THI vs Celsius formula",
+    "value": 0.09591077944563595,
+    "threshold": "<= 0.35",
+    "status": "OK",
+    "note": "Checks whether THI matches temperature/humidity physics."
+  },
+  {
+    "check_group": "THI",
+    "item": "S01.csv",
+    "metric": "Header unit vs regression-inferred unit",
+    "value": "C->C",
+    "threshold": "same unit",
+    "status": "OK",
+    "note": "A mismatch means the header is misleading even if values are usable."
+  },
+  {
+    "check_group": "THI",
+    "item": "S02.csv",
+    "metric": "MAE reported THI vs Celsius formula",
+    "value": 0.10454826331642914,
+    "threshold": "<= 0.35",
+    "status": "OK",
+    "note": "Checks whether THI matches temperature/humidity physics."
+  },
+  {
+    "check_group": "THI",
+    "item": "S02.csv",
+    "metric": "Header unit vs regression-inferred unit",
+    "value": "C->C",
+    "threshold": "same unit",
+    "status": "OK",
+    "note": "A mismatch means the header is misleading even if values are usable."
+  },
+  {
+    "check_group": "THI",
+    "item": "S03.csv",
+    "metric": "MAE reported THI vs Celsius formula",
+    "value": 0.09830970990855263,
+    "threshold": "<= 0.35",
+    "status": "OK",
+    "note": "Checks whether THI matches temperature/humidity physics."
+  },
+  {
+    "check_group": "THI",
+    "item": "S03.csv",
+    "metric": "Header unit vs regression-inferred unit",
+    "value": "C->C",
+    "threshold": "same unit",
+    "status": "OK",
+    "note": "A mismatch means the header is misleading even if values are usable."
+  },
+  {
+    "check_group": "THI",
+    "item": "S04.csv",
+    "metric": "MAE reported THI vs Celsius formula",
+    "value": 0.09664002423335223,
+    "threshold": "<= 0.35",
+    "status": "OK",
+    "note": "Checks whether THI matches temperature/humidity physics."
+  },
+  {
+    "check_group": "THI",
+    "item": "S04.csv",
+    "metric": "Header unit vs regression-inferred unit",
+    "value": "C->C",
+    "threshold": "same unit",
+    "status": "OK",
+    "note": "A mismatch means the header is misleading even if values are usable."
+  },
+  {
+    "check_group": "THI",
+    "item": "S05.csv",
+    "metric": "MAE reported THI vs Celsius formula",
+    "value": 0.09333715177512872,
+    "threshold": "<= 0.35",
+    "status": "OK",
+    "note": "Checks whether THI matches temperature/humidity physics."
+  },
+  {
+    "check_group": "THI",
+    "item": "S05.csv",
+    "metric": "Header unit vs regression-inferred unit",
+    "value": "C->C",
+    "threshold": "same unit",
+    "status": "OK",
+    "note": "A mismatch means the header is misleading even if values are usable."
+  },
+  {
+    "check_group": "THI",
+    "item": "S06.csv",
+    "metric": "MAE reported THI vs Celsius formula",
+    "value": 0.10247945804338189,
+    "threshold": "<= 0.35",
+    "status": "OK",
+    "note": "Checks whether THI matches temperature/humidity physics."
+  },
+  {
+    "check_group": "THI",
+    "item": "S06.csv",
+    "metric": "Header unit vs regression-inferred unit",
+    "value": "C->C",
+    "threshold": "same unit",
+    "status": "OK",
+    "note": "A mismatch means the header is misleading even if values are usable."
+  },
+  {
+    "check_group": "Milk/DIM",
+    "item": "C01",
+    "metric": "DIM regression slope per day",
+    "value": 1.0,
+    "threshold": "1.00 +/- 0.01",
+    "status": "OK",
+    "note": "DIM should increase by one for each daily milk record."
+  },
+  {
+    "check_group": "Milk/DIM",
+    "item": "C02",
+    "metric": "DIM regression slope per day",
+    "value": 1.0,
+    "threshold": "1.00 +/- 0.01",
+    "status": "OK",
+    "note": "DIM should increase by one for each daily milk record."
+  },
+  {
+    "check_group": "Milk/DIM",
+    "item": "C03",
+    "metric": "DIM regression slope per day",
+    "value": 1.0,
+    "threshold": "1.00 +/- 0.01",
+    "status": "OK",
+    "note": "DIM should increase by one for each daily milk record."
+  },
+  {
+    "check_group": "Milk/DIM",
+    "item": "C04",
+    "metric": "DIM regression slope per day",
+    "value": 1.0,
+    "threshold": "1.00 +/- 0.01",
+    "status": "OK",
+    "note": "DIM should increase by one for each daily milk record."
+  },
+  {
+    "check_group": "Milk/DIM",
+    "item": "C05",
+    "metric": "DIM regression slope per day",
+    "value": 1.0,
+    "threshold": "1.00 +/- 0.01",
+    "status": "OK",
+    "note": "DIM should increase by one for each daily milk record."
+  },
+  {
+    "check_group": "Milk/DIM",
+    "item": "C06",
+    "metric": "DIM regression slope per day",
+    "value": 1.0,
+    "threshold": "1.00 +/- 0.01",
+    "status": "OK",
+    "note": "DIM should increase by one for each daily milk record."
+  },
+  {
+    "check_group": "Milk/DIM",
+    "item": "C07",
+    "metric": "DIM regression slope per day",
+    "value": 1.0,
+    "threshold": "1.00 +/- 0.01",
+    "status": "OK",
+    "note": "DIM should increase by one for each daily milk record."
+  },
+  {
+    "check_group": "Milk/DIM",
+    "item": "C08",
+    "metric": "DIM regression slope per day",
+    "value": 1.0,
+    "threshold": "1.00 +/- 0.01",
+    "status": "OK",
+    "note": "DIM should increase by one for each daily milk record."
+  },
+  {
+    "check_group": "Milk/DIM",
+    "item": "C09",
+    "metric": "DIM regression slope per day",
+    "value": 1.0,
+    "threshold": "1.00 +/- 0.01",
+    "status": "OK",
+    "note": "DIM should increase by one for each daily milk record."
+  },
+  {
+    "check_group": "Milk/DIM",
+    "item": "C10",
+    "metric": "DIM regression slope per day",
+    "value": 1.0,
+    "threshold": "1.00 +/- 0.01",
+    "status": "OK",
+    "note": "DIM should increase by one for each daily milk record."
+  },
+  {
+    "check_group": "Milk/DIM",
+    "item": "C11",
+    "metric": "DIM regression slope per day",
+    "value": 1.0,
+    "threshold": "1.00 +/- 0.01",
+    "status": "OK",
+    "note": "DIM should increase by one for each daily milk record."
+  },
+  {
+    "check_group": "Milk/DIM",
+    "item": "C12",
+    "metric": "DIM regression slope per day",
+    "value": 1.0,
+    "threshold": "1.00 +/- 0.01",
+    "status": "OK",
+    "note": "DIM should increase by one for each daily milk record."
+  },
+  {
+    "check_group": "Milk/DIM",
+    "item": "C13",
+    "metric": "DIM regression slope per day",
+    "value": 1.0,
+    "threshold": "1.00 +/- 0.01",
+    "status": "OK",
+    "note": "DIM should increase by one for each daily milk record."
+  },
+  {
+    "check_group": "Milk/DIM",
+    "item": "C14",
+    "metric": "DIM regression slope per day",
+    "value": 1.0,
+    "threshold": "1.00 +/- 0.01",
+    "status": "OK",
+    "note": "DIM should increase by one for each daily milk record."
+  },
+  {
+    "check_group": "Milk/DIM",
+    "item": "C15",
+    "metric": "DIM regression slope per day",
+    "value": 1.0,
+    "threshold": "1.00 +/- 0.01",
+    "status": "OK",
+    "note": "DIM should increase by one for each daily milk record."
+  },
+  {
+    "check_group": "Milk/DIM",
+    "item": "C16",
+    "metric": "DIM regression slope per day",
+    "value": 1.0,
+    "threshold": "1.00 +/- 0.01",
+    "status": "OK",
+    "note": "DIM should increase by one for each daily milk record."
+  },
+  {
+    "check_group": "CBT",
+    "item": "C01",
+    "metric": "Physiological temperature outliers",
+    "value": 0,
+    "threshold": "0",
+    "status": "OK",
+    "note": "Core body temperature should stay inside 35-42 C for this audit."
+  },
+  {
+    "check_group": "CBT",
+    "item": "C02",
+    "metric": "Physiological temperature outliers",
+    "value": 0,
+    "threshold": "0",
+    "status": "OK",
+    "note": "Core body temperature should stay inside 35-42 C for this audit."
+  },
+  {
+    "check_group": "CBT",
+    "item": "C03",
+    "metric": "Physiological temperature outliers",
+    "value": 0,
+    "threshold": "0",
+    "status": "OK",
+    "note": "Core body temperature should stay inside 35-42 C for this audit."
+  },
+  {
+    "check_group": "CBT",
+    "item": "C04",
+    "metric": "Physiological temperature outliers",
+    "value": 0,
+    "threshold": "0",
+    "status": "OK",
+    "note": "Core body temperature should stay inside 35-42 C for this audit."
+  },
+  {
+    "check_group": "CBT",
+    "item": "C05",
+    "metric": "Physiological temperature outliers",
+    "value": 0,
+    "threshold": "0",
+    "status": "OK",
+    "note": "Core body temperature should stay inside 35-42 C for this audit."
+  },
+  {
+    "check_group": "CBT",
+    "item": "C06",
+    "metric": "Physiological temperature outliers",
+    "value": 0,
+    "threshold": "0",
+    "status": "OK",
+    "note": "Core body temperature should stay inside 35-42 C for this audit."
+  },
+  {
+    "check_group": "CBT",
+    "item": "C07",
+    "metric": "Physiological temperature outliers",
+    "value": 0,
+    "threshold": "0",
+    "status": "OK",
+    "note": "Core body temperature should stay inside 35-42 C for this audit."
+  },
+  {
+    "check_group": "CBT",
+    "item": "C08",
+    "metric": "Physiological temperature outliers",
+    "value": 0,
+    "threshold": "0",
+    "status": "OK",
+    "note": "Core body temperature should stay inside 35-42 C for this audit."
+  },
+  {
+    "check_group": "CBT",
+    "item": "C09",
+    "metric": "Physiological temperature outliers",
+    "value": 7,
+    "threshold": "0",
+    "status": "WARNING",
+    "note": "Core body temperature should stay inside 35-42 C for this audit."
+  },
+  {
+    "check_group": "CBT",
+    "item": "C10",
+    "metric": "Physiological temperature outliers",
+    "value": 0,
+    "threshold": "0",
+    "status": "OK",
+    "note": "Core body temperature should stay inside 35-42 C for this audit."
+  },
+  {
+    "check_group": "Project B numeric hygiene",
+    "item": "voeder_detail.mn_mg_kg_dm",
+    "metric": "Comma numeric values",
+    "value": 3,
+    "threshold": "0",
+    "status": "WARNING",
+    "note": "Values such as 1,014.0 need cleaning before numeric cast."
+  },
+  {
+    "check_group": "Project B numeric hygiene",
+    "item": "voeder_average.mn_mg_kg_dm",
+    "metric": "Comma numeric values",
+    "value": 2,
+    "threshold": "0",
+    "status": "WARNING",
+    "note": "Values such as 1,014.0 need cleaning before numeric cast."
+  }
+]

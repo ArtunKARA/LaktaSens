@@ -1,0 +1,215 @@
+Date,Event,Specific event,Description
+2024-03-22 12 AM,VWP expiration,VWP expiration,
+2024-02-06 11 PM,Sold Cull,Sold Cull,"Sold - Not reported, Ttj packing"
+2024-02-05 12 AM,Injury,Injury," - , ASPIRIN BOLUS 4"
+2024-02-04 12 AM,Injury,Injury," - , ASPIRIN BOLUS 3"
+2024-02-03 12 AM,Injury,Injury," - , ASPIRIN BOLUS 3"
+2024-02-02 12 AM,Injury,Injury," - , ASPIRIN BOLUS 4"
+2024-01-29 11 PM,DNB,DNB,Not reported
+2024-01-27 12 AM,Medical diagnosis,Scours,Scours - 2BOL/1
+2024-01-27 12 AM,Medical diagnosis,Scours,"Scours - PROBO, ANTI-D"
+2024-01-26 12 AM,Other,Notes,notes - DEAD TAIL
+2024-01-26 12 AM,Move,Move,Pen: 20
+2024-01-24 12 AM,Medical diagnosis,Ketosis,Ketosis - 250ML/+2
+2024-01-19 12 AM,Medical diagnosis,DA,DA - BAN2.20
+2024-01-19 12 AM,Medical diagnosis,DA,DA - LDA
+2024-01-19 12 AM,Medical diagnosis,DA,DA - PLY5.30
+2024-01-19 12 AM,Medical diagnosis,Ketosis,Ketosis - 250ML/5
+2024-01-19 12 AM,Other,Offexp,offexp - 689HMW
+2024-01-18 12 AM,Other,Notes,notes - DEXTROSE 3XDAY
+2024-01-18 12 AM,Other,Notes,notes - CATHETER
+2024-01-18 12 AM,Other,Expsurg,expsurg - LIV-MUS
+2024-01-17 12 AM,Medical diagnosis,Ketosis,Ketosis - 250ML/5
+2024-01-13 12 AM,Medical diagnosis,Ketosis,Ketosis - 250ML/5
+2024-01-13 12 AM,Medical diagnosis,Ketosis,Ketosis - 250ML/+4PROPONLY
+2024-01-13 12 AM,Other,Offfeed,offfeed - FLU1.20
+2024-01-09 12 AM,Withhold Milk,Withhold Milk,
+2024-01-05 12 AM,Medical diagnosis,Milk Fever,Milk Fever - 1/2IV 1/2SUBQ
+2024-01-05 12 AM,Other,Expsurg,expsurg - LIV-MUS
+2024-01-05 12 AM,Watch List,Watch List, for 3 days
+2024-01-05 12 AM,Freshen,Freshen,5355/82
+2023-12-27 12 AM,Other,Expsurg,expsurg - LIV-MUS
+2023-12-25 02 AM,Meat Hold,Meat Hold,
+2023-12-20 12 AM,Other,Expsurg,expsurg - LIVER
+2023-12-18 12 AM,Other,Onexp,onexp - 689HMW
+2023-12-14 02 AM,Move,Move,Pen: 211
+2023-12-13 12 AM,Other,To,TO MAD
+2023-12-13 12 AM,Other,To,TO MAD
+2023-11-14 04 AM,Move,Move,Pen: 38
+2023-11-13 12 AM,Enroll in protocol,Enroll in protocol,Dry off holds
+2023-11-13 12 AM,Dry Off,Dry Off,QTRMR
+2023-10-28 02 AM,Move,Move,Pen: 13
+2023-10-05 12 AM,Other,Notes,notes - FECAL
+2023-09-28 12 AM,Other,Notes,notes - INFORCE
+2023-09-24 02 AM,Move,Move,Pen: 11
+2023-09-20 02 AM,Move,Move,Pen: 18
+2023-08-21 02 AM,Move,Move,Pen: 6
+2023-08-11 12 AM,Other,Offexp,offexp
+2023-07-31 12 AM,Preg Check,Preg Check,Preg - M - 116 DAYS
+2023-07-21 12 AM,Other,Onexp,onexp - 683CC
+2023-07-11 02 AM,Move,Move,Pen: 4a
+2023-06-20 12 AM,Hoof Maintenance,Trim,Trim - TRIM
+2023-06-12 12 AM,Preg Check,Preg Check,Preg - M - BULL
+2023-05-22 12 AM,Preg Check,Preg Check,Preg - U - 46 DAYS
+2023-05-08 12 AM,Preg Check,Preg Check,"Preg - U - LOCL
+32 days bred"
+2023-04-06 12 AM,Bred,Bred,7AN606  by Tech 3
+2023-04-06 12 AM,Enroll in protocol,Enroll in protocol,Breeding Code: T - Imported completed protocol
+2023-04-03 12 AM,Preg Check,Preg Check,Open -  - LUT
+2023-03-02 12 AM,Bred,Bred,629HO19773  by Tech 19
+2023-03-02 12 AM,Enroll in protocol,Enroll in protocol,Breeding Code: T - Imported completed protocol
+2023-03-02 12 AM,Preg Check,Preg Check,Open -  - 629H19773
+2023-02-27 12 AM,Preg Check,Preg Check,Open -  - LUT
+2023-02-23 12 AM,Other,Offexp,offexp
+2023-01-31 08 PM,Enroll in protocol,Enroll in protocol,Due to Calve Mark - cancelled without completion
+2023-01-31 08 PM,Enroll in protocol,Enroll in protocol,Auto-Clear Milk Holds on Milk Cows and Heifers
+2023-01-31 08 PM,Withhold Milk,Withhold Milk,auto-cleared
+2023-01-26 12 AM,Preg Check,Preg Check,Open -  - 507H15839
+2023-01-26 12 AM,Bred,Bred,507HO15839  by Tech 3
+2023-01-26 12 AM,Enroll in protocol,Enroll in protocol,Breeding Code: T - Imported completed protocol
+2023-01-23 12 AM,Preg Check,Preg Check,Open -  - LUT
+2023-01-17 12 AM,Other,Onexp,onexp - HMW670
+2022-12-22 12 AM,Preg Check,Preg Check,Open -  - 614H15582
+2022-12-22 12 AM,Bred,Bred,614HO15582  - 614HO15582 / breeding protocol - None by Tech 3
+2022-12-22 12 AM,Enroll in protocol,Enroll in protocol,Double Ovsynch 2 PgF - Imported completed protocol
+2022-12-22 12 AM,Abortion,Abortion,
+2022-06-28 12 AM,Other,Notes,notes - FECAL
+2022-05-04 12 AM,Medical diagnosis,Lame,Lame - WRAPLRKB
+2022-03-29 06 PM,Move,Move,Pen: 6
+2022-03-25 12 AM,Other,Offexp,offexp - KAW651
+2022-02-08 12 AM,Other,Onexp,onexp - KAW651
+2022-01-27 06 PM,Move,Move,Pen: 30
+2022-01-01 06 PM,Move,Move,Pen: 36
+2021-12-30 08 PM,Move,Move,Pen: 18
+2021-12-30 12 AM,Preg Check,Preg Check,Preg - U - 511H15361
+2021-12-30 12 AM,Enroll in protocol,Enroll in protocol,Double Ovsynch 2 PgF - Imported completed protocol
+2021-12-30 12 AM,Enroll in protocol,Enroll in protocol,Double Ovsynch 2 PgF - Imported completed protocol
+2021-12-30 12 AM,Bred,Bred,511HO15361  - 511HO15361 / breeding protocol - None by Sandy Trower
+2021-12-29 12 AM,VWP expiration,VWP expiration,
+2021-12-15 10 AM,Move,Move,Pen: 6
+2021-10-19 12 AM,Medical diagnosis,Pneumonia,Pneumonia - NAX5.25
+2021-10-17 06 PM,Move,Move,Pen: 18
+2021-10-14 06 PM,Move,Move,Pen: 9
+2021-10-14 12 AM,Move,Move,Pen: 20
+2021-10-13 01 AM,Watch List,Watch List,Fresh Cow for 3 days
+2021-10-13 12 AM,Freshen,Freshen,4574/74
+2021-09-30 06 PM,Move,Move,Pen: 27
+2021-09-23 06 PM,Move,Move,Pen: 28
+2021-09-23 12 AM,Other,To,TO CLOSE UP
+2021-08-23 06 PM,Move,Move,Pen: 38
+2021-08-23 12 AM,Dry Off,Dry Off,QTRMR
+2021-08-20 12 AM,Other,Notes,notes - FECAL
+2021-07-26 06 PM,Move,Move,Pen: 32
+2021-03-02 06 PM,Move,Move,Pen: 36
+2021-01-14 12 PM,Move,Move,Pen: 18
+2021-01-10 12 PM,Move,Move,Pen: 4a
+2021-01-07 12 AM,Preg Check,Preg Check,Preg - U - 11AN1313
+2021-01-07 12 AM,Bred,Bred,11AN1313  by Mark
+2020-12-03 01 AM,Bred,Bred,507HO14320  - 507HO14320 / breeding protocol - None by Sandy Trower
+2020-12-03 12 AM,Preg Check,Preg Check,Open -  - 507H14320
+2020-12-03 12 AM,Enroll in protocol,Enroll in protocol,Double Ovsynch 2 PgF - Imported completed protocol
+2020-12-03 12 AM,Enroll in protocol,Enroll in protocol,Double Ovsynch 2 PgF - Imported completed protocol
+2020-11-28 12 AM,VWP expiration,VWP expiration,
+2020-11-19 06 PM,Move,Move,Pen: 30
+2020-09-18 06 PM,Move,Move,Pen: 18
+2020-09-13 12 AM,Move,Move,Pen: 9
+2020-09-12 12 AM,Freshen,Freshen,4262/90
+2020-09-12 12 AM,Move,Move,Pen: 20
+2020-09-12 12 AM,Watch List,Watch List,Fresh Cow for 3 days
+2020-09-10 06 PM,Move,Move,Pen: 26
+2020-09-03 06 PM,Move,Move,Pen: 27
+2020-09-03 12 AM,Other,Notes,notes - URINE PH 5.75
+2020-08-31 12 PM,Move,Move,Pen: 28
+2020-08-23 12 AM,Other,To,TO CLOSE UP
+2020-08-23 12 AM,Other,To,TO CLOSE UP
+2020-08-04 01 PM,Move,Move,Pen: 38
+2020-07-29 12 AM,Other,To,TO ARL
+2020-07-29 12 AM,Dry Off,Dry Off,SPCDC
+2020-07-29 12 AM,Other,To,TO ARL
+2019-12-12 12 AM,Preg Check,Preg Check,Preg - U - 200H10972
+2019-12-12 12 AM,Bred,Bred,200HO10972  by Greg
+2019-12-08 12 AM,VWP expiration,VWP expiration,
+2019-10-02 12 AM,Medical diagnosis,Ketosis,Ketosis - 300ML/+2
+2019-10-01 12 AM,Medical diagnosis,Metritis,Metritis - EXN5.30
+2019-09-25 12 PM,Move,Move,Pen: 96
+2019-09-22 12 AM,Watch List,Watch List,Fresh Cow for 3 days
+2019-09-22 12 AM,Freshen,Freshen,MLIVE
+2019-09-11 12 PM,Move,Move,Pen: 99
+2019-08-28 06 PM,Move,Move,Pen: 122
+2019-08-09 12 PM,Move,Move,Pen: 124
+2019-08-07 12 AM,Move,Move,Pen: 123
+2019-08-07 12 AM,Dry Off,Dry Off,QTRMR
+2019-08-05 12 AM,Move,Move,Pen: 98
+2019-07-01 12 AM,Medical diagnosis,Pneumonia,Pneumonia - EXN3.30
+2019-06-26 12 AM,Move,Move,Pen: 92
+2019-05-23 11 AM,Change EID,Change EID,"New EID: 840003132565718, Old: None"
+2019-02-07 12 AM,Vaccination,Vaccination,klebvac - 
+2019-01-12 12 AM,Vaccination,Vaccination,klebvac - 
+2019-01-12 12 AM,Other,Notes,notes - KLEBS
+2018-12-20 12 AM,Preg Check,Preg Check,Preg - U - 200H10972
+2018-12-20 12 AM,Bred,Bred,200HO10972  - 200HO10972 / breeding protocol - Double Ovsynch 2PGF by Greg
+2018-12-20 12 AM,Enroll in protocol,Enroll in protocol,Double Ovsynch 2PGF - Imported completed protocol
+2018-12-20 12 AM,Enroll in protocol,Enroll in protocol,Double Ovsynch 2PGF - Imported completed protocol
+2018-12-15 12 AM,VWP expiration,VWP expiration,
+2018-11-06 12 AM,Heat,Heat,
+2018-10-03 12 AM,Medical diagnosis,Ketosis,Ketosis - GLYCOL3X
+2018-09-30 12 PM,Move,Move,Pen: 94
+2018-09-29 12 AM,Watch List,Watch List,Fresh Cow for 3 days
+2018-09-29 12 AM,Freshen,Freshen,
+2018-09-17 12 AM,Move,Move,Pen: 100
+2018-08-31 12 AM,Move,Move,Pen: 142
+2018-08-20 12 AM,Weight,Weight,1530
+2018-08-18 12 AM,Weight,Weight,1545
+2018-08-07 12 AM,Move,Move,Pen: 154
+2018-06-07 12 AM,Move,Move,Pen: 156
+2018-06-07 12 AM,Other,Offexp,offexp - MSA560
+2018-05-24 12 AM,Weight,Weight,1258
+2018-05-17 12 AM,Other,Onexp,onexp - MSA560
+2018-04-12 12 AM,Move,Move,Pen: 154
+2018-03-03 12 AM,Weight,Weight,1235
+2018-02-16 12 AM,Move,Move,Pen: 160
+2018-01-18 12 AM,Move,Move,Pen: 145
+2018-01-07 11 PM,Prev lactations,Prev lactations,1 previous lactations
+2017-12-28 12 AM,Preg Check,Preg Check,Preg - U - 7H13714
+2017-12-28 12 AM,Bred,Bred,7HO13714  by Paul
+2017-12-19 12 AM,Heat,Heat,
+2017-12-02 12 AM,Other,Notes,notes - EPRINEX
+2017-12-02 12 AM,Weight,Weight,1030
+2017-11-30 01 AM,Bred,Bred,200HO10619  by Greg
+2017-11-30 12 AM,Preg Check,Preg Check,Open -  - 200H10619
+2017-10-26 12 AM,VWP expiration,VWP expiration,
+2017-10-24 12 AM,Move,Move,Pen: 166
+2017-10-19 01 AM,Bred,Bred,200HO2828  - 200HO2828 / breeding protocol - Breed followng heat detect by Greg
+2017-10-19 12 AM,Preg Check,Preg Check,Open -  - 200H2828
+2017-10-19 12 AM,Enroll in protocol,Enroll in protocol,Breed followng heat detect - Imported completed protocol
+2017-10-19 12 AM,Enroll in protocol,Enroll in protocol,Breed followng heat detect - Imported completed protocol
+2017-09-20 12 AM,Weight,Weight,905
+2017-09-15 12 AM,Move,Move,Pen: 133
+2017-08-20 12 AM,Other,Measure,measure - 814
+2017-08-20 12 AM,Weight,Weight,814
+2017-08-02 12 AM,Move,Move,Pen: 124
+2017-06-01 12 AM,Move,Move,Pen: 123
+2017-05-04 12 AM,Move,Move,Pen: 118
+2017-04-24 12 AM,Other,Measure,measure - 574
+2017-04-19 12 AM,Move,Move,Pen: 117
+2017-03-23 12 AM,Move,Move,Pen: 115
+2017-03-09 12 AM,Move,Move,Pen: 112
+2017-03-01 12 AM,Other,Measure,measure - 433
+2017-02-23 12 AM,Move,Move,Pen: 110
+2017-02-01 12 AM,Move,Move,Pen: 108
+2017-01-26 12 AM,Move,Move,Pen: 106
+2017-01-20 12 AM,Other,Measure,measure - 384
+2017-01-13 12 AM,Move,Move,Pen: 105
+2016-12-29 12 AM,Move,Move,Pen: 103
+2016-12-20 12 AM,Move,Move,Pen: 101
+2016-12-16 12 AM,Move,Move,Pen: 102
+2016-12-06 12 AM,Other,Notes,notes - CORRID5X
+2016-11-24 12 AM,Other,Notes,notes - NUFLOR
+2016-11-23 06 PM,Move,Move,Pen: 193
+2016-10-14 01 PM,Move,Move,Pen: 43
+2016-10-01 10 AM,Vaccination,Clostridium Type C & D,Clostridium Type C & D
+2016-10-01 10 AM,Vaccination,Inforce 3,Inforce 3
+2016-09-12 06 AM,Enroll in protocol,Enroll in protocol,Calf Vaccination at Weaning - protocol open
+2016-08-26 06 AM,Enroll in protocol,Enroll in protocol,Calf Vaccination-Birth - protocol open
+2016-08-26 12 AM,Move,Move,Pen: 44
+2016-08-26 12 AM,Birth,Birth,

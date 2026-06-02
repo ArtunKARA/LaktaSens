@@ -1,0 +1,126 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=2.2cm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{hyperref}
+\usepackage{array}
+\usepackage{xcolor}
+\title{Smart Feed Regresyon Tabanli Veri Tutarlilik Raporu}
+\author{LaktaSens / Codex audit script}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section*{Ozet Karar}
+Kismen tutarli: ana regresyon iliskileri calisiyor, ancak duzeltilmesi gereken uyarilar var.
+
+\begin{itemize}
+\item Kontrol edilen kok dizin: \texttt{.}
+\item THI regresyonu: bildirilen THI, sicaklik ve nemden hesaplanan THI formulu ile karsilastirildi.
+\item Sut/DIM regresyonu: DIM degerinin gun basina +1 ilerleyip ilerlemedigi test edildi.
+\item CBT regresyonu: vucut sicakligi zaman ve gun-ici sinyallerle modellenerek buyuk residual ve fizyolojik outlier arandi.
+\item Proje B numeric hygiene: ileride numeric cast riski yaratabilecek virgullu sayilar tarandi.
+\end{itemize}
+
+\section*{Uyarilar}
+\begin{itemize}
+\item \textbf{THI} -- average.csv: header unit F, regression infers C
+\item \textbf{Milk duplicate} -- C09-C10: Very high correlation with same DIM; check for duplicate or mirrored cow record
+\item \textbf{CBT} -- C09: 7 physiological outlier(s); 10 large regression residual outlier(s)
+\item \textbf{Project B numeric} -- voeder\_detail: PostgreSQL numeric cast risk if this column is later converted
+\item \textbf{Project B numeric} -- voeder\_average: PostgreSQL numeric cast risk if this column is later converted
+\end{itemize}
+
+\section*{THI Regresyon Sonuclari}
+\begin{longtable}{p{0.18\linewidth}rrrrrrrrrp{0.18\linewidth}}
+\toprule
+Dosya & N & Baslik & Infer & R2 C & MAE C & R2 F & MAE F & Gap & Durum & Not \\
+\midrule
+\endhead
+average.csv & 19831 & F & C & 0.9995 & 0.0985 & -69.6525 & 44.2631 & 0 & WARNING & header unit F, regression infers C \\
+S01.csv & 19831 & C & C & 0.9996 & 0.0959 & -66.5410 & 44.2969 & 0 & OK & THI, temperature, humidity relation is consistent \\
+S02.csv & 19831 & C & C & 0.9995 & 0.1045 & -69.7583 & 43.7569 & 0 & OK & THI, temperature, humidity relation is consistent \\
+S03.csv & 19831 & C & C & 0.9995 & 0.0983 & -72.1644 & 44.2789 & 0 & OK & THI, temperature, humidity relation is consistent \\
+S04.csv & 19831 & C & C & 0.9996 & 0.0966 & -70.1350 & 44.5500 & 0 & OK & THI, temperature, humidity relation is consistent \\
+S05.csv & 19500 & C & C & 0.9996 & 0.0933 & -70.6763 & 44.8692 & 0 & OK & THI, temperature, humidity relation is consistent \\
+S06.csv & 19831 & C & C & 0.9996 & 0.1025 & -65.3419 & 43.9518 & 0 & OK & THI, temperature, humidity relation is consistent \\
+\bottomrule
+\end{longtable}
+
+\section*{Sut ve DIM Regresyon Sonuclari}
+\begin{longtable}{p{0.18\linewidth}rrrrrrrrp{0.18\linewidth}}
+\toprule
+Inek & N & Baslangic & Bitis & DIM egim & DIM R2 & DIM max resid & Sut R2 & Durum & Not \\
+\midrule
+\endhead
+C01 & 15 & 2023-07-21 & 2023-08-04 & 1.0000 & 1.0000 & 0.0000 & 0.4665 & OK & DIM timing is consistent \\
+C02 & 15 & 2023-07-21 & 2023-08-04 & 1.0000 & 1.0000 & 0.0000 & 0.4784 & OK & DIM timing is consistent \\
+C03 & 15 & 2023-07-21 & 2023-08-04 & 1.0000 & 1.0000 & 0.0000 & 0.4092 & OK & DIM timing is consistent \\
+C04 & 15 & 2023-07-21 & 2023-08-04 & 1.0000 & 1.0000 & 0.0000 & 0.2369 & OK & DIM timing is consistent \\
+C05 & 15 & 2023-07-21 & 2023-08-04 & 1.0000 & 1.0000 & 0.0000 & 0.0854 & OK & DIM timing is consistent \\
+C06 & 15 & 2023-07-21 & 2023-08-04 & 1.0000 & 1.0000 & 0.0000 & 0.2351 & OK & DIM timing is consistent \\
+C07 & 15 & 2023-07-21 & 2023-08-04 & 1.0000 & 1.0000 & 0.0000 & 0.2448 & OK & DIM timing is consistent \\
+C08 & 15 & 2023-07-21 & 2023-08-04 & 1.0000 & 1.0000 & 0.0000 & 0.1552 & OK & DIM timing is consistent \\
+C09 & 15 & 2023-07-21 & 2023-08-04 & 1.0000 & 1.0000 & 0.0000 & 0.1228 & OK & DIM timing is consistent \\
+C10 & 15 & 2023-07-21 & 2023-08-04 & 1.0000 & 1.0000 & 0.0000 & 0.1294 & OK & DIM timing is consistent \\
+C11 & 15 & 2023-07-21 & 2023-08-04 & 1.0000 & 1.0000 & 0.0000 & 0.3195 & OK & DIM timing is consistent \\
+C12 & 15 & 2023-07-21 & 2023-08-04 & 1.0000 & 1.0000 & 0.0000 & 0.0215 & OK & DIM timing is consistent \\
+C13 & 15 & 2023-07-21 & 2023-08-04 & 1.0000 & 1.0000 & 0.0000 & 0.1559 & OK & DIM timing is consistent \\
+C14 & 15 & 2023-07-21 & 2023-08-04 & 1.0000 & 1.0000 & 0.0000 & 0.2927 & OK & DIM timing is consistent \\
+C15 & 15 & 2023-07-21 & 2023-08-04 & 1.0000 & 1.0000 & 0.0000 & 0.0658 & OK & DIM timing is consistent \\
+C16 & 15 & 2023-07-21 & 2023-08-04 & 1.0000 & 1.0000 & 0.0000 & 0.0421 & OK & DIM timing is consistent \\
+\bottomrule
+\end{longtable}
+
+\section*{Sut Serisi Benzerlik Kontrolu}
+\begin{longtable}{p{0.18\linewidth}rrrrrrp{0.18\linewidth}}
+\toprule
+Cift & N & Korelasyon & Ort abs fark & Max abs fark & Ayni DIM & Durum & Not \\
+\midrule
+\endhead
+C09-C10 & 15 & 0.9992 & 0.0393 & 0.4540 & True & WARNING & Very high correlation with same DIM; check for duplicate or mirrored cow record \\
+\bottomrule
+\end{longtable}
+
+\section*{CBT Regresyon ve Outlier Kontrolu}
+\begin{longtable}{p{0.18\linewidth}rrrrrrrrrp{0.18\linewidth}}
+\toprule
+Inek & N & Min C & Max C & R2 & Resid std & Fiz out & Reg out & Gap & Durum & Not \\
+\midrule
+\endhead
+C01 & 19831 & 37.9700 & 39.3000 & 0.1811 & 0.1731 & 0 & 0 & 0 & OK & Temperature range and residuals are consistent \\
+C02 & 19831 & 37.9300 & 39.4700 & 0.3135 & 0.2106 & 0 & 0 & 0 & OK & Temperature range and residuals are consistent \\
+C03 & 19831 & 37.8700 & 39.3200 & 0.0873 & 0.2115 & 0 & 0 & 0 & OK & Temperature range and residuals are consistent \\
+C04 & 19831 & 37.6900 & 39.4200 & 0.1908 & 0.2497 & 0 & 0 & 0 & OK & Temperature range and residuals are consistent \\
+C05 & 19831 & 37.7400 & 39.4800 & 0.1147 & 0.2684 & 0 & 0 & 0 & OK & Temperature range and residuals are consistent \\
+C06 & 19831 & 38.0000 & 39.2300 & 0.2581 & 0.2016 & 0 & 0 & 0 & OK & Temperature range and residuals are consistent \\
+C07 & 19441 & 37.7600 & 39.3400 & 0.2104 & 0.2239 & 0 & 0 & 0 & OK & Temperature range and residuals are consistent \\
+C08 & 19831 & 37.8000 & 39.2800 & 0.1955 & 0.1966 & 0 & 0 & 0 & OK & Temperature range and residuals are consistent \\
+C09 & 19831 & 21.9000 & 39.5100 & 0.1611 & 0.3556 & 7 & 10 & 0 & WARNING & 7 physiological outlier(s); 10 large regression residual outlier(s) \\
+C10 & 19831 & 37.5800 & 39.3800 & 0.2896 & 0.2536 & 0 & 0 & 0 & OK & Temperature range and residuals are consistent \\
+\bottomrule
+\end{longtable}
+
+\section*{Proje B Numeric Hygiene}
+\begin{longtable}{p{0.18\linewidth}rrrrrrp{0.18\linewidth}}
+\toprule
+Kaynak & Kolon & N & Dolu & Virgullu & Ornek & Durum & Not \\
+\midrule
+\endhead
+voeder\_detail & mn\_mg\_kg\_dm & 744 & 744 & 3 & 1,014.0, 2,371.0, 1,214.0 & WARNING & PostgreSQL numeric cast risk if this column is later converted \\
+voeder\_average & mn\_mg\_kg\_dm & 140 & 54 & 2 & 2,371.0, 1,214.0 & WARNING & PostgreSQL numeric cast risk if this column is later converted \\
+\bottomrule
+\end{longtable}
+
+\section*{Yontem Notlari}
+\begin{itemize}
+\item THI icin iki fiziksel alternatif test edildi: sicaklik degeri Celsius kabul edildi ve Fahrenheit kabul edildi. Daha dusuk MAE hangi birimi isaret ediyorsa ``inferred unit'' olarak raporlandi.
+\item Sut/DIM kontrolunde regresyon denklemi DIM = a + b * gun olarak kuruldu. Beklenen egim b = 1.0'dir.
+\item CBT kontrolunde sicaklik, gecen gun + gun-ici sinus/cosinus ozellikleri ile modellenmistir. Bu model biyolojik tahmin modeli degil, veri tutarliligi icin residual taramasidir.
+\item Dusuk sut trend R2 degeri tek basina hata degildir; sut verimi gunluk dogal dalgalanma gosterebilir.
+\end{itemize}
+
+\end{document}
