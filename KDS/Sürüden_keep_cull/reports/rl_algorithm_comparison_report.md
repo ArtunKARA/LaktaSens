@@ -1,6 +1,6 @@
 # RL Algorithm Comparison Report
 
-- Generated at: `2026-05-21T14:25:05`
+- Generated at: `2026-06-01T13:55:02`
 - Results: `data/processed/rl/rl_algorithm_comparison_results.csv`
 - Policy table: `data/processed/rl/rl_algorithm_policy_table.csv`
 
@@ -10,12 +10,12 @@
 |---|---|---:|---:|---:|---:|---:|---|
 | `model_based_mdp_value_iteration` | `model_based_exact` | -30.30 | -550.68 | 0.1111 | 0 | True | Reference policy from direct value iteration model. |
 | `keep_all` | `heuristic` | -70.99 | -618.00 | 0.0000 | 18 | True | Deterministic heuristic baseline. |
-| `dqn_style_fqi_mlp` | `simulator_rl_approximate` | -70.99 | -618.00 | 0.0000 | 18 | True | DQN-style fitted Q iteration with sklearn MLP; fitted_iterations=10, hidden=(32,). |
+| `dqn_style_fqi_mlp` | `simulator_rl_approximate` | -70.99 | -618.00 | 0.0000 | 18 | True | Direct DQN-style fitted Q iteration with sklearn MLP; iterations=10. |
 | `milk_margin_threshold` | `heuristic` | -74.67 | -624.30 | 0.1235 | 20 | True | Deterministic heuristic baseline. |
 | `tabular_q_learning` | `simulator_rl` | -93.10 | -739.24 | 0.1605 | 36 | True | Direct tabular Q-learning; episodes=4000, final_epsilon=0.0300. |
 | `risk_threshold` | `heuristic` | -164.90 | -732.55 | 0.2346 | 36 | True | Deterministic heuristic baseline. |
 | `random_policy` | `heuristic_stochastic` | -622.02 | -909.79 | 0.0500 | 18 | True | Stochastic baseline with fixed cull probability. |
-| `tabular_ppo_smoke` | `simulator_rl` | -1052.95 | -1195.45 | 0.4905 | 47 | True | Tabular PPO-style smoke test on empirical simulator; iterations=140. |
+| `tabular_ppo_smoke` | `simulator_rl` | -1052.95 | -1195.45 | 0.4905 | 47 | True | Direct tabular PPO-style smoke test; iterations=140. |
 | `cull_all_now` | `heuristic` | -1300.00 | -1300.00 | 1.0000 | 144 | True | Deterministic heuristic baseline. |
 
 ## Not Run / Not Eligible

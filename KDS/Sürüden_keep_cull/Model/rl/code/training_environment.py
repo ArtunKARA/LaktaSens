@@ -156,6 +156,7 @@ class RLTrainingEnvironment:
             "sb3_results": self.outputs_dir / "sb3_training_results.csv",
             "sb3_policy": self.outputs_dir / "sb3_policy_table.csv",
             "sb3_eval_episodes": self.outputs_dir / "sb3_eval_episodes.csv",
+            "sb3_training_curve": self.outputs_dir / "sb3_training_curve.csv",
         }
 
     def load_output_tables(self) -> dict[str, pd.DataFrame]:

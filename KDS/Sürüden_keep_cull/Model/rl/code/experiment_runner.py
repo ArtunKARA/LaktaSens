@@ -14,8 +14,6 @@ from training_environment import (
     PROJECT_ROOT,
     CommandResult,
     RLTrainingEnvironment,
-    load_yaml,
-    save_yaml,
 )
 
 
@@ -39,10 +37,23 @@ def run_sb3_pipeline(python_executable: str) -> list[CommandResult]:
     return run_model("sb3_ppo_dqn", env=RLTrainingEnvironment(), default_python=python_executable, sb3_python=python_executable)
 
 
-def run_from_parameters(parameters_path: Path = PARAMETERS_PATH) -> list[CommandResult]:
+def resolved_parameter_overrides(params: dict[str, Any], extra_overrides: dict[str, Any] | None = None) -> dict[str, Any]:
+    overrides = dict(params.get("overrides", {}) or {})
+    profile_name = params.get("profile")
+    if profile_name:
+        profile_cfg = (params.get("profiles", {}) or {}).get(profile_name, {})
+        overrides.update(profile_cfg.get("overrides", {}) or {})
+    overrides.update(extra_overrides or {})
+    return overrides
+
+
+def run_from_parameters(
+    parameters_path: Path = PARAMETERS_PATH,
+    extra_overrides: dict[str, Any] | None = None,
+) -> list[CommandResult]:
     env = RLTrainingEnvironment(parameters_path=parameters_path)
     params = env.load_parameters()
-    env.apply_overrides(params.get("overrides", {}))
+    env.apply_overrides(resolved_parameter_overrides(params, extra_overrides))
     default_python = params.get("python", {}).get("default", sys.executable)
     sb3_python = params.get("python", {}).get("sb3", default_python)
     run_cfg = params.get("run", {})
@@ -101,11 +112,7 @@ def main() -> int:
         return 0
 
     if args.mode == "all":
-        if overrides:
-            parameters = load_yaml(Path(args.parameters))
-            parameters.setdefault("overrides", {}).update(overrides)
-            save_yaml(Path(args.parameters), parameters)
-        run_from_parameters(Path(args.parameters))
+        run_from_parameters(Path(args.parameters), extra_overrides=overrides)
     elif args.mode == "mdp":
         run_model("mdp_value_iteration", env=env, default_python=args.python)
     elif args.mode == "compare":

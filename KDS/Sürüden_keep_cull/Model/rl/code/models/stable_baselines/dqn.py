@@ -91,6 +91,59 @@ def policy_table_for_model(model: Any, env: CowReplacementGymEnv, mdp_states: li
     return pd.DataFrame(rows)
 
 
+def summarize_evaluation(timestep: int, episodes: pd.DataFrame) -> dict[str, Any]:
+    terminal_counts = episodes["terminal_reason"].value_counts(normalize=True) if "terminal_reason" in episodes else {}
+    return {
+        "algorithm": ALGORITHM,
+        "timestep": int(timestep),
+        "eval_episodes": int(len(episodes)),
+        "mean_total_reward": float(episodes["total_reward"].mean()),
+        "median_total_reward": float(episodes["total_reward"].median()),
+        "mean_steps": float(episodes["steps"].mean()),
+        "mean_cull_action_rate": float(episodes["cull_action_rate"].mean()),
+        "agent_cull_episode_rate": float(terminal_counts.get("agent_cull", 0.0)),
+        "empirical_terminal_episode_rate": float(terminal_counts.get("empirical_terminal", 0.0)),
+        "max_episode_steps_rate": float(terminal_counts.get("max_episode_steps", 0.0)),
+    }
+
+
+def make_training_curve_callback(
+    mdp: Any,
+    rules: dict[str, Any],
+    seed: int,
+    eval_freq: int,
+    eval_episodes: int,
+) -> Any:
+    from stable_baselines3.common.callbacks import BaseCallback
+
+    class TrainingCurveCallback(BaseCallback):
+        def __init__(self) -> None:
+            super().__init__(verbose=0)
+            self.rows: list[dict[str, Any]] = []
+            self._last_recorded_timestep = -1
+
+        def _record(self) -> None:
+            timestep = int(self.num_timesteps)
+            eval_env = CowReplacementGymEnv(mdp, rules, seed=seed + 1000 + timestep)
+            episodes = evaluate_model(self.model, eval_env, eval_episodes)
+            self.rows.append(summarize_evaluation(timestep, episodes))
+            self._last_recorded_timestep = timestep
+
+        def _on_step(self) -> bool:
+            if eval_freq > 0 and int(self.num_timesteps) % eval_freq == 0:
+                self._record()
+            return True
+
+        def _on_training_end(self) -> None:
+            if self._last_recorded_timestep != int(self.num_timesteps):
+                self._record()
+
+        def to_frame(self) -> pd.DataFrame:
+            return pd.DataFrame(self.rows)
+
+    return TrainingCurveCallback()
+
+
 def write_sb3_report(results: pd.DataFrame, env: RLTrainingEnvironment, rules: dict[str, Any]) -> None:
     report_path = project_path(env, rules["output"]["sb3_training_report_md"])
     lines = [
@@ -100,6 +153,7 @@ def write_sb3_report(results: pd.DataFrame, env: RLTrainingEnvironment, rules: d
         f"- Results: `{rules['output']['sb3_training_results_csv']}`",
         f"- Policy table: `{rules['output']['sb3_policy_table_csv']}`",
         f"- Eval episodes: `{rules['output']['sb3_eval_episodes_csv']}`",
+        f"- Training curve: `{rules['output'].get('sb3_training_curve_csv', 'data/processed/rl/sb3_training_curve.csv')}`",
         "",
         "## Results",
         "",
@@ -117,12 +171,27 @@ def write_sb3_report(results: pd.DataFrame, env: RLTrainingEnvironment, rules: d
     report_path.write_text("\n".join(lines).rstrip() + "\n", encoding="utf-8")
 
 
+def update_training_curve_outputs(env: RLTrainingEnvironment, rules: dict[str, Any], curve: pd.DataFrame) -> None:
+    if curve.empty:
+        return
+    curve_path = project_path(env, rules["output"].get("sb3_training_curve_csv", "data/processed/rl/sb3_training_curve.csv"))
+    if curve_path.exists():
+        curve_table = pd.read_csv(curve_path, low_memory=False)
+        curve_table = curve_table[~curve_table.get("algorithm", pd.Series(dtype=str)).astype(str).eq(ALGORITHM)]
+    else:
+        curve_table = pd.DataFrame()
+    curve_table = pd.concat([curve_table, curve], ignore_index=True).sort_values(["algorithm", "timestep"])
+    curve_path.parent.mkdir(parents=True, exist_ok=True)
+    curve_table.to_csv(curve_path, index=False)
+
+
 def update_sb3_outputs(
     env: RLTrainingEnvironment,
     rules: dict[str, Any],
     result_row: dict[str, Any],
     policy: pd.DataFrame,
     episodes: pd.DataFrame,
+    curve: pd.DataFrame | None = None,
 ) -> None:
     results_path = project_path(env, rules["output"]["sb3_training_results_csv"])
     policy_path = project_path(env, rules["output"]["sb3_policy_table_csv"])
@@ -151,6 +220,7 @@ def update_sb3_outputs(
     results.to_csv(results_path, index=False)
     policy_table.to_csv(policy_path, index=False)
     episode_table.to_csv(episodes_path, index=False)
+    update_training_curve_outputs(env, rules, curve if curve is not None else pd.DataFrame())
     write_sb3_report(results, env, rules)
 
 
@@ -168,7 +238,7 @@ def missing_dependency_outputs(env: RLTrainingEnvironment, rules: dict[str, Any]
         "changed_states_vs_mdp_value_iteration": np.nan,
         "notes": reason,
     }
-    update_sb3_outputs(env, rules, row, pd.DataFrame(), pd.DataFrame())
+    update_sb3_outputs(env, rules, row, pd.DataFrame(), pd.DataFrame(), pd.DataFrame())
 
 
 def run(env: RLTrainingEnvironment, default_python: str, sb3_python: str | None, check: bool) -> list[CommandResult]:
@@ -186,16 +256,29 @@ def run(env: RLTrainingEnvironment, default_python: str, sb3_python: str | None,
     eval_episodes = int(rules["stable_baselines3"].get("eval_episodes", 400))
     cfg = rules["stable_baselines3"]["algorithms"][ALGORITHM]
     total_timesteps = int(cfg.get("total_timesteps", 30000))
+    curve_cfg = rules["stable_baselines3"].get("training_curve", {})
+    curve_callback = None
+    if bool(curve_cfg.get("enabled", True)):
+        curve_callback = make_training_curve_callback(
+            mdp=mdp,
+            rules=rules,
+            seed=seed,
+            eval_freq=int(curve_cfg.get("eval_freq", max(total_timesteps // 4, 1))),
+            eval_episodes=int(curve_cfg.get("eval_episodes", 30)),
+        )
 
     train_env = CowReplacementGymEnv(mdp, rules, seed=seed)
     model = make_dqn_model(train_env, rules)
-    model.learn(total_timesteps=total_timesteps, progress_bar=False)
+    model.learn(total_timesteps=total_timesteps, callback=curve_callback, progress_bar=False)
     model_path = model_dir / "dqn_cow_replacement.zip"
     model.save(model_path)
 
     eval_env = CowReplacementGymEnv(mdp, rules, seed=seed + 100)
     episodes = evaluate_model(model, eval_env, eval_episodes)
     policy = policy_table_for_model(model, eval_env, mdp.states, mdp_actions)
+    curve = curve_callback.to_frame() if curve_callback is not None else pd.DataFrame(
+        [summarize_evaluation(total_timesteps, episodes)]
+    )
     result_row = {
         "algorithm": ALGORITHM,
         "run_status": "completed",
@@ -206,9 +289,9 @@ def run(env: RLTrainingEnvironment, default_python: str, sb3_python: str | None,
         "mean_steps": float(episodes["steps"].mean()),
         "policy_cull_state_rate": float(policy["selected_action"].eq("cull").mean()),
         "changed_states_vs_mdp_value_iteration": int(policy["changed_vs_mdp"].sum()),
-        "notes": f"Saved model: {model_path.relative_to(env.project_root)}",
+        "notes": f"Saved model: {model_path.relative_to(env.project_root)}; timesteps={total_timesteps}",
     }
-    update_sb3_outputs(env, rules, result_row, policy, episodes)
+    update_sb3_outputs(env, rules, result_row, policy, episodes, curve)
     return direct_result(
         "sb3_dqn",
         stdout=f"trained DQN timesteps={total_timesteps} mean_reward={result_row['mean_total_reward']:.2f}",

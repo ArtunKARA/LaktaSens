@@ -1,0 +1,117 @@
+{
+  "generated_at": "2026-06-01T13:55:03",
+  "project_root": "C:\\Users\\Artun\\Desktop\\Dosyalar\\github_repos\\LaktaSens\\KDS\\Sürüden_keep_cull",
+  "python": "c:\\Users\\Artun\\anaconda3\\python.exe",
+  "requested_models": [
+    "mdp_value_iteration",
+    "tabular_q_learning",
+    "tabular_ppo_smoke",
+    "dqn_style_fqi_mlp"
+  ],
+  "run_log": [
+    {
+      "model_key": "mdp_value_iteration",
+      "status": "completed",
+      "returncodes": [
+        0
+      ],
+      "elapsed_sec": 60.71
+    },
+    {
+      "model_key": "tabular_q_learning",
+      "status": "completed",
+      "returncodes": [
+        0
+      ],
+      "elapsed_sec": 5.7
+    },
+    {
+      "model_key": "tabular_ppo_smoke",
+      "status": "completed",
+      "returncodes": [
+        0
+      ],
+      "elapsed_sec": 3.89
+    },
+    {
+      "model_key": "dqn_style_fqi_mlp",
+      "status": "completed",
+      "returncodes": [
+        0
+      ],
+      "elapsed_sec": 10.82
+    }
+  ],
+  "parameters_path": "Model\\rl\\code\\experiment_parameters.yaml",
+  "config_path": "config\\rl_env_rules.yaml",
+  "overrides": {
+    "mdp.discount_factor": 0.97,
+    "mdp.convergence_tolerance": 0.0001,
+    "mdp.max_iterations": 1000,
+    "rl_experiments.algorithms.tabular_q_learning.episodes": 4000,
+    "rl_experiments.algorithms.tabular_ppo_smoke.iterations": 140,
+    "rl_experiments.algorithms.dqn_style_fqi_mlp.fitted_iterations": 10,
+    "stable_baselines3.eval_episodes": 100,
+    "stable_baselines3.algorithms.PPO.total_timesteps": 5000,
+    "stable_baselines3.algorithms.DQN.total_timesteps": 5000,
+    "rl_experiments.algorithms.tabular_q_learning.max_steps": 60,
+    "rl_experiments.algorithms.tabular_q_learning.alpha": 0.18,
+    "rl_experiments.algorithms.tabular_q_learning.epsilon_start": 0.35,
+    "rl_experiments.algorithms.tabular_q_learning.epsilon_end": 0.03,
+    "rl_experiments.algorithms.tabular_ppo_smoke.episodes_per_iteration": 24,
+    "rl_experiments.algorithms.tabular_ppo_smoke.learning_rate": 0.015,
+    "rl_experiments.algorithms.dqn_style_fqi_mlp.hidden_layer_sizes": [
+      32
+    ],
+    "rl_experiments.algorithms.dqn_style_fqi_mlp.max_iter": 250,
+    "stable_baselines3.algorithms.PPO.learning_rate": 0.0003,
+    "stable_baselines3.algorithms.DQN.learning_rate": 0.0005
+  },
+  "output_summary": [
+    {
+      "table": "mdp_reward",
+      "rows": 324,
+      "columns": 28
+    },
+    {
+      "table": "mdp_policy",
+      "rows": 162,
+      "columns": 16
+    },
+    {
+      "table": "scenario_results",
+      "rows": 9,
+      "columns": 14
+    },
+    {
+      "table": "algorithm_readiness",
+      "rows": 10,
+      "columns": 7
+    },
+    {
+      "table": "algorithm_comparison",
+      "rows": 14,
+      "columns": 13
+    },
+    {
+      "table": "rl_algorithm_policy",
+      "rows": 1458,
+      "columns": 10
+    },
+    {
+      "table": "sb3_results",
+      "rows": 2,
+      "columns": 10
+    },
+    {
+      "table": "sb3_policy",
+      "rows": 324,
+      "columns": 5
+    },
+    {
+      "table": "sb3_eval_episodes",
+      "rows": 200,
+      "columns": 6
+    }
+  ]
+}

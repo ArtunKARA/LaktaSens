@@ -432,8 +432,10 @@ Model kodlari `models/` altinda ailelere ayrildi:
 Notebook üzerinden:
 
 1. `notebooks/rl_experiment_runner.ipynb` dosyasını aç.
-2. Parametre hücresinde MDP, tabular RL ve SB3 timestep/eval değerlerini değiştir.
-3. İlgili hücreleri çalıştır veya model registry hücresinden tek model seç.
+2. Model aileleri ve çıktı sözleşmesi bölümlerini oku.
+3. Parametre hücresinde MDP, tabular RL, fitted Q ve SB3 timestep/eval değerlerini değiştir.
+4. `RUN_MODELS` ve `RUN_DEEP_RL` değerleriyle hangi modellerin çalışacağını seç.
+5. Çıktı tabloları, policy dağılımları, scenario sensitivity ve SB3 artifact durumunu notebook içinden incele.
 
 Terminalden:
 

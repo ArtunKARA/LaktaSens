@@ -44,6 +44,20 @@ Buradan su degerleri degistirebilirsin:
 - Tabular PPO smoke iteration sayisi
 - SB3 PPO/DQN timestep sayisi
 - SB3 evaluation episode sayisi
+- SB3 training curve checkpoint sikligi
+
+Hazir DRL profilleri:
+
+- `quick_smoke`: 5k timestep. Sadece Gymnasium/SB3 train-eval-save hattini
+  hizli dogrulamak icin.
+- `long_drl_100k`: 100k timestep. Ilk ciddi PPO/DQN kosusu icin varsayilan
+  profil.
+- `long_drl_500k`: 500k timestep. 100k sonuclari anlamliysa daha agir
+  validasyon icin.
+
+Aktif profil `experiment_parameters.yaml` icindeki `profile` alanindan secilir.
+SB3 kosulari ara degerlendirme sonuclarini
+`data/processed/rl/sb3_training_curve.csv` dosyasina yazar.
 
 ## Terminalden Calistirma
 

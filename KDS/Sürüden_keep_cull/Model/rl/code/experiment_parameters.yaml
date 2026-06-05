@@ -1,16 +1,11 @@
-# Notebook/CLI tarafindan kolay degistirilecek RL deney parametreleri.
-# Degerler config/rl_env_rules.yaml icine yazilir, sonra ilgili scriptler calistirilir.
-
 run:
   rebuild_mdp: true
   run_comparative_rl: true
   run_sb3_training: true
-
+profile: long_drl_100k
 python:
-  default: "python3"
-  # Stable-Baselines3 paketleri agir oldugu icin ayri venv kullanmak daha pratik.
-  sb3: "/tmp/laktasens-rl-venv/bin/python"
-
+  default: python3
+  sb3: /tmp/laktasens-rl-venv/bin/python
 overrides:
   mdp.discount_factor: 0.97
   mdp.convergence_tolerance: 0.0001
@@ -18,7 +13,64 @@ overrides:
   rl_experiments.algorithms.tabular_q_learning.episodes: 4000
   rl_experiments.algorithms.tabular_ppo_smoke.iterations: 140
   rl_experiments.algorithms.dqn_style_fqi_mlp.fitted_iterations: 10
-  stable_baselines3.eval_episodes: 100
-  stable_baselines3.algorithms.PPO.total_timesteps: 5000
-  stable_baselines3.algorithms.DQN.total_timesteps: 5000
-
+  stable_baselines3.eval_episodes: 200
+  rl_experiments.algorithms.tabular_q_learning.max_steps: 60
+  rl_experiments.algorithms.tabular_q_learning.alpha: 0.18
+  rl_experiments.algorithms.tabular_q_learning.epsilon_start: 0.35
+  rl_experiments.algorithms.tabular_q_learning.epsilon_end: 0.03
+  rl_experiments.algorithms.tabular_ppo_smoke.episodes_per_iteration: 24
+  rl_experiments.algorithms.tabular_ppo_smoke.learning_rate: 0.015
+  rl_experiments.algorithms.dqn_style_fqi_mlp.hidden_layer_sizes:
+  - 32
+  rl_experiments.algorithms.dqn_style_fqi_mlp.max_iter: 250
+  stable_baselines3.training_curve.enabled: true
+  stable_baselines3.training_curve.eval_freq: 25000
+  stable_baselines3.training_curve.eval_episodes: 30
+  stable_baselines3.algorithms.PPO.learning_rate: 0.0003
+  stable_baselines3.algorithms.PPO.total_timesteps: 100000
+  stable_baselines3.algorithms.DQN.learning_rate: 0.0005
+  stable_baselines3.algorithms.DQN.total_timesteps: 100000
+  stable_baselines3.algorithms.DQN.buffer_size: 100000
+  stable_baselines3.algorithms.DQN.learning_starts: 5000
+  stable_baselines3.algorithms.DQN.target_update_interval: 1000
+  stable_baselines3.algorithms.DQN.exploration_fraction: 0.35
+profiles:
+  quick_smoke:
+    description: Fast sanity check. Verifies Gymnasium/SB3 train-eval-save path.
+    overrides:
+      stable_baselines3.eval_episodes: 100
+      stable_baselines3.training_curve.enabled: true
+      stable_baselines3.training_curve.eval_freq: 1000
+      stable_baselines3.training_curve.eval_episodes: 20
+      stable_baselines3.algorithms.PPO.total_timesteps: 5000
+      stable_baselines3.algorithms.DQN.total_timesteps: 5000
+      stable_baselines3.algorithms.DQN.buffer_size: 20000
+      stable_baselines3.algorithms.DQN.learning_starts: 500
+      stable_baselines3.algorithms.DQN.target_update_interval: 500
+      stable_baselines3.algorithms.DQN.exploration_fraction: 0.25
+  long_drl_100k:
+    description: First serious DRL run. Produces learning curve checkpoints and more stable PPO/DQN comparison.
+    overrides:
+      stable_baselines3.eval_episodes: 200
+      stable_baselines3.training_curve.enabled: true
+      stable_baselines3.training_curve.eval_freq: 25000
+      stable_baselines3.training_curve.eval_episodes: 30
+      stable_baselines3.algorithms.PPO.total_timesteps: 100000
+      stable_baselines3.algorithms.DQN.total_timesteps: 100000
+      stable_baselines3.algorithms.DQN.buffer_size: 100000
+      stable_baselines3.algorithms.DQN.learning_starts: 5000
+      stable_baselines3.algorithms.DQN.target_update_interval: 1000
+      stable_baselines3.algorithms.DQN.exploration_fraction: 0.35
+  long_drl_500k:
+    description: Heavier validation run. Use after 100k results look stable.
+    overrides:
+      stable_baselines3.eval_episodes: 300
+      stable_baselines3.training_curve.enabled: true
+      stable_baselines3.training_curve.eval_freq: 50000
+      stable_baselines3.training_curve.eval_episodes: 40
+      stable_baselines3.algorithms.PPO.total_timesteps: 500000
+      stable_baselines3.algorithms.DQN.total_timesteps: 500000
+      stable_baselines3.algorithms.DQN.buffer_size: 200000
+      stable_baselines3.algorithms.DQN.learning_starts: 10000
+      stable_baselines3.algorithms.DQN.target_update_interval: 2000
+      stable_baselines3.algorithms.DQN.exploration_fraction: 0.4
