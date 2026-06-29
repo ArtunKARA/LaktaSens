@@ -13,6 +13,15 @@ import { radii, spacing } from '../../theme/spacing';
 import { typography } from '../../theme/typography';
 import { QrScanResult } from '../../types/domain';
 
+function sensorQrFromResult(result?: QrScanResult) {
+  if (!result || result.type !== 'sensor') {
+    return undefined;
+  }
+
+  const data = (result.data ?? {}) as Record<string, unknown>;
+  return String(data.qr ?? result.targetId ?? '');
+}
+
 export function QRScannerScreen({ navigation }: MainScreenProps<'QRScanner'>) {
   const [permission, requestPermission] = useCameraPermissions();
   const [scanned, setScanned] = useState(false);
@@ -80,12 +89,22 @@ export function QRScannerScreen({ navigation }: MainScreenProps<'QRScanner'>) {
             <Text style={styles.code}>{result.targetId}</Text>
             {result.cowId ? (
               <View style={styles.resultActions}>
+                <AppButton label="Sagim Is Emri" icon="play-outline" onPress={() => navigation.navigate('MilkingProcess', { cowId: result.cowId })} />
                 <AppButton label="Sut Sonucu" icon="water-outline" onPress={() => navigation.navigate('MilkResult', { cowId: result.cowId })} />
                 <AppButton
                   label="AI Onerileri"
                   icon="sparkles-outline"
                   variant="secondary"
                   onPress={() => navigation.navigate('AISuggestions', { cowId: result.cowId })}
+                />
+              </View>
+            ) : null}
+            {result.type === 'sensor' ? (
+              <View style={styles.resultActions}>
+                <AppButton
+                  label="Sagim Isine Kullan"
+                  icon="play-outline"
+                  onPress={() => navigation.navigate('MilkingProcess', { sensorQr: sensorQrFromResult(result) })}
                 />
               </View>
             ) : null}

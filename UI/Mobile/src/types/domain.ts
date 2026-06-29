@@ -38,6 +38,7 @@ export interface QrScanResult {
   message: string;
   cowId?: string;
   info?: string;
+  data?: unknown;
 }
 
 export interface MilkValues {
@@ -50,6 +51,39 @@ export interface MilkValues {
   temperature: number;
   timestamp: string;
   qualitySource?: string;
+}
+
+export type MilkingJobStatus = 'active' | 'processing' | 'completed' | 'canceled' | 'unknown';
+
+export interface SensorSummary {
+  id: number;
+  qr: string;
+  name?: string | null;
+  tankCapacity?: number | null;
+  companyId?: number;
+  companyName?: string;
+}
+
+export interface MilkingJob {
+  id: number;
+  sensorQr: string;
+  machineId?: number | null;
+  machineName?: string | null;
+  cowId: string;
+  cowInternalId?: number;
+  cowName?: string;
+  companyId?: number;
+  companyName?: string;
+  status: MilkingJobStatus;
+  statusCode?: string;
+  createdAt?: string | null;
+  startedAt?: string | null;
+  lastSeenAt?: string | null;
+  completedAt?: string | null;
+  liters?: number | null;
+  temperature?: number | null;
+  note?: string;
+  isOpen?: boolean;
 }
 
 export interface MilkRecord {

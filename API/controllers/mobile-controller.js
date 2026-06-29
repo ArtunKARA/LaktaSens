@@ -256,6 +256,11 @@ function toInteger(value, fallback = 0) {
   return Number.isFinite(numberValue) ? numberValue : fallback;
 }
 
+function positiveNumber(value, fallback = null) {
+  const numberValue = Number(value);
+  return Number.isFinite(numberValue) && numberValue > 0 ? numberValue : fallback;
+}
+
 function isoDate(value) {
   if (!value) {
     return null;
@@ -441,6 +446,26 @@ function mapCow(row) {
   };
 }
 
+function milkingJobStatusName(status) {
+  if (status === "a") {
+    return "active";
+  }
+
+  if (status === "p") {
+    return "processing";
+  }
+
+  if (status === "t") {
+    return "completed";
+  }
+
+  if (status === "i") {
+    return "canceled";
+  }
+
+  return "unknown";
+}
+
 async function loadCow(pool, user, cowId) {
   const result = await scopedRequest(pool, user)
     .input("cowId", sql.NVarChar(50), cleanString(cowId))
@@ -540,6 +565,155 @@ async function loadSensor(pool, user, code) {
       ) AS Latest
       WHERE (M.QR = @code OR CONVERT(NVARCHAR(50), M.makineID) = @code)
         AND (@role = 'a' OR M.firmaID = @firmaID)
+    `);
+
+  return result.recordset[0];
+}
+
+let milkingJobTableReady = false;
+
+async function ensureMilkingJobTable(pool) {
+  if (milkingJobTableReady) {
+    return;
+  }
+
+  await pool.request().query(`
+    IF OBJECT_ID(N'dbo.SagimIsEmri', N'U') IS NULL
+    BEGIN
+      CREATE TABLE dbo.SagimIsEmri (
+        isEmriID INT IDENTITY(1,1) PRIMARY KEY,
+        sensorQR NVARCHAR(50) NOT NULL,
+        makineID INT NULL,
+        inekID INT NOT NULL,
+        firmaID INT NOT NULL,
+        kullaniciID INT NULL,
+        durum CHAR(1) NOT NULL CONSTRAINT DF_SagimIsEmri_durum DEFAULT('a'),
+        olusturmaTarihi DATETIME2 NOT NULL CONSTRAINT DF_SagimIsEmri_olusturma DEFAULT SYSUTCDATETIME(),
+        baslamaTarihi DATETIME2 NULL,
+        sonYoklamaTarihi DATETIME2 NULL,
+        kapanmaTarihi DATETIME2 NULL,
+        sutMiktar FLOAT NULL,
+        sicaklik FLOAT NULL,
+        aciklama NVARCHAR(250) NULL,
+        CONSTRAINT FK_SagimIsEmri_sagimMakine FOREIGN KEY (makineID) REFERENCES sagimMakine(makineID),
+        CONSTRAINT FK_SagimIsEmri_inek FOREIGN KEY (inekID) REFERENCES inek(inekID),
+        CONSTRAINT FK_SagimIsEmri_firma FOREIGN KEY (firmaID) REFERENCES firmalar(firmaID),
+        CONSTRAINT FK_SagimIsEmri_kullanici FOREIGN KEY (kullaniciID) REFERENCES kullanicilar(kullaniciID)
+      );
+
+      CREATE INDEX IX_SagimIsEmri_sensor_durum ON dbo.SagimIsEmri(sensorQR, durum, olusturmaTarihi DESC);
+      CREATE INDEX IX_SagimIsEmri_inek_durum ON dbo.SagimIsEmri(inekID, durum, olusturmaTarihi DESC);
+    END
+  `);
+
+  milkingJobTableReady = true;
+}
+
+function mapMilkingJob(row) {
+  if (!row) {
+    return null;
+  }
+
+  const status = milkingJobStatusName(row.durum);
+
+  return {
+    id: Number(row.isEmriID),
+    sensorQr: row.sensorQR,
+    machineId: row.makineID ? Number(row.makineID) : null,
+    machineName: row.makineAd || null,
+    cowId: row.inekQR,
+    cowInternalId: row.inekID ? Number(row.inekID) : undefined,
+    cowName: cowName(row),
+    companyId: row.firmaID ? Number(row.firmaID) : undefined,
+    companyName: row.firmaAdi || undefined,
+    userId: row.kullaniciID ? Number(row.kullaniciID) : undefined,
+    status,
+    statusCode: row.durum,
+    createdAt: isoDate(row.olusturmaTarihi),
+    startedAt: isoDate(row.baslamaTarihi),
+    lastSeenAt: isoDate(row.sonYoklamaTarihi),
+    completedAt: isoDate(row.kapanmaTarihi),
+    liters: toNumber(row.sutMiktar, null),
+    temperature: toNumber(row.sicaklik, null),
+    note: row.aciklama || undefined,
+    isOpen: status === "active" || status === "processing",
+  };
+}
+
+function milkingJobSelectSql() {
+  return `
+    SELECT
+      J.isEmriID,
+      J.sensorQR,
+      J.makineID,
+      J.inekID,
+      J.firmaID,
+      J.kullaniciID,
+      J.durum,
+      J.olusturmaTarihi,
+      J.baslamaTarihi,
+      J.sonYoklamaTarihi,
+      J.kapanmaTarihi,
+      J.sutMiktar,
+      J.sicaklik,
+      J.aciklama,
+      I.inekQR,
+      I.ad,
+      I.irk,
+      M.makineAd,
+      F.firmaAdi
+    FROM dbo.SagimIsEmri AS J
+    INNER JOIN inek AS I ON J.inekID = I.inekID
+    LEFT JOIN sagimMakine AS M ON J.makineID = M.makineID
+    INNER JOIN firmalar AS F ON J.firmaID = F.firmaID
+  `;
+}
+
+async function loadMilkingJob(pool, user, jobId) {
+  await ensureMilkingJobTable(pool);
+
+  const result = await scopedRequest(pool, user)
+    .input("jobId", sql.Int, toInteger(jobId, 0))
+    .query(`
+      ${milkingJobSelectSql()}
+      WHERE J.isEmriID = @jobId
+        AND (@role = 'a' OR J.firmaID = @firmaID)
+    `);
+
+  return result.recordset[0];
+}
+
+async function loadSensorForDevice(pool, code) {
+  const result = await pool
+    .request()
+    .input("code", sql.NVarChar(50), cleanString(code))
+    .query(`
+      SELECT TOP 1
+        M.makineID,
+        M.makineAd,
+        M.hazneHacmi,
+        M.QR,
+        M.firmaID,
+        F.firmaAdi
+      FROM sagimMakine AS M
+      INNER JOIN firmalar AS F ON M.firmaID = F.firmaID
+      WHERE M.QR = @code OR CONVERT(NVARCHAR(50), M.makineID) = @code
+    `);
+
+  return result.recordset[0];
+}
+
+async function loadActiveMilkingJobForSensor(pool, sensorQr) {
+  await ensureMilkingJobTable(pool);
+
+  const result = await pool
+    .request()
+    .input("sensorQr", sql.NVarChar(50), cleanString(sensorQr))
+    .query(`
+      ${milkingJobSelectSql().replace("SELECT", "SELECT TOP 1")}
+      WHERE J.sensorQR = @sensorQr
+        AND J.durum IN ('a', 'p')
+      ORDER BY J.olusturmaTarihi DESC, J.isEmriID DESC
     `);
 
   return result.recordset[0];
@@ -1432,6 +1606,321 @@ exports.scanQr = async (req, res) => {
     return res.status(404).json({ error: "QR kaydi bulunamadi." });
   } catch (error) {
     return serverError(res, error, "Mobile QR scan failed:");
+  }
+};
+
+exports.createMilkingJob = async (req, res) => {
+  if (![ROLE_FARMER, ROLE_ADMIN].includes(req.mobileUser?.role)) {
+    return roleForbidden(res, ROLE_FARMER);
+  }
+
+  const body = req.body || {};
+  const cowId = cleanString(body.cowId || body.inekQR || body.cowQr);
+  const sensorQr = cleanString(
+    body.sensorQr || body.sensorQR || body.SensorQR || body.sensorCode || body.machineQr,
+  );
+
+  if (!cowId || !sensorQr) {
+    return res.status(400).json({ error: "Inek QR ve sensor QR gerekli." });
+  }
+
+  try {
+    const pool = await poolPromise;
+    const user = req.mobileUser;
+    const cow = await loadCow(pool, user, cowId);
+
+    if (!cow) {
+      return res.status(404).json({ error: "Inek kaydi bulunamadi." });
+    }
+
+    const sensor = await loadSensor(pool, user, sensorQr);
+
+    if (!sensor) {
+      return res.status(404).json({ error: "Sensor veya sagim makinesi kaydi bulunamadi." });
+    }
+
+    if (Number(sensor.firmaID) !== Number(cow.firmaID)) {
+      return res.status(409).json({ error: "Sensor ve inek ayni firmaya ait olmali." });
+    }
+
+    await ensureMilkingJobTable(pool);
+
+    await pool
+      .request()
+      .input("sensorQr", sql.NVarChar(50), sensor.QR || sensorQr)
+      .input("cowId", sql.Int, Number(cow.inekID))
+      .query(`
+        UPDATE dbo.SagimIsEmri
+        SET durum = 'i',
+            kapanmaTarihi = SYSUTCDATETIME(),
+            aciklama = COALESCE(aciklama, N'Yeni is emri baslatildigi icin kapatildi.')
+        WHERE durum IN ('a', 'p')
+          AND (sensorQR = @sensorQr OR inekID = @cowId)
+      `);
+
+    const insertResult = await pool
+      .request()
+      .input("sensorQr", sql.NVarChar(50), sensor.QR || sensorQr)
+      .input("makineID", sql.Int, Number(sensor.makineID))
+      .input("inekID", sql.Int, Number(cow.inekID))
+      .input("firmaID", sql.Int, Number(cow.firmaID))
+      .input("kullaniciID", sql.Int, Number(user.id))
+      .query(`
+        INSERT INTO dbo.SagimIsEmri (sensorQR, makineID, inekID, firmaID, kullaniciID, durum)
+        OUTPUT INSERTED.isEmriID
+        VALUES (@sensorQr, @makineID, @inekID, @firmaID, @kullaniciID, 'a')
+      `);
+
+    const jobId = insertResult.recordset[0]?.isEmriID;
+    const job = await loadMilkingJob(pool, user, jobId);
+
+    return res.status(201).json({
+      message: "Sagim is emri olusturuldu. Sensor acik is emrini sorgulayabilir.",
+      job: mapMilkingJob(job),
+    });
+  } catch (error) {
+    return serverError(res, error, "Mobile milking job create failed:");
+  }
+};
+
+exports.milkingJob = async (req, res) => {
+  const jobId = toInteger(req.params.jobId, 0);
+
+  if (!jobId) {
+    return res.status(400).json({ error: "Is emri ID gerekli." });
+  }
+
+  try {
+    const pool = await poolPromise;
+    const job = await loadMilkingJob(pool, req.mobileUser, jobId);
+
+    if (!job) {
+      return res.status(404).json({ error: "Is emri bulunamadi." });
+    }
+
+    return res.json({ job: mapMilkingJob(job) });
+  } catch (error) {
+    return serverError(res, error, "Mobile milking job read failed:");
+  }
+};
+
+exports.cancelMilkingJob = async (req, res) => {
+  const jobId = toInteger(req.params.jobId, 0);
+
+  if (!jobId) {
+    return res.status(400).json({ error: "Is emri ID gerekli." });
+  }
+
+  try {
+    const pool = await poolPromise;
+    const job = await loadMilkingJob(pool, req.mobileUser, jobId);
+
+    if (!job) {
+      return res.status(404).json({ error: "Is emri bulunamadi." });
+    }
+
+    if (!["a", "p"].includes(job.durum)) {
+      return res.json({ job: mapMilkingJob(job), message: "Is emri zaten kapali." });
+    }
+
+    await pool
+      .request()
+      .input("jobId", sql.Int, jobId)
+      .query(`
+        UPDATE dbo.SagimIsEmri
+        SET durum = 'i',
+            kapanmaTarihi = SYSUTCDATETIME(),
+            aciklama = N'Mobil uygulama tarafindan iptal edildi.'
+        WHERE isEmriID = @jobId
+      `);
+
+    const updated = await loadMilkingJob(pool, req.mobileUser, jobId);
+    return res.json({ job: mapMilkingJob(updated), message: "Is emri iptal edildi." });
+  } catch (error) {
+    return serverError(res, error, "Mobile milking job cancel failed:");
+  }
+};
+
+exports.sensorOnline = async (req, res) => {
+  const body = req.body || {};
+  const sensorQr = cleanString(body.sensorQr || body.sensorQR || body.SensorQR || req.query.sensorQr);
+
+  if (!sensorQr) {
+    return res.status(400).json({ error: "Sensor QR gerekli." });
+  }
+
+  try {
+    const pool = await poolPromise;
+    const sensor = await loadSensorForDevice(pool, sensorQr);
+
+    if (!sensor) {
+      return res.status(404).json({ error: "Sensor kaydi bulunamadi." });
+    }
+
+    const job = await loadActiveMilkingJobForSensor(pool, sensor.QR || sensorQr);
+
+    return res.json({
+      online: true,
+      sensor: {
+        id: Number(sensor.makineID),
+        qr: sensor.QR || sensorQr,
+        name: sensor.makineAd || null,
+        companyId: sensor.firmaID ? Number(sensor.firmaID) : undefined,
+        companyName: sensor.firmaAdi || undefined,
+      },
+      hasJob: Boolean(job),
+      job: mapMilkingJob(job),
+    });
+  } catch (error) {
+    return serverError(res, error, "Sensor online failed:");
+  }
+};
+
+exports.sensorActiveJob = async (req, res) => {
+  const body = req.body || {};
+  const sensorQr = cleanString(body.sensorQr || body.sensorQR || body.SensorQR || req.query.sensorQr);
+
+  if (!sensorQr) {
+    return res.status(400).json({ error: "Sensor QR gerekli." });
+  }
+
+  try {
+    const pool = await poolPromise;
+    const sensor = await loadSensorForDevice(pool, sensorQr);
+
+    if (!sensor) {
+      return res.status(404).json({ error: "Sensor kaydi bulunamadi." });
+    }
+
+    const job = await loadActiveMilkingJobForSensor(pool, sensor.QR || sensorQr);
+
+    if (!job) {
+      return res.json({ hasJob: false, message: "Acik is emri yok." });
+    }
+
+    await pool
+      .request()
+      .input("jobId", sql.Int, Number(job.isEmriID))
+      .query(`
+        UPDATE dbo.SagimIsEmri
+        SET durum = CASE WHEN durum = 'a' THEN 'p' ELSE durum END,
+            baslamaTarihi = COALESCE(baslamaTarihi, SYSUTCDATETIME()),
+            sonYoklamaTarihi = SYSUTCDATETIME()
+        WHERE isEmriID = @jobId
+      `);
+
+    const updated = await loadActiveMilkingJobForSensor(pool, sensor.QR || sensorQr);
+
+    return res.json({
+      hasJob: true,
+      message: "Acik is emri bulundu.",
+      job: mapMilkingJob(updated),
+    });
+  } catch (error) {
+    return serverError(res, error, "Sensor active job failed:");
+  }
+};
+
+exports.sensorMeasurement = async (req, res) => {
+  const body = req.body || {};
+  const sensorQr = cleanString(body.sensorQr || body.sensorQR || body.SensorQR || req.query.sensorQr);
+  const jobId = toInteger(body.jobId || body.isEmriID || req.query.jobId, 0);
+  const liters = positiveNumber(
+    body.liters || body.milkLiters || body.sutMiktar || body.SutMiktar || body.Miktar,
+  );
+  const temperature = positiveNumber(body.temperature || body.sicaklik || body.Sicaklik, null);
+
+  if (!sensorQr) {
+    return res.status(400).json({ error: "Sensor QR gerekli." });
+  }
+
+  if (liters === null) {
+    return res.status(400).json({ error: "Gecerli sut miktari gerekli." });
+  }
+
+  try {
+    const pool = await poolPromise;
+    const sensor = await loadSensorForDevice(pool, sensorQr);
+
+    if (!sensor) {
+      return res.status(404).json({ error: "Sensor kaydi bulunamadi." });
+    }
+
+    await ensureMilkingJobTable(pool);
+
+    let job;
+
+    if (jobId) {
+      const result = await pool
+        .request()
+        .input("jobId", sql.Int, jobId)
+        .input("sensorQr", sql.NVarChar(50), sensor.QR || sensorQr)
+        .query(`
+          ${milkingJobSelectSql()}
+          WHERE J.isEmriID = @jobId
+            AND J.sensorQR = @sensorQr
+            AND J.durum IN ('a', 'p')
+        `);
+      job = result.recordset[0];
+    } else {
+      job = await loadActiveMilkingJobForSensor(pool, sensor.QR || sensorQr);
+    }
+
+    if (!job) {
+      return res.status(404).json({ error: "Sensor icin acik is emri bulunamadi." });
+    }
+
+    const insertResult = await pool
+      .request()
+      .input("makineID", sql.Int, Number(job.makineID || sensor.makineID))
+      .input("sutMiktar", sql.Float, liters)
+      .input("inekID", sql.Int, Number(job.inekID))
+      .query(`
+        INSERT INTO sutOlcum (makineID, sutMiktar, inekID, sagimTarihi)
+        OUTPUT INSERTED.olcumID
+        VALUES (@makineID, @sutMiktar, @inekID, CAST(GETDATE() AS DATE))
+      `);
+
+    await pool
+      .request()
+      .input("inekID", sql.Int, Number(job.inekID))
+      .query(`
+        UPDATE inek
+        SET sonSutOlcumTarihi = CAST(GETDATE() AS DATE)
+        WHERE inekID = @inekID
+      `);
+
+    await pool
+      .request()
+      .input("jobId", sql.Int, Number(job.isEmriID))
+      .input("liters", sql.Float, liters)
+      .input("temperature", sql.Float, temperature)
+      .query(`
+        UPDATE dbo.SagimIsEmri
+        SET durum = 't',
+            kapanmaTarihi = SYSUTCDATETIME(),
+            sonYoklamaTarihi = SYSUTCDATETIME(),
+            sutMiktar = @liters,
+            sicaklik = @temperature,
+            aciklama = N'Olcum sensor tarafindan tamamlandi.'
+        WHERE isEmriID = @jobId
+      `);
+
+    const completed = await pool
+      .request()
+      .input("jobId", sql.Int, Number(job.isEmriID))
+      .query(`
+        ${milkingJobSelectSql()}
+        WHERE J.isEmriID = @jobId
+      `);
+
+    return res.json({
+      message: "Olcum kaydedildi ve is emri kapatildi.",
+      measurementId: insertResult.recordset[0]?.olcumID,
+      job: mapMilkingJob(completed.recordset[0]),
+    });
+  } catch (error) {
+    return serverError(res, error, "Sensor measurement failed:");
   }
 };
 

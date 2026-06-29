@@ -144,6 +144,36 @@ CREATE TABLE kullanicilar (
 );
 GO
 
+CREATE TABLE SagimIsEmri (
+    isEmriID INT PRIMARY KEY IDENTITY(1,1),
+    sensorQR NVARCHAR(50) NOT NULL,
+    makineID INT NULL,
+    inekID INT NOT NULL,
+    firmaID INT NOT NULL,
+    kullaniciID INT NULL,
+    durum CHAR(1) NOT NULL DEFAULT('a'), -- a aktif, p sensor isliyor, t tamamlandi, i iptal
+    olusturmaTarihi DATETIME2 NOT NULL DEFAULT SYSUTCDATETIME(),
+    baslamaTarihi DATETIME2 NULL,
+    sonYoklamaTarihi DATETIME2 NULL,
+    kapanmaTarihi DATETIME2 NULL,
+    sutMiktar FLOAT NULL,
+    sicaklik FLOAT NULL,
+    aciklama NVARCHAR(250) NULL,
+    FOREIGN KEY (makineID) REFERENCES sagimMakine(makineID),
+    FOREIGN KEY (inekID) REFERENCES inek(inekID),
+    FOREIGN KEY (firmaID) REFERENCES firmalar(firmaID),
+    FOREIGN KEY (kullaniciID) REFERENCES kullanicilar(kullaniciID)
+);
+GO
+
+CREATE INDEX IX_SagimIsEmri_sensor_durum
+ON SagimIsEmri(sensorQR, durum, olusturmaTarihi DESC);
+GO
+
+CREATE INDEX IX_SagimIsEmri_inek_durum
+ON SagimIsEmri(inekID, durum, olusturmaTarihi DESC);
+GO
+
 CREATE TABLE RedEdilenBaşvurularFirmalar (
     redEdilenBaşvurularID INT PRIMARY KEY IDENTITY(1,1),
     firmaID INT,

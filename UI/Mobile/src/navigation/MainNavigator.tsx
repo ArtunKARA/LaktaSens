@@ -1,6 +1,7 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { AdminApplicationsScreen } from '../screens/Admin/AdminApplicationsScreen';
 import { DashboardScreen } from '../screens/Dashboard/DashboardScreen';
+import { MilkingProcessScreen } from '../screens/Milk/MilkingProcessScreen';
 import { MilkResultScreen } from '../screens/Milk/MilkResultScreen';
 import { ProfileScreen } from '../screens/Profile/ProfileScreen';
 import { QRScannerScreen } from '../screens/QR/QRScannerScreen';
@@ -16,6 +17,7 @@ export function MainNavigator() {
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Dashboard" component={DashboardScreen} />
       <Stack.Screen name="QRScanner" component={QRScannerScreen} />
+      <Stack.Screen name="MilkingProcess" component={MilkingProcessScreen} />
       <Stack.Screen name="MilkResult" component={MilkResultScreen} />
       <Stack.Screen name="AISuggestions" component={AISuggestionsScreen} />
       <Stack.Screen name="Profile" component={ProfileScreen} />

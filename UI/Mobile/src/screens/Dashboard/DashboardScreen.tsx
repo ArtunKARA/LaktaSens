@@ -166,6 +166,7 @@ export function DashboardScreen({ navigation }: MainScreenProps<'Dashboard'>) {
       <View style={styles.actions}>
         {role === 'c' ? (
           <>
+            <AppButton label="Sagim Sureci" icon="hardware-chip-outline" onPress={() => navigation.navigate('MilkingProcess', { cowId: targetId })} />
             <AppButton label="QR Tara" icon="qr-code-outline" onPress={() => navigation.navigate('QRScanner')} />
             <AppButton
               label="Sut Sonuclari"

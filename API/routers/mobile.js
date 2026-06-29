@@ -4,16 +4,22 @@ const {
   adminApplications,
   authRequired,
   aiSuggestions,
+  cancelMilkingJob,
   cowDetail,
   cows,
+  createMilkingJob,
   dashboard,
   feedStocks,
   health,
   login,
   me,
+  milkingJob,
   milkHistory,
   milkValues,
   scanQr,
+  sensorActiveJob,
+  sensorMeasurement,
+  sensorOnline,
   shipmentDetail,
   shipments,
   supplierOfferAction,
@@ -31,9 +37,16 @@ router.get("/dashboard", authRequired, dashboard);
 router.get("/cows", authRequired, cows);
 router.get("/cows/:cowId", authRequired, cowDetail);
 router.post("/qr/scan", authRequired, scanQr);
+router.post("/milking-jobs", authRequired, createMilkingJob);
+router.get("/milking-jobs/:jobId", authRequired, milkingJob);
+router.post("/milking-jobs/:jobId/cancel", authRequired, cancelMilkingJob);
 router.get("/cows/:cowId/milk-values", authRequired, milkValues);
 router.get("/cows/:cowId/milk-history", authRequired, milkHistory);
 router.get("/cows/:cowId/ai-suggestions", authRequired, aiSuggestions);
+router.post("/sensor/online", sensorOnline);
+router.get("/sensor/jobs/active", sensorActiveJob);
+router.post("/sensor/jobs/active", sensorActiveJob);
+router.post("/sensor/measurements", sensorMeasurement);
 router.get("/feed-stocks", authRequired, feedStocks);
 router.get("/shipments", authRequired, shipments);
 router.get("/shipments/:shipmentId", authRequired, shipmentDetail);

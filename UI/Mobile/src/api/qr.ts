@@ -8,6 +8,7 @@ function normalizeQrResult(data: Record<string, unknown>, code: string): QrScanR
     message: String(data.message ?? 'QR kaydi bulundu.'),
     cowId: data.cowId ? String(data.cowId) : undefined,
     info: data.info ? String(data.info) : undefined,
+    data: data.data,
   };
 }
 

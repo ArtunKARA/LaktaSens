@@ -6,6 +6,9 @@
 - Auth: `POST /api/mobile/login`, `GET /api/mobile/me`.
 - Dashboard: `GET /api/mobile/dashboard`.
 - QR: `POST /api/mobile/qr/scan`.
+- Sagim is emri: `POST /api/mobile/milking-jobs`, `GET /api/mobile/milking-jobs/:jobId`, `POST /api/mobile/milking-jobs/:jobId/cancel`.
+- NodeMCU sensor: `POST /api/mobile/sensor/online`, `GET|POST /api/mobile/sensor/jobs/active`, `POST /api/mobile/sensor/measurements`.
+- Sensor ornek kodu: `Sensor/sagimSensor/sagimSensor.ino`.
 - Sut sonucu: `GET /api/mobile/cows/:cowId/milk-values`.
 - AI onerileri: `GET /api/mobile/cows/:cowId/ai-suggestions`.
 - Not: Mevcut DB semasinda sut hacmi ve olcum tarihi gercek kayittir; yag/protein/SCC/sicaklik kolonlari olmadigi icin backend bunlari hesaplanan kalite sinyali olarak isaretler.
