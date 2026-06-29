@@ -1,12 +1,14 @@
 #include <ESP8266WiFi.h>
 #include <ESP8266HTTPClient.h>
 
-#define USE_LCD 0
+#define USE_LCD 1
+#define LCD_ADDRESS 0x27
+#define BUZZER_USE_TONE 1
 
 #if USE_LCD
 #include <Wire.h>
 #include <LiquidCrystal_I2C.h>
-LiquidCrystal_I2C lcd(0x27, 16, 2);
+LiquidCrystal_I2C lcd(LCD_ADDRESS, 16, 2);
 #endif
 
 #define RED_LED D0
@@ -27,6 +29,7 @@ const char *sensorQr = "f2dw2iGzdQXgT0cp";
 const unsigned long pollIntervalMs = 3000;
 const unsigned long statusIntervalMs = 1000;
 const unsigned long buttonDebounceMs = 45;
+const unsigned long errorSoundIntervalMs = 10000;
 
 // YF-S402C: F = 23 * Q(L/min). 23 pulse/s at 1 L/min => 1380 pulse/L.
 // Sahada olcekli kap ile kalibre edip bu degeri guncelle.
@@ -48,6 +51,7 @@ volatile bool measurementActive = false;
 volatile bool measurementPaused = false;
 
 unsigned long lastPollAt = 0;
+unsigned long lastErrorSoundAt = 0;
 
 void connectToWiFi();
 String sendOnlineStatus();
@@ -70,6 +74,15 @@ void setSendingState();
 void setSuccessState();
 void blink(uint8_t pin, int count, int delayMs);
 void beep(int count, int delayMs);
+void playToneMs(unsigned int frequency, unsigned int durationMs);
+void playStartupMelody();
+void playWiFiSound();
+void playJobFoundSound();
+void playPauseSound();
+void playResumeSound();
+void playSuccessSound();
+void playErrorSound();
+void playErrorSoundThrottled();
 void showStatus(const String &line1, const String &line2);
 
 void IRAM_ATTR countFlowPulse()
@@ -94,6 +107,7 @@ void setup()
 
   setLeds(false, false, false);
   digitalWrite(BUZZER_PIN, LOW);
+  playStartupMelody();
 
 #if USE_LCD
   Wire.begin(D2, D1);
@@ -113,6 +127,7 @@ void setup()
   else
   {
     showStatus("Sensor hatasi", "QR/API kontrol");
+    playErrorSoundThrottled();
     blink(RED_LED, 3, 180);
   }
 }
@@ -137,6 +152,7 @@ void loop()
   if (activeJobResponse.length() == 0)
   {
     showStatus("API cevapsiz", "Sunucu kontrol");
+    playErrorSoundThrottled();
     blink(RED_LED, 2, 180);
     return;
   }
@@ -151,6 +167,7 @@ void loop()
   if (activeJobResponse.indexOf("\"hasJob\":true") == -1)
   {
     showStatus("Gecersiz cevap", "API kontrol");
+    playErrorSoundThrottled();
     blink(RED_LED, 2, 180);
     return;
   }
@@ -162,6 +179,7 @@ void loop()
   {
     Serial.println("Is emri ID okunamadi.");
     showStatus("Is ID hatasi", "API kontrol");
+    playErrorSoundThrottled();
     blink(RED_LED, 2, 180);
     return;
   }
@@ -182,7 +200,7 @@ void runMeasurement(int jobId, const String &cowId)
   bool shouldFinish = false;
 
   setMeasuringState();
-  beep(1, 80);
+  playJobFoundSound();
   showStatus("Olcum basladi", cowId);
 
   while (!shouldFinish)
@@ -207,13 +225,14 @@ void runMeasurement(int jobId, const String &cowId)
       {
         setPausedState();
         showStatus("Olcum durdu", "Devam icin D6");
+        playPauseSound();
       }
       else
       {
         setMeasuringState();
         showStatus("Olcum devam", cowId);
+        playResumeSound();
       }
-      beep(1, 70);
     }
 
     if (buttonPressed(finishButton))
@@ -260,6 +279,7 @@ void runMeasurement(int jobId, const String &cowId)
   if (liters <= 0.0)
   {
     showStatus("Olcum bos", "Kayit yok");
+    playErrorSoundThrottled();
     blink(RED_LED, 3, 180);
     setIdleState();
     return;
@@ -269,16 +289,20 @@ void runMeasurement(int jobId, const String &cowId)
   showStatus("Sunucuya", String(liters, 2) + " L");
   String measurementResponse = sendMeasurement(jobId, liters);
 
-  if (measurementResponse.indexOf("Olcum kaydedildi") != -1 || measurementResponse.indexOf("\"status\":\"completed\"") != -1)
+  if (measurementResponse.indexOf("Mobil onay bekleniyor") != -1 ||
+      measurementResponse.indexOf("Olcum is emrine yazildi") != -1 ||
+      measurementResponse.indexOf("\"status\":\"ready\"") != -1 ||
+      measurementResponse.indexOf("\"status\":\"completed\"") != -1)
   {
-    showStatus("Olcum kayitli", String(liters, 2) + " L");
+    showStatus("Mobil onay", String(liters, 2) + " L");
     setSuccessState();
-    beep(2, 90);
+    playSuccessSound();
     delay(1200);
   }
   else
   {
     showStatus("Kayit hatasi", "API kontrol");
+    playErrorSoundThrottled();
     blink(RED_LED, 4, 180);
   }
 
@@ -300,6 +324,7 @@ void connectToWiFi()
 
   Serial.println("\nWiFi baglandi: " + WiFi.localIP().toString());
   showStatus("WiFi baglandi", WiFi.localIP().toString());
+  playWiFiSound();
 }
 
 String sendOnlineStatus()
@@ -499,6 +524,77 @@ void beep(int count, int delayMs)
     delay(delayMs);
     yield();
   }
+}
+
+void playToneMs(unsigned int frequency, unsigned int durationMs)
+{
+#if BUZZER_USE_TONE
+  tone(BUZZER_PIN, frequency, durationMs);
+  delay(durationMs);
+  noTone(BUZZER_PIN);
+#else
+  digitalWrite(BUZZER_PIN, HIGH);
+  delay(durationMs);
+  digitalWrite(BUZZER_PIN, LOW);
+#endif
+  delay(25);
+  yield();
+}
+
+void playStartupMelody()
+{
+  playToneMs(784, 70);
+  playToneMs(988, 70);
+  playToneMs(1175, 120);
+}
+
+void playWiFiSound()
+{
+  playToneMs(880, 70);
+  playToneMs(1175, 90);
+}
+
+void playJobFoundSound()
+{
+  playToneMs(659, 60);
+  playToneMs(784, 60);
+  playToneMs(659, 80);
+}
+
+void playPauseSound()
+{
+  playToneMs(392, 150);
+}
+
+void playResumeSound()
+{
+  playToneMs(659, 70);
+  playToneMs(880, 90);
+}
+
+void playSuccessSound()
+{
+  playToneMs(988, 80);
+  playToneMs(1175, 80);
+  playToneMs(1319, 120);
+}
+
+void playErrorSound()
+{
+  playToneMs(220, 130);
+  playToneMs(175, 170);
+}
+
+void playErrorSoundThrottled()
+{
+  unsigned long now = millis();
+  if (lastErrorSoundAt != 0 && now - lastErrorSoundAt < errorSoundIntervalMs)
+  {
+    return;
+  }
+
+  lastErrorSoundAt = now;
+  playErrorSound();
 }
 
 void showStatus(const String &line1, const String &line2)

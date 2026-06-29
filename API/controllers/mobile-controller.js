@@ -2129,7 +2129,7 @@ exports.sensorMeasurement = async (req, res) => {
           ${milkingJobSelectSql()}
           WHERE J.isEmriID = @jobId
             AND J.sensorQR = @sensorQr
-            AND J.durum IN ('a', 'p')
+            AND J.durum IN ('a', 'p', 'b')
         `);
       job = result.recordset[0];
     } else {
@@ -2147,12 +2147,13 @@ exports.sensorMeasurement = async (req, res) => {
       .input("temperature", sql.Float, temperature)
       .query(`
         UPDATE dbo.SagimIsEmri
-        SET durum = CASE WHEN durum = 'a' THEN 'p' ELSE durum END,
+        SET durum = 'b',
             sonYoklamaTarihi = SYSUTCDATETIME(),
             baslamaTarihi = COALESCE(baslamaTarihi, SYSUTCDATETIME()),
+            kapanmaTarihi = COALESCE(kapanmaTarihi, SYSUTCDATETIME()),
             sutMiktar = @liters,
             sicaklik = @temperature,
-            aciklama = N'Olcum sensor tarafindan guncellendi.'
+            aciklama = N'Olcum sensor tarafindan bitirildi. Mobil onay bekleniyor.'
         WHERE isEmriID = @jobId
       `);
 
