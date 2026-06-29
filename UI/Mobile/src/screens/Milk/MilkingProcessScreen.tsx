@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { getApiMessage } from '../../api/client';
 import { getCowList } from '../../api/cows';
@@ -85,10 +85,11 @@ export function MilkingProcessScreen({ navigation, route }: MainScreenProps<'Mil
   const [loading, setLoading] = useState(false);
   const [polling, setPolling] = useState(false);
   const [error, setError] = useState('');
+  const refreshingRef = useRef(false);
 
   const selectedCowFromList = useMemo(() => cows.find((item) => item.qr === cowCode), [cowCode, cows]);
   const canCreate = Boolean(sensor?.qr && cow?.qr && !loading);
-  const isMeasuring = step === 'measuring' && job && (job.status === 'active' || job.status === 'processing');
+  const shouldAutoRefresh = Boolean(job?.id && step === 'measuring' && job.status !== 'completed' && job.status !== 'canceled');
 
   const loadCows = useCallback(async () => {
     try {
@@ -100,10 +101,11 @@ export function MilkingProcessScreen({ navigation, route }: MainScreenProps<'Mil
   }, []);
 
   const refreshJob = useCallback(async () => {
-    if (!job?.id) {
+    if (!job?.id || refreshingRef.current) {
       return;
     }
 
+    refreshingRef.current = true;
     setPolling(true);
 
     try {
@@ -118,6 +120,7 @@ export function MilkingProcessScreen({ navigation, route }: MainScreenProps<'Mil
     } catch (jobError) {
       setError(getApiMessage(jobError));
     } finally {
+      refreshingRef.current = false;
       setPolling(false);
     }
   }, [job?.id]);
@@ -134,16 +137,17 @@ export function MilkingProcessScreen({ navigation, route }: MainScreenProps<'Mil
   }, []);
 
   useEffect(() => {
-    if (!isMeasuring) {
+    if (!shouldAutoRefresh) {
       return undefined;
     }
 
+    refreshJob();
     const timer = setInterval(() => {
       refreshJob();
-    }, 2000);
+    }, 1000);
 
     return () => clearInterval(timer);
-  }, [isMeasuring, refreshJob]);
+  }, [shouldAutoRefresh, refreshJob]);
 
   async function validateSensor() {
     if (!sensorCode.trim()) {

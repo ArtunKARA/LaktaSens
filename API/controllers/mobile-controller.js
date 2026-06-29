@@ -2131,7 +2131,7 @@ exports.sensorMeasurement = async (req, res) => {
           ${milkingJobSelectSql()}
           WHERE J.isEmriID = @jobId
             AND J.sensorQR = @sensorQr
-            AND J.durum IN ('a', 'p', 'b')
+            AND J.durum IN ('a', 'p')
         `);
       job = result.recordset[0];
     } else {
@@ -2150,23 +2150,13 @@ exports.sensorMeasurement = async (req, res) => {
       .input("isFinal", sql.Bit, isFinal)
       .query(`
         UPDATE dbo.SagimIsEmri
-        SET durum = CASE
-              WHEN @isFinal = 1 THEN 'b'
-              WHEN durum = 'b' THEN 'b'
-              ELSE 'p'
-            END,
+        SET durum = 'b',
             sonYoklamaTarihi = SYSUTCDATETIME(),
             baslamaTarihi = COALESCE(baslamaTarihi, SYSUTCDATETIME()),
-            kapanmaTarihi = CASE
-              WHEN @isFinal = 1 THEN COALESCE(kapanmaTarihi, SYSUTCDATETIME())
-              ELSE kapanmaTarihi
-            END,
+            kapanmaTarihi = COALESCE(kapanmaTarihi, SYSUTCDATETIME()),
             sutMiktar = @liters,
             sicaklik = @temperature,
-            aciklama = CASE
-              WHEN @isFinal = 1 THEN N'Olcum sensor tarafindan bitirildi. Mobil onay bekleniyor.'
-              ELSE N'Olcum sensor tarafindan canli guncellendi.'
-            END
+            aciklama = N'Olcum sensor tarafindan bitirildi. Mobil onay bekleniyor.'
         WHERE isEmriID = @jobId
       `);
 
@@ -2179,9 +2169,7 @@ exports.sensorMeasurement = async (req, res) => {
       `);
 
     return res.json({
-      message: isFinal
-        ? "Olcum is emrine yazildi. Mobil onay bekleniyor."
-        : "Olcum canli olarak is emrine yazildi.",
+      message: "Olcum is emrine yazildi. Mobil onay bekleniyor.",
       job: mapMilkingJob(updated.recordset[0]),
     });
   } catch (error) {
