@@ -12,6 +12,7 @@ const CifciAIRiskScores = lazy(() => import('../pages/Cifci/AI/AIRiskScores'));
 const CifciAIRecommendationCenter = lazy(() => import('../pages/Cifci/AI/AIRecommendationCenter'));
 const GenelTakip = lazy(() => import('../pages/Cifci/GenelTakip'));
 const SagmalTakip = lazy(() => import('../pages/Cifci/SagmalTakip'));
+const SutTakip = lazy(() => import('../pages/Cifci/SutTakip'));
 const KuruTakip = lazy(() => import('../pages/Cifci/KuruTakip'));
 const GebeTakip = lazy(() => import('../pages/Cifci/GebeTakip'));
 const ServisTakip = lazy(() => import('../pages/Cifci/ServisTakip'));
@@ -178,6 +179,15 @@ const routes = [
         element: (
             <AuthGuard allowedRoles={['c']}>
                 <SagmalTakip />
+            </AuthGuard>
+        ),
+        layout: 'cifci',
+    },
+    {
+        path: '/cifci/SutTakip',
+        element: (
+            <AuthGuard allowedRoles={['c']}>
+                <SutTakip />
             </AuthGuard>
         ),
         layout: 'cifci',
