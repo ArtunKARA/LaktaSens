@@ -75,3 +75,68 @@ exports.postSagimAksiyon = async (req, res) => {
         return res.status(500).json({ error: 'Internal server error' });
     }
 };
+
+exports.postSutTakip = async (req, res) => {
+    const { ID } = req.body;
+
+    try {
+        const pool = await poolPromise;
+        const result = await pool.request()
+            .input("ID", ID)
+            .query(
+                `SELECT TOP 500
+                    S.olcumID,
+                    I.inekID,
+                    I.inekQR,
+                    I.ad,
+                    I.irk,
+                    S.makineID,
+                    M.makineAd,
+                    S.sutMiktar,
+                    S.sagimTarihi,
+                    F.firmaAdi,
+                    Previous.sutMiktar AS oncekiSutMiktar,
+                    Avg7.avgSut,
+                    CowTotals.toplamSut,
+                    CowTotals.olcumSayisi
+                FROM sutOlcum AS S
+                INNER JOIN inek AS I ON S.inekID = I.inekID
+                INNER JOIN kullanicilar AS K ON I.firmaID = K.firmaID
+                INNER JOIN firmalar AS F ON I.firmaID = F.firmaID
+                LEFT JOIN sagimMakine AS M ON S.makineID = M.makineID
+                OUTER APPLY (
+                    SELECT TOP 1 S2.sutMiktar
+                    FROM sutOlcum AS S2
+                    WHERE S2.inekID = I.inekID
+                      AND (
+                        S2.sagimTarihi < S.sagimTarihi
+                        OR (S2.sagimTarihi = S.sagimTarihi AND S2.olcumID < S.olcumID)
+                      )
+                    ORDER BY S2.sagimTarihi DESC, S2.olcumID DESC
+                ) AS Previous
+                OUTER APPLY (
+                    SELECT AVG(CAST(X.sutMiktar AS FLOAT)) AS avgSut
+                    FROM (
+                        SELECT TOP 7 S3.sutMiktar
+                        FROM sutOlcum AS S3
+                        WHERE S3.inekID = I.inekID
+                        ORDER BY S3.sagimTarihi DESC, S3.olcumID DESC
+                    ) AS X
+                ) AS Avg7
+                OUTER APPLY (
+                    SELECT
+                        SUM(CAST(S4.sutMiktar AS FLOAT)) AS toplamSut,
+                        COUNT(1) AS olcumSayisi
+                    FROM sutOlcum AS S4
+                    WHERE S4.inekID = I.inekID
+                ) AS CowTotals
+                WHERE K.kullaniciID = @ID
+                ORDER BY S.sagimTarihi DESC, S.olcumID DESC;`
+            );
+
+        return res.json(result.recordset);
+    } catch (error) {
+        console.error('Sut takip verisi getirilemedi:', error);
+        return res.status(500).json({ error: 'Internal server error' });
+    }
+};
