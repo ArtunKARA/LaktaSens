@@ -5,6 +5,7 @@ import { getApiMessage } from '../../api/client';
 import { getCowList } from '../../api/cows';
 import { cancelMilkingJob, createMilkingJob, finishMilkingJob, getMilkingJob, submitMilkingJob } from '../../api/milkingJobs';
 import { scanQr } from '../../api/qr';
+import { getSensors } from '../../api/sensors';
 import { AppButton } from '../../components/ui/AppButton';
 import { AppScreen } from '../../components/ui/AppScreen';
 import { Header } from '../../components/ui/Header';
@@ -80,16 +81,33 @@ export function MilkingProcessScreen({ navigation, route }: MainScreenProps<'Mil
   const [cowCode, setCowCode] = useState(route.params?.cowId ?? '');
   const [sensor, setSensor] = useState<SensorSummary | undefined>();
   const [cow, setCow] = useState<CowSummary | undefined>();
+  const [sensors, setSensors] = useState<SensorSummary[]>([]);
   const [cows, setCows] = useState<CowSummary[]>([]);
   const [job, setJob] = useState<MilkingJob | undefined>();
   const [loading, setLoading] = useState(false);
+  const [sensorLoading, setSensorLoading] = useState(false);
   const [polling, setPolling] = useState(false);
   const [error, setError] = useState('');
+  const [sensorDropdownOpen, setSensorDropdownOpen] = useState(false);
   const refreshingRef = useRef(false);
 
+  const selectedSensorFromList = useMemo(() => sensors.find((item) => item.qr === sensorCode), [sensorCode, sensors]);
   const selectedCowFromList = useMemo(() => cows.find((item) => item.qr === cowCode), [cowCode, cows]);
   const canCreate = Boolean(sensor?.qr && cow?.qr && !loading);
   const shouldAutoRefresh = Boolean(job?.id && step === 'measuring' && job.status !== 'completed' && job.status !== 'canceled');
+
+  const loadSensors = useCallback(async () => {
+    setSensorLoading(true);
+
+    try {
+      const items = await getSensors();
+      setSensors(items);
+    } catch (sensorError) {
+      setError(getApiMessage(sensorError));
+    } finally {
+      setSensorLoading(false);
+    }
+  }, []);
 
   const loadCows = useCallback(async () => {
     try {
@@ -126,8 +144,9 @@ export function MilkingProcessScreen({ navigation, route }: MainScreenProps<'Mil
   }, [job?.id]);
 
   useEffect(() => {
+    loadSensors();
     loadCows();
-  }, [loadCows]);
+  }, [loadCows, loadSensors]);
 
   useEffect(() => {
     if (route.params?.sensorQr && !sensor) {
@@ -150,8 +169,19 @@ export function MilkingProcessScreen({ navigation, route }: MainScreenProps<'Mil
   }, [shouldAutoRefresh, refreshJob]);
 
   async function validateSensor() {
+    const selectedSensor = selectedSensorFromList || sensor;
+
+    if (selectedSensor?.qr) {
+      setSensor(selectedSensor);
+      setSensorCode(selectedSensor.qr);
+      setSensorDropdownOpen(false);
+      setError('');
+      setStep('cow');
+      return;
+    }
+
     if (!sensorCode.trim()) {
-      setError('Sensor QR gerekli.');
+      setError('Sensor secimi gerekli.');
       return;
     }
 
@@ -201,6 +231,13 @@ export function MilkingProcessScreen({ navigation, route }: MainScreenProps<'Mil
     } finally {
       setLoading(false);
     }
+  }
+
+  function selectSensorOption(nextSensor: SensorSummary) {
+    setSensor(nextSensor);
+    setSensorCode(nextSensor.qr);
+    setSensorDropdownOpen(false);
+    setError('');
   }
 
   async function startJob() {
@@ -295,10 +332,19 @@ export function MilkingProcessScreen({ navigation, route }: MainScreenProps<'Mil
 
       {step === 'sensor' ? (
         <PremiumCard accent>
-          <Text style={styles.heroTitle}>1. Sensor QR</Text>
-          <Text style={styles.heroText}>Once sagim sensorunu okut veya QR kodunu yaz.</Text>
-          <TextField icon="radio-outline" value={sensorCode} onChangeText={setSensorCode} placeholder="Sensor QR" autoCapitalize="none" />
-          <AppButton label="Sensoru Onayla" icon="checkmark-outline" loading={loading} onPress={validateSensor} />
+          <Text style={styles.heroTitle}>1. Sensor Secimi</Text>
+          <Text style={styles.heroText}>Sagim icin kullanilacak sensoru listeden sec.</Text>
+          <SensorComboBox
+            sensors={sensors}
+            selectedSensor={selectedSensorFromList || sensor}
+            open={sensorDropdownOpen}
+            loading={sensorLoading}
+            onToggle={() => setSensorDropdownOpen((current) => !current)}
+            onSelect={selectSensorOption}
+            onRefresh={loadSensors}
+          />
+          <AppButton label="Sensoru Onayla" icon="checkmark-outline" loading={loading} disabled={!sensorCode && !sensor} onPress={validateSensor} />
+          <AppButton label="Sensor Ekle" icon="add-circle-outline" variant="secondary" onPress={() => navigation.navigate('SensorAdd')} />
         </PremiumCard>
       ) : null}
 
@@ -410,6 +456,88 @@ function StepBar({ step }: { step: StepKey }) {
           </View>
         );
       })}
+    </View>
+  );
+}
+
+function SensorComboBox({
+  sensors,
+  selectedSensor,
+  open,
+  loading,
+  onToggle,
+  onSelect,
+  onRefresh,
+}: {
+  sensors: SensorSummary[];
+  selectedSensor?: SensorSummary;
+  open: boolean;
+  loading: boolean;
+  onToggle: () => void;
+  onSelect: (sensor: SensorSummary) => void;
+  onRefresh: () => void;
+}) {
+  return (
+    <View style={styles.comboWrapper}>
+      <Pressable accessibilityRole="button" onPress={onToggle} style={({ pressed }) => [styles.comboButton, pressed && styles.pressed]}>
+        <View style={styles.comboMain}>
+          <Ionicons name="hardware-chip-outline" size={22} color={colors.emerald} />
+          <View style={styles.comboTextArea}>
+            <Text style={styles.comboTitle}>Sensor</Text>
+            <Text numberOfLines={1} style={[styles.comboValue, !selectedSensor && styles.comboPlaceholder]}>
+              {selectedSensor?.name || selectedSensor?.qr || 'Sensor sec'}
+            </Text>
+            {selectedSensor?.qr ? <Text numberOfLines={1} style={styles.comboMeta}>{selectedSensor.qr}</Text> : null}
+          </View>
+        </View>
+        {loading ? (
+          <ActivityIndicator color={colors.emerald} />
+        ) : (
+          <Ionicons name={open ? 'chevron-up-outline' : 'chevron-down-outline'} size={22} color={colors.textMuted} />
+        )}
+      </Pressable>
+
+      {open ? (
+        <View style={styles.comboMenu}>
+          {sensors.length ? (
+            <ScrollView nestedScrollEnabled style={styles.comboScroll} contentContainerStyle={styles.comboOptions}>
+              {sensors.map((item) => {
+                const selected = item.qr === selectedSensor?.qr;
+                return (
+                  <Pressable
+                    key={`${item.id}-${item.qr}`}
+                    accessibilityRole="button"
+                    onPress={() => onSelect(item)}
+                    style={({ pressed }) => [styles.comboOption, selected && styles.comboOptionSelected, pressed && styles.pressed]}
+                  >
+                    <View style={styles.comboOptionIcon}>
+                      <Ionicons name={selected ? 'checkmark-circle-outline' : 'radio-button-off-outline'} size={20} color={selected ? colors.black : colors.emerald} />
+                    </View>
+                    <View style={styles.comboTextArea}>
+                      <Text numberOfLines={1} style={[styles.comboOptionTitle, selected && styles.comboOptionTextSelected]}>
+                        {item.name || `Sensor #${item.id || item.qr}`}
+                      </Text>
+                      <Text numberOfLines={1} style={[styles.comboOptionMeta, selected && styles.comboOptionTextSelected]}>
+                        {item.qr}
+                      </Text>
+                    </View>
+                  </Pressable>
+                );
+              })}
+            </ScrollView>
+          ) : (
+            <View style={styles.comboEmpty}>
+              <Text style={styles.comboEmptyTitle}>Kayitli sensor yok</Text>
+              <Text style={styles.comboEmptyText}>Once sensor ekleyip listeyi yenileyin.</Text>
+            </View>
+          )}
+
+          <Pressable accessibilityRole="button" onPress={onRefresh} style={({ pressed }) => [styles.comboRefresh, pressed && styles.pressed]}>
+            <Ionicons name="refresh-outline" size={18} color={colors.text} />
+            <Text style={styles.comboRefreshText}>{loading ? 'Yenileniyor' : 'Listeyi Yenile'}</Text>
+          </Pressable>
+        </View>
+      ) : null}
     </View>
   );
 }
@@ -541,6 +669,120 @@ const styles = StyleSheet.create({
   miniSelectionValue: {
     color: colors.text,
     fontWeight: '900',
+  },
+  comboWrapper: {
+    gap: spacing.sm,
+  },
+  comboButton: {
+    minHeight: 74,
+    borderRadius: radii.md,
+    borderWidth: 1,
+    borderColor: colors.borderStrong,
+    backgroundColor: colors.surfaceDeep,
+    padding: spacing.md,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: spacing.md,
+  },
+  comboMain: {
+    flex: 1,
+    minWidth: 0,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.md,
+  },
+  comboTextArea: {
+    flex: 1,
+    minWidth: 0,
+    gap: spacing.xs,
+  },
+  comboTitle: {
+    ...typography.caption,
+    color: colors.textMuted,
+  },
+  comboValue: {
+    color: colors.text,
+    fontSize: 16,
+    fontWeight: '900',
+  },
+  comboPlaceholder: {
+    color: colors.textSoft,
+  },
+  comboMeta: {
+    ...typography.caption,
+    color: colors.textSoft,
+  },
+  comboMenu: {
+    borderRadius: radii.md,
+    borderWidth: 1,
+    borderColor: colors.border,
+    backgroundColor: colors.surfaceDeep,
+    overflow: 'hidden',
+  },
+  comboScroll: {
+    maxHeight: 240,
+  },
+  comboOptions: {
+    gap: 1,
+  },
+  comboOption: {
+    minHeight: 64,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.md,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+    backgroundColor: colors.surfaceDeep,
+  },
+  comboOptionSelected: {
+    backgroundColor: colors.emerald,
+  },
+  comboOptionIcon: {
+    width: 24,
+    alignItems: 'center',
+  },
+  comboOptionTitle: {
+    color: colors.text,
+    fontSize: 14,
+    fontWeight: '900',
+  },
+  comboOptionMeta: {
+    ...typography.caption,
+    color: colors.textMuted,
+  },
+  comboOptionTextSelected: {
+    color: colors.black,
+  },
+  comboEmpty: {
+    minHeight: 84,
+    justifyContent: 'center',
+    padding: spacing.md,
+    gap: spacing.xs,
+  },
+  comboEmptyTitle: {
+    color: colors.text,
+    fontSize: 14,
+    fontWeight: '900',
+  },
+  comboEmptyText: {
+    ...typography.caption,
+    color: colors.textMuted,
+  },
+  comboRefresh: {
+    minHeight: 44,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: spacing.sm,
+    borderTopWidth: 1,
+    borderTopColor: colors.border,
+    backgroundColor: colors.surface,
+  },
+  comboRefreshText: {
+    color: colors.text,
+    fontSize: 13,
+    fontWeight: '800',
   },
   reviewGrid: {
     flexDirection: 'row',
