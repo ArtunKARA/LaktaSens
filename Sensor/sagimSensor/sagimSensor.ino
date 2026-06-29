@@ -23,7 +23,7 @@ const char *ssid = "Penguen";
 const char *password = "P20202020";
 
 // Mobil API ile ayni sunucu. Fiziksel testte bilgisayarin LAN IP adresini yaz.
-const char *serverBase = "http://192.168.1.10:3030";
+const char *serverBase = "http://10.41.12.147:3030";
 const char *sensorQr = "8266";
 
 const unsigned long pollIntervalMs = 3000;
@@ -125,7 +125,6 @@ void setup()
 
   showStatus("Sensor ID", String(sensorQr));
   playStartupMelody();
-  delay(4000);
 
   attachInterrupt(digitalPinToInterrupt(FLOW_SENSOR_PIN), countFlowPulse, RISING);
 
@@ -599,9 +598,23 @@ void playToneMs(unsigned int frequency, unsigned int durationMs)
 
 void playStartupMelody()
 {
-  playToneMs(784, 70);
-  playToneMs(988, 70);
-  playToneMs(1175, 120);
+  playToneMs(659, 150);
+  playToneMs(784, 150);
+  playToneMs(988, 220);
+  playToneMs(784, 120);
+  playToneMs(1047, 260);
+  playToneMs(988, 160);
+  playToneMs(784, 160);
+  playToneMs(659, 220);
+  playToneMs(523, 180);
+  playToneMs(659, 180);
+  playToneMs(784, 220);
+  playToneMs(988, 320);
+  playToneMs(1175, 180);
+  playToneMs(1319, 180);
+  playToneMs(1568, 420);
+  playToneMs(1319, 140);
+  playToneMs(1568, 315);
 }
 
 void playWiFiSound()

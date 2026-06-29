@@ -2100,9 +2100,7 @@ exports.sensorMeasurement = async (req, res) => {
   );
   const temperature = positiveNumber(body.temperature || body.sicaklik || body.Sicaklik, null);
   const finalValue = body.final ?? body.isFinal ?? body.completed ?? req.query.final;
-  const isFinal = finalValue === undefined
-    ? true
-    : ["1", "true", "evet", "e", "yes", "y"].includes(cleanString(finalValue).toLowerCase());
+  const isFinal = ["1", "true", "evet", "e", "yes", "y"].includes(cleanString(finalValue).toLowerCase());
 
   if (!sensorQr) {
     return res.status(400).json({ error: "Sensor QR gerekli." });
