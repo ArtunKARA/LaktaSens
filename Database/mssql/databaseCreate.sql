@@ -151,7 +151,7 @@ CREATE TABLE SagimIsEmri (
     inekID INT NOT NULL,
     firmaID INT NOT NULL,
     kullaniciID INT NULL,
-    durum CHAR(1) NOT NULL DEFAULT('a'), -- a aktif, p sensor isliyor, t tamamlandi, i iptal
+    durum CHAR(1) NOT NULL DEFAULT('a'), -- a aktif, p sensor isliyor, b gonderim bekliyor, t tamamlandi, i iptal
     olusturmaTarihi DATETIME2 NOT NULL DEFAULT SYSUTCDATETIME(),
     baslamaTarihi DATETIME2 NULL,
     sonYoklamaTarihi DATETIME2 NULL,

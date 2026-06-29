@@ -49,3 +49,13 @@ export async function cancelMilkingJob(jobId: number): Promise<MilkingJob> {
   const response = await apiClient.post(`/api/mobile/milking-jobs/${jobId}/cancel`);
   return extractJob(response.data ?? {});
 }
+
+export async function finishMilkingJob(jobId: number, input?: { liters?: number | null; temperature?: number | null }): Promise<MilkingJob> {
+  const response = await apiClient.post(`/api/mobile/milking-jobs/${jobId}/finish`, input ?? {});
+  return extractJob(response.data ?? {});
+}
+
+export async function submitMilkingJob(jobId: number): Promise<MilkingJob> {
+  const response = await apiClient.post(`/api/mobile/milking-jobs/${jobId}/submit`);
+  return extractJob(response.data ?? {});
+}

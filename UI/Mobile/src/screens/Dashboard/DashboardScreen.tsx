@@ -167,7 +167,7 @@ export function DashboardScreen({ navigation }: MainScreenProps<'Dashboard'>) {
         {role === 'c' ? (
           <>
             <AppButton label="Sagim Sureci" icon="hardware-chip-outline" onPress={() => navigation.navigate('MilkingProcess', { cowId: targetId })} />
-            <AppButton label="QR Tara" icon="qr-code-outline" onPress={() => navigation.navigate('QRScanner')} />
+            <AppButton label="Sensor Ekle" icon="add-circle-outline" onPress={() => navigation.navigate('SensorAdd')} />
             <AppButton
               label="Sut Sonuclari"
               icon="water-outline"

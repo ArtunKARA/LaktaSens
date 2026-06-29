@@ -7,6 +7,7 @@ export type AuthStackParamList = {
 export type MainStackParamList = {
   Dashboard: undefined;
   QRScanner: undefined;
+  SensorAdd: undefined;
   MilkingProcess: { sensorQr?: string; cowId?: string } | undefined;
   MilkResult: { cowId?: string } | undefined;
   AISuggestions: { cowId?: string } | undefined;

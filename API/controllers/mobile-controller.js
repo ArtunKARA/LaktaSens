@@ -455,6 +455,10 @@ function milkingJobStatusName(status) {
     return "processing";
   }
 
+  if (status === "b") {
+    return "ready";
+  }
+
   if (status === "t") {
     return "completed";
   }
@@ -636,7 +640,7 @@ function mapMilkingJob(row) {
     liters: toNumber(row.sutMiktar, null),
     temperature: toNumber(row.sicaklik, null),
     note: row.aciklama || undefined,
-    isOpen: status === "active" || status === "processing",
+    isOpen: status === "active" || status === "processing" || status === "ready",
   };
 }
 
@@ -698,6 +702,54 @@ async function loadSensorForDevice(pool, code) {
       FROM sagimMakine AS M
       INNER JOIN firmalar AS F ON M.firmaID = F.firmaID
       WHERE M.QR = @code OR CONVERT(NVARCHAR(50), M.makineID) = @code
+    `);
+
+  return result.recordset[0];
+}
+
+function mapSensor(row) {
+  if (!row) {
+    return null;
+  }
+
+  return {
+    id: Number(row.makineID),
+    qr: row.QR || null,
+    name: row.makineAd || null,
+    tankCapacity: toNumber(row.hazneHacmi, null),
+    companyId: row.firmaID ? Number(row.firmaID) : undefined,
+    companyName: row.firmaAdi || undefined,
+    latestMilkLiters: toNumber(row.sutMiktar, null),
+    latestMilkAt: isoDate(row.sagimTarihi),
+    latestCowId: row.inekQR || undefined,
+  };
+}
+
+async function loadSensorById(pool, user, sensorId) {
+  const result = await scopedRequest(pool, user)
+    .input("sensorId", sql.Int, toInteger(sensorId, 0))
+    .query(`
+      SELECT TOP 1
+        M.makineID,
+        M.makineAd,
+        M.hazneHacmi,
+        M.QR,
+        M.firmaID,
+        F.firmaAdi,
+        Latest.inekQR,
+        Latest.sutMiktar,
+        Latest.sagimTarihi
+      FROM sagimMakine AS M
+      INNER JOIN firmalar AS F ON M.firmaID = F.firmaID
+      OUTER APPLY (
+        SELECT TOP 1 I.inekQR, S.sutMiktar, S.sagimTarihi
+        FROM sutOlcum AS S
+        LEFT JOIN inek AS I ON S.inekID = I.inekID
+        WHERE S.makineID = M.makineID
+        ORDER BY S.sagimTarihi DESC, S.olcumID DESC
+      ) AS Latest
+      WHERE M.makineID = @sensorId
+        AND (@role = 'a' OR M.firmaID = @firmaID)
     `);
 
   return result.recordset[0];
@@ -1683,6 +1735,103 @@ exports.createMilkingJob = async (req, res) => {
   }
 };
 
+exports.sensors = async (req, res) => {
+  try {
+    const pool = await poolPromise;
+    const result = await scopedRequest(pool, req.mobileUser).query(`
+      SELECT
+        M.makineID,
+        M.makineAd,
+        M.hazneHacmi,
+        M.QR,
+        M.firmaID,
+        F.firmaAdi,
+        Latest.inekQR,
+        Latest.sutMiktar,
+        Latest.sagimTarihi
+      FROM sagimMakine AS M
+      INNER JOIN firmalar AS F ON M.firmaID = F.firmaID
+      OUTER APPLY (
+        SELECT TOP 1 I.inekQR, S.sutMiktar, S.sagimTarihi
+        FROM sutOlcum AS S
+        LEFT JOIN inek AS I ON S.inekID = I.inekID
+        WHERE S.makineID = M.makineID
+        ORDER BY S.sagimTarihi DESC, S.olcumID DESC
+      ) AS Latest
+      WHERE @role = 'a' OR M.firmaID = @firmaID
+      ORDER BY M.makineID DESC
+    `);
+
+    const items = result.recordset.map(mapSensor);
+    return res.json({ items, count: items.length });
+  } catch (error) {
+    return serverError(res, error, "Mobile sensors list failed:");
+  }
+};
+
+exports.createSensor = async (req, res) => {
+  if (![ROLE_FARMER, ROLE_ADMIN].includes(req.mobileUser?.role)) {
+    return roleForbidden(res, ROLE_FARMER);
+  }
+
+  const body = req.body || {};
+  const name = cleanString(body.name || body.makineAd || body.sensorName);
+  const qr = cleanString(body.qr || body.QR || body.sensorQr || body.sensorQR);
+  const tankCapacity = positiveNumber(body.tankCapacity || body.hazneHacmi, 0);
+  const companyId = req.mobileUser.role === ROLE_ADMIN
+    ? toInteger(body.companyId || body.firmaID, req.mobileUser.companyId || 0)
+    : toInteger(req.mobileUser.companyId, 0);
+
+  if (!name) {
+    return res.status(400).json({ error: "Sensor adi gerekli." });
+  }
+
+  if (!qr) {
+    return res.status(400).json({ error: "Sensor QR gerekli." });
+  }
+
+  if (!companyId) {
+    return res.status(400).json({ error: "Firma bilgisi bulunamadi." });
+  }
+
+  try {
+    const pool = await poolPromise;
+    const duplicate = await pool
+      .request()
+      .input("qr", sql.NVarChar(50), qr)
+      .query(`
+        SELECT TOP 1 makineID
+        FROM sagimMakine
+        WHERE QR = @qr
+      `);
+
+    if (duplicate.recordset.length) {
+      return res.status(409).json({ error: "Bu QR ile kayitli sensor zaten var." });
+    }
+
+    const insertResult = await pool
+      .request()
+      .input("name", sql.NVarChar(50), name)
+      .input("capacity", sql.Float, tankCapacity)
+      .input("qr", sql.NVarChar(50), qr)
+      .input("companyId", sql.Int, companyId)
+      .query(`
+        INSERT INTO sagimMakine (makineAd, hazneHacmi, QR, firmaID)
+        OUTPUT INSERTED.makineID
+        VALUES (@name, @capacity, @qr, @companyId)
+      `);
+
+    const sensor = await loadSensorById(pool, req.mobileUser, insertResult.recordset[0]?.makineID);
+
+    return res.status(201).json({
+      message: "Sagim sensoru eklendi.",
+      sensor: mapSensor(sensor),
+    });
+  } catch (error) {
+    return serverError(res, error, "Mobile sensor create failed:");
+  }
+};
+
 exports.milkingJob = async (req, res) => {
   const jobId = toInteger(req.params.jobId, 0);
 
@@ -1738,6 +1887,127 @@ exports.cancelMilkingJob = async (req, res) => {
     return res.json({ job: mapMilkingJob(updated), message: "Is emri iptal edildi." });
   } catch (error) {
     return serverError(res, error, "Mobile milking job cancel failed:");
+  }
+};
+
+exports.finishMilkingJob = async (req, res) => {
+  const jobId = toInteger(req.params.jobId, 0);
+  const body = req.body || {};
+  const liters = positiveNumber(body.liters || body.sutMiktar || body.milkLiters, null);
+  const temperature = positiveNumber(body.temperature || body.sicaklik, null);
+
+  if (!jobId) {
+    return res.status(400).json({ error: "Is emri ID gerekli." });
+  }
+
+  try {
+    const pool = await poolPromise;
+    const job = await loadMilkingJob(pool, req.mobileUser, jobId);
+
+    if (!job) {
+      return res.status(404).json({ error: "Is emri bulunamadi." });
+    }
+
+    if (job.durum === "t") {
+      return res.json({ job: mapMilkingJob(job), message: "Is emri zaten veritabanina gonderilmis." });
+    }
+
+    if (job.durum === "i") {
+      return res.status(409).json({ error: "Iptal edilen is emri bitirilemez." });
+    }
+
+    await pool
+      .request()
+      .input("jobId", sql.Int, jobId)
+      .input("liters", sql.Float, liters)
+      .input("temperature", sql.Float, temperature)
+      .query(`
+        UPDATE dbo.SagimIsEmri
+        SET durum = 'b',
+            kapanmaTarihi = COALESCE(kapanmaTarihi, SYSUTCDATETIME()),
+            sonYoklamaTarihi = SYSUTCDATETIME(),
+            sutMiktar = COALESCE(@liters, sutMiktar),
+            sicaklik = COALESCE(@temperature, sicaklik),
+            aciklama = N'Olcum mobil uygulama tarafindan bitirildi. Gonderim bekleniyor.'
+        WHERE isEmriID = @jobId
+      `);
+
+    const updated = await loadMilkingJob(pool, req.mobileUser, jobId);
+    return res.json({ job: mapMilkingJob(updated), message: "Olcum bitirildi. Gonderim bekleniyor." });
+  } catch (error) {
+    return serverError(res, error, "Mobile milking job finish failed:");
+  }
+};
+
+exports.submitMilkingJob = async (req, res) => {
+  const jobId = toInteger(req.params.jobId, 0);
+
+  if (!jobId) {
+    return res.status(400).json({ error: "Is emri ID gerekli." });
+  }
+
+  try {
+    const pool = await poolPromise;
+    const job = await loadMilkingJob(pool, req.mobileUser, jobId);
+
+    if (!job) {
+      return res.status(404).json({ error: "Is emri bulunamadi." });
+    }
+
+    if (job.durum === "t") {
+      return res.json({ job: mapMilkingJob(job), message: "Is emri daha once gonderilmis." });
+    }
+
+    if (job.durum !== "b") {
+      return res.status(409).json({ error: "Gondermeden once olcumu bitirin." });
+    }
+
+    const liters = positiveNumber(job.sutMiktar, null);
+
+    if (liters === null) {
+      return res.status(400).json({ error: "Gonderilecek sut miktari bulunamadi." });
+    }
+
+    const insertResult = await pool
+      .request()
+      .input("makineID", sql.Int, Number(job.makineID))
+      .input("sutMiktar", sql.Float, liters)
+      .input("inekID", sql.Int, Number(job.inekID))
+      .query(`
+        INSERT INTO sutOlcum (makineID, sutMiktar, inekID, sagimTarihi)
+        OUTPUT INSERTED.olcumID
+        VALUES (@makineID, @sutMiktar, @inekID, CAST(GETDATE() AS DATE))
+      `);
+
+    await pool
+      .request()
+      .input("inekID", sql.Int, Number(job.inekID))
+      .query(`
+        UPDATE inek
+        SET sonSutOlcumTarihi = CAST(GETDATE() AS DATE)
+        WHERE inekID = @inekID
+      `);
+
+    await pool
+      .request()
+      .input("jobId", sql.Int, jobId)
+      .query(`
+        UPDATE dbo.SagimIsEmri
+        SET durum = 't',
+            kapanmaTarihi = COALESCE(kapanmaTarihi, SYSUTCDATETIME()),
+            sonYoklamaTarihi = SYSUTCDATETIME(),
+            aciklama = N'Olcum mobil uygulama tarafindan veritabanina gonderildi.'
+        WHERE isEmriID = @jobId
+      `);
+
+    const updated = await loadMilkingJob(pool, req.mobileUser, jobId);
+    return res.json({
+      message: "Olcum veritabanina kaydedildi.",
+      measurementId: insertResult.recordset[0]?.olcumID,
+      job: mapMilkingJob(updated),
+    });
+  } catch (error) {
+    return serverError(res, error, "Mobile milking job submit failed:");
   }
 };
 
@@ -1870,26 +2140,6 @@ exports.sensorMeasurement = async (req, res) => {
       return res.status(404).json({ error: "Sensor icin acik is emri bulunamadi." });
     }
 
-    const insertResult = await pool
-      .request()
-      .input("makineID", sql.Int, Number(job.makineID || sensor.makineID))
-      .input("sutMiktar", sql.Float, liters)
-      .input("inekID", sql.Int, Number(job.inekID))
-      .query(`
-        INSERT INTO sutOlcum (makineID, sutMiktar, inekID, sagimTarihi)
-        OUTPUT INSERTED.olcumID
-        VALUES (@makineID, @sutMiktar, @inekID, CAST(GETDATE() AS DATE))
-      `);
-
-    await pool
-      .request()
-      .input("inekID", sql.Int, Number(job.inekID))
-      .query(`
-        UPDATE inek
-        SET sonSutOlcumTarihi = CAST(GETDATE() AS DATE)
-        WHERE inekID = @inekID
-      `);
-
     await pool
       .request()
       .input("jobId", sql.Int, Number(job.isEmriID))
@@ -1897,16 +2147,16 @@ exports.sensorMeasurement = async (req, res) => {
       .input("temperature", sql.Float, temperature)
       .query(`
         UPDATE dbo.SagimIsEmri
-        SET durum = 't',
-            kapanmaTarihi = SYSUTCDATETIME(),
+        SET durum = CASE WHEN durum = 'a' THEN 'p' ELSE durum END,
             sonYoklamaTarihi = SYSUTCDATETIME(),
+            baslamaTarihi = COALESCE(baslamaTarihi, SYSUTCDATETIME()),
             sutMiktar = @liters,
             sicaklik = @temperature,
-            aciklama = N'Olcum sensor tarafindan tamamlandi.'
+            aciklama = N'Olcum sensor tarafindan guncellendi.'
         WHERE isEmriID = @jobId
       `);
 
-    const completed = await pool
+    const updated = await pool
       .request()
       .input("jobId", sql.Int, Number(job.isEmriID))
       .query(`
@@ -1915,9 +2165,8 @@ exports.sensorMeasurement = async (req, res) => {
       `);
 
     return res.json({
-      message: "Olcum kaydedildi ve is emri kapatildi.",
-      measurementId: insertResult.recordset[0]?.olcumID,
-      job: mapMilkingJob(completed.recordset[0]),
+      message: "Olcum is emrine yazildi. Mobil onay bekleniyor.",
+      job: mapMilkingJob(updated.recordset[0]),
     });
   } catch (error) {
     return serverError(res, error, "Sensor measurement failed:");

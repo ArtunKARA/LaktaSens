@@ -53,7 +53,7 @@ export interface MilkValues {
   qualitySource?: string;
 }
 
-export type MilkingJobStatus = 'active' | 'processing' | 'completed' | 'canceled' | 'unknown';
+export type MilkingJobStatus = 'active' | 'processing' | 'ready' | 'completed' | 'canceled' | 'unknown';
 
 export interface SensorSummary {
   id: number;
@@ -62,6 +62,9 @@ export interface SensorSummary {
   tankCapacity?: number | null;
   companyId?: number;
   companyName?: string;
+  latestMilkLiters?: number | null;
+  latestMilkAt?: string | null;
+  latestCowId?: string;
 }
 
 export interface MilkingJob {

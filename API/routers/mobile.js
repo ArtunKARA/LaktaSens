@@ -7,9 +7,11 @@ const {
   cancelMilkingJob,
   cowDetail,
   cows,
+  createSensor,
   createMilkingJob,
   dashboard,
   feedStocks,
+  finishMilkingJob,
   health,
   login,
   me,
@@ -20,12 +22,14 @@ const {
   sensorActiveJob,
   sensorMeasurement,
   sensorOnline,
+  sensors,
   shipmentDetail,
   shipments,
   supplierOfferAction,
   supplierOffers,
   supplierOrderAction,
   supplierOrders,
+  submitMilkingJob,
 } = require("../controllers/mobile-controller.js");
 
 const router = express.Router();
@@ -37,8 +41,12 @@ router.get("/dashboard", authRequired, dashboard);
 router.get("/cows", authRequired, cows);
 router.get("/cows/:cowId", authRequired, cowDetail);
 router.post("/qr/scan", authRequired, scanQr);
+router.get("/sensors", authRequired, sensors);
+router.post("/sensors", authRequired, createSensor);
 router.post("/milking-jobs", authRequired, createMilkingJob);
 router.get("/milking-jobs/:jobId", authRequired, milkingJob);
+router.post("/milking-jobs/:jobId/finish", authRequired, finishMilkingJob);
+router.post("/milking-jobs/:jobId/submit", authRequired, submitMilkingJob);
 router.post("/milking-jobs/:jobId/cancel", authRequired, cancelMilkingJob);
 router.get("/cows/:cowId/milk-values", authRequired, milkValues);
 router.get("/cows/:cowId/milk-history", authRequired, milkHistory);
