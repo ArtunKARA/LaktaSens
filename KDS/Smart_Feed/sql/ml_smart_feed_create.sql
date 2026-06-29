@@ -261,9 +261,25 @@ create table if not exists ml_smart_feed.raw_sensor (
     lying_time_minutes double precision null,
     body_temperature double precision null,
     water_intake_liter double precision null,
+    movement_distance_m double precision null,
+    accel_magnitude_mean double precision null,
+    accel_magnitude_std double precision null,
+    pressure_mean_pa double precision null,
+    pressure_std_pa double precision null,
+    elevation_mean_m double precision null,
+    elevation_std_m double precision null,
     raw_payload jsonb null,
     loaded_at timestamp not null default now()
 );
+
+alter table ml_smart_feed.raw_sensor
+    add column if not exists movement_distance_m double precision null,
+    add column if not exists accel_magnitude_mean double precision null,
+    add column if not exists accel_magnitude_std double precision null,
+    add column if not exists pressure_mean_pa double precision null,
+    add column if not exists pressure_std_pa double precision null,
+    add column if not exists elevation_mean_m double precision null,
+    add column if not exists elevation_std_m double precision null;
 
 create index if not exists ix_raw_sensor_external_cow_id on ml_smart_feed.raw_sensor (external_cow_id);
 create index if not exists ix_raw_sensor_datetime on ml_smart_feed.raw_sensor (record_datetime);
@@ -574,10 +590,26 @@ create table if not exists ml_smart_feed.norm_sensor_daily (
     lying_time_minutes double precision null,
     body_temperature double precision null,
     water_intake_liter double precision null,
+    movement_distance_m double precision null,
+    accel_magnitude_mean double precision null,
+    accel_magnitude_std double precision null,
+    pressure_mean_pa double precision null,
+    pressure_std_pa double precision null,
+    elevation_mean_m double precision null,
+    elevation_std_m double precision null,
     kaynak_id bigint null references ml_smart_feed.meta_veri_kaynagi(kaynak_id) on delete set null,
     created_at timestamp not null default now(),
     unique (cow_id, record_date)
 );
+
+alter table ml_smart_feed.norm_sensor_daily
+    add column if not exists movement_distance_m double precision null,
+    add column if not exists accel_magnitude_mean double precision null,
+    add column if not exists accel_magnitude_std double precision null,
+    add column if not exists pressure_mean_pa double precision null,
+    add column if not exists pressure_std_pa double precision null,
+    add column if not exists elevation_mean_m double precision null,
+    add column if not exists elevation_std_m double precision null;
 
 create index if not exists ix_norm_sensor_daily_cow_date on ml_smart_feed.norm_sensor_daily (cow_id, record_date);
 
@@ -645,11 +677,31 @@ create table if not exists ml_smart_feed.feat_cow_day_snapshot (
     lying_time_minutes double precision null,
     body_temperature double precision null,
     water_intake_liter double precision null,
+    movement_distance_m double precision null,
+    accel_magnitude_mean double precision null,
+    accel_magnitude_std double precision null,
+    pressure_mean_pa double precision null,
+    pressure_std_pa double precision null,
+    elevation_mean_m double precision null,
+    elevation_std_m double precision null,
     thi double precision null,
+    data_origin text not null default 'unknown',
+    is_synthetic boolean not null default false,
 
     created_at timestamp not null default now(),
     unique (cow_id, record_date)
 );
+
+alter table ml_smart_feed.feat_cow_day_snapshot
+    add column if not exists movement_distance_m double precision null,
+    add column if not exists accel_magnitude_mean double precision null,
+    add column if not exists accel_magnitude_std double precision null,
+    add column if not exists pressure_mean_pa double precision null,
+    add column if not exists pressure_std_pa double precision null,
+    add column if not exists elevation_mean_m double precision null,
+    add column if not exists elevation_std_m double precision null,
+    add column if not exists data_origin text not null default 'unknown',
+    add column if not exists is_synthetic boolean not null default false;
 
 create index if not exists ix_feat_snapshot_cow_date on ml_smart_feed.feat_cow_day_snapshot (cow_id, record_date);
 create index if not exists ix_feat_snapshot_stage on ml_smart_feed.feat_cow_day_snapshot (lactation_stage);
@@ -691,9 +743,15 @@ create table if not exists ml_smart_feed.feat_health_risk_label (
     asidosis_label_7d boolean null,
     metritis_label_14d boolean null,
     energy_deficit_risk text null check (energy_deficit_risk in ('low', 'medium', 'high') or energy_deficit_risk is null),
+    label_origin text not null default 'unknown',
+    is_synthetic boolean not null default false,
     created_at timestamp not null default now(),
     unique (cow_id, record_date)
 );
+
+alter table ml_smart_feed.feat_health_risk_label
+    add column if not exists label_origin text not null default 'unknown',
+    add column if not exists is_synthetic boolean not null default false;
 
 create index if not exists ix_feat_health_label_cow_date on ml_smart_feed.feat_health_risk_label (cow_id, record_date);
 create index if not exists ix_feat_health_label_ketosis_7d on ml_smart_feed.feat_health_risk_label (ketosis_label_7d);

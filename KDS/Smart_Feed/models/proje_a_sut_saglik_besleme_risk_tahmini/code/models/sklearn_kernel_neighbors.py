@@ -21,7 +21,7 @@ def build_svm_rbf(task_type: str, random_state: int, params: dict[str, Any], y_t
 def build_linear_svm(task_type: str, random_state: int, params: dict[str, Any], y_train: pd.Series | None) -> Any:
     if task_type == "regression":
         return SVR(kernel="linear", **merged_params({"C": 1.0}, params))
-    defaults = {"C": 1.0, "class_weight": "balanced", "random_state": random_state}
+    defaults = {"C": 1.0, "class_weight": "balanced", "random_state": random_state, "dual": "auto", "max_iter": 10000}
     return LinearSVC(**merged_params(defaults, params))
 
 

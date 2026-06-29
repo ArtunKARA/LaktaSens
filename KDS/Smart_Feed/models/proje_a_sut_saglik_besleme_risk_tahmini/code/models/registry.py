@@ -10,6 +10,7 @@ from models.sklearn_kernel_neighbors import KERNEL_NEIGHBOR_MODELS
 from models.sklearn_linear import LINEAR_MODELS
 from models.sklearn_neural import NEURAL_MODELS
 from models.sklearn_tree import TREE_MODELS
+from models.torch_tabular import TORCH_TABULAR_MODELS
 
 
 MODEL_DEFINITIONS: dict[str, ModelDefinition] = {
@@ -19,6 +20,7 @@ MODEL_DEFINITIONS: dict[str, ModelDefinition] = {
         *TREE_MODELS,
         *KERNEL_NEIGHBOR_MODELS,
         *NEURAL_MODELS,
+        *TORCH_TABULAR_MODELS,
         *OPTIONAL_BOOSTING_MODELS,
     ]
 }
@@ -50,6 +52,9 @@ MODEL_ALIASES = {
         "knn",
         "gaussian_naive_bayes",
         "mlp",
+        "torch_mlp",
+        "torch_resnet",
+        "tabnet",
         "xgboost",
         "lightgbm",
         "catboost",
@@ -62,6 +67,7 @@ MODEL_ALIASES = {
     ],
     "boosting": ["gradient_boosting", "hist_gradient_boosting", "adaboost", "xgboost", "lightgbm", "catboost"],
     "tree_ensembles": ["random_forest", "extra_trees", "gradient_boosting", "hist_gradient_boosting"],
+    "deep_tabular": ["mlp", "torch_mlp", "torch_resnet", "tabnet"],
 }
 
 

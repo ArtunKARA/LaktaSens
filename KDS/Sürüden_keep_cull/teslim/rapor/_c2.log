@@ -1,0 +1,263 @@
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (MiKTeX 25.12) (preloaded format=pdflatex.fmt)
+ restricted \write18 enabled.
+entering extended mode
+(255172008_rapor.tex
+LaTeX2e <2025-11-01>
+L3 programming layer <2025-12-29>
+(C:\Users\Artun\AppData\Local\Programs\MiKTeX\tex/latex/ieeetran\IEEEtran.cls
+Document Class: IEEEtran 2015/08/26 V1.8b by Michael Shell
+-- See the "IEEEtran_HOWTO" manual for usage information.
+-- http://www.michaelshell.org/tex/ieeetran/
+(C:\Users\Artun\AppData\Local\Programs\MiKTeX\tex/latex/psnfss\ot1ptm.fd)
+-- Using 8.5in x 11in (letter) paper.
+-- Using PDF output.
+-- This is a 10 point document.
+) (C:\Users\Artun\AppData\Local\Programs\MiKTeX\tex/latex/base\inputenc.sty)
+(C:\Users\Artun\AppData\Local\Programs\MiKTeX\tex/latex/base\fontenc.sty
+(C:\Users\Artun\AppData\Local\Programs\MiKTeX\tex/latex/psnfss\t1ptm.fd))
+(C:\Users\Artun\AppData\Local\Programs\MiKTeX\tex/latex/lm\lmodern.sty)
+(C:\Users\Artun\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsmath.sty
+For additional information on amsmath, use the `?' option.
+(C:\Users\Artun\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amstext.sty
+(C:\Users\Artun\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsgen.sty))
+(C:\Users\Artun\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsbsy.sty)
+(C:\Users\Artun\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsopn.sty))
+(C:\Users\Artun\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\amssymb.sty
+(C:\Users\Artun\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\amsfonts.sty))
+ (C:\Users\Artun\AppData\Local\Programs\MiKTeX\tex/latex/booktabs\booktabs.sty)
+ (C:\Users\Artun\AppData\Local\Programs\MiKTeX\tex/latex/tools\array.sty)
+(C:\Users\Artun\AppData\Local\Programs\MiKTeX\tex/latex/url\url.sty)
+(C:\Users\Artun\AppData\Local\Programs\MiKTeX\tex/latex/cite\cite.sty)
+(C:\Users\Artun\AppData\Local\Programs\MiKTeX\tex/latex/graphics\graphicx.sty
+(C:\Users\Artun\AppData\Local\Programs\MiKTeX\tex/latex/graphics\keyval.sty)
+(C:\Users\Artun\AppData\Local\Programs\MiKTeX\tex/latex/graphics\graphics.sty
+(C:\Users\Artun\AppData\Local\Programs\MiKTeX\tex/latex/graphics\trig.sty)
+(C:\Users\Artun\AppData\Local\Programs\MiKTeX\tex/latex/graphics-cfg\graphics.c
+fg)
+(C:\Users\Artun\AppData\Local\Programs\MiKTeX\tex/latex/graphics-def\pdftex.def
+)))
+(C:\Users\Artun\AppData\Local\Programs\MiKTeX\tex/latex/listings\listings.sty
+(C:\Users\Artun\AppData\Local\Programs\MiKTeX\tex/latex/listings\lstpatch.sty)
+(C:\Users\Artun\AppData\Local\Programs\MiKTeX\tex/latex/listings\lstmisc.sty)
+(C:\Users\Artun\AppData\Local\Programs\MiKTeX\tex/latex/listings\listings.cfg))
+==> First Aid for listings.sty no longer applied!
+    Expected:
+        2024/09/23 1.10c (Carsten Heinz)
+    but found:
+        2025/11/14 1.11b (Carsten Heinz)
+    so I'm assuming it got fixed.
+(C:\Users\Artun\AppData\Local\Programs\MiKTeX\tex/latex/xcolor\xcolor.sty
+(C:\Users\Artun\AppData\Local\Programs\MiKTeX\tex/latex/graphics-cfg\color.cfg)
+(C:\Users\Artun\AppData\Local\Programs\MiKTeX\tex/latex/graphics\mathcolor.ltx)
+) (C:\Users\Artun\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\hyperref.sty
+(C:\Users\Artun\AppData\Local\Programs\MiKTeX\tex/generic/iftex\iftex.sty)
+(C:\Users\Artun\AppData\Local\Programs\MiKTeX\tex/latex/kvsetkeys\kvsetkeys.sty
+)
+(C:\Users\Artun\AppData\Local\Programs\MiKTeX\tex/generic/kvdefinekeys\kvdefine
+keys.sty)
+(C:\Users\Artun\AppData\Local\Programs\MiKTeX\tex/generic/pdfescape\pdfescape.s
+ty
+(C:\Users\Artun\AppData\Local\Programs\MiKTeX\tex/generic/ltxcmds\ltxcmds.sty)
+(C:\Users\Artun\AppData\Local\Programs\MiKTeX\tex/generic/pdftexcmds\pdftexcmds
+.sty
+(C:\Users\Artun\AppData\Local\Programs\MiKTeX\tex/generic/infwarerr\infwarerr.s
+ty)))
+(C:\Users\Artun\AppData\Local\Programs\MiKTeX\tex/latex/hycolor\hycolor.sty)
+(C:\Users\Artun\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\nameref.sty
+(C:\Users\Artun\AppData\Local\Programs\MiKTeX\tex/latex/refcount\refcount.sty)
+(C:\Users\Artun\AppData\Local\Programs\MiKTeX\tex/generic/gettitlestring\gettit
+lestring.sty
+(C:\Users\Artun\AppData\Local\Programs\MiKTeX\tex/latex/kvoptions\kvoptions.sty
+)))
+(C:\Users\Artun\AppData\Local\Programs\MiKTeX\tex/latex/etoolbox\etoolbox.sty)
+(C:\Users\Artun\AppData\Local\Programs\MiKTeX\tex/generic/stringenc\stringenc.s
+ty) (C:\Users\Artun\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\pd1enc.def
+) (C:\Users\Artun\AppData\Local\Programs\MiKTeX\tex/generic/intcalc\intcalc.sty
+) (C:\Users\Artun\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\puenc.def)
+(C:\Users\Artun\AppData\Local\Programs\MiKTeX\tex/generic/bitset\bitset.sty
+(C:\Users\Artun\AppData\Local\Programs\MiKTeX\tex/generic/bigintcalc\bigintcalc
+.sty)))
+(C:\Users\Artun\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\hpdftex.def
+(C:\Users\Artun\AppData\Local\Programs\MiKTeX\tex/latex/rerunfilecheck\rerunfil
+echeck.sty
+(C:\Users\Artun\AppData\Local\Programs\MiKTeX\tex/generic/uniquecounter\uniquec
+ounter.sty)))
+(C:\Users\Artun\AppData\Local\Programs\MiKTeX\tex/latex/lm\t1lmr.fd)
+(C:\Users\Artun\AppData\Local\Programs\MiKTeX\tex/latex/l3backend\l3backend-pdf
+tex.def) (_tmp_rapor.aux)
+-- Lines per column: 56 (exact).
+
+(C:\Users\Artun\AppData\Local\Programs\MiKTeX\tex/context/base/mkii\supp-pdf.mk
+ii
+[Loading MPS to PDF converter (version 2006.09.02).]
+)
+(C:\Users\Artun\AppData\Local\Programs\MiKTeX\tex/latex/epstopdf-pkg\epstopdf-b
+ase.sty
+(C:\Users\Artun\AppData\Local\Programs\MiKTeX\tex/latex/00miktex\epstopdf-sys.c
+fg)) (_tmp_rapor.out) (_tmp_rapor.out)
+(C:\Users\Artun\AppData\Local\Programs\MiKTeX\tex/latex/lm\ot1lmr.fd)
+(C:\Users\Artun\AppData\Local\Programs\MiKTeX\tex/latex/lm\omllmm.fd)
+(C:\Users\Artun\AppData\Local\Programs\MiKTeX\tex/latex/lm\omslmsy.fd)
+(C:\Users\Artun\AppData\Local\Programs\MiKTeX\tex/latex/lm\omxlmex.fd)
+(C:\Users\Artun\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsa.fd)
+(C:\Users\Artun\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsb.fd)
+Underfull \hbox (badness 1509) in paragraph at lines 36--52
+\T1/lmr/bx/n/9 band^^Yyla kar³^^Yla³t^^Yr^^Ylm^^Y³t^^Yr. Tam ölçekli ko³uda Q-
+[1{C:/Users/Artun/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}{C:/Users/Ar
+tun/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/lm/lm-ec.enc}{C:/Users/Artun/
+AppData/Local/Programs/MiKTeX/fonts/enc/dvips/lm/lm-mathsy.enc}{C:/Users/Artun/
+AppData/Local/Programs/MiKTeX/fonts/enc/dvips/lm/lm-rm.enc}{C:/Users/Artun/AppD
+ata/Local/Programs/MiKTeX/fonts/enc/dvips/lm/lm-mathit.enc}]
+(C:\Users\Artun\AppData\Local\Programs\MiKTeX\tex/latex/lm\t1lmtt.fd)
+Underfull \hbox (badness 3907) in paragraph at lines 110--112
+\T1/lmr/m/n/10 gelirinden birik-mi³ sa§l^^Yk/üreme riskinin ç^^Ykar^^Yl-
+
+Underfull \hbox (badness 4403) in paragraph at lines 114--117
+[]\T1/lmr/bx/n/10 Daha ucuz al-ter-natif yok: \T1/lmr/m/n/10 Or-tam stokastik
+
+Underfull \hbox (badness 1478) in paragraph at lines 122--134
+\T1/lmr/m/n/10 der-sin amac^^Y ö§ren-meyi (ö§renme/eval e§ri-leri, ke³if--
+
+Underfull \hbox (badness 4193) in paragraph at lines 151--157
+\T1/lmr/m/n/10 kalan dört parame-tre pro-totip varsay^^Ym^^Yd^^Yr (Bölüm
+
+Underfull \hbox (badness 4872) in paragraph at lines 166--169
+\T1/lmr/bx/n/10 Cull \T1/lmr/m/n/10 ödülü, hay-van^^Y bugün ç^^Ykar-man^^Yn net
+ ge-tiri-
+[2{C:/Users/Artun/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/lm/lm-mathex.en
+c} <../sunum/grafikler/00_pipeline.png>]
+Overfull \hbox (0.97594pt too wide) in paragraph at lines 182--197
+ [][] 
+
+Underfull \hbox (badness 7291) in paragraph at lines 214--216
+[]\T1/lmtt/m/n/10 keep \T1/lmr/m/n/10 ak-siy-onun-dan son-raki du-rum, gerçek k
+ay^^Yt
+
+Underfull \hbox (badness 1472) in paragraph at lines 220--225
+\T1/lmr/m/n/10 son-raki du-ruma her biri $\OML/lmm/m/it/10 p  \OT1/lmr/m/n/10 =
+  0\OML/lmm/m/it/10 :\OT1/lmr/m/n/10 333$ \T1/lmr/m/n/10 olas^^Yl^^Ykla geçer.
+
+Underfull \hbox (badness 2698) in paragraph at lines 220--225
+\T1/lmr/m/n/10 Bu, or-tam^^Yn \T1/lmr/m/it/10 tan^^Ym gere§i stokastik \T1/lmr/
+m/n/10 oldu§unu kan^^Yt-
+
+Underfull \hbox (badness 2913) in paragraph at lines 226--235
+\T1/lmr/m/n/10 van^^Yn ard^^Y³^^Yk ayl^^Yk snap-shot'lar^^Y aras^^Yn-daki gö-zl
+e-nen
+
+Underfull \hbox (badness 10000) in paragraph at lines 248--248
+[]|\T1/lmr/m/n/8 model-free, off-
+
+Underfull \hbox (badness 10000) in paragraph at lines 249--249
+[]|\T1/lmr/m/n/8 model-free, off-
+
+Overfull \hbox (13.2223pt too wide) in paragraph at lines 251--251
+[]|\T1/lmr/m/n/8 keep/cull/random/risk| 
+
+Underfull \hbox (badness 10000) in paragraph at lines 262--266
+[]\T1/lmr/bx/n/10 SB3 DQN \T1/lmr/m/n/10 (off-policy, de-rin). Gö-zlem, du-rum
+
+Underfull \hbox (badness 1681) in paragraph at lines 262--266
+\T1/lmr/m/n/10 meta-data's^^Yndan ku-ru-lan yo§un bir say^^Ysal vek-tördür
+
+Underfull \hbox (badness 1845) in paragraph at lines 262--266
+\T1/lmr/m/n/10 (one-hot $\OT1/lmr/m/n/10 +$ \T1/lmr/m/n/10 z-normalizasyon). DQ
+N bir \T1/lmr/m/it/10 re-play buffer
+
+Underfull \hbox (badness 4582) in paragraph at lines 262--266
+\T1/lmr/m/n/10 (\T1/lmtt/m/n/10 kod/rl_core.py:474\T1/lmr/m/n/10 ) ve hedef a§ 
+kul-lan^^Yr; tekrar
+
+Underfull \hbox (badness 1728) in paragraph at lines 273--282
+[]\T1/lmr/m/n/10 Tüm e§itim ve de§er-lendirme be³ to-hum üz-erinde
+
+Underfull \hbox (badness 3058) in paragraph at lines 307--316
+[]\T1/lmr/m/n/10 Tablo [][]IV[][], be³ to-hum üz-erinde ortalama$\OMS/lmsy/m/n/
+10 ^^F$\T1/lmr/m/n/10 standart
+
+Underfull \hbox (badness 4072) in paragraph at lines 307--316
+\T1/lmr/m/n/10 be-lir-gin biçimde geçmi³tir. DQN to-hum-lar aras^^Ynda
+[3]
+Underfull \hbox (badness 2653) in paragraph at lines 356--364
+\T1/lmr/m/n/10 ö§re-nilen de§er fonksiy-onunun fi-ilî poli-tika kalitesini
+
+Underfull \hbox (badness 2213) in paragraph at lines 374--382
+\T1/lmr/m/n/10 le-nen 'yük-sek riskli ve ileri lak-ta-syon-daki in-e§i ele'
+
+Underfull \hbox (badness 2326) in paragraph at lines 435--440
+\T1/lmr/m/n/10 Her ik-isi de \T1/lmr/m/it/10 on-line \T1/lmr/m/n/10 (simülatörl
+e etk-ile³erek) ö§renir;
+[4]
+Underfull \hbox (badness 1668) in paragraph at lines 447--453
+\T1/lmr/m/n/10 DQN'in k^^Ysmi gö-zlem-lenebilir-lik s^^Yn^^Yr^^Yn^^Y hafi-flete
+n bir
+
+Underfull \hbox (badness 10000) in paragraph at lines 456--462
+[]\T1/lmr/m/n/10 Süt fiy-at^^Y (0.4668) ve bak^^Ym maliyeti (8.5337)
+
+Underfull \hbox (badness 10000) in paragraph at lines 456--462
+\T1/lmr/m/n/10 USDA 2025 kay-nakl^^Yd^^Yr; re-place-ment, cull, te-davi
+
+Underfull \hbox (badness 10000) in paragraph at lines 456--462
+\T1/lmr/m/n/10 ve to-hum-lama maliyet-leri pro-totip varsay^^Ym^^Yd^^Yr
+
+Underfull \hbox (badness 10000) in paragraph at lines 456--462
+\T1/lmr/m/n/10 (\T1/lmtt/m/n/10 reward_baseline_us_2025.csv\T1/lmr/m/n/10 , \T1
+/lmtt/m/n/10 value_source
+
+Underfull \hbox (badness 1635) in paragraph at lines 456--462
+\T1/lmr/m/n/10 sü-tunu). Poli-tika bu varsay^^Ym-lara du-yarl^^Yd^^Yr; senaryo
+[5 <../sunum/grafikler/01_ogrenme_egrisi.png> <../sunum/grafikler/02_eval_egris
+i.png>]
+
+** Conference Paper **
+Before submitting the final camera ready copy, remember to:
+
+ 1. Manually equalize the lengths of two columns on the last page
+ of your paper;
+
+ 2. Ensure that any PostScript and/or PDF output post-processing
+ uses only Type 1 fonts and that every step in the generation
+ process uses the appropriate paper size.
+
+[6 <../sunum/grafikler/03_loss_ve_policy_heatmap.png> <../sunum/grafikler/04_hi
+perparametre_duyarlilik.png> <../sunum/grafikler/05_baseline_karsilastirma.png>
+] (_tmp_rapor.aux)
+
+Package rerunfilecheck Warning: File `_tmp_rapor.out' has changed.
+(rerunfilecheck)                Rerun to get outlines right
+(rerunfilecheck)                or use package `bookmark'.
+
+ )
+(see the transcript file for additional information)<C:/Users/Artun/AppData/Loc
+al/Programs/MiKTeX/fonts/type1/public/lm/lmbx10.pfb><C:/Users/Artun/AppData/Loc
+al/Programs/MiKTeX/fonts/type1/public/lm/lmbx8.pfb><C:/Users/Artun/AppData/Loca
+l/Programs/MiKTeX/fonts/type1/public/lm/lmbx9.pfb><C:/Users/Artun/AppData/Local
+/Programs/MiKTeX/fonts/type1/public/lm/lmbxi10.pfb><C:/Users/Artun/AppData/Loca
+l/Programs/MiKTeX/fonts/type1/public/lm/lmcsc10.pfb><C:/Users/Artun/AppData/Loc
+al/Programs/MiKTeX/fonts/type1/public/lm/lmex10.pfb><C:/Users/Artun/AppData/Loc
+al/Programs/MiKTeX/fonts/type1/public/lm/lmmi10.pfb><C:/Users/Artun/AppData/Loc
+al/Programs/MiKTeX/fonts/type1/public/lm/lmmi6.pfb><C:/Users/Artun/AppData/Loca
+l/Programs/MiKTeX/fonts/type1/public/lm/lmmi7.pfb><C:/Users/Artun/AppData/Local
+/Programs/MiKTeX/fonts/type1/public/lm/lmmi8.pfb><C:/Users/Artun/AppData/Local/
+Programs/MiKTeX/fonts/type1/public/lm/lmr10.pfb><C:/Users/Artun/AppData/Local/P
+rograms/MiKTeX/fonts/type1/public/lm/lmr12.pfb><C:/Users/Artun/AppData/Local/Pr
+ograms/MiKTeX/fonts/type1/public/lm/lmr17.pfb><C:/Users/Artun/AppData/Local/Pro
+grams/MiKTeX/fonts/type1/public/lm/lmr6.pfb><C:/Users/Artun/AppData/Local/Progr
+ams/MiKTeX/fonts/type1/public/lm/lmr7.pfb><C:/Users/Artun/AppData/Local/Program
+s/MiKTeX/fonts/type1/public/lm/lmr8.pfb><C:/Users/Artun/AppData/Local/Programs/
+MiKTeX/fonts/type1/public/lm/lmr9.pfb><C:/Users/Artun/AppData/Local/Programs/Mi
+KTeX/fonts/type1/public/lm/lmri10.pfb><C:/Users/Artun/AppData/Local/Programs/Mi
+KTeX/fonts/type1/public/lm/lmri8.pfb><C:/Users/Artun/AppData/Local/Programs/MiK
+TeX/fonts/type1/public/lm/lmsy10.pfb><C:/Users/Artun/AppData/Local/Programs/MiK
+TeX/fonts/type1/public/lm/lmsy5.pfb><C:/Users/Artun/AppData/Local/Programs/MiKT
+eX/fonts/type1/public/lm/lmsy6.pfb><C:/Users/Artun/AppData/Local/Programs/MiKTe
+X/fonts/type1/public/lm/lmsy7.pfb><C:/Users/Artun/AppData/Local/Programs/MiKTeX
+/fonts/type1/public/lm/lmsy8.pfb><C:/Users/Artun/AppData/Local/Programs/MiKTeX/
+fonts/type1/public/lm/lmsy9.pfb><C:/Users/Artun/AppData/Local/Programs/MiKTeX/f
+onts/type1/public/lm/lmtcsc10.pfb><C:/Users/Artun/AppData/Local/Programs/MiKTeX
+/fonts/type1/public/lm/lmtt10.pfb><C:/Users/Artun/AppData/Local/Programs/MiKTeX
+/fonts/type1/public/lm/lmtt8.pfb><C:/Users/Artun/AppData/Local/Programs/MiKTeX/
+fonts/type1/public/amsfonts/symbols/msbm10.pfb>
+Output written on _tmp_rapor.pdf (6 pages, 1908423 bytes).
+Transcript written on _tmp_rapor.log.

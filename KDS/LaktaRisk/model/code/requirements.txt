@@ -1,0 +1,14 @@
+pandas
+numpy
+sqlalchemy
+psycopg2-binary
+scikit-learn
+matplotlib
+joblib
+xgboost
+lightgbm
+catboost
+torch
+pytorch-tabnet
+ipykernel
+jupyter

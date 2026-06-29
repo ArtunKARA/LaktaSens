@@ -16,8 +16,8 @@ Then:
 Note:
 - This file uses psql \copy, so paths are read by the client machine.
 - Run it from c:/Users/VICTUS/Desktop/Tubitak/LaktaSens or adjust paths.
-- Large MmCows IMMU and pressure folders are not loaded by default because
-  they are about 11 GB. Keep those as a separate high-frequency ETL step.
+- MmCows IMMU, pressure, UWB, and ankle files are summarized before import by
+  KDS/Smart_Feed/scripts/build_mmcows_daily_sensor_features.py.
 */
 
 \set ON_ERROR_STOP on
@@ -205,6 +205,26 @@ alter table ml_smart_feed.stg_mmcows_cbt alter column external_cow_id set defaul
 alter table ml_smart_feed.stg_mmcows_cbt alter column source_file set default 'KDS/Smart_Feed/Data/external/mmcows_multimodal/main_data/cbt/C10.csv';
 alter table ml_smart_feed.stg_mmcows_cbt alter column external_cow_id set default 'C10';
 \copy ml_smart_feed.stg_mmcows_cbt (timestamp_epoch, temperature_c) FROM 'KDS/Smart_Feed/Data/external/mmcows_multimodal/main_data/cbt/C10.csv' WITH (FORMAT csv, HEADER true)
+
+drop table if exists ml_smart_feed.stg_mmcows_daily_sensor;
+create unlogged table ml_smart_feed.stg_mmcows_daily_sensor (
+    external_cow_id text,
+    record_date text,
+    lying_time_minutes text,
+    movement_distance_m text,
+    accel_magnitude_mean text,
+    accel_magnitude_std text,
+    pressure_mean_pa text,
+    pressure_std_pa text,
+    elevation_mean_m text,
+    elevation_std_m text,
+    ankle_samples text,
+    uwb_samples text,
+    immu_samples text,
+    pressure_samples text
+);
+
+\copy ml_smart_feed.stg_mmcows_daily_sensor FROM 'KDS/Smart_Feed/Data/generated/postgres_import/mmcows_multimodal/daily_sensor_features.csv' WITH (FORMAT csv, HEADER true)
 
 drop table if exists ml_smart_feed.stg_mmcows_thi;
 create unlogged table ml_smart_feed.stg_mmcows_thi (
@@ -406,7 +426,7 @@ insert into ml_smart_feed.raw_milk (
 select
     k.kaynak_id,
     m.external_cow_id,
-    (to_timestamp(nullif(m.timestamp_epoch, '')::double precision) at time zone 'UTC')::date as record_date,
+    (to_timestamp(nullif(m.timestamp_epoch, '')::double precision) at time zone 'America/Chicago')::date as record_date,
     nullif(m.milk_weight_kg, '')::double precision as daily_milk_yield_kg,
     jsonb_build_object(
         'source_file', m.source_file,
@@ -432,7 +452,7 @@ select
     jsonb_build_object(
         'source_file', m.source_file,
         'timestamp_epoch', m.timestamp_epoch,
-        'record_date', (to_timestamp(nullif(m.timestamp_epoch, '')::double precision) at time zone 'UTC')::date,
+        'record_date', (to_timestamp(nullif(m.timestamp_epoch, '')::double precision) at time zone 'America/Chicago')::date,
         'context', 'DIM from MmCows milk file'
     )
 from ml_smart_feed.stg_mmcows_milk m
@@ -510,7 +530,7 @@ insert into ml_smart_feed.raw_sensor (
 select
     k.kaynak_id,
     c.external_cow_id,
-    (to_timestamp(nullif(c.timestamp_epoch, '')::double precision) at time zone 'UTC')::timestamp as record_datetime,
+    (to_timestamp(nullif(c.timestamp_epoch, '')::double precision) at time zone 'America/Chicago')::timestamp as record_datetime,
     'body_temperature' as sensor_type,
     nullif(c.temperature_c, '')::double precision as body_temperature,
     jsonb_build_object(
@@ -522,6 +542,47 @@ from ml_smart_feed.stg_mmcows_cbt c
 join ml_smart_feed.meta_veri_kaynagi k on k.kaynak_kod = 'mmcows_multimodal'
 where nullif(c.timestamp_epoch, '') is not null
   and nullif(c.temperature_c, '') is not null;
+
+insert into ml_smart_feed.raw_sensor (
+    kaynak_id,
+    external_cow_id,
+    record_datetime,
+    sensor_type,
+    lying_time_minutes,
+    movement_distance_m,
+    accel_magnitude_mean,
+    accel_magnitude_std,
+    pressure_mean_pa,
+    pressure_std_pa,
+    elevation_mean_m,
+    elevation_std_m,
+    raw_payload
+)
+select
+    k.kaynak_id,
+    s.external_cow_id,
+    s.record_date::date::timestamp as record_datetime,
+    'multimodal_daily_summary' as sensor_type,
+    nullif(s.lying_time_minutes, '')::double precision,
+    nullif(s.movement_distance_m, '')::double precision,
+    nullif(s.accel_magnitude_mean, '')::double precision,
+    nullif(s.accel_magnitude_std, '')::double precision,
+    nullif(s.pressure_mean_pa, '')::double precision,
+    nullif(s.pressure_std_pa, '')::double precision,
+    nullif(s.elevation_mean_m, '')::double precision,
+    nullif(s.elevation_std_m, '')::double precision,
+    jsonb_build_object(
+        'source_file', 'daily_sensor_features.csv',
+        'timezone', 'America/Chicago',
+        'ankle_samples', nullif(s.ankle_samples, '')::bigint,
+        'uwb_samples', nullif(s.uwb_samples, '')::bigint,
+        'immu_samples', nullif(s.immu_samples, '')::bigint,
+        'pressure_samples', nullif(s.pressure_samples, '')::bigint
+    )
+from ml_smart_feed.stg_mmcows_daily_sensor s
+join ml_smart_feed.meta_veri_kaynagi k on k.kaynak_kod = 'mmcows_multimodal'
+where nullif(s.external_cow_id, '') is not null
+  and nullif(s.record_date, '') is not null;
 
 -- ============================================================================
 -- RAW ENVIRONMENT
@@ -573,7 +634,7 @@ select
     k.kaynak_id,
     'mmcows_farm' as external_farm_id,
     t.barn_id,
-    (to_timestamp(nullif(t.timestamp_epoch, '')::double precision) at time zone 'UTC')::timestamp as record_datetime,
+    (to_timestamp(nullif(t.timestamp_epoch, '')::double precision) at time zone 'America/Chicago')::timestamp as record_datetime,
     nullif(t.temperature_value, '')::double precision as temperature_c,
     nullif(t.humidity_percent, '')::double precision as humidity_percent,
     nullif(t.thi, '')::double precision as thi,
@@ -636,21 +697,23 @@ cross join (
     values
         ('activity', 'activity', 'motion_index', 'Agroscope mi motion index'),
         ('body_temperature', 'body_temp', 'C', 'MmCows core body temperature'),
+        ('multimodal_daily_summary', 'multimodal_daily', 'cow_day', 'MmCows ankle, UWB, IMMU, and pressure daily summary'),
         ('thi', 'environment_thi', 'index', 'MmCows barn THI')
 ) as v(external_sensor_type, standard_sensor_type, unit, aciklama)
 where k.kaynak_kod in ('agroscope_activity_zenodo', 'mmcows_multimodal')
 on conflict do nothing;
 
 /*
-Optional high-frequency MmCows folders not loaded here:
+High-frequency MmCows folders are not copied row-by-row:
 - KDS/Smart_Feed/Data/external/mmcows_multimodal/main_data/ankle
 - KDS/Smart_Feed/Data/external/mmcows_multimodal/main_data/immu
 - KDS/Smart_Feed/Data/external/mmcows_multimodal/main_data/pressure
 - KDS/Smart_Feed/Data/external/mmcows_multimodal/main_data/uwb
 
-Reason: IMMU + pressure are about 11 GB. Import them only after deciding
-retention policy, partitioning, and whether they should stay in raw_sensor or
-be summarized first into norm_sensor_daily.
+IMMU + pressure are about 11 GB. The daily summary generated by
+build_mmcows_daily_sensor_features.py is loaded into raw_sensor instead, so
+the training pipeline uses the information without treating correlated
+high-frequency samples as independent labels.
 
 Excel/DOCX/PDF-only Proje A artifacts such as PLOS RumiWatch are intentionally
 not loaded directly here. PostgreSQL COPY cannot read those formats; export

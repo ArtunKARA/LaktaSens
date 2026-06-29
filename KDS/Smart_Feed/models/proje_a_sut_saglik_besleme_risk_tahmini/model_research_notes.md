@@ -22,6 +22,11 @@ baselines, tree ensembles, and boosting models before heavier sequence models.
 | CatBoost paper: https://arxiv.org/abs/1706.09516 | CatBoost targets unbiased boosting and categorical feature handling. |
 | Random Forests, Breiman 2001: https://www.ovid.com/journals/male/fulltext/00010134-200145010-00001~random-forests | Random forests are strong non-linear tabular baselines with internal importance diagnostics. |
 | Support-vector networks, Cortes and Vapnik 1995: https://link.springer.com/article/10.1007/BF00994018 | SVM is a classic strong-margin classifier used in many dairy-health ML comparisons. |
+| Roberts et al. 2017, structured cross-validation: https://doi.org/10.1111/ecog.02881 | Ignoring hierarchical dependence can underestimate prediction error. Repeated cow-day rows therefore must stay grouped by cow during CV. |
+| StratifiedGroupKFold documentation: https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.StratifiedGroupKFold.html | Preserves class proportions as far as possible while keeping groups non-overlapping. |
+| TabNet, Arik and Pfister: https://arxiv.org/abs/1908.07442 | Uses sequential attention for tabular feature selection and interpretable feature attribution. |
+| Revisiting Deep Learning Models for Tabular Data: https://arxiv.org/abs/2106.11959 | Identifies a ResNet-like architecture as a strong deep tabular baseline and finds no universally superior solution versus GBDT. |
+| Why do tree-based models still outperform deep learning on tabular data?: https://arxiv.org/abs/2207.08815 | Shows tree ensembles remain particularly strong on medium-sized tabular datasets, so deep models should supplement rather than replace boosting. |
 
 ## Selected Academic Top 10
 
@@ -47,6 +52,38 @@ Additional implemented candidates:
 - `gaussian_naive_bayes`
 - `linear_discriminant_analysis`
 - `elastic_net` for regression targets
+- `torch_mlp`
+- `torch_resnet`, based on the strong ResNet-like tabular baseline
+- `tabnet`, using the optional `pytorch-tabnet` package
+
+## Validation Protocol
+
+- The final test cows are held out before model comparison.
+- Five-fold `StratifiedGroupKFold` runs on the remaining development cows for
+  classification; regression uses `GroupKFold`.
+- Every cow belongs to exactly one fold at a time, preventing repeated
+  cow-day rows from leaking between fold train and validation sets.
+- Model selection uses `cv_<primary_metric>_mean`.
+- Binary decision thresholds are derived from out-of-fold predictions, then
+  applied once to the untouched test set.
+- The binary default primary metric is PR-AUC because positive health-risk
+  rows are rare and accuracy is dominated by the negative class.
+- Probability calibration is fitted only on development out-of-fold
+  predictions. Brier score, log-loss, ECE, and a calibration curve are
+  evaluated on the untouched test cows.
+- The top four models are additionally compared with repeated
+  `StratifiedGroupKFold` to measure seed/fold sensitivity.
+- SCC ablation and standalone sensor/milk/feeding feature-group studies use
+  the same cow-level split protocol.
+
+## Deep Learning Scope
+
+The current pipeline models one pre-aggregated cow-day row at a time. MLP,
+tabular ResNet, and TabNet are therefore valid additions. LSTM/GRU/temporal
+Transformer models are not added to this row-based registry because they
+require explicit ordered windows, sequence masks, and a separate
+sequence-level validation pipeline. Adding an LSTM without that redesign
+would not actually learn longitudinal dynamics.
 
 ## Extension Rule
 

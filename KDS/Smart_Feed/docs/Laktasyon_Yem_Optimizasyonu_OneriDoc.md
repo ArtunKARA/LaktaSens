@@ -24,6 +24,12 @@ Bu ortamda `ml_smart_feed` benzeri ayrı bir schema altında ham dış veri, nor
 
 Bu yapıda Proje A, çevrenin state kısmını güçlü hale getirecek; Proje B ise bu state’e göre rasyon aksiyonu üretecek.
 
+Proje A için tamamlanan PR-AUC model seçimi, olasılık kalibrasyonu, SCC
+ablation, özellik grubu karşılaştırması ve tekrarlı cow-group CV sonuçları
+ayrıntılı olarak aşağıdaki raporda açıklanmıştır:
+
+`KDS/Smart_Feed/reports/project_a_advanced_experiment_results_20260607.md`
+
 #### PostgreSQL dış veri yükleme SQL'leri
 
 `KDS/Smart_Feed/Data/external` altındaki hazır dış veri dosyalarını PostgreSQL'e almak için SQL'ler Proje A ve Proje B olarak ayrıldı:
@@ -36,13 +42,16 @@ Bu yapıda Proje A, çevrenin state kısmını güçlü hale getirecek; Proje B 
 Çalıştırma sırası:
 
 ```bash
+python KDS/Smart_Feed/scripts/build_mmcows_daily_sensor_features.py
 psql -d <db_name> -f KDS/Smart_Feed/sql/ml_smart_feed_create.sql
 psql -d <db_name> -f KDS/Smart_Feed/sql/01_seed_meta_veri_kaynagi.sql
 psql -d <db_name> -f KDS/Smart_Feed/sql/02_load_external_project_a.sql
 psql -d <db_name> -f KDS/Smart_Feed/sql/03_load_external_project_b.sql
+psql -d <db_name> -f KDS/Smart_Feed/sql/04_generate_synthetic_project_a_features.sql
+psql -d <db_name> -f KDS/Smart_Feed/sql/06_generate_synthetic_project_a_longitudinal.sql
 ```
 
-Not: `mmcows_multimodal` içindeki IMMU ve pressure yüksek frekans CSV'leri yaklaşık 11 GB olduğu için Proje A scriptinde varsayılan olarak yüklenmez; önce özetleme/partition kararı verildikten sonra ayrı bir high-frequency ETL ile alınmalıdır. Excel, PDF ve DOCX dosyaları da doğrudan PostgreSQL `COPY` ile okunamadığı için önce CSV'ye parse edilmelidir.
+Not: `mmcows_multimodal` içindeki IMMU ve pressure yüksek frekans CSV'leri yaklaşık 11 GB olduğu için PostgreSQL'e satır satır yüklenmez. `build_mmcows_daily_sensor_features.py`, ankle/UWB/IMMU/pressure verisini cow-day feature'larına özetler ve Proje A SQL'i bu küçük özet dosyasını yükler. Excel, PDF ve DOCX dosyaları da doğrudan PostgreSQL `COPY` ile okunamadığı için önce CSV'ye parse edilmelidir.
 
 #### Sisteme girecek temel veriler
 
