@@ -261,28 +261,6 @@ function positiveNumber(value, fallback = null) {
   return Number.isFinite(numberValue) && numberValue > 0 ? numberValue : fallback;
 }
 
-function booleanFlag(value, fallback = false) {
-  if (value === undefined || value === null || value === "") {
-    return fallback;
-  }
-
-  if (typeof value === "boolean") {
-    return value;
-  }
-
-  const normalized = String(value).trim().toLowerCase();
-
-  if (["1", "true", "yes", "evet", "e"].includes(normalized)) {
-    return true;
-  }
-
-  if (["0", "false", "no", "hayir", "h"].includes(normalized)) {
-    return false;
-  }
-
-  return fallback;
-}
-
 function isoDate(value) {
   if (!value) {
     return null;
@@ -2121,10 +2099,6 @@ exports.sensorMeasurement = async (req, res) => {
     body.liters || body.milkLiters || body.sutMiktar || body.SutMiktar || body.Miktar,
   );
   const temperature = positiveNumber(body.temperature || body.sicaklik || body.Sicaklik, null);
-  const finalMeasurement = booleanFlag(
-    body.finalMeasurement ?? body.isFinal ?? body.final ?? body.finished ?? body.completed,
-    true,
-  );
 
   if (!sensorQr) {
     return res.status(400).json({ error: "Sensor QR gerekli." });
@@ -2155,7 +2129,7 @@ exports.sensorMeasurement = async (req, res) => {
           ${milkingJobSelectSql()}
           WHERE J.isEmriID = @jobId
             AND J.sensorQR = @sensorQr
-            AND J.durum IN ('a', 'p', 'b')
+            AND J.durum IN ('a', 'p')
         `);
       job = result.recordset[0];
     } else {
@@ -2171,30 +2145,14 @@ exports.sensorMeasurement = async (req, res) => {
       .input("jobId", sql.Int, Number(job.isEmriID))
       .input("liters", sql.Float, liters)
       .input("temperature", sql.Float, temperature)
-      .input("finalMeasurement", sql.Bit, finalMeasurement ? 1 : 0)
-      .input(
-        "note",
-        sql.NVarChar(255),
-        finalMeasurement
-          ? "Olcum sensor tarafindan bitirildi. Mobil onay bekleniyor."
-          : "Canli olcum sensor tarafindan guncellendi.",
-      )
       .query(`
         UPDATE dbo.SagimIsEmri
-        SET durum = CASE
-              WHEN @finalMeasurement = 1 THEN 'b'
-              WHEN durum = 'a' THEN 'p'
-              ELSE durum
-            END,
+        SET durum = CASE WHEN durum = 'a' THEN 'p' ELSE durum END,
             sonYoklamaTarihi = SYSUTCDATETIME(),
             baslamaTarihi = COALESCE(baslamaTarihi, SYSUTCDATETIME()),
-            kapanmaTarihi = CASE
-              WHEN @finalMeasurement = 1 THEN COALESCE(kapanmaTarihi, SYSUTCDATETIME())
-              ELSE kapanmaTarihi
-            END,
             sutMiktar = @liters,
-            sicaklik = @temperature,
-            aciklama = @note
+            sicaklik = COALESCE(@temperature, sicaklik),
+            aciklama = N'Canli olcum sensor tarafindan guncellendi.'
         WHERE isEmriID = @jobId
       `);
 
@@ -2207,9 +2165,7 @@ exports.sensorMeasurement = async (req, res) => {
       `);
 
     return res.json({
-      message: finalMeasurement
-        ? "Olcum is emrine yazildi. Mobil onay bekleniyor."
-        : "Canli olcum is emrine yazildi.",
+      message: "Canli olcum is emrine yazildi.",
       job: mapMilkingJob(updated.recordset[0]),
     });
   } catch (error) {
