@@ -3,7 +3,8 @@
 Smart Feed PostgreSQL full loader
 
 Bu dosya ml_smart_feed semasini olusturur, meta seed verilerini basar ve
-Proje A / Proje B dis veri yuklemelerini sirasiyla calistirir.
+Proje A / Proje B dis veri yuklemelerini ve Proje A egitim datasetini
+sirasiyla olusturur.
 
 Kullanim:
   psql -U <user> -d <db_name> -f KDS/Smart_Feed/sql/00_postgresql_load_all.sql
@@ -34,16 +35,22 @@ Notlar:
 \echo Repo root: :repo_root
 \cd :repo_root
 
-\echo [1/4] Sema ve tablolar olusturuluyor
+\echo [1/6] Sema ve tablolar olusturuluyor
 \ir ml_smart_feed_create.sql
 
-\echo [2/4] Meta veri kaynaklari seed ediliyor
+\echo [2/6] Meta veri kaynaklari seed ediliyor
 \ir 01_seed_meta_veri_kaynagi.sql
 
-\echo [3/4] Proje A dis veri yuklemesi yapiliyor
+\echo [3/6] Proje A dis veri yuklemesi yapiliyor
 \ir 02_load_external_project_a.sql
 
-\echo [4/4] Proje B dis veri yuklemesi yapiliyor
+\echo [4/6] Proje B dis veri yuklemesi yapiliyor
 \ir 03_load_external_project_b.sql
+
+\echo [5/6] Proje A MmCows proxy feature dataseti uretiliyor
+\ir 04_generate_synthetic_project_a_features.sql
+
+\echo [6/6] Proje A longitudinal sentetik egitim kohortu uretiliyor
+\ir 06_generate_synthetic_project_a_longitudinal.sql
 
 \echo === Smart Feed PostgreSQL yukleme tamamlandi ===

@@ -88,11 +88,32 @@ def load_project_a_dataset(database_url: str | None = None, schema: str = "ml_sm
             s.lying_time_minutes,
             s.body_temperature,
             s.water_intake_liter,
+            (to_jsonb(s)->>'movement_distance_m')::double precision as movement_distance_m,
+            (to_jsonb(s)->>'accel_magnitude_mean')::double precision as accel_magnitude_mean,
+            (to_jsonb(s)->>'accel_magnitude_std')::double precision as accel_magnitude_std,
+            (to_jsonb(s)->>'pressure_mean_pa')::double precision as pressure_mean_pa,
+            (to_jsonb(s)->>'pressure_std_pa')::double precision as pressure_std_pa,
+            (to_jsonb(s)->>'elevation_mean_m')::double precision as elevation_mean_m,
+            (to_jsonb(s)->>'elevation_std_m')::double precision as elevation_std_m,
             s.thi,
+            coalesce(to_jsonb(s)->>'data_origin', 'unknown') as data_origin,
+            coalesce((to_jsonb(s)->>'is_synthetic')::boolean, false) as is_synthetic,
             lead(s.daily_milk_yield_kg) over (
                 partition by s.cow_id order by s.record_date
             ) as next_day_milk_yield_kg
         from {schema}.feat_cow_day_snapshot s
+    ),
+    prediction_base as (
+        select distinct on (cow_id, record_date)
+            cow_id,
+            record_date,
+            early_warning_flag,
+            energy_deficit_risk_score,
+            ketosis_risk_score,
+            mastitis_risk_score,
+            asidosis_risk_score
+        from {schema}.feat_prediction_a
+        order by cow_id, record_date, created_at desc, prediction_id desc
     )
     select
         sb.*,
@@ -102,6 +123,8 @@ def load_project_a_dataset(database_url: str | None = None, schema: str = "ml_sm
         coalesce(h.mastitis_label_14d, false)::int as mastitis_14d,
         coalesce(h.asidosis_label_7d, false)::int as asidosis_7d,
         h.energy_deficit_risk,
+        coalesce(to_jsonb(h)->>'label_origin', 'unknown') as label_origin,
+        coalesce((to_jsonb(h)->>'is_synthetic')::boolean, false) as label_is_synthetic,
         (h.energy_deficit_risk = 'high')::int as energy_deficit_high,
         f.feeding_need_class,
         f.need_score,
@@ -115,7 +138,7 @@ def load_project_a_dataset(database_url: str | None = None, schema: str = "ml_sm
         on h.cow_id = sb.cow_id and h.record_date = sb.record_date
     left join {schema}.feat_feeding_need_label f
         on f.cow_id = sb.cow_id and f.record_date = sb.record_date
-    left join {schema}.feat_prediction_a p
+    left join prediction_base p
         on p.cow_id = sb.cow_id and p.record_date = sb.record_date
     order by sb.cow_id, sb.record_date
     """
@@ -138,4 +161,9 @@ def dataset_summary(frame: pd.DataFrame, target_name: str) -> dict[str, Any]:
     }
     if target_name in frame:
         summary["target_distribution"] = frame[target_name].value_counts(dropna=False).to_dict()
+    if "data_origin" in frame:
+        summary["data_origin_distribution"] = frame["data_origin"].value_counts(dropna=False).to_dict()
+    if "is_synthetic" in frame and len(frame):
+        summary["synthetic_rows"] = int(frame["is_synthetic"].fillna(False).astype(bool).sum())
+        summary["synthetic_percent"] = round(summary["synthetic_rows"] / len(frame) * 100, 2)
     return summary

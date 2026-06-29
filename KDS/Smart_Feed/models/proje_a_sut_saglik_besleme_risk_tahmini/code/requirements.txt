@@ -8,5 +8,7 @@ joblib
 xgboost
 lightgbm
 catboost
+torch
+pytorch-tabnet
 ipykernel
 jupyter

@@ -597,6 +597,24 @@ with cbt as (
     where s.sensor_type = 'body_temperature'
     group by c.cow_id, s.record_datetime::date
 ),
+multimodal as (
+    select
+        c.cow_id,
+        s.record_datetime::date as record_date,
+        avg(s.lying_time_minutes) as lying_time_minutes,
+        avg(s.movement_distance_m) as movement_distance_m,
+        avg(s.accel_magnitude_mean) as accel_magnitude_mean,
+        avg(s.accel_magnitude_std) as accel_magnitude_std,
+        avg(s.pressure_mean_pa) as pressure_mean_pa,
+        avg(s.pressure_std_pa) as pressure_std_pa,
+        avg(s.elevation_mean_m) as elevation_mean_m,
+        avg(s.elevation_std_m) as elevation_std_m,
+        max(s.kaynak_id) as kaynak_id
+    from ml_smart_feed.raw_sensor s
+    join ml_smart_feed.norm_cow_profile c on c.external_cow_id = s.external_cow_id
+    where s.sensor_type = 'multimodal_daily_summary'
+    group by c.cow_id, s.record_datetime::date
+),
 base as (
     select
         m.cow_id,
@@ -607,11 +625,21 @@ base as (
         e.avg_temp,
         e.avg_thi,
         cbt.avg_body_temperature,
+        mm.lying_time_minutes as observed_lying_time_minutes,
+        mm.movement_distance_m,
+        mm.accel_magnitude_mean,
+        mm.accel_magnitude_std,
+        mm.pressure_mean_pa,
+        mm.pressure_std_pa,
+        mm.elevation_mean_m,
+        mm.elevation_std_m,
+        mm.kaynak_id as observed_sensor_kaynak_id,
         coalesce(nullif(regexp_replace(c.external_cow_id, '[^0-9]', '', 'g'), '')::integer, 0) as cow_num
     from ml_smart_feed.norm_milk_daily m
     join ml_smart_feed.norm_cow_profile c on c.cow_id = m.cow_id
     left join ml_smart_feed.norm_feeding_daily f on f.cow_id = m.cow_id and f.record_date = m.record_date
     left join cbt on cbt.cow_id = m.cow_id and cbt.record_date = m.record_date
+    left join multimodal mm on mm.cow_id = m.cow_id and mm.record_date = m.record_date
     left join (
         select record_date, avg(avg_temperature_c) as avg_temp, avg(avg_thi) as avg_thi
         from ml_smart_feed.norm_environment_daily
@@ -626,6 +654,13 @@ insert into ml_smart_feed.norm_sensor_daily (
     lying_time_minutes,
     body_temperature,
     water_intake_liter,
+    movement_distance_m,
+    accel_magnitude_mean,
+    accel_magnitude_std,
+    pressure_mean_pa,
+    pressure_std_pa,
+    elevation_mean_m,
+    elevation_std_m,
     kaynak_id
 )
 select
@@ -643,13 +678,16 @@ select
         )
     ),
     35.0 + coalesce(b.daily_milk_yield_kg, 35) * 0.35 + ((b.cow_num % 6) * 3),
-    least(
-        900.0,
-        greatest(
-            600.0,
-            780.0
-            - case when coalesce(b.avg_thi, 65) > 75 then 55 else 0 end
-            + ((b.cow_num % 5) - 2) * 12
+    coalesce(
+        b.observed_lying_time_minutes,
+        least(
+            900.0,
+            greatest(
+                600.0,
+                780.0
+                - case when coalesce(b.avg_thi, 65) > 75 then 55 else 0 end
+                + ((b.cow_num % 5) - 2) * 12
+            )
         )
     ),
     coalesce(
@@ -668,7 +706,14 @@ select
             + 0.60 * coalesce(b.avg_temp, 20)
         )
     ),
-    k.kaynak_id
+    b.movement_distance_m,
+    b.accel_magnitude_mean,
+    b.accel_magnitude_std,
+    b.pressure_mean_pa,
+    b.pressure_std_pa,
+    b.elevation_mean_m,
+    b.elevation_std_m,
+    coalesce(b.observed_sensor_kaynak_id, k.kaynak_id)
 from base b
 cross join ml_smart_feed.meta_veri_kaynagi k
 where k.kaynak_kod = 'synthetic_smart_feed_v1'
@@ -679,6 +724,13 @@ set
     lying_time_minutes = excluded.lying_time_minutes,
     body_temperature = excluded.body_temperature,
     water_intake_liter = excluded.water_intake_liter,
+    movement_distance_m = excluded.movement_distance_m,
+    accel_magnitude_mean = excluded.accel_magnitude_mean,
+    accel_magnitude_std = excluded.accel_magnitude_std,
+    pressure_mean_pa = excluded.pressure_mean_pa,
+    pressure_std_pa = excluded.pressure_std_pa,
+    elevation_mean_m = excluded.elevation_mean_m,
+    elevation_std_m = excluded.elevation_std_m,
     kaynak_id = excluded.kaynak_id;
 
 -- ---------------------------------------------------------------------------
@@ -752,7 +804,16 @@ snapshot_base as (
         s.lying_time_minutes,
         s.body_temperature,
         s.water_intake_liter,
-        e.avg_thi as thi
+        s.movement_distance_m,
+        s.accel_magnitude_mean,
+        s.accel_magnitude_std,
+        s.pressure_mean_pa,
+        s.pressure_std_pa,
+        s.elevation_mean_m,
+        s.elevation_std_m,
+        e.avg_thi as thi,
+        'mmcows_observed_with_proxy'::text as data_origin,
+        true as is_synthetic
     from ml_smart_feed.norm_milk_daily m
     join ml_smart_feed.norm_cow_profile c on c.cow_id = m.cow_id
     left join ml_smart_feed.norm_lactation_daily l on l.cow_id = m.cow_id and l.record_date = m.record_date
@@ -785,7 +846,16 @@ insert into ml_smart_feed.feat_cow_day_snapshot (
     lying_time_minutes,
     body_temperature,
     water_intake_liter,
-    thi
+    movement_distance_m,
+    accel_magnitude_mean,
+    accel_magnitude_std,
+    pressure_mean_pa,
+    pressure_std_pa,
+    elevation_mean_m,
+    elevation_std_m,
+    thi,
+    data_origin,
+    is_synthetic
 )
 select * from snapshot_base
 on conflict (cow_id, record_date) do update
@@ -812,7 +882,16 @@ set
     lying_time_minutes = excluded.lying_time_minutes,
     body_temperature = excluded.body_temperature,
     water_intake_liter = excluded.water_intake_liter,
-    thi = excluded.thi;
+    movement_distance_m = excluded.movement_distance_m,
+    accel_magnitude_mean = excluded.accel_magnitude_mean,
+    accel_magnitude_std = excluded.accel_magnitude_std,
+    pressure_mean_pa = excluded.pressure_mean_pa,
+    pressure_std_pa = excluded.pressure_std_pa,
+    elevation_mean_m = excluded.elevation_mean_m,
+    elevation_std_m = excluded.elevation_std_m,
+    thi = excluded.thi,
+    data_origin = excluded.data_origin,
+    is_synthetic = excluded.is_synthetic;
 
 insert into ml_smart_feed.feat_health_risk_label (
     cow_id,
@@ -823,7 +902,9 @@ insert into ml_smart_feed.feat_health_risk_label (
     mastitis_label_14d,
     asidosis_label_7d,
     metritis_label_14d,
-    energy_deficit_risk
+    energy_deficit_risk,
+    label_origin,
+    is_synthetic
 )
 select
     s.cow_id,
@@ -840,7 +921,9 @@ select
         when s.estimated_dmi_kg / nullif(s.daily_milk_yield_kg, 0) < 0.46 or (s.thi >= 78 and s.daily_milk_yield_kg > 45) then 'high'
         when s.estimated_dmi_kg / nullif(s.daily_milk_yield_kg, 0) < 0.52 or s.thi >= 75 then 'medium'
         else 'low'
-    end
+    end,
+    'synthetic_project_a_v1_proxy_rule',
+    true
 from ml_smart_feed.feat_cow_day_snapshot s
 on conflict (cow_id, record_date) do update
 set
@@ -850,7 +933,9 @@ set
     mastitis_label_14d = excluded.mastitis_label_14d,
     asidosis_label_7d = excluded.asidosis_label_7d,
     metritis_label_14d = excluded.metritis_label_14d,
-    energy_deficit_risk = excluded.energy_deficit_risk;
+    energy_deficit_risk = excluded.energy_deficit_risk,
+    label_origin = excluded.label_origin,
+    is_synthetic = excluded.is_synthetic;
 
 insert into ml_smart_feed.feat_feeding_need_label (
     cow_id,
@@ -921,6 +1006,13 @@ select
         'lying_time_minutes', s.lying_time_minutes,
         'body_temperature', s.body_temperature,
         'water_intake_liter', s.water_intake_liter,
+        'movement_distance_m', s.movement_distance_m,
+        'accel_magnitude_mean', s.accel_magnitude_mean,
+        'accel_magnitude_std', s.accel_magnitude_std,
+        'pressure_mean_pa', s.pressure_mean_pa,
+        'pressure_std_pa', s.pressure_std_pa,
+        'elevation_mean_m', s.elevation_mean_m,
+        'elevation_std_m', s.elevation_std_m,
         'thi', s.thi,
         'milk_avg_7d', t.milk_avg_7d,
         'milk_trend_7d', t.milk_trend_7d
@@ -1005,4 +1097,3 @@ set
 commit;
 
 \echo === Smart Feed Project A synthetic/proxy generation completed ===
-

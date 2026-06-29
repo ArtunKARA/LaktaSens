@@ -1,0 +1,13 @@
+# Teslim — sabitlenmiş (==) bağımlılıklar. Üretildiği ortam: Python 3.11.
+# torch CPU kurulumu için (CUDA gerekmez):
+#   pip install torch==2.5.1 --index-url https://download.pytorch.org/whl/cpu
+#   pip install -r requirements.txt
+numpy==1.26.4
+pandas==2.1.4
+PyYAML==6.0.1
+gymnasium==0.29.1
+stable_baselines3==2.3.2
+torch==2.5.1
+matplotlib==3.10.7
+scikit-learn==1.3.2
+cloudpickle==2.2.1

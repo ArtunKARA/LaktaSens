@@ -30,8 +30,14 @@ NUMERIC_FEATURES = [
     "lying_time_minutes",
     "body_temperature",
     "water_intake_liter",
+    "movement_distance_m",
+    "accel_magnitude_mean",
+    "accel_magnitude_std",
+    "pressure_mean_pa",
+    "pressure_std_pa",
+    "elevation_mean_m",
+    "elevation_std_m",
     "thi",
-    "need_score",
 ]
 
 CATEGORICAL_FEATURES = [
@@ -39,6 +45,44 @@ CATEGORICAL_FEATURES = [
     "lactation_stage",
     "ration_type",
 ]
+
+FEATURE_GROUPS = {
+    "sensor": [
+        "rumination_minutes",
+        "activity_level",
+        "lying_time_minutes",
+        "body_temperature",
+        "water_intake_liter",
+        "movement_distance_m",
+        "accel_magnitude_mean",
+        "accel_magnitude_std",
+        "pressure_mean_pa",
+        "pressure_std_pa",
+        "elevation_mean_m",
+        "elevation_std_m",
+        "thi",
+    ],
+    "milk": [
+        "daily_milk_yield_kg",
+        "milk_fat_percent",
+        "milk_protein_percent",
+        "fat_protein_ratio",
+        "scc",
+        "milk_electrical_conductivity",
+    ],
+    "feeding": [
+        "dry_matter_percent",
+        "estimated_dmi_kg",
+        "forage_concentrate_ratio",
+        "feed_change_last7d",
+    ],
+}
+
+FEATURE_GROUP_CATEGORICALS = {
+    "sensor": [],
+    "milk": [],
+    "feeding": ["ration_type"],
+}
 
 TARGET_TYPES = {
     "energy_deficit_high": "binary",
@@ -61,6 +105,12 @@ class ProjectATrainingConfig:
     schema: str = DEFAULT_SCHEMA
     split_method: str = "time"
     test_size: float = 0.25
+    validation_size: float = 0.2
+    enable_group_cv: bool = True
+    cv_folds: int = 5
+    cv_repeats: int = 1
+    calibrate_probabilities: bool = True
+    calibration_method: str = "sigmoid"
     random_state: int = 42
     primary_metric: str | None = None
     model_names: list[str] = field(default_factory=lambda: DEFAULT_MODEL_NAMES.copy())
@@ -68,7 +118,9 @@ class ProjectATrainingConfig:
     skip_unavailable_models: bool = True
     numeric_features: list[str] = field(default_factory=lambda: NUMERIC_FEATURES.copy())
     categorical_features: list[str] = field(default_factory=lambda: CATEGORICAL_FEATURES.copy())
+    allowed_data_origins: list[str] | None = None
     save_artifacts: bool = False
+    refit_full_data: bool = False
     artifact_dir: Path = ARTIFACT_DIR
     run_name: str | None = None
 
