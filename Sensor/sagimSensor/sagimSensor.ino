@@ -24,12 +24,14 @@ const char *password = "P20202020";
 
 // Mobil API ile ayni sunucu. Fiziksel testte bilgisayarin LAN IP adresini yaz.
 const char *serverBase = "http://192.168.1.10:3030";
-const char *sensorQr = "f2dw2iGzdQXgT0cp";
+const char *sensorQr = "8266";
 
 const unsigned long pollIntervalMs = 3000;
 const unsigned long statusIntervalMs = 1000;
 const unsigned long buttonDebounceMs = 45;
 const unsigned long errorSoundIntervalMs = 10000;
+const unsigned long yellowBlinkIntervalMs = 350;
+const unsigned long measuringSoundIntervalMs = 2000;
 
 // YF-S402C: F = 23 * Q(L/min). 23 pulse/s at 1 L/min => 1380 pulse/L.
 // Sahada olcekli kap ile kalibre edip bu degeri guncelle.
@@ -52,11 +54,13 @@ volatile bool measurementPaused = false;
 
 unsigned long lastPollAt = 0;
 unsigned long lastErrorSoundAt = 0;
+unsigned long lastYellowBlinkAt = 0;
+bool yellowBlinkState = false;
 
 void connectToWiFi();
 String sendOnlineStatus();
 String queryActiveJob();
-String sendMeasurement(int jobId, float liters);
+String sendMeasurement(int jobId, float liters, bool finalMeasurement);
 void runMeasurement(int jobId, const String &cowId);
 void resetFlowCounter();
 unsigned long getFlowPulses();
@@ -67,6 +71,9 @@ int extractJsonInt(String json, String key);
 String extractJsonString(String json, String key);
 bool buttonPressed(ButtonState &button);
 void setLeds(bool red, bool yellow, bool green);
+void setYellowLed(bool on);
+void startYellowBlink();
+void updateYellowBlink();
 void setIdleState();
 void setMeasuringState();
 void setPausedState();
@@ -80,9 +87,11 @@ void playWiFiSound();
 void playJobFoundSound();
 void playPauseSound();
 void playResumeSound();
+void playMeasuringTickSound();
 void playSuccessSound();
 void playErrorSound();
 void playErrorSoundThrottled();
+void showMeasurementStatus(const String &cowId, float liters);
 void showStatus(const String &line1, const String &line2);
 
 void IRAM_ATTR countFlowPulse()
@@ -107,13 +116,16 @@ void setup()
 
   setLeds(false, false, false);
   digitalWrite(BUZZER_PIN, LOW);
-  playStartupMelody();
 
 #if USE_LCD
   Wire.begin(D2, D1);
   lcd.init();
   lcd.backlight();
 #endif
+
+  showStatus("Sensor ID", String(sensorQr));
+  playStartupMelody();
+  delay(4000);
 
   attachInterrupt(digitalPinToInterrupt(FLOW_SENSOR_PIN), countFlowPulse, RISING);
 
@@ -174,6 +186,11 @@ void loop()
 
   int jobId = extractJsonInt(activeJobResponse, "id");
   String cowId = extractJsonString(activeJobResponse, "cowId");
+  String cowInfo = extractJsonString(activeJobResponse, "cowName");
+  if (cowInfo.length() == 0)
+  {
+    cowInfo = cowId;
+  }
 
   if (jobId <= 0)
   {
@@ -185,7 +202,7 @@ void loop()
   }
 
   Serial.println("Acik is emri bulundu: #" + String(jobId) + " inek=" + cowId);
-  runMeasurement(jobId, cowId);
+  runMeasurement(jobId, cowInfo);
 }
 
 void runMeasurement(int jobId, const String &cowId)
@@ -197,14 +214,17 @@ void runMeasurement(int jobId, const String &cowId)
   unsigned long lastStatusAt = millis();
   unsigned long lastPulseSnapshot = 0;
   unsigned long lastFlowCalcAt = millis();
+  unsigned long lastMeasuringSoundAt = millis();
   bool shouldFinish = false;
 
   setMeasuringState();
   playJobFoundSound();
-  showStatus("Olcum basladi", cowId);
+  showMeasurementStatus(cowId, 0.0);
 
   while (!shouldFinish)
   {
+    updateYellowBlink();
+
     if (WiFi.status() != WL_CONNECTED)
     {
       connectToWiFi();
@@ -224,13 +244,13 @@ void runMeasurement(int jobId, const String &cowId)
       if (measurementPaused)
       {
         setPausedState();
-        showStatus("Olcum durdu", "Devam icin D6");
+        showMeasurementStatus(cowId, pulsesToLiters(getFlowPulses()));
         playPauseSound();
       }
       else
       {
         setMeasuringState();
-        showStatus("Olcum devam", cowId);
+        showMeasurementStatus(cowId, pulsesToLiters(getFlowPulses()));
         playResumeSound();
       }
     }
@@ -260,10 +280,18 @@ void runMeasurement(int jobId, const String &cowId)
       lastStatusAt = now;
 
       Serial.println("Pulse=" + String(pulses) + " Miktar=" + String(liters, 2) + " L Debi=" + String(flowLpm, 2) + " L/dk");
-      if (!measurementPaused)
+      showMeasurementStatus(cowId, liters);
+
+      if (!measurementPaused && liters > 0.0)
       {
-        showStatus("Olculuyor", String(liters, 2) + " L");
+        sendMeasurement(jobId, liters, false);
       }
+    }
+
+    if (!measurementPaused && millis() - lastMeasuringSoundAt >= measuringSoundIntervalMs)
+    {
+      lastMeasuringSoundAt = millis();
+      playMeasuringTickSound();
     }
 
     delay(10);
@@ -287,7 +315,7 @@ void runMeasurement(int jobId, const String &cowId)
 
   setSendingState();
   showStatus("Sunucuya", String(liters, 2) + " L");
-  String measurementResponse = sendMeasurement(jobId, liters);
+  String measurementResponse = sendMeasurement(jobId, liters, true);
 
   if (measurementResponse.indexOf("Mobil onay bekleniyor") != -1 ||
       measurementResponse.indexOf("Olcum is emrine yazildi") != -1 ||
@@ -340,13 +368,14 @@ String queryActiveJob()
   return getUrl(url);
 }
 
-String sendMeasurement(int jobId, float liters)
+String sendMeasurement(int jobId, float liters, bool finalMeasurement)
 {
   String url = String(serverBase) + "/api/mobile/sensor/measurements";
   String body = "{";
   body += "\"sensorQr\":\"" + String(sensorQr) + "\",";
   body += "\"jobId\":" + String(jobId) + ",";
-  body += "\"liters\":" + String(liters, 2);
+  body += "\"liters\":" + String(liters, 2) + ",";
+  body += "\"final\":" + String(finalMeasurement ? "true" : "false");
   body += "}";
 
   return postJson(url, body);
@@ -473,23 +502,50 @@ bool buttonPressed(ButtonState &button)
 void setLeds(bool red, bool yellow, bool green)
 {
   digitalWrite(RED_LED, red ? HIGH : LOW);
-  digitalWrite(YELLOW_LED, yellow ? HIGH : LOW);
+  setYellowLed(yellow);
   digitalWrite(GREEN_LED, green ? HIGH : LOW);
+}
+
+void setYellowLed(bool on)
+{
+  yellowBlinkState = on;
+  digitalWrite(YELLOW_LED, on ? HIGH : LOW);
+}
+
+void startYellowBlink()
+{
+  yellowBlinkState = true;
+  lastYellowBlinkAt = millis();
+  digitalWrite(YELLOW_LED, HIGH);
+}
+
+void updateYellowBlink()
+{
+  if (millis() - lastYellowBlinkAt < yellowBlinkIntervalMs)
+  {
+    return;
+  }
+
+  lastYellowBlinkAt = millis();
+  yellowBlinkState = !yellowBlinkState;
+  digitalWrite(YELLOW_LED, yellowBlinkState ? HIGH : LOW);
 }
 
 void setIdleState()
 {
-  setLeds(false, false, true);
+  setLeds(false, true, true);
 }
 
 void setMeasuringState()
 {
   setLeds(false, true, false);
+  startYellowBlink();
 }
 
 void setPausedState()
 {
   setLeds(false, true, true);
+  startYellowBlink();
 }
 
 void setSendingState()
@@ -572,6 +628,11 @@ void playResumeSound()
   playToneMs(880, 90);
 }
 
+void playMeasuringTickSound()
+{
+  playToneMs(1047, 35);
+}
+
 void playSuccessSound()
 {
   playToneMs(988, 80);
@@ -595,6 +656,13 @@ void playErrorSoundThrottled()
 
   lastErrorSoundAt = now;
   playErrorSound();
+}
+
+void showMeasurementStatus(const String &cowId, float liters)
+{
+  String topLine = cowId.length() > 0 ? cowId : "Inek bilgisi";
+  String bottomLine = "Olculen:" + String(liters, 2) + "L";
+  showStatus(topLine, bottomLine);
 }
 
 void showStatus(const String &line1, const String &line2)

@@ -2099,6 +2099,10 @@ exports.sensorMeasurement = async (req, res) => {
     body.liters || body.milkLiters || body.sutMiktar || body.SutMiktar || body.Miktar,
   );
   const temperature = positiveNumber(body.temperature || body.sicaklik || body.Sicaklik, null);
+  const finalValue = body.final ?? body.isFinal ?? body.completed ?? req.query.final;
+  const isFinal = finalValue === undefined
+    ? true
+    : ["1", "true", "evet", "e", "yes", "y"].includes(cleanString(finalValue).toLowerCase());
 
   if (!sensorQr) {
     return res.status(400).json({ error: "Sensor QR gerekli." });
@@ -2145,15 +2149,26 @@ exports.sensorMeasurement = async (req, res) => {
       .input("jobId", sql.Int, Number(job.isEmriID))
       .input("liters", sql.Float, liters)
       .input("temperature", sql.Float, temperature)
+      .input("isFinal", sql.Bit, isFinal)
       .query(`
         UPDATE dbo.SagimIsEmri
-        SET durum = 'b',
+        SET durum = CASE
+              WHEN @isFinal = 1 THEN 'b'
+              WHEN durum = 'b' THEN 'b'
+              ELSE 'p'
+            END,
             sonYoklamaTarihi = SYSUTCDATETIME(),
             baslamaTarihi = COALESCE(baslamaTarihi, SYSUTCDATETIME()),
-            kapanmaTarihi = COALESCE(kapanmaTarihi, SYSUTCDATETIME()),
+            kapanmaTarihi = CASE
+              WHEN @isFinal = 1 THEN COALESCE(kapanmaTarihi, SYSUTCDATETIME())
+              ELSE kapanmaTarihi
+            END,
             sutMiktar = @liters,
             sicaklik = @temperature,
-            aciklama = N'Olcum sensor tarafindan bitirildi. Mobil onay bekleniyor.'
+            aciklama = CASE
+              WHEN @isFinal = 1 THEN N'Olcum sensor tarafindan bitirildi. Mobil onay bekleniyor.'
+              ELSE N'Olcum sensor tarafindan canli guncellendi.'
+            END
         WHERE isEmriID = @jobId
       `);
 
@@ -2166,7 +2181,9 @@ exports.sensorMeasurement = async (req, res) => {
       `);
 
     return res.json({
-      message: "Olcum is emrine yazildi. Mobil onay bekleniyor.",
+      message: isFinal
+        ? "Olcum is emrine yazildi. Mobil onay bekleniyor."
+        : "Olcum canli olarak is emrine yazildi.",
       job: mapMilkingJob(updated.recordset[0]),
     });
   } catch (error) {
