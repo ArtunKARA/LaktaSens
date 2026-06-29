@@ -28,8 +28,10 @@ const char *sensorQr = "f2dw2iGzdQXgT0cp";
 
 const unsigned long pollIntervalMs = 3000;
 const unsigned long statusIntervalMs = 1000;
+const unsigned long liveMeasurementIntervalMs = 1500;
 const unsigned long buttonDebounceMs = 45;
 const unsigned long errorSoundIntervalMs = 10000;
+const float minLiveMeasurementDeltaLiters = 0.01;
 
 // YF-S402C: F = 23 * Q(L/min). 23 pulse/s at 1 L/min => 1380 pulse/L.
 // Sahada olcekli kap ile kalibre edip bu degeri guncelle.
@@ -56,7 +58,7 @@ unsigned long lastErrorSoundAt = 0;
 void connectToWiFi();
 String sendOnlineStatus();
 String queryActiveJob();
-String sendMeasurement(int jobId, float liters);
+String sendMeasurement(int jobId, float liters, bool finalMeasurement);
 void runMeasurement(int jobId, const String &cowId);
 void resetFlowCounter();
 unsigned long getFlowPulses();
@@ -195,8 +197,10 @@ void runMeasurement(int jobId, const String &cowId)
   measurementPaused = false;
 
   unsigned long lastStatusAt = millis();
+  unsigned long lastLiveSendAt = 0;
   unsigned long lastPulseSnapshot = 0;
   unsigned long lastFlowCalcAt = millis();
+  float lastLiveSentLiters = 0.0;
   bool shouldFinish = false;
 
   setMeasuringState();
@@ -264,6 +268,25 @@ void runMeasurement(int jobId, const String &cowId)
       {
         showStatus("Olculuyor", String(liters, 2) + " L");
       }
+
+      if (!measurementPaused &&
+          liters > 0.0 &&
+          now - lastLiveSendAt >= liveMeasurementIntervalMs &&
+          (lastLiveSendAt == 0 || liters - lastLiveSentLiters >= minLiveMeasurementDeltaLiters))
+      {
+        lastLiveSendAt = now;
+        lastLiveSentLiters = liters;
+
+        String liveResponse = sendMeasurement(jobId, liters, false);
+        if (liveResponse.length() > 0)
+        {
+          Serial.println("Canli olcum gonderildi: " + String(liters, 2) + " L");
+        }
+        else
+        {
+          Serial.println("Canli olcum gonderilemedi.");
+        }
+      }
     }
 
     delay(10);
@@ -287,7 +310,7 @@ void runMeasurement(int jobId, const String &cowId)
 
   setSendingState();
   showStatus("Sunucuya", String(liters, 2) + " L");
-  String measurementResponse = sendMeasurement(jobId, liters);
+  String measurementResponse = sendMeasurement(jobId, liters, true);
 
   if (measurementResponse.indexOf("Mobil onay bekleniyor") != -1 ||
       measurementResponse.indexOf("Olcum is emrine yazildi") != -1 ||
@@ -340,13 +363,15 @@ String queryActiveJob()
   return getUrl(url);
 }
 
-String sendMeasurement(int jobId, float liters)
+String sendMeasurement(int jobId, float liters, bool finalMeasurement)
 {
   String url = String(serverBase) + "/api/mobile/sensor/measurements";
   String body = "{";
   body += "\"sensorQr\":\"" + String(sensorQr) + "\",";
   body += "\"jobId\":" + String(jobId) + ",";
-  body += "\"liters\":" + String(liters, 2);
+  body += "\"liters\":" + String(liters, 2) + ",";
+  body += "\"finalMeasurement\":";
+  body += finalMeasurement ? "true" : "false";
   body += "}";
 
   return postJson(url, body);
