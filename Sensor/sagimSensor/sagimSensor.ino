@@ -339,7 +339,6 @@ void runMeasurement(int jobId, const String &cowId)
   setSendingState();
   showStatus("Sunucuya", String(liters, 2) + " L");
   String measurementResponse = sendMeasurement(jobId, liters, true);
-  String measurementResponse = sendMeasurement(jobId, liters, true);
 
   if (measurementResponse.indexOf("Mobil onay bekleniyor") != -1 ||
       measurementResponse.indexOf("Olcum is emrine yazildi") != -1 ||
@@ -392,7 +391,6 @@ String queryActiveJob()
   return getUrl(url);
 }
 
-String sendMeasurement(int jobId, float liters, bool finalMeasurement)
 String sendMeasurement(int jobId, float liters, bool finalMeasurement)
 {
   String url = String(serverBase) + "/api/mobile/sensor/measurements";
