@@ -63,7 +63,6 @@ void connectToWiFi();
 String sendOnlineStatus();
 String queryActiveJob();
 String sendMeasurement(int jobId, float liters, bool finalMeasurement);
-String sendMeasurement(int jobId, float liters, bool finalMeasurement);
 void runMeasurement(int jobId, const String &cowId);
 void resetFlowCounter();
 unsigned long getFlowPulses();
@@ -286,11 +285,6 @@ void runMeasurement(int jobId, const String &cowId)
       Serial.println("Pulse=" + String(pulses) + " Miktar=" + String(liters, 2) + " L Debi=" + String(flowLpm, 2) + " L/dk");
       showMeasurementStatus(cowId, liters);
 
-      if (!measurementPaused && liters > 0.0)
-      {
-        sendMeasurement(jobId, liters, false);
-      }
-
       if (!measurementPaused &&
           liters > 0.0 &&
           now - lastLiveSendAt >= liveMeasurementIntervalMs &&
@@ -398,10 +392,8 @@ String sendMeasurement(int jobId, float liters, bool finalMeasurement)
   body += "\"sensorQr\":\"" + String(sensorQr) + "\",";
   body += "\"jobId\":" + String(jobId) + ",";
   body += "\"liters\":" + String(liters, 2) + ",";
-  body += "\"finalMeasurement\":";
+  body += "\"final\":";
   body += finalMeasurement ? "true" : "false";
-  body += "\"liters\":" + String(liters, 2) + ",";
-  body += "\"final\":" + String(finalMeasurement ? "true" : "false");
   body += "}";
 
   return postJson(url, body);

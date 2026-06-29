@@ -2099,7 +2099,13 @@ exports.sensorMeasurement = async (req, res) => {
     body.liters || body.milkLiters || body.sutMiktar || body.SutMiktar || body.Miktar,
   );
   const temperature = positiveNumber(body.temperature || body.sicaklik || body.Sicaklik, null);
-  const finalValue = body.final ?? body.isFinal ?? body.completed ?? req.query.final;
+  const finalValue =
+    body.final ??
+    body.finalMeasurement ??
+    body.isFinal ??
+    body.completed ??
+    req.query.final ??
+    req.query.finalMeasurement;
   const isFinal = ["1", "true", "evet", "e", "yes", "y"].includes(cleanString(finalValue).toLowerCase());
 
   if (!sensorQr) {
@@ -2150,13 +2156,19 @@ exports.sensorMeasurement = async (req, res) => {
       .input("isFinal", sql.Bit, isFinal)
       .query(`
         UPDATE dbo.SagimIsEmri
-        SET durum = 'b',
+        SET durum = CASE WHEN @isFinal = 1 THEN 'b' ELSE 'p' END,
             sonYoklamaTarihi = SYSUTCDATETIME(),
             baslamaTarihi = COALESCE(baslamaTarihi, SYSUTCDATETIME()),
-            kapanmaTarihi = COALESCE(kapanmaTarihi, SYSUTCDATETIME()),
+            kapanmaTarihi = CASE
+              WHEN @isFinal = 1 THEN COALESCE(kapanmaTarihi, SYSUTCDATETIME())
+              ELSE kapanmaTarihi
+            END,
             sutMiktar = @liters,
-            sicaklik = @temperature,
-            aciklama = N'Olcum sensor tarafindan bitirildi. Mobil onay bekleniyor.'
+            sicaklik = COALESCE(@temperature, sicaklik),
+            aciklama = CASE
+              WHEN @isFinal = 1 THEN N'Olcum sensor tarafindan bitirildi. Mobil onay bekleniyor.'
+              ELSE N'Canli olcum sensor tarafindan guncellendi.'
+            END
         WHERE isEmriID = @jobId
       `);
 
@@ -2169,7 +2181,7 @@ exports.sensorMeasurement = async (req, res) => {
       `);
 
     return res.json({
-      message: "Olcum is emrine yazildi. Mobil onay bekleniyor.",
+      message: isFinal ? "Olcum is emrine yazildi. Mobil onay bekleniyor." : "Canli olcum guncellendi.",
       job: mapMilkingJob(updated.recordset[0]),
     });
   } catch (error) {
