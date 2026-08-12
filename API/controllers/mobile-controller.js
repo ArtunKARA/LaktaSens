@@ -2,7 +2,11 @@ const crypto = require("crypto");
 const { poolPromise, sql } = require("../service/connection.js");
 
 const TOKEN_TTL_SECONDS = Number(process.env.MOBILE_TOKEN_TTL_SECONDS || 60 * 60 * 24 * 7);
-const TOKEN_SECRET = process.env.MOBILE_AUTH_SECRET || "laktasense-mobile-dev-secret";
+const TOKEN_SECRET = process.env.MOBILE_AUTH_SECRET;
+
+if (!TOKEN_SECRET) {
+  throw new Error("MOBILE_AUTH_SECRET ortam degiskeni zorunludur.");
+}
 
 const ROLE_ADMIN = "a";
 const ROLE_FARMER = "c";

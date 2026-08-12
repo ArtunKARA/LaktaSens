@@ -1,0 +1,6 @@
+# Yerel gizli bilgiler
+**/.env
+**/.env.*
+!**/.env.example
+Sensor/**/arduino_secrets.h
+

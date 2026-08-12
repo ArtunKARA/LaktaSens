@@ -1,0 +1,5 @@
+#pragma once
+
+#define SECRET_SSID "WIFI_AG_ADI"
+#define SECRET_PASSWORD "WIFI_PAROLASI"
+

@@ -69,7 +69,6 @@ Mevcut API katmanını kullanarak kullanıcı doğrulama ve veri sorguları yap�
 ### Varolan proje öğeleri
 - `UI/LaktaSense`: Web uygulaması için React + Vite + Mantine tabanlı UI.
 - `API/`: Node.js + `mssql` ile MSSQL bağlantısı, halihazırda kullanıcı/firmalar/admin/sorgular var.
-- `UI/Template`: benzer yapıda başka bir web template, ancak mobil için kullanılmayacak.
 
 ## Gerekli teknoloji yığını
 1. Expo managed app

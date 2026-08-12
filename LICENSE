@@ -1,0 +1,71 @@
+LaktaSens Source-Available Academic Review License Notice
+Version 1.0, 12 August 2026
+
+Copyright (c) 2024-2026 Artun KARA and LaktaSens contributors.
+All rights reserved.
+
+1. Scope
+
+This notice applies only to original LaktaSens material for which the above
+copyright holders own or control the necessary rights (the "Project
+Material"). Third-party software, templates, data sets, media, fonts, models,
+and other components are excluded and remain subject to their own terms. See
+THIRD_PARTY_NOTICES.md.
+
+2. Limited permission
+
+Permission is granted to access, view, and locally run the Project Material
+solely for non-commercial academic study, research review, teaching,
+evaluation, and security testing of the Project itself.
+
+Any copy made under this permission must retain this notice and
+THIRD_PARTY_NOTICES.md. Rights supplied directly by the repository hosting
+platform, including platform-native viewing and forking, remain governed by
+that platform's terms.
+
+3. Restrictions
+
+Except with prior written permission from the copyright holders, you may not:
+
+- publish, redistribute, sublicense, sell, rent, or otherwise provide the
+  Project Material or a substantial portion of it to another party;
+- publicly deploy, host, or offer the Project Material or a derivative work as
+  a product or service;
+- use the Project Material for commercial activity, paid consulting, internal
+  business operations, or production decision-making;
+- distribute modified versions or derivative works;
+- remove or alter copyright, attribution, license, or third-party notices;
+- use the LaktaSens name, logo, or other brand elements in a way that implies
+  endorsement, affiliation, or origin; or
+- use prototype model outputs for clinical, veterinary, animal-welfare, or
+  commercial livestock decisions.
+
+No patent, trademark, data, privacy, publicity, or other rights are granted by
+this notice.
+
+4. Separate permission
+
+Requests for commercial use, redistribution, deployment, modification, or
+other permissions outside this notice may be sent to info@laktasens.com.
+Permission is valid only when provided in writing by an authorized rights
+holder. Rights in third-party material must be obtained from the relevant
+third-party rights holders separately.
+
+5. Termination
+
+The limited permission above terminates automatically upon breach of these
+terms. Following termination, all copies made under this permission must be
+deleted, except where retention is required by law.
+
+6. Disclaimer
+
+THE PROJECT MATERIAL IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE, NON-INFRINGEMENT, ACCURACY, SAFETY, OR
+FITNESS FOR CLINICAL OR COMMERCIAL DECISION-MAKING. TO THE MAXIMUM EXTENT
+PERMITTED BY LAW, THE COPYRIGHT HOLDERS AND CONTRIBUTORS SHALL NOT BE LIABLE
+FOR ANY CLAIM, LOSS, DAMAGE, OR OTHER LIABILITY ARISING FROM OR RELATED TO THE
+PROJECT MATERIAL OR ITS USE.
+
+This is a source-available permission notice, not an OSI-approved open-source
+license.

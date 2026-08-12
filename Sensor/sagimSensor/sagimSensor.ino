@@ -19,8 +19,10 @@ LiquidCrystal_I2C lcd(LCD_ADDRESS, 16, 2);
 #define FINISH_BUTTON_PIN D7
 #define BUZZER_PIN D8
 
-const char *ssid = "Penguen";
-const char *password = "P20202020";
+#include "arduino_secrets.h"
+
+const char *ssid = SECRET_SSID;
+const char *password = SECRET_PASSWORD;
 
 // Mobil API ile ayni sunucu. Fiziksel testte bilgisayarin LAN IP adresini yaz.
 const char *serverBase = "http://10.41.12.147:3030";

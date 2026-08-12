@@ -6,8 +6,10 @@
 #define GREEN_LED D2 
 
 // WiFi ayarları
-const char* ssid = "Redmi";        // WiFi SSID
-const char* password = "ankara06"; // WiFi şifre
+#include "arduino_secrets.h"
+
+const char* ssid = SECRET_SSID;
+const char* password = SECRET_PASSWORD;
 const char* onlineUrl = "https://confoni.com/sensor/aktif"; // Veri gönderim URL'si
 const char* serverUrl = "https://confoni.com/sensor/veri"; // Veri gönderim URL'si
 const char* SensorQR = "f2dw2iGzdQXgT0cp";

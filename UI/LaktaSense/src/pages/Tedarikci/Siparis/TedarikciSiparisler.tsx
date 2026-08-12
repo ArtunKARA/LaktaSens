@@ -41,24 +41,6 @@ interface SevkiyatRow {
     yemAdi: string;
     MiktarKg: number;
 }
-const lastScrollYRef = useRef(0);
-const restoringScrollRef = useRef(false); const restoreScrollPosition = () => {
-    const y = lastScrollYRef.current;
-
-    // tek sefer yetmeyebiliyor, birkaç frame boyunca geri basıyoruz
-    requestAnimationFrame(() => {
-        window.scrollTo(0, y);
-
-        requestAnimationFrame(() => {
-            window.scrollTo(0, y);
-
-            setTimeout(() => {
-                window.scrollTo(0, y);
-                restoringScrollRef.current = false;
-            }, 60);
-        });
-    });
-};
 const API = {
     list: 'http://localhost:3030/api/tedarikci/siparis/postSiparisList',
     approve: 'http://localhost:3030/api/tedarikci/siparis/postSiparisOnay',
@@ -106,6 +88,26 @@ const badgeSevkiyat = (d?: string | null) => {
 const TedarikciSiparisleri = () => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
+    const lastScrollYRef = useRef(0);
+    const restoringScrollRef = useRef(false);
+
+    const restoreScrollPosition = () => {
+        const y = lastScrollYRef.current;
+
+        // tek sefer yetmeyebiliyor, birkaç frame boyunca geri basıyoruz
+        requestAnimationFrame(() => {
+            window.scrollTo(0, y);
+
+            requestAnimationFrame(() => {
+                window.scrollTo(0, y);
+
+                setTimeout(() => {
+                    window.scrollTo(0, y);
+                    restoringScrollRef.current = false;
+                }, 60);
+            });
+        });
+    };
 
     const storedUserInfo = localStorage.getItem('userInfo');
     const userInfo = storedUserInfo ? JSON.parse(storedUserInfo) : null;
